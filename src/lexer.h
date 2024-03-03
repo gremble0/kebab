@@ -7,12 +7,12 @@ typedef struct token_t {
     TOKEN_DEFV,
 
     // Syntax
-    TOKEN_COLON,      // :
-    TOKEN_EQUALS,     // =
-    TOKEN_COMMA,      // ,
-    TOKEN_LBRACE,     // ]
-    TOKEN_RBRACE,     // [
-    TOKEN_FAT_RARROW, // =>
+    TOKEN_COLON,  // :
+    TOKEN_EQUALS, // =
+    TOKEN_COMMA,  // ,
+    TOKEN_LBRACE, // [
+    TOKEN_RBRACE, // ]
+    // TOKEN_FAT_RARROW, // =>
 
     // Primitives
     TOKEN_PLUS,  // +
@@ -30,15 +30,17 @@ typedef struct token_t {
     TOKEN_EOF, // <end of file>
   } kind;
   union {
-    char *name;
-    char *string_literal;
+    const char *name;
+    const char *string_literal;
     int integer_literal;
   };
 } token_t;
 
+#define LEXER_BUF_SIZE 10
 typedef struct lexer_t {
   FILE *source_file;
-  char current;
+  char buffer[LEXER_BUF_SIZE];
+  size_t buffer_pos;
 } lexer_t;
 
 lexer_t *lexer_init(const char *file_path);

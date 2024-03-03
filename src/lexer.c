@@ -27,9 +27,6 @@ static void print_token(token_t *token) {
   case TOKEN_RBRACE: {
     printf("]");
   } break;
-  case TOKEN_FAT_RARROW: {
-    printf("=>");
-  } break;
   case TOKEN_PLUS: {
     printf("+");
   } break;
@@ -59,7 +56,20 @@ static void print_token(token_t *token) {
   }
 }
 
-static char lexer_peek_char(lexer_t *lexer, int offset);
+static void lexer_load_next_chunk(lexer_t *lexer) {
+  fread(lexer->buffer, LEXER_BUF_SIZE, 1, lexer->source_file);
+  lexer->buffer_pos = 0;
+}
+
+static const int lexer_read_int(lexer_t *lexer) {
+  // TODO: implement
+  return 0;
+}
+
+static const char *lexer_read_str(lexer_t *lexer) {
+  // TODO: implement
+  return 0;
+}
 
 /**
  * @brief Initialize a lexer, setting its inital state based on the file at
@@ -78,6 +88,9 @@ lexer_t *lexer_init(const char *file_path) {
   if (f == NULL) {
     err_io_fail(file_path);
   }
+  lexer->source_file = f;
+  lexer->buffer_pos = 0;
+  lexer_load_next_chunk(lexer);
 
   return lexer;
 }
@@ -94,10 +107,64 @@ token_t *lexer_next_token(lexer_t *lexer) {
     err_malloc_fail();
   }
 
-  // TODO: make token
-  // print_token(next_token);
+  printf("%zu: %s\n", lexer->buffer_pos, lexer->buffer);
+  if (lexer->buffer_pos == LEXER_BUF_SIZE - 1) {
+    lexer_load_next_chunk(lexer);
+  }
 
-  next_token->kind = TOKEN_EOF;
+  switch (lexer->buffer[lexer->buffer_pos]) {
+  case ':': {
+    next_token->kind = TOKEN_COLON;
+  } break;
+  case '=': {
+    next_token->kind = TOKEN_EQUALS;
+  } break;
+  case ',': {
+    next_token->kind = TOKEN_COMMA;
+  } break;
+  case '[': {
+    next_token->kind = TOKEN_LBRACE;
+  } break;
+  case ']': {
+    next_token->kind = TOKEN_RBRACE;
+  } break;
+  case '+': {
+    next_token->kind = TOKEN_PLUS;
+  } break;
+  case '-': {
+    next_token->kind = TOKEN_MINUS;
+  } break;
+  case '*':
+    next_token->kind = TOKEN_MULT;
+    break;
+  case '/':
+    next_token->kind = TOKEN_DIV;
+    break;
+  case '0':
+  case '1':
+  case '2':
+  case '3':
+  case '4':
+  case '5':
+  case '6':
+  case '7':
+  case '8':
+  case '9': {
+    const int num = lexer_read_int(lexer);
+    next_token->kind = TOKEN_INTEGER_LITERAL;
+    next_token->integer_literal = num;
+  } break;
+  case '"':
+  case '\'': {
+    const char *str = lexer_read_str(lexer);
+    next_token->kind = TOKEN_STRING_LITERAL;
+    next_token->string_literal = str;
+  } break;
+  default: {
+    err_custom("ILLEGAL_TOKEN: '%c'\n", lexer->buffer[lexer->buffer_pos]);
+  } break;
+  }
+
   return next_token;
 }
 

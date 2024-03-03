@@ -4,7 +4,7 @@ OBJS=lexer.o main.o
 NONSTDLIBSRC=../lib/nonstdlib/src
 LIBS=-L$(NONSTDLIBSRC) -lnonstdlib
 
-all: $(OBJS)
+all: clean $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o kebab $(LIBS)
 
 main.o:
