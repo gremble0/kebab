@@ -1,0 +1,4 @@
+defp main: int = argc: int, argv: string[] => ; list<string> ??
+  defv my-var = 4 - 2
+
+  printf "Hello world\n"
