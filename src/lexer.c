@@ -4,6 +4,11 @@
 #include "error.h"
 #include "lexer.h"
 
+/**
+ * @brief Debugging function to print the "toString" of a token
+ *
+ * @param token token to print
+ */
 static void print_token(token_t *token) {
   switch (token->kind) {
   case TOKEN_DEFP: {
@@ -56,16 +61,37 @@ static void print_token(token_t *token) {
   }
 }
 
+/**
+ * @brief Loads the LEXER_BUF_SIZE next bytes into the lexers buffer for reading
+ * the source file, also resets buffer_pos
+ *
+ * @param lexer lexer to load next chunk for
+ */
 static void lexer_load_next_chunk(lexer_t *lexer) {
   fread(lexer->buffer, LEXER_BUF_SIZE, 1, lexer->source_file);
   lexer->buffer_pos = 0;
 }
 
+/**
+ * @brief Builds up an int from the contents in the lexers buffer, loading new
+ * chunks if necessary
+ *
+ * @param lexer lexer to read int from
+ * @return the next number in the lexer
+ */
 static const int lexer_read_int(lexer_t *lexer) {
-  // TODO: implement
+  char c = lexer->buffer[lexer->buffer_pos];
+
   return 0;
 }
 
+/**
+ * @brief Builds up a string from the contents the lexers buffer, loading new
+ * chunks if necessary
+ *
+ * @param lexer lexer to read string from
+ * @return the next string in the lexer
+ */
 static const char *lexer_read_str(lexer_t *lexer) {
   // TODO: implement
   return 0;
@@ -140,7 +166,8 @@ token_t *lexer_next_token(lexer_t *lexer) {
   case '/':
     next_token->kind = TOKEN_DIV;
     break;
-  case '0':
+
+  // Variables and functions can start with 0 but not numbers
   case '1':
   case '2':
   case '3':
@@ -154,14 +181,18 @@ token_t *lexer_next_token(lexer_t *lexer) {
     next_token->kind = TOKEN_INTEGER_LITERAL;
     next_token->integer_literal = num;
   } break;
+
   case '"':
   case '\'': {
     const char *str = lexer_read_str(lexer);
     next_token->kind = TOKEN_STRING_LITERAL;
     next_token->string_literal = str;
   } break;
+
   default: {
-    err_custom("ILLEGAL_TOKEN: '%c'\n", lexer->buffer[lexer->buffer_pos]);
+    const char *str = lexer_read_str(lexer);
+    next_token->kind = TOKEN_NAME;
+    next_token->name = str;
   } break;
   }
 
