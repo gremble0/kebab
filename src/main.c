@@ -9,6 +9,12 @@ int main(int argc, char **argv) {
   }
 
   lexer_t *lexer = lexer_init(argv[1]);
+
+  token_t *cur_token = lexer_next_token(lexer);
+  while (cur_token->kind != TOKEN_EOF) {
+    cur_token = lexer_next_token(lexer);
+  }
+
   lexer_free(lexer);
 
   return 0;

@@ -23,8 +23,11 @@ typedef struct token_t {
     // Values
     TOKEN_STRING_LITERAL,
     TOKEN_INTEGER_LITERAL,
-    TOKEN_NAME,
     // TODO: TOKEN_FLOAT_LITERAL,
+    TOKEN_NAME,
+
+    TOKEN_EOL, // \n | \r
+    TOKEN_EOF, // <end of file>
   } kind;
   union {
     char *name;
@@ -39,5 +42,5 @@ typedef struct lexer_t {
 } lexer_t;
 
 lexer_t *lexer_init(const char *file_path);
-void lexer_free(lexer_t *lexer);
 token_t *lexer_next_token(lexer_t *lexer);
+void lexer_free(lexer_t *lexer);
