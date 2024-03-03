@@ -1,13 +1,14 @@
 CC=clang
 CFLAGS=-Wall -Wextra
 OBJS=lexer.o
-LIB=../lib/nonstdlib/src/libnonstdlib.a
+NONSTDLIBSRC=../lib/nonstdlib/src
+LIB=$(NONSTDLIBSRC)/nonstdlib
 
 all: nonstdlib lexer.o
-	$(CC) $(OBJS) main.c -o kebab
+	$(CC) $(OBJS) -I$(NONSTDLIBSRC) main.c -o kebab -L$(NONSTDLIBSRC) -lnonstdlib 
 
 lexer.o:
-	$(CC) $(CFLAGS) -c lexer.c -o lexer.o
+	$(CC) $(CFLAGS) -I$(NONSTDLIBSRC) -c lexer.c -o lexer.o
 
 nonstdlib:
 	$(MAKE) -C ../lib/nonstdlib/src
