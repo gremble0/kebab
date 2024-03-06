@@ -167,7 +167,11 @@ token_t *lexer_next_token(lexer_t *lexer) {
     next_token->kind = TOKEN_DIV;
     break;
 
-  // Variables and functions can start with 0 but not numbers
+  // Numbers can only start with 0 if they are 0, eg. 01 is an error
+  case '0': {
+    next_token->kind = TOKEN_INTEGER_LITERAL;
+    next_token->integer_literal = 0;
+  } break;
   case '1':
   case '2':
   case '3':
