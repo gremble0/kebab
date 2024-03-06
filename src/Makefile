@@ -1,5 +1,5 @@
 CC=clang
-CFLAGS=-Wall -Wextra
+CFLAGS=-Wall -Wextra -g
 OBJS=lexer.o token.o main.o
 NONSTDLIBSRC=../lib/nonstdlib/src
 LIBS=-L$(NONSTDLIBSRC) -lnonstdlib

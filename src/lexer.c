@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +21,8 @@ static void lexer_load_next_line(lexer_t *lexer) {
 static int lexer_line_done(lexer_t *lexer) {
   // check if line lexer is on a newline or a comment
   return lexer->line[lexer->line_pos] == '\n' ||
-         lexer->line[lexer->line_pos] == ';';
+         lexer->line[lexer->line_pos] == ';' ||
+         lexer->line[lexer->line_pos] < 0;
 }
 
 static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
@@ -39,6 +41,8 @@ static int lexer_read_int(lexer_t *lexer) {
   return 0;
 }
 
+static int is_not_dquote(int num) { return num != '"'; }
+
 /**
  * @brief Reads characters between a pair of '"'-s
  *
@@ -46,8 +50,21 @@ static int lexer_read_int(lexer_t *lexer) {
  * @return the string between two '"'-s
  */
 static const char *lexer_read_str(lexer_t *lexer) {
-  // TODO: implement
-  return 0;
+  assert(lexer->line[lexer->line_pos] == '"');
+  ++lexer->line_pos;
+  size_t i = lexer_seek_while(lexer, is_not_dquote);
+
+  char *word = malloc(sizeof(char) * i + 1);
+  if (word == NULL) {
+    err_malloc_fail();
+  }
+
+  memcpy(word, &lexer->line[lexer->line_pos], i);
+  word[i] = '\0';
+  assert(lexer->line[lexer->line_pos + i] == '"');
+  lexer->line_pos += i + 1; // +1 to skip closing '"'
+
+  return word;
 }
 
 // TODO: widen condition to allow true KEBAB-CASE !!
@@ -97,14 +114,18 @@ lexer_t *lexer_init(const char *file_path) {
  * @return token with appropriate contents based on lexer position
  */
 token_t *lexer_next_token(lexer_t *lexer) {
+  if (lexer->line_len < 0) {
+    return token_make_eof();
+  }
+
   if (lexer_line_done(lexer)) {
     // Read next line and return EOF if at end of file
     free(lexer->line);
     lexer_load_next_line(lexer);
 
-    if (lexer->line_len < 0) {
-      return token_make_eof();
-    }
+    printf("%zd\n", lexer->line_len);
+    ++lexer->line_pos;
+    return token_make_eol();
   }
 
   switch (lexer->line[lexer->line_pos]) {

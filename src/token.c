@@ -51,7 +51,7 @@ void token_print(token_t *token) {
     puts("TOKEN_DIV");
   } break;
   case TOKEN_STRING_LITERAL: {
-    printf("TOKEN_STRING_LITERAL: \"%s\n\" ", token->string_literal);
+    printf("TOKEN_STRING_LITERAL: \"%s\"\n", token->string_literal);
   } break;
   case TOKEN_INTEGER_LITERAL: {
     printf("TOKEN_INTEGER_LITERAL: %d\n", token->integer_literal);
@@ -105,7 +105,16 @@ token_t *token_make_mult() { return NULL; }
 
 token_t *token_make_div() { return NULL; }
 
-token_t *token_make_str_lit(const char *str_lit) { return NULL; }
+token_t *token_make_str_lit(const char *str_lit) {
+  token_t *str_lit_tok = malloc(sizeof(token_t));
+  if (str_lit_tok == NULL) {
+    err_malloc_fail();
+  }
+  str_lit_tok->kind = TOKEN_STRING_LITERAL;
+  str_lit_tok->string_literal = str_lit;
+
+  return str_lit_tok;
+}
 
 token_t *token_make_int_lit(const int int_lit) { return NULL; }
 token_t *token_make_name(const char *name) {
@@ -119,7 +128,16 @@ token_t *token_make_name(const char *name) {
   return name_tok;
 }
 
-token_t *token_make_eol() { return NULL; }
+token_t *token_make_eol() {
+  token_t *eol_tok = malloc(sizeof(token_t));
+  if (eol_tok == NULL) {
+    err_malloc_fail();
+  }
+  eol_tok->kind = TOKEN_EOL;
+
+  return eol_tok;
+}
+
 token_t *token_make_eof() {
   token_t *eof = malloc(sizeof(token_t));
   if (eof == NULL) {
