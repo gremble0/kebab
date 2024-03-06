@@ -37,6 +37,8 @@ typedef struct token_t {
   };
 } token_t;
 
+void token_print(token_t *token);
+
 token_t *token_make_def();
 
 token_t *token_make_colon();

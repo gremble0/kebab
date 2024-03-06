@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,80 +7,14 @@
 #include "lexer.h"
 
 /**
- * @brief Debugging function to print the "toString" of a token
- *
- * @param token token to print
- */
-static void print_token(token_t *token) {
-  switch (token->kind) {
-  case TOKEN_DEF: {
-    printf("def ");
-  } break;
-  case TOKEN_INT: {
-    printf("int");
-  } break;
-  case TOKEN_FN: {
-    printf("fn");
-  } break;
-  case TOKEN_COLON: {
-    printf(":");
-  } break;
-  case TOKEN_EQUALS: {
-    printf("=");
-  } break;
-  case TOKEN_COMMA: {
-    printf(", ");
-  } break;
-  case TOKEN_LBRACE: {
-    printf("[");
-  } break;
-  case TOKEN_RBRACE: {
-    printf("]");
-  } break;
-  case TOKEN_FAT_RARROW: {
-    printf("}");
-  } break;
-  case TOKEN_PLUS: {
-    printf("+");
-  } break;
-  case TOKEN_MINUS: {
-    printf("-");
-  } break;
-  case TOKEN_MULT: {
-    printf("*");
-  } break;
-  case TOKEN_DIV: {
-    printf("/");
-  } break;
-  case TOKEN_STRING_LITERAL: {
-    printf("\"%s\n\" ", token->string_literal);
-  } break;
-  case TOKEN_INTEGER_LITERAL: {
-    printf("%d ", token->integer_literal);
-  } break;
-  case TOKEN_NAME: {
-    printf("%s ", token->name);
-  } break;
-  case TOKEN_EOL: {
-    putchar('\n');
-  } break;
-  case TOKEN_EOF: {
-  } break;
-  }
-}
-
-/**
  * @brief Loads the LEXER_BUF_SIZE next bytes into the lexers buffer for reading
  * the source file, also resets buffer_pos
  *
  * @param lexer lexer to load next chunk for
  */
 static void lexer_load_next_line(lexer_t *lexer) {
-  // TODO: this should be fine, but maybe look into redoing in future
-  // getline(&lexer->line, &lexer->line_len, lexer->source_file);
   size_t a = 0;
   lexer->line_len = getline(&lexer->line, &a, lexer->source_file);
-  printf("%zd: %s", lexer->line_len, lexer->line);
 }
 
 /**
@@ -113,8 +48,19 @@ static const char *lexer_read_str(lexer_t *lexer) {
 }
 
 static const char *lexer_read_word(lexer_t *lexer) {
-  // TODO: implement
-  return 0;
+  // TODO: where to free?
+  char *word = malloc(sizeof(char) * (lexer->line_len - lexer->line_pos + 1));
+  if (word == NULL) {
+    err_malloc_fail();
+  }
+
+  size_t i = 0;
+  while (isalnum(lexer->line[lexer->line_pos])) {
+    word[i++] = lexer->line[lexer->line_pos++];
+  }
+  word[i] = '\0';
+
+  return word;
 }
 
 /**
@@ -159,6 +105,10 @@ token_t *lexer_next_token(lexer_t *lexer) {
   }
 
   switch (lexer->line[lexer->line_pos]) {
+  case ' ':
+    ++lexer->line_pos;
+    return lexer_next_token(lexer);
+
   case ':':
     ++lexer->line_pos;
     return token_make_colon();
@@ -207,10 +157,11 @@ token_t *lexer_next_token(lexer_t *lexer) {
 
   default: {
     const char *word = lexer_read_word(lexer);
+    // TODO: add all keywords
     if (strcmp(word, "def") == 0) {
       return token_make_def();
     } else {
-      err_custom("ILLEGAL TOKEN: %s", word);
+      return token_make_name(word);
     }
   }
   }
