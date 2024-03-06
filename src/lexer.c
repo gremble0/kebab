@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "error.h"
 #include "lexer.h"
@@ -101,13 +102,17 @@ static int lexer_line_done(lexer_t *lexer) {
 }
 
 /**
- * @brief Builds up a string from the contents the lexers buffer, loading new
- * chunks if necessary
+ * @brief Reads characters between a pair of '"'-s
  *
  * @param lexer lexer to read string from
- * @return the next string in the lexer
+ * @return the string between two '"'-s
  */
 static const char *lexer_read_str(lexer_t *lexer) {
+  // TODO: implement
+  return 0;
+}
+
+static const char *lexer_read_word(lexer_t *lexer) {
   // TODO: implement
   return 0;
 }
@@ -143,96 +148,72 @@ lexer_t *lexer_init(const char *file_path) {
  * @return token with appropriate contents based on lexer position
  */
 token_t *lexer_next_token(lexer_t *lexer) {
-  token_t *next_token = malloc(sizeof(token_t));
-  if (next_token == NULL) {
-    err_malloc_fail();
-  }
-
-  // printf("%zu: %s", lexer->line_len, lexer->line);
-  if (lexer->line_pos == lexer->line_len) {
-    // if (lexer_line_done(lexer)) {
+  if (lexer_line_done(lexer)) {
     // Read next line and return EOF if at end of file
+    free(lexer->line);
     lexer_load_next_line(lexer);
+
     if (lexer->line_len < 0) {
-      next_token->kind = TOKEN_EOF;
-      return next_token;
+      return token_make_eof();
     }
   }
-  lexer->line_pos = lexer->line_len;
-  next_token->kind = TOKEN_INTEGER_LITERAL;
 
-  return next_token;
-  // if (lexer->line_len < 0) {
-  //   next_token->kind = TOKEN_EOF;
-  //   return next_token;
-  // } else if (lexer_line_done(lexer)) {
-  //   free(lexer->line);
-  //   lexer_load_next_line(lexer);
-  // }
-  //
-  // switch (lexer->line[lexer->line_pos]) {
-  // case ':': {
-  //   next_token->kind = TOKEN_COLON;
-  // } break;
-  // case '=': {
-  //   next_token->kind = TOKEN_EQUALS;
-  // } break;
-  // case ',': {
-  //   next_token->kind = TOKEN_COMMA;
-  // } break;
-  // case '[': {
-  //   next_token->kind = TOKEN_LBRACE;
-  // } break;
-  // case ']': {
-  //   next_token->kind = TOKEN_RBRACE;
-  // } break;
-  // case '+': {
-  //   next_token->kind = TOKEN_PLUS;
-  // } break;
-  // case '-': {
-  //   next_token->kind = TOKEN_MINUS;
-  // } break;
-  // case '*':
-  //   next_token->kind = TOKEN_MULT;
-  //   break;
-  // case '/':
-  //   next_token->kind = TOKEN_DIV;
-  //   break;
-  //
-  // // Numbers can only start with 0 if they are 0, eg. 01 is an error
-  // case '0': {
-  //   next_token->kind = TOKEN_INTEGER_LITERAL;
-  //   next_token->integer_literal = 0;
-  // } break;
-  // case '1':
-  // case '2':
-  // case '3':
-  // case '4':
-  // case '5':
-  // case '6':
-  // case '7':
-  // case '8':
-  // case '9': {
-  //   const int num = lexer_read_int(lexer);
-  //   next_token->kind = TOKEN_INTEGER_LITERAL;
-  //   next_token->integer_literal = num;
-  // } break;
-  //
-  // case '"':
-  // case '\'': {
-  //   const char *str = lexer_read_str(lexer);
-  //   next_token->kind = TOKEN_STRING_LITERAL;
-  //   next_token->string_literal = str;
-  // } break;
-  //
-  // default: {
-  //   const char *str = lexer_read_str(lexer);
-  //   next_token->kind = TOKEN_NAME;
-  //   next_token->name = str;
-  // } break;
-  // }
-  //
-  // return next_token;
+  switch (lexer->line[lexer->line_pos]) {
+  case ':':
+    ++lexer->line_pos;
+    return token_make_colon();
+  case '=':
+    ++lexer->line_pos;
+    return token_make_equals();
+  case ',':
+    ++lexer->line_pos;
+    return token_make_comma();
+  case '[':
+    ++lexer->line_pos;
+    return token_make_lbrace();
+  case ']':
+    ++lexer->line_pos;
+    return token_make_rbrace();
+
+  case '+':
+    ++lexer->line_pos;
+    return token_make_plus();
+  case '-':
+    ++lexer->line_pos;
+    return token_make_minus();
+  case '*':
+    ++lexer->line_pos;
+    return token_make_mult();
+  case '/':
+    ++lexer->line_pos;
+    return token_make_div();
+
+  // TODO: revisit what to do with numbers starting with 0
+  case '0':
+  case '1':
+  case '2':
+  case '3':
+  case '4':
+  case '5':
+  case '6':
+  case '7':
+  case '8':
+  case '9':
+    return token_make_int_lit(lexer_read_int(lexer));
+
+  case '"':
+    return token_make_str_lit(lexer_read_str(lexer));
+    // case '\'': TODO: char type
+
+  default: {
+    const char *word = lexer_read_word(lexer);
+    if (strcmp(word, "def") == 0) {
+      return token_make_def();
+    } else {
+      err_custom("ILLEGAL TOKEN: %s", word);
+    }
+  }
+  }
 }
 
 /**
