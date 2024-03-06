@@ -3,16 +3,19 @@
 typedef struct token_t {
   enum kind {
     // Definitions
-    TOKEN_DEFP,
-    TOKEN_DEFV,
+    TOKEN_DEF,
+
+    // Constructors
+    TOKEN_INT,
+    TOKEN_FN,
 
     // Syntax
-    TOKEN_COLON,  // :
-    TOKEN_EQUALS, // =
-    TOKEN_COMMA,  // ,
-    TOKEN_LBRACE, // [
-    TOKEN_RBRACE, // ]
-    // TOKEN_FAT_RARROW, // =>
+    TOKEN_COLON,      // :
+    TOKEN_EQUALS,     // =
+    TOKEN_COMMA,      // ,
+    TOKEN_LBRACE,     // [
+    TOKEN_RBRACE,     // ]
+    TOKEN_FAT_RARROW, // =>
 
     // Primitives
     TOKEN_PLUS,  // +
@@ -36,11 +39,12 @@ typedef struct token_t {
   };
 } token_t;
 
-#define LEXER_BUF_SIZE 10
+#define LEXER_BUF_SIZE 256
 typedef struct lexer_t {
   FILE *source_file;
-  char buffer[LEXER_BUF_SIZE];
-  size_t buffer_pos;
+  char *line;
+  ssize_t line_len;
+  size_t line_pos;
 } lexer_t;
 
 lexer_t *lexer_init(const char *file_path);

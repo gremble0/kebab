@@ -11,17 +11,20 @@
  */
 static void print_token(token_t *token) {
   switch (token->kind) {
-  case TOKEN_DEFP: {
-    printf("defp ");
+  case TOKEN_DEF: {
+    printf("def ");
   } break;
-  case TOKEN_DEFV: {
-    printf("defv ");
+  case TOKEN_INT: {
+    printf("int");
+  } break;
+  case TOKEN_FN: {
+    printf("fn");
   } break;
   case TOKEN_COLON: {
-    printf(": ");
+    printf(":");
   } break;
   case TOKEN_EQUALS: {
-    printf("= ");
+    printf("=");
   } break;
   case TOKEN_COMMA: {
     printf(", ");
@@ -31,6 +34,9 @@ static void print_token(token_t *token) {
   } break;
   case TOKEN_RBRACE: {
     printf("]");
+  } break;
+  case TOKEN_FAT_RARROW: {
+    printf("}");
   } break;
   case TOKEN_PLUS: {
     printf("+");
@@ -67,9 +73,12 @@ static void print_token(token_t *token) {
  *
  * @param lexer lexer to load next chunk for
  */
-static void lexer_load_next_chunk(lexer_t *lexer) {
-  fread(lexer->buffer, LEXER_BUF_SIZE, 1, lexer->source_file);
-  lexer->buffer_pos = 0;
+static void lexer_load_next_line(lexer_t *lexer) {
+  // TODO: this should be fine, but maybe look into redoing in future
+  // getline(&lexer->line, &lexer->line_len, lexer->source_file);
+  size_t a = 0;
+  lexer->line_len = getline(&lexer->line, &a, lexer->source_file);
+  printf("%zd: %s", lexer->line_len, lexer->line);
 }
 
 /**
@@ -79,10 +88,16 @@ static void lexer_load_next_chunk(lexer_t *lexer) {
  * @param lexer lexer to read int from
  * @return the next number in the lexer
  */
-static const int lexer_read_int(lexer_t *lexer) {
-  char c = lexer->buffer[lexer->buffer_pos];
+static int lexer_read_int(lexer_t *lexer) {
+  char c = lexer->line[lexer->line_pos];
 
   return 0;
+}
+
+static int lexer_line_done(lexer_t *lexer) {
+  // check if line lexer is on a newline or a comment
+  return lexer->line[lexer->line_pos] == '\n' ||
+         lexer->line[lexer->line_pos] == ';';
 }
 
 /**
@@ -115,8 +130,8 @@ lexer_t *lexer_init(const char *file_path) {
     err_io_fail(file_path);
   }
   lexer->source_file = f;
-  lexer->buffer_pos = 0;
-  lexer_load_next_chunk(lexer);
+  lexer->line = NULL;
+  lexer_load_next_line(lexer);
 
   return lexer;
 }
@@ -133,74 +148,91 @@ token_t *lexer_next_token(lexer_t *lexer) {
     err_malloc_fail();
   }
 
-  printf("%zu: %s\n", lexer->buffer_pos, lexer->buffer);
-  if (lexer->buffer_pos == LEXER_BUF_SIZE - 1) {
-    lexer_load_next_chunk(lexer);
+  // printf("%zu: %s", lexer->line_len, lexer->line);
+  if (lexer->line_pos == lexer->line_len) {
+    // if (lexer_line_done(lexer)) {
+    // Read next line and return EOF if at end of file
+    lexer_load_next_line(lexer);
+    if (lexer->line_len < 0) {
+      next_token->kind = TOKEN_EOF;
+      return next_token;
+    }
   }
-
-  switch (lexer->buffer[lexer->buffer_pos]) {
-  case ':': {
-    next_token->kind = TOKEN_COLON;
-  } break;
-  case '=': {
-    next_token->kind = TOKEN_EQUALS;
-  } break;
-  case ',': {
-    next_token->kind = TOKEN_COMMA;
-  } break;
-  case '[': {
-    next_token->kind = TOKEN_LBRACE;
-  } break;
-  case ']': {
-    next_token->kind = TOKEN_RBRACE;
-  } break;
-  case '+': {
-    next_token->kind = TOKEN_PLUS;
-  } break;
-  case '-': {
-    next_token->kind = TOKEN_MINUS;
-  } break;
-  case '*':
-    next_token->kind = TOKEN_MULT;
-    break;
-  case '/':
-    next_token->kind = TOKEN_DIV;
-    break;
-
-  // Numbers can only start with 0 if they are 0, eg. 01 is an error
-  case '0': {
-    next_token->kind = TOKEN_INTEGER_LITERAL;
-    next_token->integer_literal = 0;
-  } break;
-  case '1':
-  case '2':
-  case '3':
-  case '4':
-  case '5':
-  case '6':
-  case '7':
-  case '8':
-  case '9': {
-    const int num = lexer_read_int(lexer);
-    next_token->kind = TOKEN_INTEGER_LITERAL;
-    next_token->integer_literal = num;
-  } break;
-
-  case '"':
-  case '\'': {
-    const char *str = lexer_read_str(lexer);
-    next_token->kind = TOKEN_STRING_LITERAL;
-    next_token->string_literal = str;
-  } break;
-
-  default: {
-    const char *str = lexer_read_str(lexer);
-    next_token->kind = TOKEN_NAME;
-    next_token->name = str;
-  } break;
-  }
+  lexer->line_pos = lexer->line_len;
+  next_token->kind = TOKEN_INTEGER_LITERAL;
 
   return next_token;
+  // if (lexer->line_len < 0) {
+  //   next_token->kind = TOKEN_EOF;
+  //   return next_token;
+  // } else if (lexer_line_done(lexer)) {
+  //   free(lexer->line);
+  //   lexer_load_next_line(lexer);
+  // }
+  //
+  // switch (lexer->line[lexer->line_pos]) {
+  // case ':': {
+  //   next_token->kind = TOKEN_COLON;
+  // } break;
+  // case '=': {
+  //   next_token->kind = TOKEN_EQUALS;
+  // } break;
+  // case ',': {
+  //   next_token->kind = TOKEN_COMMA;
+  // } break;
+  // case '[': {
+  //   next_token->kind = TOKEN_LBRACE;
+  // } break;
+  // case ']': {
+  //   next_token->kind = TOKEN_RBRACE;
+  // } break;
+  // case '+': {
+  //   next_token->kind = TOKEN_PLUS;
+  // } break;
+  // case '-': {
+  //   next_token->kind = TOKEN_MINUS;
+  // } break;
+  // case '*':
+  //   next_token->kind = TOKEN_MULT;
+  //   break;
+  // case '/':
+  //   next_token->kind = TOKEN_DIV;
+  //   break;
+  //
+  // // Numbers can only start with 0 if they are 0, eg. 01 is an error
+  // case '0': {
+  //   next_token->kind = TOKEN_INTEGER_LITERAL;
+  //   next_token->integer_literal = 0;
+  // } break;
+  // case '1':
+  // case '2':
+  // case '3':
+  // case '4':
+  // case '5':
+  // case '6':
+  // case '7':
+  // case '8':
+  // case '9': {
+  //   const int num = lexer_read_int(lexer);
+  //   next_token->kind = TOKEN_INTEGER_LITERAL;
+  //   next_token->integer_literal = num;
+  // } break;
+  //
+  // case '"':
+  // case '\'': {
+  //   const char *str = lexer_read_str(lexer);
+  //   next_token->kind = TOKEN_STRING_LITERAL;
+  //   next_token->string_literal = str;
+  // } break;
+  //
+  // default: {
+  //   const char *str = lexer_read_str(lexer);
+  //   next_token->kind = TOKEN_NAME;
+  //   next_token->name = str;
+  // } break;
+  // }
+  //
+  // return next_token;
 }
 
 /**
