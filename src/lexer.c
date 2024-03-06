@@ -17,23 +17,26 @@ static void lexer_load_next_line(lexer_t *lexer) {
   lexer->line_len = getline(&lexer->line, &a, lexer->source_file);
 }
 
-/**
- * @brief Builds up an int from the contents in the lexers buffer, loading new
- * chunks if necessary
- *
- * @param lexer lexer to read int from
- * @return the next number in the lexer
- */
-static int lexer_read_int(lexer_t *lexer) {
-  char c = lexer->line[lexer->line_pos];
-
-  return 0;
-}
-
 static int lexer_line_done(lexer_t *lexer) {
   // check if line lexer is on a newline or a comment
   return lexer->line[lexer->line_pos] == '\n' ||
          lexer->line[lexer->line_pos] == ';';
+}
+
+static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
+  size_t i = 0;
+  // TODO: && line->pos < line->line_len
+  while (pred(lexer->line[lexer->line_pos + i])) {
+    ++i;
+  }
+
+  return i;
+}
+
+static int lexer_read_int(lexer_t *lexer) {
+  char c = lexer->line[lexer->line_pos];
+
+  return 0;
 }
 
 /**
@@ -47,18 +50,18 @@ static const char *lexer_read_str(lexer_t *lexer) {
   return 0;
 }
 
+// TODO: widen condition to allow true KEBAB-CASE !!
 static const char *lexer_read_word(lexer_t *lexer) {
-  // TODO: where to free?
-  char *word = malloc(sizeof(char) * (lexer->line_len - lexer->line_pos + 1));
+  size_t i = lexer_seek_while(lexer, isalnum);
+
+  char *word = malloc(sizeof(char) * i + 1);
   if (word == NULL) {
     err_malloc_fail();
   }
 
-  size_t i = 0;
-  while (isalnum(lexer->line[lexer->line_pos])) {
-    word[i++] = lexer->line[lexer->line_pos++];
-  }
+  memcpy(word, &lexer->line[lexer->line_pos], i);
   word[i] = '\0';
+  lexer->line_pos += i;
 
   return word;
 }

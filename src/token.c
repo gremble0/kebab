@@ -67,7 +67,15 @@ void token_print(token_t *token) {
   }
 }
 
-token_t *token_make_def() { return NULL; }
+token_t *token_make_def() {
+  token_t *def_token = malloc(sizeof(token_t));
+  if (def_token == NULL) {
+    err_malloc_fail();
+  }
+  def_token->kind = TOKEN_DEF;
+
+  return def_token;
+}
 
 token_t *token_make_colon() { return NULL; }
 
