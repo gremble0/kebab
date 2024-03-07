@@ -4,7 +4,7 @@ typedef struct expr_t {
 } expr_t;
 
 typedef struct fn_call_t {
-  const char *fn_name;
+  const char *fn_name; // TODO: fn type? maybe when evaling parsed code
   list_t *arguments;
 } fn_call_t;
 
@@ -36,6 +36,9 @@ typedef struct statement_t {
   };
 } statement_t;
 
+// Entrypoint to build/use the contents of a program
 typedef struct ast_t {
   list_t *statements;
 } ast_t;
+
+ast_t *parser_parse(const char *path);

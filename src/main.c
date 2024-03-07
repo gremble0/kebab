@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "lexer.h"
+#include "parser.h"
 
 int main(int argc, char **argv) {
   if (argc < 2) {
@@ -8,21 +8,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  lexer_t *lexer = lexer_init(argv[1]);
-
-  while (1) {
-    token_t *token = lexer_next_token(lexer);
-
-    if (token->kind == TOKEN_EOF) {
-      token_free(token);
-      break;
-    } else {
-      token_print(token);
-      token_free(token);
-    }
-  }
-
-  lexer_free(lexer);
+  parser_parse(argv[1]);
 
   return 0;
 }

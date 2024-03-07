@@ -3,3 +3,4 @@
 kebab
 compile_commands.json
 .cache/
+vgcore*
