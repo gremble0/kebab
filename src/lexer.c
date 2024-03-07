@@ -16,6 +16,7 @@ static int is_not_dquote(int num) { return num != '"'; }
  * @param lexer lexer to load next chunk for
  */
 static void lexer_load_next_line(lexer_t *lexer) {
+  // TODO: wtf
   size_t a = 0;
   lexer->line_len = getline(&lexer->line, &a, lexer->source_file);
   lexer->line_pos = 0;
@@ -24,8 +25,7 @@ static void lexer_load_next_line(lexer_t *lexer) {
 static int lexer_line_done(lexer_t *lexer) {
   // check if line lexer is on a newline or a comment
   return lexer->line[lexer->line_pos] == '\n' ||
-         lexer->line[lexer->line_pos] == ';' ||
-         lexer->line[lexer->line_pos] < 0;
+         lexer->line[lexer->line_pos] == ';';
 }
 
 static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
@@ -36,6 +36,14 @@ static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
   }
 
   return i;
+}
+
+static char lexer_peek_char(lexer_t *lexer, size_t offset) {
+  if (lexer->line_pos + offset >= (size_t)lexer->line_len) {
+    return 0;
+  }
+
+  return lexer->line[lexer->line_pos + offset];
 }
 
 static int lexer_read_int(lexer_t *lexer) {
@@ -141,12 +149,24 @@ token_t *lexer_next_token(lexer_t *lexer) {
   case ':':
     ++lexer->line_pos;
     return token_make_simple(TOKEN_COLON);
-  case '=':
-    ++lexer->line_pos;
-    return token_make_simple(TOKEN_EQUALS);
+  case '=': {
+    if (lexer_peek_char(lexer, 1) == '>') {
+      lexer->line_pos += 2;
+      return token_make_simple(TOKEN_FAT_RARROW);
+    } else {
+      ++lexer->line_pos;
+      return token_make_simple(TOKEN_EQUALS);
+    }
+  }
   case ',':
     ++lexer->line_pos;
     return token_make_simple(TOKEN_COMMA);
+  case '(':
+    ++lexer->line_pos;
+    return token_make_simple(TOKEN_LPAREN);
+  case ')':
+    ++lexer->line_pos;
+    return token_make_simple(TOKEN_RPAREN);
   case '[':
     ++lexer->line_pos;
     return token_make_simple(TOKEN_LBRACE);
@@ -189,6 +209,10 @@ token_t *lexer_next_token(lexer_t *lexer) {
     // TODO: add all keywords
     if (strcmp(word, "def") == 0) {
       return token_make_simple(TOKEN_DEF);
+    } else if (strcmp(word, "int") == 0) {
+      return token_make_simple(TOKEN_INT);
+    } else if (strcmp(word, "fn") == 0) {
+      return token_make_simple(TOKEN_FN);
     } else {
       return token_make_name(word);
     }

@@ -29,6 +29,12 @@ void token_print(token_t *token) {
   case TOKEN_COMMA: {
     puts("TOKEN_COMMA");
   } break;
+  case TOKEN_LPAREN: {
+    puts("TOKEN_LPAREN");
+  } break;
+  case TOKEN_RPAREN: {
+    puts("TOKEN_RPAREN");
+  } break;
   case TOKEN_LBRACE: {
     puts("TOKEN_LBRACE");
   } break;
@@ -67,7 +73,7 @@ void token_print(token_t *token) {
   }
 }
 
-token_t *token_make_simple(enum kind token_kind) {
+token_t *token_make_simple(enum token_kind_t token_kind) {
   token_t *token = malloc(sizeof(token_t));
   if (token == NULL) {
     err_malloc_fail();
