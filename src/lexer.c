@@ -7,7 +7,10 @@
 #include "error.h"
 #include "lexer.h"
 
-static int is_not_dquote(int num) { return num != '"'; }
+static int is_not_dquote(int c) { return c != '"'; }
+static int is_kebab_case(int c) {
+  return !isspace(c) && (c != ',' && c != '(' && c != ')');
+}
 
 /**
  * @brief Loads the LEXER_BUF_SIZE next bytes into the lexers buffer for reading
@@ -22,12 +25,26 @@ static void lexer_load_next_line(lexer_t *lexer) {
   lexer->line_pos = 0;
 }
 
+/**
+ * @brief Checks if the lexer is done lexing the current line
+ *
+ * @param lexer lexer to check
+ * @return 1 if line is done 0 if not
+ */
 static int lexer_line_done(lexer_t *lexer) {
-  // check if line lexer is on a newline or a comment
   return lexer->line[lexer->line_pos] == '\n' ||
          lexer->line[lexer->line_pos] == ';';
 }
 
+/**
+ * @brief Seek forward in the current line in the lexer until a predicate fails.
+ *
+ * @param lexer lexer to check
+ * @param pred a predicate function that takes a character, e.g. isalnum,
+ * isdigit, etc.
+ * @return how many characters away from the current position the
+ * predicate first fails.
+ */
 static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
   size_t i = 0;
   // TODO: && line->pos < line->line_len
@@ -38,6 +55,14 @@ static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
   return i;
 }
 
+/**
+ * @brief Peek forward in the current line by some offset and return the char
+ * present there.
+ *
+ * @param lexer lexer to peek into
+ * @param offset how many indexes to the right to peek
+ * @return the character at the offset, 0 if offset is out of bounds
+ */
 static char lexer_peek_char(lexer_t *lexer, size_t offset) {
   if (lexer->line_pos + offset >= (size_t)lexer->line_len) {
     return 0;
@@ -46,6 +71,13 @@ static char lexer_peek_char(lexer_t *lexer, size_t offset) {
   return lexer->line[lexer->line_pos + offset];
 }
 
+/**
+ * @brief Read digits at the current line until the isdigit predicate fails.
+ * Also increments the lexer's line position
+ *
+ * @param lexer lexer to read the int from
+ * @return the integer at the current line position
+ */
 static int lexer_read_int(lexer_t *lexer) {
   assert(isdigit(lexer->line[lexer->line_pos]));
   size_t i = lexer_seek_while(lexer, isdigit);
@@ -59,7 +91,8 @@ static int lexer_read_int(lexer_t *lexer) {
 }
 
 /**
- * @brief Reads characters between a pair of '"'-s
+ * @brief Reads characters between a pair of '"'-s. Also increments the lexer's
+ * line position
  *
  * @param lexer lexer to read string from
  * @return the string between two '"'-s
@@ -83,8 +116,15 @@ static const char *lexer_read_str(lexer_t *lexer) {
 }
 
 // TODO: widen condition to allow true KEBAB-CASE !!
+/**
+ * @brief Reads characters until whitespace or newline. Also increments the
+ * lexer's line position
+ *
+ * @param lexer lexer to read word from
+ * @return the string until the next whitespace or newline
+ */
 static const char *lexer_read_word(lexer_t *lexer) {
-  size_t i = lexer_seek_while(lexer, isalnum);
+  size_t i = lexer_seek_while(lexer, is_kebab_case);
 
   char *word = malloc(sizeof(char) * i + 1);
   if (word == NULL) {
@@ -134,7 +174,6 @@ token_t *lexer_next_token(lexer_t *lexer) {
   }
 
   if (lexer_line_done(lexer)) {
-    // Read next line and return EOF if at end of file
     free(lexer->line);
     lexer_load_next_line(lexer);
 
