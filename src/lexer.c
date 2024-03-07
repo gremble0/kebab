@@ -122,7 +122,7 @@ lexer_t *lexer_init(const char *file_path) {
  */
 token_t *lexer_next_token(lexer_t *lexer) {
   if (lexer->line_len < 0) {
-    return token_make_eof();
+    return token_make_simple(TOKEN_EOF);
   }
 
   if (lexer_line_done(lexer)) {
@@ -130,7 +130,7 @@ token_t *lexer_next_token(lexer_t *lexer) {
     free(lexer->line);
     lexer_load_next_line(lexer);
 
-    return token_make_eol();
+    return token_make_simple(TOKEN_EOL);
   }
 
   switch (lexer->line[lexer->line_pos]) {
@@ -140,32 +140,32 @@ token_t *lexer_next_token(lexer_t *lexer) {
 
   case ':':
     ++lexer->line_pos;
-    return token_make_colon();
+    return token_make_simple(TOKEN_COLON);
   case '=':
     ++lexer->line_pos;
-    return token_make_equals();
+    return token_make_simple(TOKEN_EQUALS);
   case ',':
     ++lexer->line_pos;
-    return token_make_comma();
+    return token_make_simple(TOKEN_COMMA);
   case '[':
     ++lexer->line_pos;
-    return token_make_lbrace();
+    return token_make_simple(TOKEN_LBRACE);
   case ']':
     ++lexer->line_pos;
-    return token_make_rbrace();
+    return token_make_simple(TOKEN_RBRACE);
 
   case '+':
     ++lexer->line_pos;
-    return token_make_plus();
+    return token_make_simple(TOKEN_PLUS);
   case '-':
     ++lexer->line_pos;
-    return token_make_minus();
+    return token_make_simple(TOKEN_MINUS);
   case '*':
     ++lexer->line_pos;
-    return token_make_mult();
+    return token_make_simple(TOKEN_MULT);
   case '/':
     ++lexer->line_pos;
-    return token_make_div();
+    return token_make_simple(TOKEN_DIV);
 
   // TODO: revisit what to do with numbers starting with 0
   case '0':
@@ -188,7 +188,7 @@ token_t *lexer_next_token(lexer_t *lexer) {
     const char *word = lexer_read_word(lexer);
     // TODO: add all keywords
     if (strcmp(word, "def") == 0) {
-      return token_make_def();
+      return token_make_simple(TOKEN_DEF);
     } else {
       return token_make_name(word);
     }

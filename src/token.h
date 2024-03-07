@@ -1,5 +1,5 @@
 typedef struct token_t {
-  enum kind {
+  enum token_kind_t {
     // Definitions
     TOKEN_DEF,
 
@@ -39,23 +39,7 @@ typedef struct token_t {
 
 void token_print(token_t *token);
 
-token_t *token_make_def();
-
-token_t *token_make_colon();
-token_t *token_make_equals();
-token_t *token_make_comma();
-token_t *token_make_lbrace();
-token_t *token_make_rbrace();
-token_t *token_make_fat_rarrow();
-
-token_t *token_make_plus();
-token_t *token_make_minus();
-token_t *token_make_mult();
-token_t *token_make_div();
-
+token_t *token_make_simple(enum token_kind_t token_kind);
 token_t *token_make_str_lit(const char *str_lit);
 token_t *token_make_int_lit(const int int_lit);
 token_t *token_make_name(const char *name);
-
-token_t *token_make_eol();
-token_t *token_make_eof();

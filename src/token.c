@@ -67,114 +67,14 @@ void token_print(token_t *token) {
   }
 }
 
-token_t *token_make_def() {
-  token_t *def_token = malloc(sizeof(token_t));
-  if (def_token == NULL) {
+token_t *token_make_simple(enum kind token_kind) {
+  token_t *token = malloc(sizeof(token_t));
+  if (token == NULL) {
     err_malloc_fail();
   }
-  def_token->kind = TOKEN_DEF;
+  token->kind = token_kind;
 
-  return def_token;
-}
-
-token_t *token_make_colon() {
-  token_t *colon_token = malloc(sizeof(token_t));
-  if (colon_token == NULL) {
-    err_malloc_fail();
-  }
-  colon_token->kind = TOKEN_COLON;
-
-  return colon_token;
-}
-
-token_t *token_make_equals() {
-  token_t *equals_token = malloc(sizeof(token_t));
-  if (equals_token == NULL) {
-    err_malloc_fail();
-  }
-  equals_token->kind = TOKEN_EQUALS;
-
-  return equals_token;
-}
-
-token_t *token_make_comma() {
-  token_t *comma_token = malloc(sizeof(token_t));
-  if (comma_token == NULL) {
-    err_malloc_fail();
-  }
-  comma_token->kind = TOKEN_COMMA;
-
-  return comma_token;
-}
-
-token_t *token_make_lbrace() {
-  token_t *lbrace_token = malloc(sizeof(token_t));
-  if (lbrace_token == NULL) {
-    err_malloc_fail();
-  }
-  lbrace_token->kind = TOKEN_LBRACE;
-
-  return lbrace_token;
-}
-
-token_t *token_make_rbrace() {
-  token_t *rbrace_token = malloc(sizeof(token_t));
-  if (rbrace_token == NULL) {
-    err_malloc_fail();
-  }
-  rbrace_token->kind = TOKEN_RBRACE;
-
-  return rbrace_token;
-}
-
-token_t *token_make_fat_rarrow() {
-  token_t *fat_rarrow_token = malloc(sizeof(token_t));
-  if (fat_rarrow_token == NULL) {
-    err_malloc_fail();
-  }
-  fat_rarrow_token->kind = TOKEN_FAT_RARROW;
-
-  return fat_rarrow_token;
-}
-
-token_t *token_make_plus() {
-  token_t *plus = malloc(sizeof(token_t));
-  if (plus == NULL) {
-    err_malloc_fail();
-  }
-  plus->kind = TOKEN_PLUS;
-
-  return plus;
-}
-
-token_t *token_make_minus() {
-  token_t *minus = malloc(sizeof(token_t));
-  if (minus == NULL) {
-    err_malloc_fail();
-  }
-  minus->kind = TOKEN_MINUS;
-
-  return minus;
-}
-
-token_t *token_make_mult() {
-  token_t *mult = malloc(sizeof(token_t));
-  if (mult == NULL) {
-    err_malloc_fail();
-  }
-  mult->kind = TOKEN_MULT;
-
-  return mult;
-}
-
-token_t *token_make_div() {
-  token_t *div = malloc(sizeof(token_t));
-  if (div == NULL) {
-    err_malloc_fail();
-  }
-  div->kind = TOKEN_DIV;
-
-  return div;
+  return token;
 }
 
 token_t *token_make_str_lit(const char *str_lit) {
@@ -208,24 +108,4 @@ token_t *token_make_name(const char *name) {
   name_tok->name = name;
 
   return name_tok;
-}
-
-token_t *token_make_eol() {
-  token_t *eol_tok = malloc(sizeof(token_t));
-  if (eol_tok == NULL) {
-    err_malloc_fail();
-  }
-  eol_tok->kind = TOKEN_EOL;
-
-  return eol_tok;
-}
-
-token_t *token_make_eof() {
-  token_t *eof = malloc(sizeof(token_t));
-  if (eof == NULL) {
-    err_malloc_fail();
-  }
-  eof->kind = TOKEN_EOF;
-
-  return eof;
 }
