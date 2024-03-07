@@ -1,0 +1,9 @@
+def add = int(2 + 2)
+
+def c = fn(int num1, int num2 =>
+  int(num1 + num2) ; should be ignoreda jdkljflks
+)
+
+def kebab-case = fn(composite-type var =>
+  int(composite-type
+)

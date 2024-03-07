@@ -1,25 +1,25 @@
 ; IDEAS:
-
-defp main: int = argc: int, argv: string[] = ; list<string> ??
-  defv my-var = 4 - 2
-
-  printf "Hello world\n"
-
-main = fn(argc: int, argv: string[]) => int
-  printf "Hello world\n"
-
-def fn<<argc: int, argv: list<string>>, int> main = 
-  def int my-var = 4 - 2
-  printf "Hello world\n"
-
-  0 ; implicit return
-
-def main = fn(argc: int, argv: list<string>) => int(
-  def my-var = int(1) ; my-var is the integer 1
-  def my-var-p = ref(my-var) ; my-var-p is a reference to my-var
-
-  0
-)
+;
+;defp main: int = argc: int, argv: string[] = ; list<string> ?? ;jwerioweiorweiorjqowjrioqwjeriojqwoierioqwerjoqwoeirjqwoierjqwoierj
+;  defv my-var = 4 - 2
+;
+;  printf "Hello world\n"
+;
+;main = fn(argc: int, argv: string[]) => int
+;  printf "Hello world\n"
+;
+;def fn<<argc: int, argv: list<string>>, int> main = 
+;  def int my-var = 4 - 2
+;  printf "Hello world\n"
+;
+;  0 ; implicit return
+;
+;def main = fn(argc: int, argv: list<string>) => int(
+;  def my-var = int(1) ; my-var is the integer 1
+;  def my-var-p = ref(my-var) ; my-var-p is a reference to my-var
+;
+;  0
+;)
 
 ;;; THIS IS GOOD !!
 ; A function that returns a function that returns an int
@@ -43,3 +43,10 @@ def add = fn(num1: int, num2: int =>
 def add = fn(num1: int, num2: int =>
   num1 + num2
 )
+
+; advanced
+def concat = fn(s1: string, s2: string =>
+  string(s1 + s2)
+)
+
+def concatted-strs = concat("yo", "lo")
