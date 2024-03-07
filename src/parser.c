@@ -6,12 +6,12 @@ ast_t *parser_parse(const char *path) {
 
   while (1) {
     token_t *token = lexer_next_token(lexer);
+    token_print(token);
 
     if (token->kind == TOKEN_EOF) {
       token_free(token);
       break;
     } else {
-      token_print(token);
       token_free(token);
     }
   }

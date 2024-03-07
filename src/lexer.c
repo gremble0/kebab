@@ -6,10 +6,11 @@
 
 #include "error.h"
 #include "lexer.h"
+#include "token.h"
 
 static int is_not_dquote(int c) { return c != '"'; }
 static int is_kebab_case(int c) {
-  return !isspace(c) && (c != ',' && c != '(' && c != ')');
+  return !isspace(c) && c != ',' && c != '(' && c != ')';
 }
 
 /**
@@ -19,7 +20,10 @@ static int is_kebab_case(int c) {
  * @param lexer lexer to load next chunk for
  */
 static void lexer_load_next_line(lexer_t *lexer) {
-  // TODO: wtf
+  if (lexer->line != NULL) {
+    free(lexer->line);
+  }
+
   size_t _ = 0;
   lexer->line_len = getline(&lexer->line, &_, lexer->source_file);
   lexer->line_pos = 0;
@@ -31,9 +35,13 @@ static void lexer_load_next_line(lexer_t *lexer) {
  * @param lexer lexer to check
  * @return 1 if line is done 0 if not
  */
-static int lexer_line_done(lexer_t *lexer) {
+static int lexer_line_is_done(lexer_t *lexer) {
   return lexer->line[lexer->line_pos] == '\n' ||
          lexer->line[lexer->line_pos] == ';';
+}
+
+static int lexer_line_is_empty(lexer_t *lexer) {
+  return lexer->line_len == 1 || lexer->line[0] == ';';
 }
 
 /**
@@ -185,11 +193,24 @@ token_t *lexer_next_token(lexer_t *lexer) {
     return token_make_simple(TOKEN_EOF);
   }
 
-  if (lexer_line_done(lexer)) {
-    free(lexer->line);
-    lexer_load_next_line(lexer);
+  // if (lexer_line_done(lexer)) {
+  //   lexer_load_next_line(lexer);
+  //
+  //   if (lexer->line_len == 1) {
+  //     return lexer_next_token(lexer);
+  //   } else {
+  //     return token_make_simple(TOKEN_EOL);
+  //   }
+  // }
 
-    return token_make_simple(TOKEN_EOL);
+  if (lexer_line_is_done(lexer)) {
+    if (lexer_line_is_empty(lexer)) {
+      lexer_load_next_line(lexer);
+      return lexer_next_token(lexer);
+    } else {
+      lexer_load_next_line(lexer);
+      return token_make_simple(TOKEN_EOL);
+    }
   }
 
   switch (lexer->line[lexer->line_pos]) {

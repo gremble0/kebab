@@ -12,8 +12,19 @@ def kebab-case = fn(composite-type var =>
 def mut my-var = 4
 my-var = 6
 
+
+
+;dasd
+
+
 ; this should error
 def my-const = 4
 my-const = 6
+
+
+
+
+
+
 
 def ch = 'c'

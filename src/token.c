@@ -72,6 +72,7 @@ void token_print(token_t *token) {
     puts("TOKEN_EOL");
   } break;
   case TOKEN_EOF: {
+    puts("TOKEN_EOF");
   } break;
   }
 }
