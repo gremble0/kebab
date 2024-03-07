@@ -7,6 +7,8 @@
 #include "error.h"
 #include "lexer.h"
 
+static int is_not_dquote(int num) { return num != '"'; }
+
 /**
  * @brief Loads the LEXER_BUF_SIZE next bytes into the lexers buffer for reading
  * the source file, also resets buffer_pos
@@ -16,6 +18,7 @@
 static void lexer_load_next_line(lexer_t *lexer) {
   size_t a = 0;
   lexer->line_len = getline(&lexer->line, &a, lexer->source_file);
+  lexer->line_pos = 0;
 }
 
 static int lexer_line_done(lexer_t *lexer) {
@@ -36,12 +39,16 @@ static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
 }
 
 static int lexer_read_int(lexer_t *lexer) {
-  char c = lexer->line[lexer->line_pos];
+  assert(isdigit(lexer->line[lexer->line_pos]));
+  size_t i = lexer_seek_while(lexer, isdigit);
 
-  return 0;
+  char num[i + 1];
+  memcpy(num, &lexer->line[lexer->line_pos], i);
+  num[i] = '\0';
+  lexer->line_pos += i;
+
+  return atoi(num);
 }
-
-static int is_not_dquote(int num) { return num != '"'; }
 
 /**
  * @brief Reads characters between a pair of '"'-s
@@ -123,8 +130,6 @@ token_t *lexer_next_token(lexer_t *lexer) {
     free(lexer->line);
     lexer_load_next_line(lexer);
 
-    printf("%zd\n", lexer->line_len);
-    ++lexer->line_pos;
     return token_make_eol();
   }
 

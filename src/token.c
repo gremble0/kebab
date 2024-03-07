@@ -116,7 +116,17 @@ token_t *token_make_str_lit(const char *str_lit) {
   return str_lit_tok;
 }
 
-token_t *token_make_int_lit(const int int_lit) { return NULL; }
+token_t *token_make_int_lit(const int int_lit) {
+  token_t *int_lit_tok = malloc(sizeof(token_t));
+  if (int_lit_tok == NULL) {
+    err_malloc_fail();
+  }
+  int_lit_tok->kind = TOKEN_INTEGER_LITERAL;
+  int_lit_tok->integer_literal = int_lit;
+
+  return int_lit_tok;
+}
+
 token_t *token_make_name(const char *name) {
   token_t *name_tok = malloc(sizeof(token_t));
   if (name_tok == NULL) {
