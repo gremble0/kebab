@@ -35,6 +35,7 @@ def curried = fn(returns-fn(3))
 ; is an int - 5
 def uses-curried = int(curried(2)) 
 
+; function return type is the first constructor called inside the function
 def add = fn(num1: int, num2: int =>
   int(num1 + num2)
 )
@@ -44,9 +45,52 @@ def add = fn(num1: int, num2: int =>
   num1 + num2
 )
 
+; this is how you do multiple statements in a function.
+; this function prints hello world, but since printf has return type void
+; it does not return until num + 1
+def add1 = fn(num: int =>
+  int(
+    printf("hello world\n")
+    num + 1
+  )
+)
+
+def side-effects = fn( =>
+  void(
+    printf("hello world\n")
+  )
+)
+
+def early-return = fn( =>
+  int(
+    add1(4) ; function will return here since add1 returns an int
+    printf("this will not be printed\n")
+  )
+)
+
+def not-early-return = fn( =>
+  int(
+    def my-var = add1(4)
+    printf("this will be printed\n")
+    my-var ; will return here since my-var is int
+  )
+)
+
+; mutability (constant by default)
+def mut my-var = 4
+my-var = 6
+
+; this should error
+def my-const = 4
+my-const = 6
+
+; char type is different from string
+def ch = 'c'
+
 ; advanced
 def concat = fn(s1: string, s2: string =>
   string(s1 + s2)
 )
 
 def concatted-strs = concat("yo", "lo")
+
