@@ -40,6 +40,7 @@ typedef struct token_t {
 } token_t;
 
 void token_print(token_t *token);
+void token_free(token_t *token);
 
 token_t *token_make_simple(enum token_kind_t token_kind);
 token_t *token_make_str_lit(const char *str_lit);

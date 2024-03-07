@@ -142,10 +142,13 @@ token_t *lexer_next_token(lexer_t *lexer) {
   }
 
   switch (lexer->line[lexer->line_pos]) {
+  // Whitespace
+  case '\t':
   case ' ':
     ++lexer->line_pos;
     return lexer_next_token(lexer);
 
+    // Syntax
   case ':':
     ++lexer->line_pos;
     return token_make_simple(TOKEN_COLON);
@@ -174,6 +177,7 @@ token_t *lexer_next_token(lexer_t *lexer) {
     ++lexer->line_pos;
     return token_make_simple(TOKEN_RBRACE);
 
+  // Primitives
   case '+':
     ++lexer->line_pos;
     return token_make_simple(TOKEN_PLUS);

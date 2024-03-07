@@ -73,6 +73,21 @@ void token_print(token_t *token) {
   }
 }
 
+void token_free(token_t *token) {
+  switch (token->kind) {
+  case TOKEN_NAME:
+    free((void *)token->name);
+    free(token);
+    break;
+  case TOKEN_STRING_LITERAL:
+    free((void *)token->string_literal);
+    free(token);
+    break;
+  default:
+    free(token);
+  }
+}
+
 token_t *token_make_simple(enum token_kind_t token_kind) {
   token_t *token = malloc(sizeof(token_t));
   if (token == NULL) {
