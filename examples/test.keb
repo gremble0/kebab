@@ -5,5 +5,15 @@ def c = fn(int num1, int num2 =>
 )
 
 def kebab-case = fn(composite-type var =>
-  int(composite-type
+  int(composite-type)
 )
+
+; mutability (constant by default)
+def mut my-var = 4
+my-var = 6
+
+; this should error
+def my-const = 4
+my-const = 6
+
+def ch = 'c'

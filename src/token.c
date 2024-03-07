@@ -14,8 +14,8 @@ void token_print(token_t *token) {
   case TOKEN_DEF: {
     puts("TOKEN_DEF");
   } break;
-  case TOKEN_INT: {
-    puts("TOKEN_INT");
+  case TOKEN_MUT: {
+    puts("TOKEN_MUT");
   } break;
   case TOKEN_FN: {
     puts("TOKEN_FN");
@@ -55,6 +55,9 @@ void token_print(token_t *token) {
   } break;
   case TOKEN_DIV: {
     puts("TOKEN_DIV");
+  } break;
+  case TOKEN_CHAR_LITERAL: {
+    printf("TOKEN_CHAR_LITERAL: '%c'\n", token->char_literal);
   } break;
   case TOKEN_STRING_LITERAL: {
     printf("TOKEN_STRING_LITERAL: \"%s\"\n", token->string_literal);
@@ -109,7 +112,18 @@ token_t *token_make_str_lit(const char *str_lit) {
   return str_lit_tok;
 }
 
-token_t *token_make_int_lit(const int int_lit) {
+token_t *token_make_char_lit(char char_lit) {
+  token_t *char_lit_tok = malloc(sizeof(token_t));
+  if (char_lit_tok == NULL) {
+    err_malloc_fail();
+  }
+  char_lit_tok->kind = TOKEN_CHAR_LITERAL;
+  char_lit_tok->char_literal = char_lit;
+
+  return char_lit_tok;
+}
+
+token_t *token_make_int_lit(int int_lit) {
   token_t *int_lit_tok = malloc(sizeof(token_t));
   if (int_lit_tok == NULL) {
     err_malloc_fail();

@@ -115,6 +115,19 @@ static const char *lexer_read_str(lexer_t *lexer) {
   return word;
 }
 
+static char lexer_read_char(lexer_t *lexer) {
+  assert(lexer->line[lexer->line_pos] == '\'');
+  ++lexer->line_pos; // skip first '
+
+  char c = lexer->line[lexer->line_pos];
+  ++lexer->line_pos; // skip char
+
+  assert(lexer->line[lexer->line_pos] == '\'');
+  ++lexer->line_pos; // skip second '
+
+  return c;
+}
+
 // TODO: widen condition to allow true KEBAB-CASE !!
 /**
  * @brief Reads characters until whitespace or newline. Also increments the
@@ -230,6 +243,11 @@ token_t *lexer_next_token(lexer_t *lexer) {
     ++lexer->line_pos;
     return token_make_simple(TOKEN_DIV);
 
+  case '"':
+    return token_make_str_lit(lexer_read_str(lexer));
+  case '\'':
+    return token_make_char_lit(lexer_read_char(lexer));
+
   // TODO: revisit what to do with numbers starting with 0
   case '0':
   case '1':
@@ -243,17 +261,12 @@ token_t *lexer_next_token(lexer_t *lexer) {
   case '9':
     return token_make_int_lit(lexer_read_int(lexer));
 
-  case '"':
-    return token_make_str_lit(lexer_read_str(lexer));
-    // case '\'': TODO: char type
-
   default: {
     const char *word = lexer_read_word(lexer);
-    // TODO: add all keywords
     if (strcmp(word, "def") == 0) {
       return token_make_simple(TOKEN_DEF);
-    } else if (strcmp(word, "int") == 0) {
-      return token_make_simple(TOKEN_INT);
+    } else if (strcmp(word, "mut") == 0) {
+      return token_make_simple(TOKEN_MUT);
     } else if (strcmp(word, "fn") == 0) {
       return token_make_simple(TOKEN_FN);
     } else {
