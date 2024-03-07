@@ -1,3 +1,5 @@
+#pragma once
+
 typedef struct token_t {
   enum token_kind_t {
     // Keywords

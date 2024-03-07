@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "lexer.h"
 
@@ -15,7 +14,7 @@ int main(int argc, char **argv) {
     token_t *token = lexer_next_token(lexer);
 
     if (token->kind == TOKEN_EOF) {
-      free(token);
+      token_free(token);
       break;
     } else {
       token_print(token);

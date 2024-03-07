@@ -20,8 +20,8 @@ static int is_kebab_case(int c) {
  */
 static void lexer_load_next_line(lexer_t *lexer) {
   // TODO: wtf
-  size_t a = 0;
-  lexer->line_len = getline(&lexer->line, &a, lexer->source_file);
+  size_t _ = 0;
+  lexer->line_len = getline(&lexer->line, &_, lexer->source_file);
   lexer->line_pos = 0;
 }
 
@@ -117,13 +117,11 @@ static const char *lexer_read_str(lexer_t *lexer) {
 
 static char lexer_read_char(lexer_t *lexer) {
   assert(lexer->line[lexer->line_pos] == '\'');
-  ++lexer->line_pos; // skip first '
+  assert(lexer->line[lexer->line_pos + 2] == '\'');
 
-  char c = lexer->line[lexer->line_pos];
-  ++lexer->line_pos; // skip char
+  char c = lexer->line[lexer->line_pos + 1];
 
-  assert(lexer->line[lexer->line_pos] == '\'');
-  ++lexer->line_pos; // skip second '
+  lexer->line_pos += 3;
 
   return c;
 }
@@ -183,6 +181,7 @@ lexer_t *lexer_init(const char *file_path) {
  */
 token_t *lexer_next_token(lexer_t *lexer) {
   if (lexer->line_len < 0) {
+    free(lexer->line);
     return token_make_simple(TOKEN_EOF);
   }
 
@@ -264,11 +263,17 @@ token_t *lexer_next_token(lexer_t *lexer) {
   default: {
     const char *word = lexer_read_word(lexer);
     if (strcmp(word, "def") == 0) {
+      free((void *)word);
       return token_make_simple(TOKEN_DEF);
+
     } else if (strcmp(word, "mut") == 0) {
+      free((void *)word);
       return token_make_simple(TOKEN_MUT);
+
     } else if (strcmp(word, "fn") == 0) {
+      free((void *)word);
       return token_make_simple(TOKEN_FN);
+
     } else {
       return token_make_name(word);
     }
