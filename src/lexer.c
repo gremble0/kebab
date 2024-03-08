@@ -208,16 +208,6 @@ token_t *lexer_next_token(lexer_t *lexer) {
     return token_make_simple(TOKEN_EOF);
   }
 
-  // if (lexer_line_done(lexer)) {
-  //   lexer_load_next_line(lexer);
-  //
-  //   if (lexer->line_len == 1) {
-  //     return lexer_next_token(lexer);
-  //   } else {
-  //     return token_make_simple(TOKEN_EOL);
-  //   }
-  // }
-
   if (lexer_line_is_done(lexer)) {
     if (lexer_line_is_empty(lexer)) {
       lexer_load_next_line(lexer);
@@ -316,6 +306,8 @@ token_t *lexer_next_token(lexer_t *lexer) {
   }
   }
 }
+
+token_t *lexer_peek_token(lexer_t *lexer /*, size_t steps*/) {}
 
 /**
  * @brief Free lexer and all data associated with it
