@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "lexer.h"
 #include "parser.h"
 
 int main(int argc, char **argv) {
@@ -8,7 +9,11 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  parser_parse(argv[1]);
+  lexer_t *lexer = lexer_init(argv[1]);
+  ast_t *ast = parse_lexer(lexer);
+
+  lexer_free(lexer);
+  parse_free(ast);
 
   return 0;
 }

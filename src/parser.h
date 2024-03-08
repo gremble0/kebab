@@ -1,3 +1,4 @@
+#include "lexer.h"
 #include "list.h"
 
 typedef struct expr_t {
@@ -41,4 +42,5 @@ typedef struct ast_t {
   list_t *statements;
 } ast_t;
 
-ast_t *parser_parse(const char *path);
+ast_t *parse_lexer(lexer_t *lexer);
+void parse_free(ast_t *ast);

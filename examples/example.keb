@@ -1,6 +1,6 @@
 ; IDEAS:
 ;
-;defp main: int = argc: int, argv: string[] = ; list<string> ?? ;jwerioweiorweiorjqowjrioqwjeriojqwoierioqwerjoqwoeirjqwoierjqwoierj
+;defp main: int = argc: int, argv: string[] = ; list<string> ??
 ;  defv my-var = 4 - 2
 ;
 ;  printf "Hello world\n"
@@ -21,16 +21,17 @@
 ;  0
 ;)
 
-;;; THIS IS GOOD !!
 ; A function that returns a function that returns an int
-def returns-fn = fn(num: int =>
-  fn(num2: int =>
+def returns-fn = fn(num : int =>
+  fn(num2 : int =>
     int(num1 + num2)
   )
 )
 
 ; is a function
-def curried = fn(returns-fn(3))
+def curried = fn( =>
+  int(returns-fn(3))
+)
 
 ; is an int - 5
 def uses-curried = int(curried(2)) 
@@ -77,15 +78,15 @@ def not-early-return = fn( =>
 )
 
 ; mutability (constant by default)
-def mut my-var = 4
-my-var = 6
+def mut my-var = int(4)
+set my-var = int(6)
 
 ; this should error
-def my-const = 4
-my-const = 6
+def my-const = int(5)
+set my-const = int(6)
 
 ; char type is different from string
-def ch = 'c'
+def ch = char('c')
 
 ; advanced
 def concat = fn(s1: string, s2: string =>

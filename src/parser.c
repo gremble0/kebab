@@ -59,21 +59,17 @@ static statement_t *parse_statement(ast_t *ast, lexer_t *lexer) {
   return statement;
 }
 
-ast_t *parse_file(const char *path) {
-  lexer_t *lexer = lexer_init(path);
-
+ast_t *parse_lexer(lexer_t *lexer) {
   ast_t *ast = malloc(sizeof(ast_t));
 
   while (1) {
     list_push_back(ast->statements, parse_statement(ast, lexer));
   }
 
-  lexer_free(lexer);
-
   return ast;
 }
 
-void parser_free(ast_t *ast) {
+void parse_free(ast_t *ast) {
   for (size_t i = 0; i < ast->statements->cur_size; ++i) {
     // TODO: tricky
     // make generic parser_free_statement() or something

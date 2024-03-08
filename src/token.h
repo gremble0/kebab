@@ -4,6 +4,7 @@ typedef struct token_t {
   enum token_kind_t {
     // Keywords
     TOKEN_DEF,
+    TOKEN_SET,
     TOKEN_MUT,
 
     // Constructors

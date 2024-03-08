@@ -292,6 +292,10 @@ token_t *lexer_next_token(lexer_t *lexer) {
       free((void *)word);
       return token_make_simple(TOKEN_DEF);
 
+    } else if (strcmp(word, "set") == 0) {
+      free((void *)word);
+      return token_make_simple(TOKEN_SET);
+
     } else if (strcmp(word, "mut") == 0) {
       free((void *)word);
       return token_make_simple(TOKEN_MUT);
