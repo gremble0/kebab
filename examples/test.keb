@@ -14,7 +14,8 @@ my-var = 6
 
 
 
-;dasd
+   ;dasd
+   ;dasd
 
 
 ; this should error

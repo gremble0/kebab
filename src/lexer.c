@@ -40,8 +40,23 @@ static int lexer_line_is_done(lexer_t *lexer) {
          lexer->line[lexer->line_pos] == ';';
 }
 
+/**
+ * @brief Check if the current line is empty (or only contains a comment)
+ *
+ * @param lexer lexer to check
+ * @return 1 if line is empty 0 if not
+ */
 static int lexer_line_is_empty(lexer_t *lexer) {
-  return lexer->line_len == 1 || lexer->line[0] == ';';
+  if (lexer->line_len == 1) {
+    return 1;
+  }
+
+  size_t spaces = 0;
+  while (isspace(lexer->line[spaces])) {
+    ++spaces;
+  }
+
+  return lexer->line[spaces] == ';';
 }
 
 /**
@@ -49,7 +64,7 @@ static int lexer_line_is_empty(lexer_t *lexer) {
  *
  * @param lexer lexer to check
  * @param pred a predicate function that takes a character, e.g. isalnum,
- * isdigit, etc.
+ * isdigit, isspace etc.
  * @return how many characters away from the current position the
  * predicate first fails.
  */
