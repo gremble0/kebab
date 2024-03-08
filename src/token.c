@@ -1,79 +1,64 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "error.h"
 #include "token.h"
 
 /**
- * @brief Debugging function to print the "toString" of a token
+ * @brief converts a token to a string for debugging information
  *
- * @param token token to print
+ * @param token token to stringify
  */
-void token_print(token_t *token) {
+char *token_to_string(token_t *token) {
   switch (token->kind) {
-  case TOKEN_DEF: {
-    puts("TOKEN_DEF");
-  } break;
-  case TOKEN_MUT: {
-    puts("TOKEN_MUT");
-  } break;
-  case TOKEN_FN: {
-    puts("TOKEN_FN");
-  } break;
-  case TOKEN_COLON: {
-    puts("TOKEN_COLON");
-  } break;
-  case TOKEN_EQUALS: {
-    puts("TOKEN_EQUALS");
-  } break;
-  case TOKEN_COMMA: {
-    puts("TOKEN_COMMA");
-  } break;
-  case TOKEN_LPAREN: {
-    puts("TOKEN_LPAREN");
-  } break;
-  case TOKEN_RPAREN: {
-    puts("TOKEN_RPAREN");
-  } break;
-  case TOKEN_LBRACE: {
-    puts("TOKEN_LBRACE");
-  } break;
-  case TOKEN_RBRACE: {
-    puts("TOKEN_RBRACE");
-  } break;
-  case TOKEN_FAT_RARROW: {
-    puts("TOKEN_FAT_RARROW");
-  } break;
-  case TOKEN_PLUS: {
-    puts("TOKEN_PLUS");
-  } break;
-  case TOKEN_MINUS: {
-    puts("TOKEN_MINUS");
-  } break;
-  case TOKEN_MULT: {
-    puts("TOKEN_MULT");
-  } break;
-  case TOKEN_DIV: {
-    puts("TOKEN_DIV");
-  } break;
-  case TOKEN_CHAR_LITERAL: {
-    printf("TOKEN_CHAR_LITERAL: '%c'\n", token->char_literal);
-  } break;
-  case TOKEN_STRING_LITERAL: {
-    printf("TOKEN_STRING_LITERAL: \"%s\"\n", token->string_literal);
-  } break;
-  case TOKEN_INTEGER_LITERAL: {
-    printf("TOKEN_INTEGER_LITERAL: %d\n", token->integer_literal);
-  } break;
-  case TOKEN_NAME: {
-    printf("TOKEN_NAME: '%s'\n", token->name);
-  } break;
-  case TOKEN_EOL: {
-    puts("TOKEN_EOL");
-  } break;
+  case TOKEN_DEF:
+  case TOKEN_SET:
+  case TOKEN_MUT:
+  case TOKEN_FN:
+  case TOKEN_COLON:
+  case TOKEN_EQUALS:
+  case TOKEN_COMMA:
+  case TOKEN_LPAREN:
+  case TOKEN_RPAREN:
+  case TOKEN_LBRACE:
+  case TOKEN_RBRACE:
+  case TOKEN_FAT_RARROW:
+  case TOKEN_PLUS:
+  case TOKEN_MINUS:
+  case TOKEN_MULT:
+  case TOKEN_DIV:
+  case TOKEN_EOL:
   case TOKEN_EOF: {
-    puts("TOKEN_EOF");
-  } break;
+    // Maps simple tokens to its stringified version. Indexing this array
+    // with a tokens kind will return its string version
+    static const char *simple_tokens[] = {
+        "def ", "set ", "mut ", "fn", ":", "=", ",", "(",  ")",
+        "[",    "]",    "=>",   "+",  "-", "*", "/", "\n", ""};
+    return strdup(simple_tokens[token->kind]);
+  }
+  case TOKEN_CHAR_LITERAL: {
+    char *res = malloc(4); // 3 for 'c' and 1 for NULL terminator
+    sprintf(res, "'%c'", token->char_literal);
+    return res;
+  }
+  case TOKEN_STRING_LITERAL: {
+    // 2 for quotes and 1 for NULL terminator
+    char *res = malloc(strlen(token->string_literal) + 3);
+    sprintf(res, "\"%s\"", token->string_literal);
+    return res;
+  }
+  case TOKEN_INTEGER_LITERAL: {
+    int len = snprintf(NULL, 0, "%d", token->integer_literal);
+    char *res = malloc(len + 1);
+    sprintf(res, "%d", token->integer_literal);
+    return res;
+  }
+  case TOKEN_NAME: {
+    char *res = malloc(strlen(token->name) + 1);
+    sprintf(res, "%s", token->name);
+    return res;
+  }
   }
 }
 

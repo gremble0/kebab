@@ -29,15 +29,16 @@ typedef struct token_t {
     TOKEN_MULT,  // *
     TOKEN_DIV,   // /
 
+    // Special
+    TOKEN_EOL, // \n | \r
+    TOKEN_EOF, // <end of file>
+
     // Values
     TOKEN_CHAR_LITERAL,
     TOKEN_STRING_LITERAL,
     TOKEN_INTEGER_LITERAL,
     // TODO: TOKEN_FLOAT_LITERAL,
     TOKEN_NAME,
-
-    TOKEN_EOL, // \n | \r
-    TOKEN_EOF, // <end of file>
   } kind;
   union {
     const char *name;
@@ -47,7 +48,7 @@ typedef struct token_t {
   };
 } token_t;
 
-void token_print(token_t *token);
+char *token_to_string(token_t *token);
 void token_free(token_t *token);
 
 token_t *token_make_simple(enum token_kind_t token_kind);

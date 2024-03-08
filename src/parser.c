@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "error.h"
@@ -37,18 +38,16 @@ static statement_t *parse_statement(ast_t *ast, lexer_t *lexer) {
 
   switch (token->kind) {
   case TOKEN_DEF:
-    list_push_back(ast->statements, parse_definition(ast, lexer));
+    statement->definition = parse_definition(ast, lexer);
     break;
-  case TOKEN_NAME: {
-    token_t *next_token = lexer_peek_token(lexer);
-    if (next_token->kind == TOKEN_LPAREN) {
-      list_push_back(ast->statements, parse_fn_call(ast, lexer));
-    } else if (next_token->kind == TOKEN_EQUALS) {
-      list_push_back(ast->statements, parse_assignment(ast, lexer));
-    } else {
-      err_illegal_token(token);
-    }
-  } break;
+
+  case TOKEN_SET:
+    statement->assignment = parse_assignment(ast, lexer);
+    break;
+
+  case TOKEN_NAME:
+    statement->fn_call = parse_fn_call(ast, lexer);
+    break;
 
   default:
     err_illegal_token(token);
@@ -61,9 +60,23 @@ static statement_t *parse_statement(ast_t *ast, lexer_t *lexer) {
 
 ast_t *parse_lexer(lexer_t *lexer) {
   ast_t *ast = malloc(sizeof(ast_t));
+  ast->statements = list_init(10, sizeof(statement_t));
 
+  // while (1) {
+  //   list_push_back(ast->statements, parse_statement(ast, lexer));
+  // }
   while (1) {
-    list_push_back(ast->statements, parse_statement(ast, lexer));
+    token_t *token = lexer_next_token(lexer);
+
+    if (token->kind == TOKEN_EOF) {
+      token_free(token);
+      break;
+    } else {
+      char *tok_string = token_to_string(token);
+      printf("%s", tok_string);
+      free(tok_string);
+      token_free(token);
+    }
   }
 
   return ast;
