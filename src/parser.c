@@ -1,21 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "error.h"
 #include "lexer.h"
 #include "list.h"
 #include "parser.h"
 #include "token.h"
 
-static _Noreturn void err_illegal_token(token_t *token) {
-  // TODO: write token_to_string() function for making errors
-  enum token_kind_t token_kind = token->kind;
-  token_free(token);
-  err_custom("ERR_ILLEGAL_TOKEN: '%d'", token_kind);
+static fn_constructor_t *parse_fn_constructor(ast_t *ast, lexer_t *lexer) {}
+
+static constructor_t *parse_constructor(ast_t *ast, lexer_t *lexer) {
+  constructor_t *constructor = malloc(sizeof(constructor_t));
+
+  token_t *constructor_name = lexer_next_token(lexer);
+  switch (constructor_name->kind) {
+  case TOKEN_FN: {
+    constructor->fn_constructor = parse_fn_constructor(ast, lexer);
+    break;
+  }
+  default:
+    err_illegal_token(constructor_name);
+  }
+
+  token_free(constructor_name);
+
+  return constructor;
 }
 
 static definition_t *parse_definition(ast_t *ast, lexer_t *lexer) {
   definition_t *definition = malloc(sizeof(definition_t));
+
+  token_t *symbol_token = lexer_next_token(lexer);
+  definition->symbol = strdup(symbol_token->name);
+  token_free(symbol_token);
+
+  lexer_skip_token(lexer, TOKEN_EQUALS);
+
+  definition->constructor = parse_constructor(ast, lexer);
 
   return definition;
 }
@@ -49,6 +70,11 @@ static statement_t *parse_statement(ast_t *ast, lexer_t *lexer) {
     statement->fn_call = parse_fn_call(ast, lexer);
     break;
 
+  case TOKEN_EOF:
+    free(statement);
+    token_free(token);
+    return NULL;
+
   default:
     err_illegal_token(token);
   }
@@ -62,22 +88,28 @@ ast_t *parse_lexer(lexer_t *lexer) {
   ast_t *ast = malloc(sizeof(ast_t));
   ast->statements = list_init(10, sizeof(statement_t));
 
-  // while (1) {
-  //   list_push_back(ast->statements, parse_statement(ast, lexer));
-  // }
   while (1) {
-    token_t *token = lexer_next_token(lexer);
-
-    if (token->kind == TOKEN_EOF) {
-      token_free(token);
+    statement_t *statement = parse_statement(ast, lexer);
+    printf("asd\n");
+    if (statement == NULL) {
       break;
-    } else {
-      char *tok_string = token_to_string(token);
-      printf("%s", tok_string);
-      free(tok_string);
-      token_free(token);
     }
+
+    list_push_back(ast->statements, statement);
   }
+  // while (1) {
+  //   token_t *token = lexer_next_token(lexer);
+  //
+  //   if (token->kind == TOKEN_EOF) {
+  //     token_free(token);
+  //     break;
+  //   } else {
+  //     char *tok_string = token_to_string(token);
+  //     printf("%s", tok_string);
+  //     free(tok_string);
+  //     token_free(token);
+  //   }
+  // }
 
   return ast;
 }
