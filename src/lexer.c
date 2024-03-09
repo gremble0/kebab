@@ -288,6 +288,7 @@ token_t *lexer_next_token(lexer_t *lexer) {
 
   default: {
     const char *word = lexer_read_word(lexer);
+    // TODO: hash and switch case
     if (strcmp(word, "def") == 0) {
       free((void *)word);
       return token_make_simple(TOKEN_DEF);
@@ -299,6 +300,14 @@ token_t *lexer_next_token(lexer_t *lexer) {
     } else if (strcmp(word, "mut") == 0) {
       free((void *)word);
       return token_make_simple(TOKEN_MUT);
+
+    } else if (strcmp(word, "int") == 0) {
+      free((void *)word);
+      return token_make_simple(TOKEN_INT);
+
+    } else if (strcmp(word, "string") == 0) {
+      free((void *)word);
+      return token_make_simple(TOKEN_STRING);
 
     } else if (strcmp(word, "fn") == 0) {
       free((void *)word);

@@ -7,9 +7,9 @@ typedef enum token_kind_t {
   TOKEN_MUT,
 
   // Constructors
-  // TODO: These should be defined by parser or even in language stdlib
-  // TOKEN_INT,
-  // TOKEN_STRING,
+  // TODO: Move the definition of these types higher up instead of hardcoding
+  TOKEN_INT,
+  TOKEN_STRING,
   TOKEN_FN,
 
   // Syntax

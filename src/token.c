@@ -15,6 +15,8 @@ char *token_to_string(token_t *token) {
   case TOKEN_DEF:
   case TOKEN_SET:
   case TOKEN_MUT:
+  case TOKEN_INT:
+  case TOKEN_STRING:
   case TOKEN_FN:
   case TOKEN_COLON:
   case TOKEN_EQUALS:
@@ -33,8 +35,8 @@ char *token_to_string(token_t *token) {
     // Maps simple tokens to its stringified version. Indexing this array
     // with a tokens kind will return its string version
     static const char *simple_tokens[] = {
-        "def ", "set ", "mut ", "fn", ":", "=", ",", "(",  ")",
-        "[",    "]",    "=>",   "+",  "-", "*", "/", "\n", ""};
+        "def ", "set ", "mut ", "int", "string", "fn", ":", "=", ",",  "(",
+        ")",    "[",    "]",    "=>",  "+",      "-",  "*", "/", "\n", ""};
     return strdup(simple_tokens[token->kind]);
   }
   case TOKEN_CHAR_LITERAL: {
