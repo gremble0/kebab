@@ -77,7 +77,7 @@ void token_free(token_t *token) {
   }
 }
 
-token_t *token_make_simple(enum token_kind_t token_kind) {
+token_t *token_make_simple(token_kind_t token_kind) {
   token_t *token = malloc(sizeof(token_t));
   if (token == NULL) {
     err_malloc_fail();
@@ -129,4 +129,10 @@ token_t *token_make_name(const char *name) {
   name_tok->name = name;
 
   return name_tok;
+}
+
+_Noreturn void err_illegal_token(token_t *token) {
+  err_print_stacktrace();
+  fprintf(stderr, "ERR_ILLEGAL_TOKEN: '%s'", token_to_string(token));
+  exit(1);
 }

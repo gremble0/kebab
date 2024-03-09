@@ -313,6 +313,14 @@ token_t *lexer_next_token(lexer_t *lexer) {
 
 token_t *lexer_peek_token(lexer_t *lexer /*, size_t steps*/) {}
 
+void lexer_skip_token(lexer_t *lexer, token_kind_t token_kind) {
+  token_t *token = lexer_next_token(lexer);
+  if (token->kind != token_kind) {
+    lexer_free(lexer);
+    err_illegal_token(token);
+  }
+}
+
 /**
  * @brief Free lexer and all data associated with it
  *

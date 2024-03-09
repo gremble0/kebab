@@ -1,6 +1,13 @@
 #include "lexer.h"
 #include "list.h"
 
+typedef struct constructor_t {
+  list_t *params;     // Only for functions, NULL for primitives
+  void *return_type;  // TODO: type for return types?
+  list_t *statements; // constructor body is a list of statements, constructor
+                      // returns first statement that returns return_type
+} constructor_t;
+
 typedef struct expr_t {
 } expr_t;
 
@@ -8,12 +15,6 @@ typedef struct fn_call_t {
   const char *fn_name; // TODO: fn type? maybe when evaling parsed code
   list_t *arguments;
 } fn_call_t;
-
-typedef struct fn_def_t {
-  list_t *params;
-  void *return_type;  // TODO: type for return types?
-  list_t *statements; // function body is a list of statements
-} fn_def_t;
 
 // Binds a symbol to an expression
 typedef struct definition_t {
