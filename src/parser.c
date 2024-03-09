@@ -7,13 +7,41 @@
 #include "parser.h"
 #include "token.h"
 
-static fn_constructor_t *parse_fn_constructor(ast_t *ast, lexer_t *lexer) {}
+static int_constructor_t *parse_int_constructor(ast_t *ast, lexer_t *lexer) {
+  int_constructor_t *int_constructor = malloc(sizeof(int_constructor_t));
+
+  lexer_skip_token(lexer, TOKEN_LPAREN);
+
+  return int_constructor;
+}
+
+static string_constructor_t *parse_string_constructor(ast_t *ast,
+                                                      lexer_t *lexer) {
+  string_constructor_t *string_constructor =
+      malloc(sizeof(string_constructor_t));
+
+  return string_constructor;
+}
+
+static fn_constructor_t *parse_fn_constructor(ast_t *ast, lexer_t *lexer) {
+  fn_constructor_t *fn_constructor = malloc(sizeof(fn_constructor_t));
+
+  return fn_constructor;
+}
 
 static constructor_t *parse_constructor(ast_t *ast, lexer_t *lexer) {
   constructor_t *constructor = malloc(sizeof(constructor_t));
 
   token_t *constructor_name = lexer_next_token(lexer);
   switch (constructor_name->kind) {
+  case TOKEN_INT: {
+    constructor->int_constructor = parse_int_constructor(ast, lexer);
+    break;
+  }
+  case TOKEN_STRING: {
+    constructor->string_constructor = parse_string_constructor(ast, lexer);
+    break;
+  }
   case TOKEN_FN: {
     constructor->fn_constructor = parse_fn_constructor(ast, lexer);
     break;
@@ -27,11 +55,17 @@ static constructor_t *parse_constructor(ast_t *ast, lexer_t *lexer) {
   return constructor;
 }
 
+static expr_t *parse_expr(ast_t *ast, lexer_t *lexer) {
+  expr_t *expr = malloc(sizeof(expr_t));
+
+  return expr;
+}
+
 static definition_t *parse_definition(ast_t *ast, lexer_t *lexer) {
   definition_t *definition = malloc(sizeof(definition_t));
 
   token_t *symbol_token = lexer_next_token(lexer);
-  definition->symbol = strdup(symbol_token->name);
+  definition->name = strdup(symbol_token->name);
   token_free(symbol_token);
 
   lexer_skip_token(lexer, TOKEN_EQUALS);
@@ -39,12 +73,6 @@ static definition_t *parse_definition(ast_t *ast, lexer_t *lexer) {
   definition->constructor = parse_constructor(ast, lexer);
 
   return definition;
-}
-
-static fn_call_t *parse_fn_call(ast_t *ast, lexer_t *lexer) {
-  fn_call_t *fn_call = malloc(sizeof(fn_call_t));
-
-  return fn_call;
 }
 
 static assignment_t *parse_assignment(ast_t *ast, lexer_t *lexer) {
@@ -67,9 +95,12 @@ static statement_t *parse_statement(ast_t *ast, lexer_t *lexer) {
     break;
 
   case TOKEN_NAME:
-    statement->fn_call = parse_fn_call(ast, lexer);
+  case TOKEN_INTEGER_LITERAL:
+  case TOKEN_STRING_LITERAL:
+    statement->expr = parse_expr(ast, lexer);
     break;
 
+  // TODO: Is this right?
   case TOKEN_EOF:
     free(statement);
     token_free(token);

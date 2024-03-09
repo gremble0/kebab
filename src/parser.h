@@ -6,22 +6,36 @@ typedef enum operator_t {
   OP_MINUS,
   OP_MULT,
   OP_DIV,
+
+  // Indicates the lack of an operator
+  OP_NONE,
 } operator_t;
 
 typedef struct atom_t {
   union {
     int int_value;
     const char *string_value;
+    const char *name;
     list_t *list_value;
+
+    // TODO:
     // float
     // nil
     // bool
     // map
   };
-  // TODO: structs for the types that allow pre/suf-fix ?
-  operator_t prefix; // e.g. -2
-  operator_t suffix; // e.g 2 - ...
 } atom_t;
+
+typedef struct primary_t {
+  atom_t *atom;
+  list_t *arguments; // for function calls
+} primary_t;
+
+typedef struct factor_t {
+  operator_t prefix; // e.g. -2
+  primary_t *primary;
+  operator_t suffix; // e.g 2 - ...
+} factor_t;
 
 typedef struct string_constructor_t {
   list_t *statements;
@@ -47,24 +61,19 @@ typedef struct constructor_t {
 } constructor_t;
 
 typedef struct expr_t {
-  list_t *atoms;
+  list_t *primaries;
 } expr_t;
-
-typedef struct fn_call_t {
-  const char *fn_name; // TODO: fn type? maybe when evaling parsed code
-  list_t *arguments;
-} fn_call_t;
 
 // Binds a symbol to an expression
 typedef struct definition_t {
-  const char *symbol;
+  const char *name;
   constructor_t *constructor;
 } definition_t;
 
 // Same as a definition, but is only allowed for mutable bindings
 typedef struct assignment_t {
-  const char *symbol;
-  expr_t *expr;
+  const char *name;
+  constructor_t *constructor;
 } assignment_t;
 
 // Sort of abstract/generic type to represent all possible statements.
@@ -73,7 +82,6 @@ typedef struct statement_t {
   union {
     definition_t *definition;
     assignment_t *assignment;
-    fn_call_t *fn_call;
     expr_t *expr;
   };
 } statement_t;
