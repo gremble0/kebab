@@ -11,6 +11,7 @@ typedef struct lexer_t {
   size_t line_pos;
 } lexer_t;
 
+// TODO: make void lexer_load_token and make lexer hold a cur_token ?
 lexer_t *lexer_init(const char *file_path);
 token_t *lexer_next_token(lexer_t *lexer);
 token_t *lexer_peek_token(lexer_t *lexer);

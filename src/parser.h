@@ -28,7 +28,7 @@ typedef struct atom_t {
 
 typedef struct primary_t {
   atom_t *atom;
-  list_t *arguments; // for function calls
+  list_t *arguments; // for function calls, TODO: suffix for more syntax like []
 } primary_t;
 
 typedef struct factor_t {
@@ -61,12 +61,13 @@ typedef struct constructor_t {
 } constructor_t;
 
 typedef struct expr_t {
-  list_t *primaries;
+  list_t *factors;
 } expr_t;
 
 // Binds a symbol to an expression
 typedef struct definition_t {
   const char *name;
+  int is_mutable; // flag for seeing if this definition is mutable
   constructor_t *constructor;
 } definition_t;
 

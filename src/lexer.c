@@ -320,7 +320,16 @@ token_t *lexer_next_token(lexer_t *lexer) {
   }
 }
 
-token_t *lexer_peek_token(lexer_t *lexer /*, size_t steps*/) {}
+token_t *lexer_peek_token(lexer_t *lexer /*, size_t steps*/) {
+  // TODO: Maybe assert is unnecessary
+  ASSERT(lexer->line_pos != (size_t)lexer->line_len);
+  size_t prev_pos = lexer->line_pos;
+
+  token_t *token = lexer_next_token(lexer);
+  lexer->line_pos = prev_pos;
+
+  return token;
+}
 
 void lexer_skip_token(lexer_t *lexer, token_kind_t token_kind) {
   token_t *token = lexer_next_token(lexer);
@@ -328,6 +337,7 @@ void lexer_skip_token(lexer_t *lexer, token_kind_t token_kind) {
     lexer_free(lexer);
     err_illegal_token(token);
   }
+  token_free(token);
 }
 
 /**
