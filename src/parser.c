@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "error.h"
 #include "lexer.h"
 #include "list.h"
 #include "parser.h"
@@ -61,29 +62,87 @@ static constructor_t *parse_constructor(ast_t *ast, lexer_t *lexer) {
 
   return constr;
 }
+static primary_t *parse_primary(ast_t *ast, lexer_t *lexer) {
+  primary_t *prm = malloc(sizeof(primary_t));
+  if (prm == NULL) {
+    parse_free(ast);
+    lexer_free(lexer);
+    err_malloc_fail();
+  }
 
-static factor_t *parse_factor(ast_t *ast, lexer_t *lexer) {}
+  return prm;
+}
+
+static operator_t parse_factor_prefix(ast_t *ast, lexer_t *lexer) {
+  // TODO: REALLY SHOULD HAVE cur_token INSTEAD OF HAVING TO PEEK
+  token_t *next = lexer_peek_token(lexer);
+  token_kind_t next_kind = next->kind;
+  token_free(next);
+
+  if (next_kind == TOKEN_MINUS) {
+    return OP_MINUS;
+  } else if (next_kind == TOKEN_PLUS) {
+    return OP_PLUS;
+  } else {
+    return OP_NONE;
+  }
+}
+
+static operator_t parse_factor_suffix(ast_t *ast, lexer_t *lexer) {
+  token_t *next = lexer_peek_token(lexer);
+  token_kind_t next_kind = next->kind;
+  token_free(next);
+
+  if (next_kind == TOKEN_MINUS) {
+    return OP_MINUS;
+  } else if (next_kind == TOKEN_PLUS) {
+    return OP_PLUS;
+  } else {
+    return OP_NONE;
+  }
+}
+
+static factor_t *parse_factor(ast_t *ast, lexer_t *lexer) {
+  factor_t *ft = malloc(sizeof(factor_t));
+  if (ft == NULL) {
+    parse_free(ast);
+    lexer_free(lexer); // TODO: add macro/function for this repetetive cleanup?
+    err_malloc_fail(); // TODO: add malloc fail checks everywhere.
+  }
+
+  // Check for prefixes
+  ft->prefix = parse_factor_prefix(ast, lexer);
+
+  // Parse primary
+  ft->primary = parse_primary(ast, lexer);
+
+  // TODO: Check for suffixes
+  ft->suffix = parse_factor_suffix(ast, lexer);
+
+  return ft;
+}
 
 static expr_t *parse_expr(ast_t *ast, lexer_t *lexer, int wait_for_paren) {
   expr_t *expr = malloc(sizeof(expr_t));
   expr->factors = list_init(3, sizeof(factor_t));
 
-  token_kind_t closing_kind;
-  if (wait_for_paren) {
-    closing_kind = TOKEN_RPAREN;
-  } else {
-    closing_kind = TOKEN_EOL;
-  }
+  token_kind_t closing_kind = wait_for_paren ? TOKEN_RPAREN : TOKEN_EOL;
 
   token_t *next = lexer_next_token(lexer);
   while (next->kind != closing_kind) {
     switch (next->kind) {
-    case TOKEN_INTEGER_LITERAL: {
+    case TOKEN_INTEGER_LITERAL:
+    case TOKEN_STRING_LITERAL:
+    case TOKEN_NAME:
+      list_push_back(expr->factors, parse_factor(ast, lexer));
       break;
-    }
+
     default:
       err_illegal_token(next);
     }
+
+    token_free(next);
+    next = lexer_next_token(lexer);
   }
 
   return expr;
