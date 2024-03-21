@@ -9,6 +9,7 @@ typedef struct lexer_t {
   char *line;
   ssize_t line_len;
   size_t line_pos;
+  // token_t *cur_token;
 } lexer_t;
 
 // TODO: make void lexer_load_token and make lexer hold a cur_token ?

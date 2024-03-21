@@ -135,6 +135,6 @@ token_t *token_make_name(const char *name) {
 
 _Noreturn void err_illegal_token(token_t *token) {
   err_print_stacktrace();
-  fprintf(stderr, "ERR_ILLEGAL_TOKEN: '%s'", token_to_string(token));
+  fprintf(stderr, "ERR_ILLEGAL_TOKEN: '%s'\n", token_to_string(token));
   exit(1);
 }

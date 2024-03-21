@@ -96,9 +96,15 @@ def concat = fn(s1: string, s2: string =>
 def concatted-strs = concat("yo", "lo")
 
 def takes-list = fn(some-list : list<string> =>
-  int(1 + 2)
+  int {1 + 2}
 )
 
 def returns-list = fn( =>
   list<string>("a", "b", "var args")
 )
+
+def takes-generic = fn {list<string> some-list =>
+  void {
+    printf("ASD")
+  }
+}
