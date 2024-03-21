@@ -26,21 +26,40 @@ static int lexer_write_cur_token(lexer_t *lexer, FILE *f) {
   }
 }
 
-static void assert_file_contents_equal(FILE *f1, FILE *f2) {}
+static void assert_file_contents_equal(FILE *f1, FILE *f2) {
+  const size_t BUFFER_SIZE = 2048;
+  char buffer1[BUFFER_SIZE];
+  char buffer2[BUFFER_SIZE];
+
+  while (!feof(f1) && !feof(f2)) {
+    size_t read1 = fread(buffer1, 1, BUFFER_SIZE, f1);
+    size_t read2 = fread(buffer2, 1, BUFFER_SIZE, f2);
+
+    ASSERT(read1 == read2);
+
+    ASSERT(memcmp(buffer1, buffer2, read1) == 0);
+  }
+}
+
+// static void test_lexer_on_file(const char *path) {
+// }
 
 void test_lexer() {
+  // Lex the source code file and log it to a txt file
   lexer_t *lexer = lexer_init("./keb/test-lexer.keb");
-  FILE *actual = fopen("./keb/test-lexer.txt", "w");
+  FILE *actual = fopen("./keb/test-lexer.txt", "w+");
 
   while (lexer_write_cur_token(lexer, actual) != 1)
     ;
 
   FILE *expected = fopen("./keb/test-lexer-expected.txt", "r");
 
+  // Reset the new file to the start and assert its contents are the same as the
+  // expected lexed version
+  fseek(actual, 0, SEEK_SET);
   assert_file_contents_equal(actual, expected);
 
   fclose(actual);
   fclose(expected);
-
   lexer_free(lexer);
 }
