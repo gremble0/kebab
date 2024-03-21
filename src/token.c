@@ -13,52 +13,65 @@
 char *token_to_string(token_t *token) {
   switch (token->kind) {
   case TOKEN_DEF:
+    return strdup("TOKEN_DEF");
   case TOKEN_SET:
+    return strdup("TOKEN_SET");
   case TOKEN_MUT:
+    return strdup("TOKEN_MUT");
   case TOKEN_INT:
+    return strdup("TOKEN_INT");
   case TOKEN_STRING:
+    return strdup("TOKEN_STRING");
   case TOKEN_FN:
+    return strdup("TOKEN_FN");
   case TOKEN_COLON:
+    return strdup("TOKEN_COLON");
   case TOKEN_EQUALS:
+    return strdup("TOKEN_EQUALS");
   case TOKEN_COMMA:
+    return strdup("TOKEN_COMMA");
   case TOKEN_LPAREN:
+    return strdup("TOKEN_LPAREN");
   case TOKEN_RPAREN:
+    return strdup("TOKEN_RPAREN");
   case TOKEN_LBRACE:
+    return strdup("TOKEN_LBRACE");
   case TOKEN_RBRACE:
+    return strdup("TOKEN_RBRACE");
   case TOKEN_FAT_RARROW:
+    return strdup("TOKEN_FAT_RARROW");
   case TOKEN_PLUS:
+    return strdup("TOKEN_PLUS");
   case TOKEN_MINUS:
+    return strdup("TOKEN_MINUS");
   case TOKEN_MULT:
+    return strdup("TOKEN_MULT");
   case TOKEN_DIV:
+    return strdup("TOKEN_DIV");
   case TOKEN_EOL:
-  case TOKEN_EOF: {
-    // Maps simple tokens to its stringified version. Indexing this array
-    // with a tokens kind will return its string version
-    static const char *simple_tokens[] = {
-        "def ", "set ", "mut ", "int", "string", "fn", ":", "=", ",",  "(",
-        ")",    "[",    "]",    "=>",  "+",      "-",  "*", "/", "\n", ""};
-    return strdup(simple_tokens[token->kind]);
-  }
+    return strdup("TOKEN_EOL");
+  case TOKEN_EOF:
+    return strdup("TOKEN_EOF");
   case TOKEN_CHAR_LITERAL: {
-    char *res = malloc(4); // 3 for 'c' and 1 for NULL terminator
-    sprintf(res, "'%c'", token->char_literal);
+    char *res = malloc(sizeof("TOKEN_CHAR_LITERAL: 'c'") + 1);
+    sprintf(res, "TOKEN_CHAR_LITERAL: '%c'", token->char_literal);
     return res;
   }
   case TOKEN_STRING_LITERAL: {
-    // 2 for quotes and 1 for NULL terminator
-    char *res = malloc(strlen(token->string_literal) + 3);
-    sprintf(res, "\"%s\"", token->string_literal);
+    char *res = malloc(sizeof("TOKEN_STRING_LITERAL: \"\"") +
+                       strlen(token->string_literal) + 1);
+    sprintf(res, "TOKEN_STRING_LITERAL: \"%s\"", token->string_literal);
     return res;
   }
   case TOKEN_INTEGER_LITERAL: {
     int len = snprintf(NULL, 0, "%d", token->integer_literal);
-    char *res = malloc(len + 1);
-    sprintf(res, "%d", token->integer_literal);
+    char *res = malloc(sizeof("TOKEN_INTEGER_LITERAL: ") + len + 1);
+    sprintf(res, "TOKEN_INTEGER_LITERAL: %d", token->integer_literal);
     return res;
   }
   case TOKEN_NAME: {
-    char *res = malloc(strlen(token->name) + 1);
-    sprintf(res, "%s", token->name);
+    char *res = malloc(sizeof("TOKEN_NAME: \"\"") + strlen(token->name) + 1);
+    sprintf(res, "TOKEN_NAME: \"%s\"", token->name);
     return res;
   }
   }

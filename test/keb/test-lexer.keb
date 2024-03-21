@@ -4,8 +4,8 @@ def c = fn(num1 : int, num2 : int =>
   int(num1 + num2) ; should be ignoreda jdkljflks
 )
 
-def kebab-case = fn(composite-type var =>
-  int(composite-type)
+def kebab-case = fn(var : composite-type =>
+  int(var)
 )
 
 ; mutability (constant by default)
