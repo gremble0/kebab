@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "error.h"
 #include "lexer.h"
-#include "list.h"
+#include "nerror.h"
+#include "nlist.h"
 #include "parser.h"
 #include "token.h"
 

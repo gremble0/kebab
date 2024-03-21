@@ -1,5 +1,5 @@
 #include "lexer.h"
-#include "list.h"
+#include "nlist.h"
 
 typedef enum operator_t {
   OP_PLUS,

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "error.h"
+#include "nerror.h"
 #include "lexer.h"
 #include "token.h"
 

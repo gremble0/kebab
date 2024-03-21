@@ -1,6 +1,8 @@
 *.o
+*.a
 *.out
 kebab
+test_all
 compile_commands.json
 .cache/
 vgcore*
