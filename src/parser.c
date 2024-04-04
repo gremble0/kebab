@@ -39,8 +39,9 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
 static constructor_t *parse_constructor(lexer_t *lexer) {
   constructor_t *constr = malloc(sizeof(constructor_t));
 
-  token_t *next_token = lexer_next_token(lexer);
-  switch (next_token->kind) {
+  // token_t *next_token = lexer_next_token(lexer);
+  lexer_advance(lexer);
+  switch (lexer->cur_token->kind) {
   case TOKEN_INT: {
     constr->int_constructor = parse_int_constructor(lexer);
     break;
@@ -54,10 +55,11 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
     break;
   }
   default:
-    err_illegal_token(next_token);
+    err_illegal_token(lexer->cur_token);
   }
 
-  token_free(next_token);
+  // TODO: do this in lexer_advance
+  token_free(lexer->cur_token);
 
   return constr;
 }
@@ -72,14 +74,9 @@ static primary_t *parse_primary(lexer_t *lexer) {
 }
 
 static operator_t parse_factor_prefix(lexer_t *lexer) {
-  // TODO: REALLY SHOULD HAVE cur_token INSTEAD OF HAVING TO PEEK
-  token_t *next = lexer_peek_token(lexer);
-  token_kind_t next_kind = next->kind;
-  token_free(next);
-
-  if (next_kind == TOKEN_MINUS) {
+  if (lexer->cur_token->kind == TOKEN_MINUS) {
     return OP_MINUS;
-  } else if (next_kind == TOKEN_PLUS) {
+  } else if (lexer->cur_token->kind == TOKEN_PLUS) {
     return OP_PLUS;
   } else {
     return OP_NONE;
@@ -87,17 +84,13 @@ static operator_t parse_factor_prefix(lexer_t *lexer) {
 }
 
 static operator_t parse_factor_suffix(lexer_t *lexer) {
-  token_t *next = lexer_peek_token(lexer);
-  token_kind_t next_kind = next->kind;
-  token_free(next);
-
-  if (next_kind == TOKEN_MINUS) {
+  if (lexer->cur_token->kind == TOKEN_MINUS) {
     return OP_MINUS;
-  } else if (next_kind == TOKEN_PLUS) {
+  } else if (lexer->cur_token->kind == TOKEN_PLUS) {
     return OP_PLUS;
-  } else if (next_kind == TOKEN_MULT) {
+  } else if (lexer->cur_token->kind == TOKEN_MULT) {
     return OP_MULT;
-  } else if (next_kind == TOKEN_DIV) {
+  } else if (lexer->cur_token->kind == TOKEN_DIV) {
     return OP_DIV;
   } else {
     return OP_NONE;
@@ -117,7 +110,8 @@ static factor_t *parse_factor(lexer_t *lexer) {
   // Parse primary
   ft->primary = parse_primary(lexer);
 
-  // TODO: Check for suffixes
+  // Check for suffixes
+  // TODO: This is probably wrong, should be part of expression
   ft->suffix = parse_factor_suffix(lexer);
 
   return ft;
@@ -130,9 +124,10 @@ static expr_t *parse_expr(lexer_t *lexer, int wait_for_paren) {
 
   token_kind_t closing_kind = wait_for_paren ? TOKEN_RPAREN : TOKEN_EOL;
 
-  token_t *next = lexer_next_token(lexer);
-  while (next->kind != closing_kind) {
-    switch (next->kind) {
+  // token_t *next = lexer_next_token(lexer);
+  lexer_advance(lexer);
+  while (lexer->cur_token->kind != closing_kind) {
+    switch (lexer->cur_token->kind) {
     case TOKEN_INTEGER_LITERAL:
     case TOKEN_STRING_LITERAL:
     case TOKEN_NAME:
@@ -140,11 +135,12 @@ static expr_t *parse_expr(lexer_t *lexer, int wait_for_paren) {
       break;
 
     default:
-      err_illegal_token(next);
+      err_illegal_token(lexer->cur_token);
     }
 
-    token_free(next);
-    next = lexer_next_token(lexer);
+    // TODO: free should be done in lexer_advance
+    token_free(lexer->cur_token);
+    lexer_advance(lexer);
   }
 
   return expr;
@@ -153,26 +149,31 @@ static expr_t *parse_expr(lexer_t *lexer, int wait_for_paren) {
 static definition_t *parse_definition(lexer_t *lexer) {
   lexer_skip_token(lexer, TOKEN_DEF);
 
+  // TODO: sizeof *def
   definition_t *def = malloc(sizeof(definition_t));
-  token_t *next_token = lexer_next_token(lexer);
+  // token_t *next_token = lexer_next_token(lexer);
+  lexer_advance(lexer);
 
   // If the definition is `def mut ...` add is_mutable flag and load next
   // token, otherwise definition should be immutable
-  if (next_token->kind == TOKEN_MUT) {
+  if (lexer->cur_token->kind == TOKEN_MUT) {
     def->is_mutable = 1;
-    token_free(next_token);
-    next_token = lexer_next_token(lexer);
+    // TODO: do in lexer_advance
+    token_free(lexer->cur_token);
+    lexer_advance(lexer);
   } else {
     def->is_mutable = 0;
   }
 
-  if (next_token->kind != TOKEN_NAME) {
-    err_illegal_token(next_token);
+  if (lexer->cur_token->kind != TOKEN_NAME) {
+    err_illegal_token(lexer->cur_token);
   }
 
-  def->name = strdup(next_token->name);
-  token_free(next_token);
+  def->name = strdup(lexer->cur_token->name);
+  // TODO: do in lexer_advance
+  token_free(lexer->cur_token);
 
+  // Next token should be `=`
   lexer_skip_token(lexer, TOKEN_EQUALS);
 
   def->constructor = parse_constructor(lexer);
@@ -181,16 +182,19 @@ static definition_t *parse_definition(lexer_t *lexer) {
 }
 
 static assignment_t *parse_assignment(lexer_t *lexer) {
+  // TODO: sizeof *assignment
   assignment_t *assignment = malloc(sizeof(assignment_t));
 
   return assignment;
 }
 
 static statement_t *parse_statement(lexer_t *lexer) {
+  // TODO: this is all wrong i think
   statement_t *statement = malloc(sizeof(statement_t));
-  token_t *token = lexer_peek_token(lexer);
+  lexer_advance(lexer);
+  // token_t *token = lexer_peek_token(lexer); Why?
 
-  switch (token->kind) {
+  switch (lexer->cur_token->kind) {
   case TOKEN_DEF:
     statement->definition = parse_definition(lexer);
     break;
@@ -208,14 +212,14 @@ static statement_t *parse_statement(lexer_t *lexer) {
   // TODO: Is this right?
   case TOKEN_EOF:
     free(statement);
-    token_free(token);
+    token_free(lexer->cur_token);
     return NULL;
 
   default:
-    err_illegal_token(token);
+    err_illegal_token(lexer->cur_token);
   }
 
-  token_free(token);
+  token_free(lexer->cur_token);
 
   return statement;
 }

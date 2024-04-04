@@ -22,7 +22,7 @@ typedef struct atom_t {
     // float
     // nil
     // bool
-    // map
+    // map?
   };
 } atom_t;
 
