@@ -191,18 +191,28 @@ lexer_t *lexer_init(const char *file_path) {
   }
   lexer->source_file = f;
   lexer->line = NULL;
+  lexer->cur_token = NULL;
   lexer_load_next_line(lexer);
 
   return lexer;
 }
 
 /**
- * @brief Get the next token in the lexer, returned token needs to be freed
+ * @brief Advance lexer by loading the next token into lexer->cur_token. This
+ * function also takes care of freeing all lexer->cur_tokens except for
+ * TOKEN_EOF, which is freed by lexer_free.
  *
- * @param lexer lexer to get token from
- * @return token with appropriate contents based on lexer position
+ * @param lexer lexer to advance
  */
 void lexer_advance(lexer_t *lexer) {
+  if (lexer->cur_token != NULL) {
+    // Free previous token
+    token_free(lexer->cur_token);
+    // For recursive calls we reset cur_token to NULL to not double free
+    lexer->cur_token = NULL;
+  }
+
+  // If line_len is negative reading the next line has failed indicating EOF
   if (lexer->line_len < 0) {
     free(lexer->line);
     lexer->cur_token = token_make_simple(TOKEN_EOF);
@@ -210,6 +220,7 @@ void lexer_advance(lexer_t *lexer) {
   }
 
   if (lexer_line_is_done(lexer)) {
+    // Only make EOL tokens for non empty lines
     if (lexer_line_is_empty(lexer)) {
       lexer_load_next_line(lexer);
       return lexer_advance(lexer);
@@ -282,13 +293,13 @@ void lexer_advance(lexer_t *lexer) {
     lexer->cur_token = token_make_simple(TOKEN_DIV);
     return;
 
+  // Literals
   case '"':
     lexer->cur_token = token_make_str_lit(lexer_read_str(lexer));
     return;
   case '\'':
     lexer->cur_token = token_make_char_lit(lexer_read_char(lexer));
     return;
-
   // TODO: revisit what to do with numbers starting with 0
   case '0':
   case '1':
@@ -303,6 +314,7 @@ void lexer_advance(lexer_t *lexer) {
     lexer->cur_token = token_make_int_lit(lexer_read_int(lexer));
     return;
 
+  // Keywords
   default: {
     const char *word = lexer_read_word(lexer);
     // TODO: hash and switch case
@@ -357,8 +369,6 @@ void lexer_skip_token(lexer_t *lexer, token_kind_t token_kind) {
   if (lexer->cur_token->kind != token_kind) {
     err_illegal_token(lexer->cur_token);
   }
-
-  token_free(lexer->cur_token);
 }
 
 /**
@@ -368,6 +378,7 @@ void lexer_skip_token(lexer_t *lexer, token_kind_t token_kind) {
  */
 void lexer_free(lexer_t *lexer) {
   fclose(lexer->source_file);
+  ASSERT(lexer->cur_token->kind == TOKEN_EOF);
   token_free(lexer->cur_token);
   free(lexer);
 }

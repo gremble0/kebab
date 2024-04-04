@@ -9,22 +9,25 @@
 
 // Move to lexer?
 static int lexer_write_cur_token(lexer_t *lexer, FILE *f) {
-  token_t *token = lexer_next_token(lexer);
-  token_kind_t token_kind = token->kind;
+  // token_t *token = lexer_next_token(lexer);
+  lexer_advance(lexer);
 
-  char *token_string = token_to_string(token);
+  char *token_string = token_to_string(lexer->cur_token);
   int token_string_len = strlen(token_string);
   fwrite(token_string, 1, token_string_len, f);
   fwrite("\n", 1, 1, f);
 
-  free(token_string);
-  token_free(token);
-
-  if (token_kind == TOKEN_EOF) {
-    return 1;
+  int ret;
+  if (lexer->cur_token->kind == TOKEN_EOF) {
+    ret = 1;
   } else {
-    return 0;
+    ret = 0;
   }
+
+  free(token_string);
+  // token_free(lexer->cur_token);
+
+  return ret;
 }
 
 static void assert_file_contents_equal(FILE *f1, FILE *f2) {

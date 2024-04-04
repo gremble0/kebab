@@ -58,9 +58,6 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
     err_illegal_token(lexer->cur_token);
   }
 
-  // TODO: do this in lexer_advance
-  token_free(lexer->cur_token);
-
   return constr;
 }
 static primary_t *parse_primary(lexer_t *lexer) {
@@ -138,8 +135,6 @@ static expr_t *parse_expr(lexer_t *lexer, int wait_for_paren) {
       err_illegal_token(lexer->cur_token);
     }
 
-    // TODO: free should be done in lexer_advance
-    token_free(lexer->cur_token);
     lexer_advance(lexer);
   }
 
@@ -151,15 +146,12 @@ static definition_t *parse_definition(lexer_t *lexer) {
 
   // TODO: sizeof *def
   definition_t *def = malloc(sizeof(definition_t));
-  // token_t *next_token = lexer_next_token(lexer);
   lexer_advance(lexer);
 
   // If the definition is `def mut ...` add is_mutable flag and load next
   // token, otherwise definition should be immutable
   if (lexer->cur_token->kind == TOKEN_MUT) {
     def->is_mutable = 1;
-    // TODO: do in lexer_advance
-    token_free(lexer->cur_token);
     lexer_advance(lexer);
   } else {
     def->is_mutable = 0;
@@ -170,8 +162,6 @@ static definition_t *parse_definition(lexer_t *lexer) {
   }
 
   def->name = strdup(lexer->cur_token->name);
-  // TODO: do in lexer_advance
-  token_free(lexer->cur_token);
 
   // Next token should be `=`
   lexer_skip_token(lexer, TOKEN_EQUALS);
@@ -212,14 +202,11 @@ static statement_t *parse_statement(lexer_t *lexer) {
   // TODO: Is this right?
   case TOKEN_EOF:
     free(statement);
-    token_free(lexer->cur_token);
     return NULL;
 
   default:
     err_illegal_token(lexer->cur_token);
   }
-
-  token_free(lexer->cur_token);
 
   return statement;
 }
@@ -238,19 +225,6 @@ ast_t *parse_lexer(lexer_t *lexer) {
 
     list_push_back(ast->statements, statement);
   }
-  // while (1) {
-  //   token_t *token = lexer_next_token(lexer);
-  //
-  //   if (token->kind == TOKEN_EOF) {
-  //     token_free(token);
-  //     break;
-  //   } else {
-  //     char *tok_string = token_to_string(token);
-  //     printf("%s", tok_string);
-  //     free(tok_string);
-  //     token_free(token);
-  //   }
-  // }
 
   return ast;
 }
