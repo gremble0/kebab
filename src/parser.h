@@ -1,15 +1,20 @@
 #include "lexer.h"
 #include "nlist.h"
 
-typedef enum operator_t {
-  OP_PLUS,
-  OP_MINUS,
-  OP_MULT,
-  OP_DIV,
+typedef enum unary_operator_t {
+  UNARY_PLUS,  // +1
+  UNARY_MINUS, // -1
+  UNARY_NOT,   // ~true
 
-  // Indicates the lack of an operator
-  OP_NONE,
-} operator_t;
+  UNARY_NO_OP, // Indicates missing operator
+} unary_operator_t;
+
+typedef enum binary_operator_t {
+  BINARY_PLUS,  // x + y
+  BINARY_MINUS, // x - y
+  BINARY_MULT,  // x * y
+  BINARY_DIV,   // x / y
+} binary_operator_t;
 
 typedef struct atom_t {
   union {
@@ -32,17 +37,16 @@ typedef struct primary_t {
 } primary_t;
 
 typedef struct factor_t {
-  operator_t prefix; // e.g. -2
+  unary_operator_t prefix; // e.g. -2, +1, ~false
   primary_t *primary;
-  operator_t suffix; // e.g 2 - ...
 } factor_t;
 
 typedef struct string_constructor_t {
-  list_t *statements;
+  list_t *statements; // list<statement_t>
 } string_constructor_t;
 
 typedef struct int_constructor_t {
-  list_t *statements;
+  list_t *statements; // list<statement_t>
 } int_constructor_t;
 
 typedef struct fn_constructor_t {
@@ -61,7 +65,8 @@ typedef struct constructor_t {
 } constructor_t;
 
 typedef struct expr_t {
-  list_t *factors;
+  list_t *factors;   // list<factor_t>
+  list_t *operators; // list<binary_operator_t>
 } expr_t;
 
 // Binds a symbol to an expression

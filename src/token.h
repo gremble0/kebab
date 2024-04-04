@@ -27,6 +27,11 @@ typedef enum token_kind_t {
   TOKEN_MINUS, // -
   TOKEN_MULT,  // *
   TOKEN_DIV,   // /
+  TOKEN_NOT,   // ~
+
+  // Booleans
+  TOKEN_TRUE,
+  TOKEN_FALSE,
 
   // Special
   TOKEN_EOL, // \n | \r

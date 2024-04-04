@@ -9,7 +9,6 @@
 
 // Move to lexer?
 static int lexer_write_cur_token(lexer_t *lexer, FILE *f) {
-  // token_t *token = lexer_next_token(lexer);
   lexer_advance(lexer);
 
   char *token_string = token_to_string(lexer->cur_token);
@@ -25,7 +24,6 @@ static int lexer_write_cur_token(lexer_t *lexer, FILE *f) {
   }
 
   free(token_string);
-  // token_free(lexer->cur_token);
 
   return ret;
 }

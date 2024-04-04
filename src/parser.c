@@ -70,27 +70,16 @@ static primary_t *parse_primary(lexer_t *lexer) {
   return prm;
 }
 
-static operator_t parse_factor_prefix(lexer_t *lexer) {
-  if (lexer->cur_token->kind == TOKEN_MINUS) {
-    return OP_MINUS;
-  } else if (lexer->cur_token->kind == TOKEN_PLUS) {
-    return OP_PLUS;
+static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
+  // TODO: some sort of error handling
+  if (lexer->cur_token->kind == TOKEN_PLUS) {
+    return UNARY_PLUS;
+  } else if (lexer->cur_token->kind == TOKEN_MINUS) {
+    return UNARY_MINUS;
+  } else if (lexer->cur_token->kind == TOKEN_NOT) {
+    return UNARY_NOT;
   } else {
-    return OP_NONE;
-  }
-}
-
-static operator_t parse_factor_suffix(lexer_t *lexer) {
-  if (lexer->cur_token->kind == TOKEN_MINUS) {
-    return OP_MINUS;
-  } else if (lexer->cur_token->kind == TOKEN_PLUS) {
-    return OP_PLUS;
-  } else if (lexer->cur_token->kind == TOKEN_MULT) {
-    return OP_MULT;
-  } else if (lexer->cur_token->kind == TOKEN_DIV) {
-    return OP_DIV;
-  } else {
-    return OP_NONE;
+    return UNARY_NO_OP;
   }
 }
 
@@ -107,23 +96,17 @@ static factor_t *parse_factor(lexer_t *lexer) {
   // Parse primary
   ft->primary = parse_primary(lexer);
 
-  // Check for suffixes
-  // TODO: This is probably wrong, should be part of expression
-  ft->suffix = parse_factor_suffix(lexer);
-
   return ft;
 }
 
 // TODO: change condition to parse until not expr instead of newline/paren
-static expr_t *parse_expr(lexer_t *lexer, int wait_for_paren) {
+static expr_t *parse_expr(lexer_t *lexer) {
   expr_t *expr = malloc(sizeof(*expr));
   expr->factors = list_init(3, sizeof(factor_t));
 
-  token_kind_t closing_kind = wait_for_paren ? TOKEN_RPAREN : TOKEN_EOL;
-
-  // token_t *next = lexer_next_token(lexer);
   lexer_advance(lexer);
-  while (lexer->cur_token->kind != closing_kind) {
+
+  while (lexer->cur_token->kind != TOKEN_EOL) {
     switch (lexer->cur_token->kind) {
     case TOKEN_INTEGER_LITERAL:
     case TOKEN_STRING_LITERAL:
@@ -194,7 +177,7 @@ static statement_t *parse_statement(lexer_t *lexer) {
   case TOKEN_NAME:
   case TOKEN_INTEGER_LITERAL:
   case TOKEN_STRING_LITERAL:
-    stmt->expr = parse_expr(lexer, 0);
+    stmt->expr = parse_expr(lexer);
     break;
 
   // TODO: Is this right?

@@ -103,7 +103,7 @@ def returns-list = fn( =>
   list<string>("a", "b", "var args")
 )
 
-def takes-generic = fn(some-list : list<string> =>
+def takes-generic = fn(some-list : list(string) =>
   void(
     printf("ASD")
   )
@@ -132,3 +132,18 @@ def recursion = (a, b) =>
     recursion(a + 1, b)
   else =>
     a
+
+def recursion = fn((a : int) => int(
+  if a > 10 =>
+    recursion(a - 1)
+  else =>
+    a
+))
+
+def puts = fn((s : string) => void(
+  syscall(1, s, len(s)) ; len() is defined in C
+))
+
+def my-func = fn(() => void(
+  puts("hello world")
+))

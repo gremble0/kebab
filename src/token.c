@@ -48,6 +48,12 @@ char *token_to_string(token_t *token) {
     return strdup("TOKEN_MULT");
   case TOKEN_DIV:
     return strdup("TOKEN_DIV");
+  case TOKEN_NOT:
+    return strdup("TOKEN_NOT");
+  case TOKEN_TRUE:
+    return strdup("TOKEN_TRUE");
+  case TOKEN_FALSE:
+    return strdup("TOKEN_FALSE");
   case TOKEN_EOL:
     return strdup("TOKEN_EOL");
   case TOKEN_EOF:
