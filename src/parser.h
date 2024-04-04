@@ -1,6 +1,15 @@
 #include "lexer.h"
 #include "nlist.h"
 
+#define EXPECT_TOKEN(lexer, token_kind)                                        \
+  do {                                                                         \
+    if (lexer->cur_token->kind != token_kind) {                                \
+      err_illegal_token(lexer->cur_token);                                     \
+    }                                                                          \
+  } while (0);
+
+#define LIST_START_SIZE 3
+
 typedef enum unary_operator_t {
   UNARY_PLUS,  // +1
   UNARY_MINUS, // -1
@@ -51,12 +60,14 @@ typedef struct int_constructor_t {
 
 typedef struct fn_constructor_t {
   list_t *params;     // Only for functions, NULL for primitives
-  void *return_type;  // TODO: type for return types?
+  void *return_type;  // TODO: type for return types?, enum kebab_type: int,
+                      // string, etc. ?
   list_t *statements; // constructor body is a list of statements, constructor
                       // returns first statement that returns return_type
 } fn_constructor_t;
 
 typedef struct constructor_t {
+  // TODO: enum type?
   union {
     fn_constructor_t *fn_constructor;
     int_constructor_t *int_constructor;
@@ -97,5 +108,5 @@ typedef struct ast_t {
   list_t *statements;
 } ast_t;
 
-ast_t *parse_lexer(lexer_t *lexer);
-void parse_free(ast_t *ast);
+ast_t *parse(lexer_t *lexer);
+void ast_free(ast_t *ast);

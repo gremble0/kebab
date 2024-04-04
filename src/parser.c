@@ -13,13 +13,17 @@ static statement_t *parse_statement(lexer_t *lexer);
 
 static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   int_constructor_t *intc = malloc(sizeof(*intc));
+  lexer_advance(lexer);
+  EXPECT_TOKEN(lexer, TOKEN_LPAREN);
 
-  lexer_skip_token(lexer, TOKEN_LPAREN);
-  intc->statements = list_init(3, sizeof(statement_t));
+  intc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
 
-  list_push_back(intc->statements, parse_statement(lexer));
+  while (lexer->cur_token->kind != TOKEN_RPAREN) {
+    list_push_back(intc->statements, parse_statement(lexer));
+  }
 
-  // TODO: parse sequence of statements ...
+  EXPECT_TOKEN(lexer, TOKEN_RPAREN); // TODO: Unnecessary?
+  lexer_advance(lexer);
 
   return intc;
 }
@@ -33,27 +37,30 @@ static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
 static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
 
+  // parse params
+
+  // call constructor of body type
+
   return fnc;
 }
 
 static constructor_t *parse_constructor(lexer_t *lexer) {
   constructor_t *constr = malloc(sizeof(*constr));
-
-  // token_t *next_token = lexer_next_token(lexer);
   lexer_advance(lexer);
+
   switch (lexer->cur_token->kind) {
-  case TOKEN_INT: {
+  case TOKEN_INT:
     constr->int_constructor = parse_int_constructor(lexer);
     break;
-  }
-  case TOKEN_STRING: {
+
+  case TOKEN_STRING:
     constr->string_constructor = parse_string_constructor(lexer);
     break;
-  }
-  case TOKEN_FN: {
+
+  case TOKEN_FN:
     constr->fn_constructor = parse_fn_constructor(lexer);
     break;
-  }
+
   default:
     err_illegal_token(lexer->cur_token);
   }
@@ -99,39 +106,71 @@ static factor_t *parse_factor(lexer_t *lexer) {
   return ft;
 }
 
+static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
+  // To avoid unnecessary malloc and free for return NULL path we make a
+  // temporary varible to store the binary operators which will only be malloced
+  // when needed
+  binary_operator_t bo;
+
+  switch (lexer->cur_token->kind) {
+  case TOKEN_PLUS:
+    bo = BINARY_PLUS;
+    break;
+  case TOKEN_MINUS:
+    bo = BINARY_MINUS;
+    break;
+  case TOKEN_MULT:
+    bo = BINARY_MULT;
+    break;
+  case TOKEN_DIV:
+    bo = BINARY_DIV;
+    break;
+  default:
+    return NULL;
+  }
+
+  binary_operator_t *ret = malloc(sizeof(*ret));
+  *ret = bo;
+  return ret;
+}
+
 // TODO: change condition to parse until not expr instead of newline/paren
 static expr_t *parse_expr(lexer_t *lexer) {
   expr_t *expr = malloc(sizeof(*expr));
-  expr->factors = list_init(3, sizeof(factor_t));
+  if (expr == NULL) {
+    err_malloc_fail();
+  }
 
-  lexer_advance(lexer);
+  expr->factors = list_init(LIST_START_SIZE, sizeof(factor_t));
+  expr->operators = list_init(LIST_START_SIZE, sizeof(binary_operator_t));
 
-  while (lexer->cur_token->kind != TOKEN_EOL) {
+  while (lexer->cur_token->kind != TOKEN_RPAREN) {
     switch (lexer->cur_token->kind) {
     case TOKEN_INTEGER_LITERAL:
     case TOKEN_STRING_LITERAL:
     case TOKEN_NAME:
       list_push_back(expr->factors, parse_factor(lexer));
+      list_push_back(expr->operators, parse_binary_operator(lexer));
       break;
 
     default:
       err_illegal_token(lexer->cur_token);
     }
-
-    lexer_advance(lexer);
   }
 
   return expr;
 }
 
 static definition_t *parse_definition(lexer_t *lexer) {
-  lexer_skip_token(lexer, TOKEN_DEF);
-
-  definition_t *def = malloc(sizeof(*def));
+  EXPECT_TOKEN(lexer, TOKEN_DEF);
   lexer_advance(lexer);
 
-  // If the definition is `def mut ...` add is_mutable flag and load next
-  // token, otherwise definition should be immutable
+  definition_t *def = malloc(sizeof(*def));
+  if (def == NULL) {
+    err_malloc_fail();
+  }
+
+  // Definition can optionally be mutable, if omitted default is immutable
   if (lexer->cur_token->kind == TOKEN_MUT) {
     def->is_mutable = 1;
     lexer_advance(lexer);
@@ -139,14 +178,12 @@ static definition_t *parse_definition(lexer_t *lexer) {
     def->is_mutable = 0;
   }
 
-  if (lexer->cur_token->kind != TOKEN_NAME) {
-    err_illegal_token(lexer->cur_token);
-  }
+  EXPECT_TOKEN(lexer, TOKEN_NAME);
 
   def->name = strdup(lexer->cur_token->name);
 
-  // Next token should be `=`
-  lexer_skip_token(lexer, TOKEN_EQUALS);
+  lexer_advance(lexer);
+  EXPECT_TOKEN(lexer, TOKEN_EQUALS);
 
   def->constructor = parse_constructor(lexer);
 
@@ -160,10 +197,8 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
 }
 
 static statement_t *parse_statement(lexer_t *lexer) {
-  // TODO: this is all wrong i think
   statement_t *stmt = malloc(sizeof(*stmt));
   lexer_advance(lexer);
-  // token_t *token = lexer_peek_token(lexer); Why?
 
   switch (lexer->cur_token->kind) {
   case TOKEN_DEF:
@@ -192,13 +227,16 @@ static statement_t *parse_statement(lexer_t *lexer) {
   return stmt;
 }
 
-ast_t *parse_lexer(lexer_t *lexer) {
+ast_t *parse(lexer_t *lexer) {
   ast_t *ast = malloc(sizeof(*ast));
   ast->statements = list_init(10, sizeof(statement_t));
 
   while (1) {
     statement_t *statement = parse_statement(lexer);
     printf("asd\n");
+    list_push_back(ast->statements, statement);
+    return ast;
+
     if (statement == NULL) {
       lexer_free(lexer);
       break;
@@ -210,7 +248,7 @@ ast_t *parse_lexer(lexer_t *lexer) {
   return ast;
 }
 
-void parse_free(ast_t *ast) {
+void ast_free(ast_t *ast) {
   for (size_t i = 0; i < ast->statements->cur_size; ++i) {
     // TODO: tricky
     // make generic parser_free_statement() or something

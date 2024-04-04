@@ -1,12 +1,15 @@
 def add = int(2 + 2)
+def should-be-ok = int(2
+                       +
+                       3)
 
-def c = fn(num1 : int, num2 : int =>
-  int(num1 + num2) ; should be ignoreda jdkljflks
-)
+def c = fn(num1 : int, num2 : int => int(
+  num1 + num2 ; should be ignoreda jdkljflks
+))
 
-def kebab-case = fn(composite-type var =>
-  int(composite-type)
-)
+def kebab-case = fn(multi-word-type var => int(
+  2
+))
 
 ; mutability (constant by default)
 def mut my-var = int(4)
@@ -18,7 +21,7 @@ my-var = int(6)
    ;dasd
 
 
-; this should error
+; this should error (ideally while parsing)
 def my-const = int(4)
 my-const = int(6)
 

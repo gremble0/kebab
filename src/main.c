@@ -10,10 +10,10 @@ int main(int argc, char **argv) {
   }
 
   lexer_t *lexer = lexer_init(argv[1]);
-  ast_t *ast = parse_lexer(lexer);
+  ast_t *ast = parse(lexer);
 
   lexer_free(lexer);
-  parse_free(ast);
+  ast_free(ast);
 
   return 0;
 }
