@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "nerror.h"
 #include "lexer.h"
+#include "nerror.h"
 #include "token.h"
 
 static int is_not_dquote(int c) { return c != '"'; }
@@ -202,19 +202,21 @@ lexer_t *lexer_init(const char *file_path) {
  * @param lexer lexer to get token from
  * @return token with appropriate contents based on lexer position
  */
-token_t *lexer_next_token(lexer_t *lexer) {
+void lexer_advance(lexer_t *lexer) {
   if (lexer->line_len < 0) {
     free(lexer->line);
-    return token_make_simple(TOKEN_EOF);
+    lexer->cur_token = token_make_simple(TOKEN_EOF);
+    return;
   }
 
   if (lexer_line_is_done(lexer)) {
     if (lexer_line_is_empty(lexer)) {
       lexer_load_next_line(lexer);
-      return lexer_next_token(lexer);
+      return lexer_advance(lexer);
     } else {
       lexer_load_next_line(lexer);
-      return token_make_simple(TOKEN_EOL);
+      lexer->cur_token = token_make_simple(TOKEN_EOL);
+      return;
     }
   }
 
@@ -223,55 +225,69 @@ token_t *lexer_next_token(lexer_t *lexer) {
   case '\t':
   case ' ':
     ++lexer->line_pos;
-    return lexer_next_token(lexer);
+    return lexer_advance(lexer);
 
     // Syntax
   case ':':
     ++lexer->line_pos;
-    return token_make_simple(TOKEN_COLON);
+    lexer->cur_token = token_make_simple(TOKEN_COLON);
+    return;
   case '=': {
     if (lexer_peek_char(lexer, 1) == '>') {
       lexer->line_pos += 2;
-      return token_make_simple(TOKEN_FAT_RARROW);
+      lexer->cur_token = token_make_simple(TOKEN_FAT_RARROW);
+      return;
     } else {
       ++lexer->line_pos;
-      return token_make_simple(TOKEN_EQUALS);
+      lexer->cur_token = token_make_simple(TOKEN_EQUALS);
+      return;
     }
   }
   case ',':
     ++lexer->line_pos;
-    return token_make_simple(TOKEN_COMMA);
+    lexer->cur_token = token_make_simple(TOKEN_COMMA);
+    return;
   case '(':
     ++lexer->line_pos;
-    return token_make_simple(TOKEN_LPAREN);
+    lexer->cur_token = token_make_simple(TOKEN_LPAREN);
+    return;
   case ')':
     ++lexer->line_pos;
-    return token_make_simple(TOKEN_RPAREN);
+    lexer->cur_token = token_make_simple(TOKEN_RPAREN);
+    return;
   case '[':
     ++lexer->line_pos;
-    return token_make_simple(TOKEN_LBRACE);
+    lexer->cur_token = token_make_simple(TOKEN_LBRACE);
+    return;
   case ']':
     ++lexer->line_pos;
-    return token_make_simple(TOKEN_RBRACE);
+    lexer->cur_token = token_make_simple(TOKEN_RBRACE);
+    return;
 
   // Primitives
   case '+':
     ++lexer->line_pos;
-    return token_make_simple(TOKEN_PLUS);
+    lexer->cur_token = token_make_simple(TOKEN_PLUS);
+    return;
   case '-':
     ++lexer->line_pos;
-    return token_make_simple(TOKEN_MINUS);
+    lexer->cur_token = token_make_simple(TOKEN_MINUS);
+    return;
   case '*':
     ++lexer->line_pos;
-    return token_make_simple(TOKEN_MULT);
+    lexer->cur_token = token_make_simple(TOKEN_MULT);
+    return;
   case '/':
     ++lexer->line_pos;
-    return token_make_simple(TOKEN_DIV);
+    lexer->cur_token = token_make_simple(TOKEN_DIV);
+    return;
 
   case '"':
-    return token_make_str_lit(lexer_read_str(lexer));
+    lexer->cur_token = token_make_str_lit(lexer_read_str(lexer));
+    return;
   case '\'':
-    return token_make_char_lit(lexer_read_char(lexer));
+    lexer->cur_token = token_make_char_lit(lexer_read_char(lexer));
+    return;
 
   // TODO: revisit what to do with numbers starting with 0
   case '0':
@@ -284,60 +300,65 @@ token_t *lexer_next_token(lexer_t *lexer) {
   case '7':
   case '8':
   case '9':
-    return token_make_int_lit(lexer_read_int(lexer));
+    lexer->cur_token = token_make_int_lit(lexer_read_int(lexer));
+    return;
 
   default: {
     const char *word = lexer_read_word(lexer);
     // TODO: hash and switch case
     if (strcmp(word, "def") == 0) {
       free((void *)word);
-      return token_make_simple(TOKEN_DEF);
+      lexer->cur_token = token_make_simple(TOKEN_DEF);
+      return;
 
     } else if (strcmp(word, "set") == 0) {
       free((void *)word);
-      return token_make_simple(TOKEN_SET);
+      lexer->cur_token = token_make_simple(TOKEN_SET);
+      return;
 
     } else if (strcmp(word, "mut") == 0) {
       free((void *)word);
-      return token_make_simple(TOKEN_MUT);
+      lexer->cur_token = token_make_simple(TOKEN_MUT);
+      return;
 
     } else if (strcmp(word, "int") == 0) {
       free((void *)word);
-      return token_make_simple(TOKEN_INT);
+      lexer->cur_token = token_make_simple(TOKEN_INT);
+      return;
 
     } else if (strcmp(word, "string") == 0) {
       free((void *)word);
-      return token_make_simple(TOKEN_STRING);
+      lexer->cur_token = token_make_simple(TOKEN_STRING);
+      return;
 
     } else if (strcmp(word, "fn") == 0) {
       free((void *)word);
-      return token_make_simple(TOKEN_FN);
+      lexer->cur_token = token_make_simple(TOKEN_FN);
+      return;
 
     } else {
-      return token_make_name(word);
+      lexer->cur_token = token_make_name(word);
+      return;
     }
   }
   }
 }
 
-token_t *lexer_peek_token(lexer_t *lexer /*, size_t steps*/) {
-  // TODO: Maybe assert is unnecessary
-  ASSERT(lexer->line_pos != (size_t)lexer->line_len);
-  size_t prev_pos = lexer->line_pos;
-
-  token_t *token = lexer_next_token(lexer);
-  lexer->line_pos = prev_pos;
-
-  return token;
-}
-
+/**
+ * @brief Assert that the current token is token_kind and skip it. If token_kind
+ * is different raise error.
+ *
+ * @param lexer lexer to skip token for
+ * @param token_kind kind of token to assert is next
+ */
 void lexer_skip_token(lexer_t *lexer, token_kind_t token_kind) {
-  token_t *token = lexer_next_token(lexer);
-  if (token->kind != token_kind) {
-    lexer_free(lexer);
-    err_illegal_token(token);
+  lexer_advance(lexer);
+
+  if (lexer->cur_token->kind != token_kind) {
+    err_illegal_token(lexer->cur_token);
   }
-  token_free(token);
+
+  token_free(lexer->cur_token);
 }
 
 /**
@@ -347,5 +368,6 @@ void lexer_skip_token(lexer_t *lexer, token_kind_t token_kind) {
  */
 void lexer_free(lexer_t *lexer) {
   fclose(lexer->source_file);
+  token_free(lexer->cur_token);
   free(lexer);
 }
