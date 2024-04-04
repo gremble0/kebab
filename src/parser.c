@@ -12,7 +12,7 @@
 static statement_t *parse_statement(lexer_t *lexer);
 
 static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
-  int_constructor_t *intc = malloc(sizeof(int_constructor_t));
+  int_constructor_t *intc = malloc(sizeof(*intc));
 
   lexer_skip_token(lexer, TOKEN_LPAREN);
   intc->statements = list_init(3, sizeof(statement_t));
@@ -25,19 +25,19 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
 }
 
 static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
-  string_constructor_t *strc = malloc(sizeof(string_constructor_t));
+  string_constructor_t *strc = malloc(sizeof(*strc));
 
   return strc;
 }
 
 static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
-  fn_constructor_t *fnc = malloc(sizeof(fn_constructor_t));
+  fn_constructor_t *fnc = malloc(sizeof(*fnc));
 
   return fnc;
 }
 
 static constructor_t *parse_constructor(lexer_t *lexer) {
-  constructor_t *constr = malloc(sizeof(constructor_t));
+  constructor_t *constr = malloc(sizeof(*constr));
 
   // token_t *next_token = lexer_next_token(lexer);
   lexer_advance(lexer);
@@ -61,7 +61,7 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
   return constr;
 }
 static primary_t *parse_primary(lexer_t *lexer) {
-  primary_t *prm = malloc(sizeof(primary_t));
+  primary_t *prm = malloc(sizeof(*prm));
   if (prm == NULL) {
     lexer_free(lexer);
     err_malloc_fail();
@@ -95,7 +95,7 @@ static operator_t parse_factor_suffix(lexer_t *lexer) {
 }
 
 static factor_t *parse_factor(lexer_t *lexer) {
-  factor_t *ft = malloc(sizeof(factor_t));
+  factor_t *ft = malloc(sizeof(*ft));
   if (ft == NULL) {
     lexer_free(lexer); // TODO: add macro/function for this repetetive cleanup?
     err_malloc_fail(); // TODO: add malloc fail checks everywhere.
@@ -116,7 +116,7 @@ static factor_t *parse_factor(lexer_t *lexer) {
 
 // TODO: change condition to parse until not expr instead of newline/paren
 static expr_t *parse_expr(lexer_t *lexer, int wait_for_paren) {
-  expr_t *expr = malloc(sizeof(expr_t));
+  expr_t *expr = malloc(sizeof(*expr));
   expr->factors = list_init(3, sizeof(factor_t));
 
   token_kind_t closing_kind = wait_for_paren ? TOKEN_RPAREN : TOKEN_EOL;
@@ -144,8 +144,7 @@ static expr_t *parse_expr(lexer_t *lexer, int wait_for_paren) {
 static definition_t *parse_definition(lexer_t *lexer) {
   lexer_skip_token(lexer, TOKEN_DEF);
 
-  // TODO: sizeof *def
-  definition_t *def = malloc(sizeof(definition_t));
+  definition_t *def = malloc(sizeof(*def));
   lexer_advance(lexer);
 
   // If the definition is `def mut ...` add is_mutable flag and load next
@@ -172,47 +171,46 @@ static definition_t *parse_definition(lexer_t *lexer) {
 }
 
 static assignment_t *parse_assignment(lexer_t *lexer) {
-  // TODO: sizeof *assignment
-  assignment_t *assignment = malloc(sizeof(assignment_t));
+  assignment_t *ass = malloc(sizeof(*ass));
 
-  return assignment;
+  return ass;
 }
 
 static statement_t *parse_statement(lexer_t *lexer) {
   // TODO: this is all wrong i think
-  statement_t *statement = malloc(sizeof(statement_t));
+  statement_t *stmt = malloc(sizeof(*stmt));
   lexer_advance(lexer);
   // token_t *token = lexer_peek_token(lexer); Why?
 
   switch (lexer->cur_token->kind) {
   case TOKEN_DEF:
-    statement->definition = parse_definition(lexer);
+    stmt->definition = parse_definition(lexer);
     break;
 
   case TOKEN_SET:
-    statement->assignment = parse_assignment(lexer);
+    stmt->assignment = parse_assignment(lexer);
     break;
 
   case TOKEN_NAME:
   case TOKEN_INTEGER_LITERAL:
   case TOKEN_STRING_LITERAL:
-    statement->expr = parse_expr(lexer, 0);
+    stmt->expr = parse_expr(lexer, 0);
     break;
 
   // TODO: Is this right?
   case TOKEN_EOF:
-    free(statement);
+    free(stmt);
     return NULL;
 
   default:
     err_illegal_token(lexer->cur_token);
   }
 
-  return statement;
+  return stmt;
 }
 
 ast_t *parse_lexer(lexer_t *lexer) {
-  ast_t *ast = malloc(sizeof(ast_t));
+  ast_t *ast = malloc(sizeof(*ast));
   ast->statements = list_init(10, sizeof(statement_t));
 
   while (1) {

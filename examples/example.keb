@@ -22,14 +22,14 @@
 ;)
 
 ; A function that returns a function that returns an int
-def returns-fn = fn(num : int =>
+def returns-fn = fn((num : int) =>
   fn(num2 : int =>
     int(num1 + num2)
   )
 )
 
 ; is a function
-def curried = fn( =>
+def curried = fn(() =>
   int(returns-fn(3))
 )
 
@@ -37,19 +37,19 @@ def curried = fn( =>
 def uses-curried = int(curried(2)) 
 
 ; function return type is the first constructor called inside the function
-def add = fn(num1: int, num2: int =>
+def add = fn(num1 : int, num2 : int =>
   int(num1 + num2)
 )
 
 ; this is an error, no int() constructor
-def add = fn(num1: int, num2: int =>
+def add = fn(num1 : int, num2 : int =>
   num1 + num2
 )
 
 ; this is how you do multiple statements in a function.
 ; this function prints hello world, but since printf has return type void
 ; it does not return until num + 1
-def add1 = fn(num: int =>
+def add1 = fn(num : int =>
   int(
     printf("hello world\n")
     num + 1
@@ -88,23 +88,47 @@ set my-const = int(6)
 ; char type is different from string
 def ch = char('c')
 
-; advanced
-def concat = fn(s1: string, s2: string =>
+; advanced (would do the same as just `string(s1 + s2)`)
+def concat = fn(s1 : string, s2 : string =>
   string(s1 + s2)
 )
 
 def concatted-strs = concat("yo", "lo")
 
 def takes-list = fn(some-list : list<string> =>
-  int {1 + 2}
+  int(1 + 2)
 )
 
 def returns-list = fn( =>
   list<string>("a", "b", "var args")
 )
 
-def takes-generic = fn {list<string> some-list =>
-  void {
+def takes-generic = fn(some-list : list<string> =>
+  void(
     printf("ASD")
-  }
-}
+  )
+)
+
+def conditions = fn(a : int) =>
+  bool (
+    if a > 10 =>
+      true
+    else =>
+      false
+  )
+
+def conditions = (a) =>
+  if a > 10 => true
+  else => false
+
+def ternaries-kinda = (a) =>
+  def b =
+    if a > 10 => true
+    else => false
+  b
+
+def recursion = (a, b) =>
+  if a < b =>
+    recursion(a + 1, b)
+  else =>
+    a

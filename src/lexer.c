@@ -180,7 +180,7 @@ static const char *lexer_read_word(lexer_t *lexer) {
  * @return lexer at the start of the file at file_path
  */
 lexer_t *lexer_init(const char *file_path) {
-  lexer_t *lexer = malloc(sizeof(lexer_t));
+  lexer_t *lexer = malloc(sizeof(*lexer));
   if (lexer == NULL) {
     err_malloc_fail();
   }

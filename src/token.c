@@ -93,7 +93,7 @@ void token_free(token_t *token) {
 }
 
 token_t *token_make_simple(token_kind_t token_kind) {
-  token_t *token = malloc(sizeof(token_t));
+  token_t *token = malloc(sizeof(*token));
   if (token == NULL) {
     err_malloc_fail();
   }
@@ -103,7 +103,7 @@ token_t *token_make_simple(token_kind_t token_kind) {
 }
 
 token_t *token_make_str_lit(const char *str_lit) {
-  token_t *str_lit_tok = malloc(sizeof(token_t));
+  token_t *str_lit_tok = malloc(sizeof(*str_lit_tok));
   if (str_lit_tok == NULL) {
     err_malloc_fail();
   }
@@ -114,7 +114,7 @@ token_t *token_make_str_lit(const char *str_lit) {
 }
 
 token_t *token_make_char_lit(char char_lit) {
-  token_t *char_lit_tok = malloc(sizeof(token_t));
+  token_t *char_lit_tok = malloc(sizeof(*char_lit_tok));
   if (char_lit_tok == NULL) {
     err_malloc_fail();
   }
@@ -125,7 +125,7 @@ token_t *token_make_char_lit(char char_lit) {
 }
 
 token_t *token_make_int_lit(int int_lit) {
-  token_t *int_lit_tok = malloc(sizeof(token_t));
+  token_t *int_lit_tok = malloc(sizeof(*int_lit_tok));
   if (int_lit_tok == NULL) {
     err_malloc_fail();
   }
@@ -136,7 +136,7 @@ token_t *token_make_int_lit(int int_lit) {
 }
 
 token_t *token_make_name(const char *name) {
-  token_t *name_tok = malloc(sizeof(token_t));
+  token_t *name_tok = malloc(sizeof(*name_tok));
   if (name_tok == NULL) {
     err_malloc_fail();
   }
