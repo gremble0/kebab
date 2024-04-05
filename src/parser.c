@@ -18,7 +18,7 @@ static statement_t *parse_statement(lexer_t *lexer);
 
 static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<int_constructor>\n", make_indent(cur_indent_depth++));
+  start_parsing("int_constructor", cur_indent_depth++);
 #endif
 
   int_constructor_t *intc = malloc(sizeof(*intc));
@@ -35,7 +35,7 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   lexer_advance(lexer);
 
 #ifdef DEBUG
-  printf("%s</int_constructor>\n", make_indent(cur_indent_depth--));
+  finish_parsing("int_constructor", cur_indent_depth--);
 #endif
 
   return intc;
@@ -43,13 +43,13 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
 
 static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<string_constructor>\n", make_indent(cur_indent_depth++));
+  start_parsing("string_constructor", cur_indent_depth++);
 #endif
 
   string_constructor_t *strc = malloc(sizeof(*strc));
 
 #ifdef DEBUG
-  printf("%s</string_constructor>\n", make_indent(cur_indent_depth--));
+  finish_parsing("string_constructor", cur_indent_depth--);
 #endif
 
   return strc;
@@ -57,7 +57,7 @@ static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
 
 static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<fn_constructor>\n", make_indent(cur_indent_depth++));
+  start_parsing("fn_constructor", cur_indent_depth++);
 #endif
 
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
@@ -67,7 +67,7 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   // call constructor of body type
 
 #ifdef DEBUG
-  printf("%s</fn_constructor>\n", make_indent(cur_indent_depth--));
+  finish_parsing("fn_constructor", cur_indent_depth--);
 #endif
 
   return fnc;
@@ -77,7 +77,7 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
 // parse_atom, parse_def, etc.
 static constructor_t *parse_constructor(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<constructor>\n", make_indent(cur_indent_depth++));
+  start_parsing("constructor", cur_indent_depth++);
 #endif
 
   constructor_t *constr = malloc(sizeof(*constr));
@@ -101,17 +101,13 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
   }
 
 #ifdef DEBUG
-  printf("%s</constructor>\n", make_indent(cur_indent_depth--));
+  finish_parsing("constructor", cur_indent_depth--);
 #endif
 
   return constr;
 }
 
 static atom_t *parse_atom(lexer_t *lexer) {
-#ifdef DEBUG
-  printf("%s<atom>\n", make_indent(cur_indent_depth++));
-#endif
-
   atom_t *atom = malloc(sizeof(*atom));
   if (atom == NULL) {
     err_malloc_fail();
@@ -121,7 +117,7 @@ static atom_t *parse_atom(lexer_t *lexer) {
   atom->int_value = 5;
 
 #ifdef DEBUG
-  printf("%s</atom>\n", make_indent(cur_indent_depth--));
+  start_and_finish_parsing("atom", cur_indent_depth--);
 #endif
 
   return atom;
@@ -129,7 +125,7 @@ static atom_t *parse_atom(lexer_t *lexer) {
 
 static primary_t *parse_primary(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<primary>\n", make_indent(cur_indent_depth++));
+  start_parsing("primary", cur_indent_depth++);
 #endif
 
   primary_t *prm = malloc(sizeof(*prm));
@@ -141,7 +137,7 @@ static primary_t *parse_primary(lexer_t *lexer) {
   prm->atom = parse_atom(lexer);
 
 #ifdef DEBUG
-  printf("%s</primary>\n", make_indent(cur_indent_depth--));
+  finish_parsing("primary", cur_indent_depth--);
 #endif
 
   return prm;
@@ -170,8 +166,8 @@ static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
 
 #ifdef DEBUG
   if (uo != UNARY_NO_OP) {
-    printf("%s<factor_prefix>\n", make_indent(cur_indent_depth++));
-    printf("%s</factor_prefix>\n", make_indent(cur_indent_depth--));
+    start_parsing("factor_prefix", cur_indent_depth++);
+    finish_parsing("factor_prefix", cur_indent_depth--);
   }
 #endif
 
@@ -180,7 +176,7 @@ static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
 
 static factor_t *parse_factor(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<factor>\n", make_indent(cur_indent_depth++));
+  start_parsing("factor", cur_indent_depth++);
 #endif
 
   factor_t *ft = malloc(sizeof(*ft));
@@ -196,7 +192,7 @@ static factor_t *parse_factor(lexer_t *lexer) {
   ft->primary = parse_primary(lexer);
 
 #ifdef DEBUG
-  printf("%s</factor>\n", make_indent(cur_indent_depth--));
+  finish_parsing("factor", cur_indent_depth--);
 #endif
 
   return ft;
@@ -227,10 +223,8 @@ static binary_operator_t parse_binary_operator(lexer_t *lexer) {
   }
 
 #ifdef DEBUG
-  if (bo != BINARY_NO_OP) {
-    printf("%s<binary_operator>\n", make_indent(cur_indent_depth++));
-    printf("%s</binary_operator>\n", make_indent(cur_indent_depth--));
-  }
+  if (bo != BINARY_NO_OP)
+    start_and_finish_parsing("binary_operator", ++cur_indent_depth);
 #endif
 
   return bo;
@@ -239,7 +233,7 @@ static binary_operator_t parse_binary_operator(lexer_t *lexer) {
 // TODO: change condition to parse until not expr instead of newline/paren
 static expr_t *parse_expr(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<expr>\n", make_indent(cur_indent_depth++));
+  start_parsing("expr", cur_indent_depth++);
 #endif
 
   expr_t *expr = malloc(sizeof(*expr));
@@ -271,7 +265,7 @@ static expr_t *parse_expr(lexer_t *lexer) {
   }
 
 #ifdef DEBUG
-  printf("%s</expr>\n", make_indent(cur_indent_depth--));
+  finish_parsing("expr", cur_indent_depth--);
 #endif
 
   return expr;
@@ -279,7 +273,7 @@ static expr_t *parse_expr(lexer_t *lexer) {
 
 static definition_t *parse_definition(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<definition>\n", make_indent(cur_indent_depth++));
+  start_parsing("definition", cur_indent_depth++);
 #endif
 
   EXPECT_TOKEN(lexer, TOKEN_DEF);
@@ -308,7 +302,7 @@ static definition_t *parse_definition(lexer_t *lexer) {
   def->constructor = parse_constructor(lexer);
 
 #ifdef DEBUG
-  printf("%s</definition>\n", make_indent(cur_indent_depth--));
+  finish_parsing("definition", cur_indent_depth--);
 #endif
 
   return def;
@@ -316,13 +310,13 @@ static definition_t *parse_definition(lexer_t *lexer) {
 
 static assignment_t *parse_assignment(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<assignment>\n", make_indent(cur_indent_depth++));
+  start_parsing("assignment", cur_indent_depth++);
 #endif
 
   assignment_t *ass = malloc(sizeof(*ass));
 
 #ifdef DEBUG
-  printf("%s</assignment>\n", make_indent(cur_indent_depth--));
+  finish_parsing("assignment", cur_indent_depth--);
 #endif
 
   return ass;
@@ -330,7 +324,7 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
 
 static statement_t *parse_statement(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<statement>\n", make_indent(cur_indent_depth++));
+  start_parsing("statement", cur_indent_depth++);
 #endif
 
   statement_t *stmt = malloc(sizeof(*stmt));
@@ -361,7 +355,7 @@ static statement_t *parse_statement(lexer_t *lexer) {
   }
 
 #ifdef DEBUG
-  printf("%s</statement>\n", make_indent(cur_indent_depth--));
+  finish_parsing("statement", cur_indent_depth--);
 #endif
 
   return stmt;
@@ -369,7 +363,7 @@ static statement_t *parse_statement(lexer_t *lexer) {
 
 ast_t *parse(lexer_t *lexer) {
 #ifdef DEBUG
-  printf("%s<ast>\n", make_indent(cur_indent_depth++));
+  start_parsing("ast", cur_indent_depth++);
 #endif
 
   ast_t *ast = malloc(sizeof(*ast));
@@ -378,7 +372,7 @@ ast_t *parse(lexer_t *lexer) {
   while (1) {
     statement_t *statement = parse_statement(lexer);
     list_push_back(ast->statements, statement);
-    return ast;
+    break;
 
     if (statement == NULL) {
       lexer_free(lexer);
@@ -389,7 +383,7 @@ ast_t *parse(lexer_t *lexer) {
   }
 
 #ifdef DEBUG
-  printf("%s</ast>\n", make_indent(cur_indent_depth--));
+  finish_parsing("ast", cur_indent_depth);
 #endif
 
   return ast;

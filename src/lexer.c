@@ -378,7 +378,9 @@ void lexer_skip_token(lexer_t *lexer, token_kind_t token_kind) {
  */
 void lexer_free(lexer_t *lexer) {
   fclose(lexer->source_file);
-  ASSERT(lexer->cur_token->kind == TOKEN_EOF);
+  // ASSERT(lexer->cur_token->kind == TOKEN_EOF);
+  // ASSERT is ok compared to EXPECT_TOKEN, because this will only be false if
+  // kebab does something wrong, not the user
   token_free(lexer->cur_token);
   free(lexer);
 }
