@@ -23,6 +23,8 @@ typedef enum binary_operator_t {
   BINARY_MINUS, // x - y
   BINARY_MULT,  // x * y
   BINARY_DIV,   // x / y
+
+  BINARY_NO_OP, // Indicates missing operator
 } binary_operator_t;
 
 typedef struct atom_t {

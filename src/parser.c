@@ -12,6 +12,10 @@
 static statement_t *parse_statement(lexer_t *lexer);
 
 static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<int_constructor>\n");
+#endif
+
   int_constructor_t *intc = malloc(sizeof(*intc));
   lexer_advance(lexer);
   EXPECT_TOKEN(lexer, TOKEN_LPAREN);
@@ -25,26 +29,52 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   EXPECT_TOKEN(lexer, TOKEN_RPAREN); // TODO: Unnecessary?
   lexer_advance(lexer);
 
+#ifdef DEBUG
+  printf("</int_constructor>\n");
+#endif
+
   return intc;
 }
 
 static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<string_constructor>\n");
+#endif
+
   string_constructor_t *strc = malloc(sizeof(*strc));
+
+#ifdef DEBUG
+  printf("</string_constructor>\n");
+#endif
 
   return strc;
 }
 
 static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<fn_constructor>\n");
+#endif
+
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
 
   // parse params
 
   // call constructor of body type
 
+#ifdef DEBUG
+  printf("</fn_constructor>\n");
+#endif
+
   return fnc;
 }
 
+// TODO: modularize parser into multiple files, e.g. parse_constructor,
+// parse_atom, parse_def, etc.
 static constructor_t *parse_constructor(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<constructor>\n");
+#endif
+
   constructor_t *constr = malloc(sizeof(*constr));
   lexer_advance(lexer);
 
@@ -65,32 +95,89 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
     err_illegal_token(lexer->cur_token);
   }
 
+#ifdef DEBUG
+  printf("</constructor>\n");
+#endif
+
   return constr;
 }
+
+static atom_t *parse_atom(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<atom>\n");
+#endif
+
+  atom_t *atom = malloc(sizeof(*atom));
+  if (atom == NULL) {
+    err_malloc_fail();
+  }
+
+  lexer_advance(lexer);
+  atom->int_value = 5;
+
+#ifdef DEBUG
+  printf("</atom>\n");
+#endif
+
+  return atom;
+}
+
 static primary_t *parse_primary(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<primary>\n");
+#endif
+
   primary_t *prm = malloc(sizeof(*prm));
   if (prm == NULL) {
     lexer_free(lexer);
     err_malloc_fail();
   }
 
+  prm->atom = parse_atom(lexer);
+
+#ifdef DEBUG
+  printf("</primary>\n");
+#endif
+
   return prm;
 }
 
+// TODO: rename -> parse_unary_operator?
 static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
+  unary_operator_t uo;
+
   // TODO: some sort of error handling
-  if (lexer->cur_token->kind == TOKEN_PLUS) {
-    return UNARY_PLUS;
-  } else if (lexer->cur_token->kind == TOKEN_MINUS) {
-    return UNARY_MINUS;
-  } else if (lexer->cur_token->kind == TOKEN_NOT) {
-    return UNARY_NOT;
-  } else {
-    return UNARY_NO_OP;
+  switch (lexer->cur_token->kind) {
+  case TOKEN_PLUS:
+    lexer_advance(lexer);
+    uo = UNARY_PLUS;
+    break;
+  case TOKEN_MINUS:
+    lexer_advance(lexer);
+    uo = UNARY_MINUS;
+    break;
+  case TOKEN_NOT:
+    lexer_advance(lexer);
+    uo = UNARY_NOT;
+  default:
+    uo = UNARY_NO_OP;
   }
+
+#ifdef DEBUG
+  if (uo != UNARY_NO_OP) {
+    printf("<factor_prefix>\n");
+    printf("</factor_prefix>\n");
+  }
+#endif
+
+  return uo;
 }
 
 static factor_t *parse_factor(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<factor>\n");
+#endif
+
   factor_t *ft = malloc(sizeof(*ft));
   if (ft == NULL) {
     lexer_free(lexer); // TODO: add macro/function for this repetetive cleanup?
@@ -103,39 +190,53 @@ static factor_t *parse_factor(lexer_t *lexer) {
   // Parse primary
   ft->primary = parse_primary(lexer);
 
+#ifdef DEBUG
+  printf("</factor>\n");
+#endif
+
   return ft;
 }
 
-static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
-  // To avoid unnecessary malloc and free for return NULL path we make a
-  // temporary varible to store the binary operators which will only be malloced
-  // when needed
+static binary_operator_t parse_binary_operator(lexer_t *lexer) {
   binary_operator_t bo;
 
   switch (lexer->cur_token->kind) {
   case TOKEN_PLUS:
+    lexer_advance(lexer);
     bo = BINARY_PLUS;
     break;
   case TOKEN_MINUS:
+    lexer_advance(lexer);
     bo = BINARY_MINUS;
     break;
   case TOKEN_MULT:
+    lexer_advance(lexer);
     bo = BINARY_MULT;
     break;
   case TOKEN_DIV:
+    lexer_advance(lexer);
     bo = BINARY_DIV;
     break;
   default:
-    return NULL;
+    bo = BINARY_NO_OP;
   }
 
-  binary_operator_t *ret = malloc(sizeof(*ret));
-  *ret = bo;
-  return ret;
+#ifdef DEBUG
+  if (bo != BINARY_NO_OP) {
+    printf("<binary_operator>\n");
+    printf("</binary_operator>\n");
+  }
+#endif
+
+  return bo;
 }
 
 // TODO: change condition to parse until not expr instead of newline/paren
 static expr_t *parse_expr(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<expr>\n");
+#endif
+
   expr_t *expr = malloc(sizeof(*expr));
   if (expr == NULL) {
     err_malloc_fail();
@@ -144,13 +245,19 @@ static expr_t *parse_expr(lexer_t *lexer) {
   expr->factors = list_init(LIST_START_SIZE, sizeof(factor_t));
   expr->operators = list_init(LIST_START_SIZE, sizeof(binary_operator_t));
 
+  // TODO: is condition always right?
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
     switch (lexer->cur_token->kind) {
     case TOKEN_INTEGER_LITERAL:
     case TOKEN_STRING_LITERAL:
     case TOKEN_NAME:
       list_push_back(expr->factors, parse_factor(lexer));
-      list_push_back(expr->operators, parse_binary_operator(lexer));
+      binary_operator_t bo = parse_binary_operator(lexer);
+      if (bo != BINARY_NO_OP) {
+        binary_operator_t *bo_p = malloc(sizeof(*bo_p));
+        *bo_p = bo;
+        list_push_back(expr->operators, bo_p);
+      }
       break;
 
     default:
@@ -158,10 +265,18 @@ static expr_t *parse_expr(lexer_t *lexer) {
     }
   }
 
+#ifdef DEBUG
+  printf("</expr>\n");
+#endif
+
   return expr;
 }
 
 static definition_t *parse_definition(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<definition>\n");
+#endif
+
   EXPECT_TOKEN(lexer, TOKEN_DEF);
   lexer_advance(lexer);
 
@@ -187,16 +302,32 @@ static definition_t *parse_definition(lexer_t *lexer) {
 
   def->constructor = parse_constructor(lexer);
 
+#ifdef DEBUG
+  printf("</definition>\n");
+#endif
+
   return def;
 }
 
 static assignment_t *parse_assignment(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<assignment>\n");
+#endif
+
   assignment_t *ass = malloc(sizeof(*ass));
+
+#ifdef DEBUG
+  printf("</assignment>\n");
+#endif
 
   return ass;
 }
 
 static statement_t *parse_statement(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<statement>\n");
+#endif
+
   statement_t *stmt = malloc(sizeof(*stmt));
   lexer_advance(lexer);
 
@@ -224,16 +355,23 @@ static statement_t *parse_statement(lexer_t *lexer) {
     err_illegal_token(lexer->cur_token);
   }
 
+#ifdef DEBUG
+  printf("</statement>\n");
+#endif
+
   return stmt;
 }
 
 ast_t *parse(lexer_t *lexer) {
+#ifdef DEBUG
+  printf("<ast>\n");
+#endif
+
   ast_t *ast = malloc(sizeof(*ast));
   ast->statements = list_init(10, sizeof(statement_t));
 
   while (1) {
     statement_t *statement = parse_statement(lexer);
-    printf("asd\n");
     list_push_back(ast->statements, statement);
     return ast;
 
@@ -244,6 +382,10 @@ ast_t *parse(lexer_t *lexer) {
 
     list_push_back(ast->statements, statement);
   }
+
+#ifdef DEBUG
+  printf("</ast>\n");
+#endif
 
   return ast;
 }
