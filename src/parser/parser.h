@@ -1,3 +1,5 @@
+#pragma once
+
 #include "lexer.h"
 #include "nlist.h"
 
@@ -8,7 +10,11 @@
     }                                                                          \
   } while (0);
 
-#define LIST_START_SIZE 3
+#define LIST_START_SIZE 5
+
+#ifdef DEBUG
+static size_t cur_indent_depth = 0;
+#endif
 
 typedef enum unary_operator_t {
   UNARY_PLUS,  // +1
