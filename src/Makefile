@@ -1,6 +1,6 @@
 CC=clang
 CFLAGS=-Wall -Wextra -g -DDEBUG
-OBJS=main.o parser.o lexer.o token.o
+OBJS=main.o parser.o lexer.o token.o debug.o
 NONSTDLIBSRC=../lib/nonstdlib/src
 LIBS=-L$(NONSTDLIBSRC) -lnonstdlib
 LIB=libkebab.a
