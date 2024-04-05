@@ -29,8 +29,9 @@ typedef enum binary_operator_t {
 
 typedef struct atom_t {
   union {
-    int int_value;
+    char char_value;
     const char *string_value;
+    int int_value;
     const char *name;
     list_t *list_value;
 

@@ -11,6 +11,7 @@ typedef enum token_kind_t {
   TOKEN_INT,
   TOKEN_STRING,
   TOKEN_FN,
+  // TOKEN_CHAR
 
   // Syntax
   TOKEN_COLON,      // :
@@ -60,7 +61,7 @@ void token_free(token_t *token);
 
 token_t *token_make_simple(token_kind_t token_kind);
 token_t *token_make_str_lit(const char *str_lit);
-token_t *token_make_char_lit(const char char_lit);
+token_t *token_make_char_lit(char char_lit);
 token_t *token_make_int_lit(int int_lit);
 token_t *token_make_name(const char *name);
 

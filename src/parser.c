@@ -108,13 +108,33 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
 }
 
 static atom_t *parse_atom(lexer_t *lexer) {
+  // TODO: maybe free some strings here?
   atom_t *atom = malloc(sizeof(*atom));
   if (atom == NULL) {
     err_malloc_fail();
   }
 
+  switch (lexer->cur_token->kind) {
+  case TOKEN_CHAR_LITERAL:
+    atom->char_value = lexer->cur_token->char_literal;
+    break;
+  case TOKEN_STRING_LITERAL:
+    // Copy to avoid sharing memory, so we can free lexer ASAP
+    atom->string_value = strdup(lexer->cur_token->string_literal);
+    break;
+  case TOKEN_INTEGER_LITERAL:
+    atom->int_value = lexer->cur_token->integer_literal;
+    break;
+  case TOKEN_NAME:
+    // Copy to avoid sharing memory, so we can free lexer ASAP
+    atom->name = strdup(lexer->cur_token->name);
+    break;
+  // TODO: list, etc.
+  default:
+    err_illegal_token(lexer->cur_token);
+  }
+
   lexer_advance(lexer);
-  atom->int_value = 5;
 
 #ifdef DEBUG
   start_and_finish_parsing("atom", cur_indent_depth--);
