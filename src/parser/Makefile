@@ -6,7 +6,7 @@ NONSTDLIBSRC=../../lib/nonstdlib/src
 LEXERSRC=../lexer
 UTILSRC=../util
 
-OBJS=parser.o
+OBJS=parser.o debug.o
 
 all: clean $(OBJS)
 

@@ -17,10 +17,11 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   start_parsing("int_constructor");
 #endif
 
-  int_constructor_t *intc = malloc(sizeof(*intc));
+  EXPECT_TOKEN(lexer, TOKEN_INT);
   lexer_advance(lexer);
   EXPECT_TOKEN(lexer, TOKEN_LPAREN);
 
+  int_constructor_t *intc = malloc(sizeof(*intc));
   intc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
@@ -267,6 +268,7 @@ static expr_t *parse_expr(lexer_t *lexer) {
     case TOKEN_STRING_LITERAL:
     case TOKEN_NAME:
       list_push_back(expr->factors, parse_factor(lexer));
+
       binary_operator_t bo = parse_binary_operator(lexer);
       if (bo != BINARY_NO_OP) {
         binary_operator_t *bo_p = malloc(sizeof(*bo_p));
@@ -343,8 +345,11 @@ static statement_t *parse_statement(lexer_t *lexer) {
   start_parsing("statement");
 #endif
 
-  statement_t *stmt = malloc(sizeof(*stmt));
   lexer_advance(lexer);
+  statement_t *stmt = malloc(sizeof(*stmt));
+  if (stmt == NULL) {
+    err_malloc_fail();
+  }
 
   switch (lexer->cur_token->kind) {
   case TOKEN_DEF:

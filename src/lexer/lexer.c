@@ -41,25 +41,6 @@ static int lexer_line_is_done(lexer_t *lexer) {
 }
 
 /**
- * @brief Check if the current line is empty (or only contains a comment)
- *
- * @param lexer lexer to check
- * @return 1 if line is empty 0 if not
- */
-static int lexer_line_is_empty(lexer_t *lexer) {
-  if (lexer->line_len == 1) {
-    return 1;
-  }
-
-  size_t spaces = 0;
-  while (isspace(lexer->line[spaces])) {
-    ++spaces;
-  }
-
-  return lexer->line[spaces] == ';';
-}
-
-/**
  * @brief Seek forward in the current line in the lexer until a predicate fails.
  *
  * @param lexer lexer to check
@@ -220,15 +201,9 @@ void lexer_advance(lexer_t *lexer) {
   }
 
   if (lexer_line_is_done(lexer)) {
-    // Only make EOL tokens for non empty lines
-    if (lexer_line_is_empty(lexer)) {
-      lexer_load_next_line(lexer);
-      return lexer_advance(lexer);
-    } else {
-      lexer_load_next_line(lexer);
-      lexer->cur_token = token_make_simple(TOKEN_EOL);
-      return;
-    }
+    // Kebab does not care about newlines, so simply ignore them
+    lexer_load_next_line(lexer);
+    return lexer_advance(lexer);
   }
 
   switch (lexer->line[lexer->line_pos]) {

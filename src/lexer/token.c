@@ -54,8 +54,6 @@ char *token_to_string(token_t *token) {
     return strdup("TOKEN_TRUE");
   case TOKEN_FALSE:
     return strdup("TOKEN_FALSE");
-  case TOKEN_EOL:
-    return strdup("TOKEN_EOL");
   case TOKEN_EOF:
     return strdup("TOKEN_EOF");
   case TOKEN_CHAR_LITERAL: {

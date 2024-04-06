@@ -35,7 +35,6 @@ typedef enum token_kind_t {
   TOKEN_FALSE,
 
   // Special
-  TOKEN_EOL, // \n | \r
   TOKEN_EOF, // <end of file>
 
   // Values
