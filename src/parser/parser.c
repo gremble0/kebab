@@ -56,11 +56,11 @@ static char_constructor_t *parse_char_constructor(lexer_t *lexer) {
   EXPECT_TOKEN(lexer, TOKEN_LPAREN);
   lexer_advance(lexer);
 
-  char_constructor_t *strc = malloc(sizeof(*strc));
-  strc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
+  char_constructor_t *chc = malloc(sizeof(*chc));
+  chc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    list_push_back(strc->statements, parse_statement(lexer));
+    list_push_back(chc->statements, parse_statement(lexer));
   }
 
   EXPECT_TOKEN(lexer, TOKEN_RPAREN); // TODO: Unnecessary?
@@ -70,7 +70,7 @@ static char_constructor_t *parse_char_constructor(lexer_t *lexer) {
   finish_parsing("char_constructor");
 #endif
 
-  return strc;
+  return chc;
 }
 
 static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
@@ -364,8 +364,9 @@ static expr_t *parse_expr(lexer_t *lexer) {
   // TODO: is condition always right?
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
     switch (lexer->cur_token->kind) {
-    case TOKEN_INTEGER_LITERAL:
+    case TOKEN_CHAR_LITERAL:
     case TOKEN_STRING_LITERAL:
+    case TOKEN_INTEGER_LITERAL:
     case TOKEN_NAME:
       list_push_back(expr->factors, parse_factor(lexer));
 
@@ -431,7 +432,22 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
   start_parsing("assignment");
 #endif
 
+  EXPECT_TOKEN(lexer, TOKEN_SET);
+  lexer_advance(lexer);
+
   assignment_t *ass = malloc(sizeof(*ass));
+  if (ass == NULL) {
+    err_malloc_fail();
+  }
+
+  EXPECT_TOKEN(lexer, TOKEN_NAME);
+  ass->name = strdup(lexer->cur_token->name);
+  lexer_advance(lexer);
+
+  EXPECT_TOKEN(lexer, TOKEN_EQUALS);
+  lexer_advance(lexer);
+
+  ass->constructor = parse_constructor(lexer);
 
 #ifdef DEBUG
   finish_parsing("assignment");
@@ -460,8 +476,9 @@ static statement_t *parse_statement(lexer_t *lexer) {
     break;
 
   case TOKEN_NAME:
-  case TOKEN_INTEGER_LITERAL:
+  case TOKEN_CHAR_LITERAL:
   case TOKEN_STRING_LITERAL:
+  case TOKEN_INTEGER_LITERAL:
     stmt->expr = parse_expr(lexer);
     break;
 

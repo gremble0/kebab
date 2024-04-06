@@ -17,11 +17,12 @@ _Noreturn void err_illegal_token(token_t *token) {
   exit(1);
 }
 
+// TODO: this is a runtime error
 _Noreturn void err_set_constant(token_t *constant) {
   err_print_stacktrace();
   fprintf(stderr,
-          "ERR_SET_CONSTANT: cannot mutate '%s' with 'set' assignment. Define "
-          "variable with 'mut'\n",
+          "ERR_SET_CONSTANT: cannot mutate '%s' with 'set'. Define variable "
+          "with 'mut'\n",
           token_to_string(constant));
   exit(1);
 }

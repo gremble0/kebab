@@ -24,7 +24,7 @@ set my-var = int(6)
 
 ; this should error (ideally while parsing)
 def my-const = int(4)
-my-const = int(6)
+set my-const = int(6) ; TODO: allow not using constructors when type is already known (infer type here, maybe hard)
 
 
 

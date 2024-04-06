@@ -309,14 +309,19 @@ void lexer_advance(lexer_t *lexer) {
       lexer->cur_token = token_make_simple(TOKEN_MUT);
       return;
 
-    } else if (strcmp(word, "int") == 0) {
+    } else if (strcmp(word, "char") == 0) {
       free((void *)word);
-      lexer->cur_token = token_make_simple(TOKEN_INT);
+      lexer->cur_token = token_make_simple(TOKEN_CHAR);
       return;
 
     } else if (strcmp(word, "string") == 0) {
       free((void *)word);
       lexer->cur_token = token_make_simple(TOKEN_STRING);
+      return;
+
+    } else if (strcmp(word, "int") == 0) {
+      free((void *)word);
+      lexer->cur_token = token_make_simple(TOKEN_INT);
       return;
 
     } else if (strcmp(word, "fn") == 0) {
