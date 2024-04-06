@@ -14,7 +14,7 @@ def kebab-case = fn((my-var : my-type) => int(
 
 ; mutability (constant by default)
 def mut my-var = int(4)
-my-var = int(6)
+set my-var = int(6)
 
 
 

@@ -15,5 +15,4 @@ typedef struct lexer_t {
 // TODO: make void lexer_load_token and make lexer hold a cur_token ?
 lexer_t *lexer_init(const char *file_path);
 void lexer_advance(lexer_t *lexer);
-void lexer_skip_token(lexer_t *lexer, token_kind_t token_kind);
 void lexer_free(lexer_t *lexer);

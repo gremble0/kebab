@@ -7,6 +7,7 @@
 #include "nerror.h"
 #include "nlist.h"
 #include "parser.h"
+#include "parser_error.h"
 #include "token.h"
 
 // TODO: clean up forward declarations
@@ -153,6 +154,7 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   // parse function body
   fnc->body = parse_constructor(lexer);
 
+  // Close the opening paren of the fn constructor
   EXPECT_TOKEN(lexer, TOKEN_RPAREN);
   lexer_advance(lexer);
 

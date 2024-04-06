@@ -333,21 +333,6 @@ void lexer_advance(lexer_t *lexer) {
 }
 
 /**
- * @brief Assert that the current token is token_kind and skip it. If token_kind
- * is different raise error.
- *
- * @param lexer lexer to skip token for
- * @param token_kind kind of token to assert is next
- */
-void lexer_skip_token(lexer_t *lexer, token_kind_t token_kind) {
-  lexer_advance(lexer);
-
-  if (lexer->cur_token->kind != token_kind) {
-    err_illegal_token(lexer->cur_token);
-  }
-}
-
-/**
  * @brief Free lexer and all data associated with it
  *
  * @param lexer lexer to free
