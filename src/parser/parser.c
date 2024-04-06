@@ -348,12 +348,12 @@ static binary_operator_t parse_binary_operator(lexer_t *lexer) {
 }
 
 // TODO: change condition to parse until not expr instead of newline/paren
-static expr_t *parse_expr(lexer_t *lexer) {
+static expression_t *parse_expr(lexer_t *lexer) {
 #ifdef DEBUG
   start_parsing("expr");
 #endif
 
-  expr_t *expr = malloc(sizeof(*expr));
+  expression_t *expr = malloc(sizeof(*expr));
   if (expr == NULL) {
     err_malloc_fail();
   }
@@ -468,10 +468,12 @@ static statement_t *parse_statement(lexer_t *lexer) {
 
   switch (lexer->cur_token->kind) {
   case TOKEN_DEF:
+    stmt->type = STMT_DEFINITION;
     stmt->definition = parse_definition(lexer);
     break;
 
   case TOKEN_SET:
+    stmt->type = STMT_ASSIGNMENT;
     stmt->assignment = parse_assignment(lexer);
     break;
 
@@ -479,13 +481,9 @@ static statement_t *parse_statement(lexer_t *lexer) {
   case TOKEN_CHAR_LITERAL:
   case TOKEN_STRING_LITERAL:
   case TOKEN_INTEGER_LITERAL:
+    stmt->type = STMT_EXPRESSION;
     stmt->expr = parse_expr(lexer);
     break;
-
-  // TODO: Is this right?
-  case TOKEN_EOF:
-    free(stmt);
-    return NULL;
 
   default:
     err_illegal_token(lexer->cur_token);
@@ -507,14 +505,12 @@ ast_t *parse(lexer_t *lexer) {
   ast->statements = list_init(10, sizeof(statement_t));
 
   while (1) {
-    statement_t *statement = parse_statement(lexer);
-    list_push_back(ast->statements, statement);
-
-    if (statement == NULL) {
-      lexer_free(lexer);
+    if (lexer->cur_token->kind == TOKEN_EOF) {
       break;
     }
 
+    statement_t *statement = parse_statement(lexer);
+    printf("%d\n", statement->type);
     list_push_back(ast->statements, statement);
   }
 
@@ -532,6 +528,6 @@ void ast_free(ast_t *ast) {
     // needs to not free the statement itself as it will be freed by list_free()
   }
 
-  list_free(ast->statements);
+  // list_free(ast->statements);
   free(ast);
 }

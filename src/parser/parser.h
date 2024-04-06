@@ -82,6 +82,15 @@ typedef struct factor_t {
   primary_t *primary;
 } factor_t;
 
+// Forward declaration because its used in fn_constructor
+typedef struct constructor_t constructor_t;
+typedef enum constructor_type_t {
+  CONSTR_CHAR,
+  CONSTR_STRING,
+  CONSTR_INT,
+  CONSTR_FN,
+} constructor_type_t;
+
 typedef struct char_constructor_t {
   list_t *statements; // list<statement_t>
 } char_constructor_t;
@@ -94,9 +103,6 @@ typedef struct int_constructor_t {
   list_t *statements; // list<statement_t>
 } int_constructor_t;
 
-// Forward declaration because its used in fn_constructor
-typedef struct constructor_t constructor_t;
-
 typedef struct fn_param_t {
   const char *name;
   const char *type_name;
@@ -104,11 +110,12 @@ typedef struct fn_param_t {
 
 typedef struct fn_constructor_t {
   list_t *params; // Only for functions, NULL for primitives
+  constructor_type_t type;
   constructor_t *body;
 } fn_constructor_t;
 
 struct constructor_t {
-  // TODO: enum type?
+  constructor_type_t type;
   union {
     char_constructor_t *char_constructor;
     string_constructor_t *string_constructor;
@@ -117,37 +124,44 @@ struct constructor_t {
   };
 };
 
-typedef struct expr_t {
+typedef struct expression_t {
   list_t *factors;   // list<factor_t>
   list_t *operators; // list<binary_operator_t>
-} expr_t;
+} expression_t;
 
 // Binds a symbol to an expression
 typedef struct definition_t {
   const char *name;
   int is_mutable; // flag for seeing if this definition is mutable
+  constructor_type_t type;
   constructor_t *constructor;
 } definition_t;
 
 // Same as a definition, but is only allowed for mutable bindings
 typedef struct assignment_t {
   const char *name;
+  constructor_type_t type;
   constructor_t *constructor;
 } assignment_t;
 
 // Sort of abstract/generic type to represent all possible statements.
 // Actual statements are the types in the union of this struct.
 typedef struct statement_t {
+  enum {
+    STMT_DEFINITION,
+    STMT_ASSIGNMENT,
+    STMT_EXPRESSION,
+  } type;
   union {
     definition_t *definition;
     assignment_t *assignment;
-    expr_t *expr;
+    expression_t *expr;
   };
 } statement_t;
 
 // Entrypoint to build/use the contents of a program
 typedef struct ast_t {
-  list_t *statements;
+  list_t *statements; // list<statement_t>
 } ast_t;
 
 ast_t *parse(lexer_t *lexer);
