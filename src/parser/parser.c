@@ -11,6 +11,7 @@
 
 // TODO: clean up forward declarations
 static statement_t *parse_statement(lexer_t *lexer);
+static constructor_t *parse_constructor(lexer_t *lexer);
 
 static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
 #ifdef DEBUG
@@ -20,6 +21,7 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   EXPECT_TOKEN(lexer, TOKEN_INT);
   lexer_advance(lexer);
   EXPECT_TOKEN(lexer, TOKEN_LPAREN);
+  lexer_advance(lexer);
 
   int_constructor_t *intc = malloc(sizeof(*intc));
   intc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
@@ -27,6 +29,9 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
     list_push_back(intc->statements, parse_statement(lexer));
   }
+
+  // TODO: if statements return type not int then error - something like this.
+  // Do this in runtime or parser - probably parser?
 
   EXPECT_TOKEN(lexer, TOKEN_RPAREN); // TODO: Unnecessary?
   lexer_advance(lexer);
@@ -38,12 +43,56 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   return intc;
 }
 
+static char_constructor_t *parse_char_constructor(lexer_t *lexer) {
+#ifdef DEBUG
+  start_parsing("char_constructor");
+#endif
+  // TODO: very similar to int_constructor, maybe redo into one func with enum
+  // as param or something
+
+  EXPECT_TOKEN(lexer, TOKEN_CHAR);
+  lexer_advance(lexer);
+  EXPECT_TOKEN(lexer, TOKEN_LPAREN);
+  lexer_advance(lexer);
+
+  char_constructor_t *strc = malloc(sizeof(*strc));
+  strc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
+
+  while (lexer->cur_token->kind != TOKEN_RPAREN) {
+    list_push_back(strc->statements, parse_statement(lexer));
+  }
+
+  EXPECT_TOKEN(lexer, TOKEN_RPAREN); // TODO: Unnecessary?
+  lexer_advance(lexer);
+
+#ifdef DEBUG
+  finish_parsing("char_constructor");
+#endif
+
+  return strc;
+}
+
 static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
 #ifdef DEBUG
   start_parsing("string_constructor");
 #endif
+  // TODO: very similar to int_constructor, maybe redo into one func with enum
+  // as param or something
+
+  EXPECT_TOKEN(lexer, TOKEN_STRING);
+  lexer_advance(lexer);
+  EXPECT_TOKEN(lexer, TOKEN_LPAREN);
+  lexer_advance(lexer);
 
   string_constructor_t *strc = malloc(sizeof(*strc));
+  strc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
+
+  while (lexer->cur_token->kind != TOKEN_RPAREN) {
+    list_push_back(strc->statements, parse_statement(lexer));
+  }
+
+  EXPECT_TOKEN(lexer, TOKEN_RPAREN); // TODO: Unnecessary?
+  lexer_advance(lexer);
 
 #ifdef DEBUG
   finish_parsing("string_constructor");
@@ -57,11 +106,22 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   start_parsing("fn_constructor");
 #endif
 
+  EXPECT_TOKEN(lexer, TOKEN_FN);
+  lexer_advance(lexer);
+  EXPECT_TOKEN(lexer, TOKEN_LPAREN);
+  lexer_advance(lexer);
+  EXPECT_TOKEN(lexer, TOKEN_LPAREN);
+  lexer_advance(lexer);
+
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
+  fnc->params = list_init(LIST_START_SIZE, sizeof(statement_t));
 
   // parse params
+  while (lexer->cur_token->kind != TOKEN_RPAREN) {
+    list_push_back(fnc->params, "");
+  }
 
-  // call constructor of body type
+  fnc->body = parse_constructor(lexer);
 
 #ifdef DEBUG
   finish_parsing("fn_constructor");
@@ -81,12 +141,16 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
   lexer_advance(lexer);
 
   switch (lexer->cur_token->kind) {
-  case TOKEN_INT:
-    constr->int_constructor = parse_int_constructor(lexer);
+  case TOKEN_CHAR:
+    constr->char_constructor = parse_char_constructor(lexer);
     break;
 
   case TOKEN_STRING:
     constr->string_constructor = parse_string_constructor(lexer);
+    break;
+
+  case TOKEN_INT:
+    constr->int_constructor = parse_int_constructor(lexer);
     break;
 
   case TOKEN_FN:
@@ -345,7 +409,6 @@ static statement_t *parse_statement(lexer_t *lexer) {
   start_parsing("statement");
 #endif
 
-  lexer_advance(lexer);
   statement_t *stmt = malloc(sizeof(*stmt));
   if (stmt == NULL) {
     err_malloc_fail();
@@ -393,7 +456,6 @@ ast_t *parse(lexer_t *lexer) {
   while (1) {
     statement_t *statement = parse_statement(lexer);
     list_push_back(ast->statements, statement);
-    break;
 
     if (statement == NULL) {
       lexer_free(lexer);

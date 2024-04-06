@@ -174,6 +174,7 @@ lexer_t *lexer_init(const char *file_path) {
   lexer->line = NULL;
   lexer->cur_token = NULL;
   lexer_load_next_line(lexer);
+  lexer_advance(lexer);
 
   return lexer;
 }

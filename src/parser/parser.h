@@ -33,6 +33,26 @@ typedef enum binary_operator_t {
   BINARY_NO_OP, // Indicates missing operator
 } binary_operator_t;
 
+typedef enum keb_type_raw_t {
+  TYPE_CHAR,
+  TYPE_STRING,
+  TYPE_INT,
+  TYPE_LIST,
+  TYPE_FN,
+} keb_type_raw_t;
+
+typedef struct keb_type_t {
+  keb_type_raw_t type;
+  union {
+    keb_type_raw_t generic_type; // for lists e.g. list<int>
+    struct {
+      // for fns, e.g. fn((a : int) => int(...))
+      list_t *param_types; // list<keb_type_raw_t>
+      keb_type_raw_t return_type;
+    };
+  };
+} keb_type_t;
+
 typedef struct atom_t {
   union {
     char char_value;
@@ -59,6 +79,10 @@ typedef struct factor_t {
   primary_t *primary;
 } factor_t;
 
+typedef struct char_constructor_t {
+  list_t *statements; // list<statement_t>
+} char_constructor_t;
+
 typedef struct string_constructor_t {
   list_t *statements; // list<statement_t>
 } string_constructor_t;
@@ -67,22 +91,28 @@ typedef struct int_constructor_t {
   list_t *statements; // list<statement_t>
 } int_constructor_t;
 
+// Forward declaration because its used in fn_constructor
+typedef struct constructor_t constructor_t;
+
+typedef struct fn_param_t {
+  keb_type_t type;
+  const char *name;
+} fn_param_t;
+
 typedef struct fn_constructor_t {
-  list_t *params;     // Only for functions, NULL for primitives
-  void *return_type;  // TODO: type for return types?, enum kebab_type: int,
-                      // string, etc. ?
-  list_t *statements; // constructor body is a list of statements, constructor
-                      // returns first statement that returns return_type
+  list_t *params; // Only for functions, NULL for primitives
+  constructor_t *body;
 } fn_constructor_t;
 
-typedef struct constructor_t {
+struct constructor_t {
   // TODO: enum type?
   union {
-    fn_constructor_t *fn_constructor;
-    int_constructor_t *int_constructor;
+    char_constructor_t *char_constructor;
     string_constructor_t *string_constructor;
+    int_constructor_t *int_constructor;
+    fn_constructor_t *fn_constructor;
   };
-} constructor_t;
+};
 
 typedef struct expr_t {
   list_t *factors;   // list<factor_t>

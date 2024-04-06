@@ -18,10 +18,12 @@ char *token_to_string(token_t *token) {
     return strdup("TOKEN_SET");
   case TOKEN_MUT:
     return strdup("TOKEN_MUT");
-  case TOKEN_INT:
-    return strdup("TOKEN_INT");
+  case TOKEN_CHAR:
+    return strdup("TOKEN_CHAR");
   case TOKEN_STRING:
     return strdup("TOKEN_STRING");
+  case TOKEN_INT:
+    return strdup("TOKEN_INT");
   case TOKEN_FN:
     return strdup("TOKEN_FN");
   case TOKEN_COLON:

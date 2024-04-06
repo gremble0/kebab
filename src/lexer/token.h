@@ -8,10 +8,10 @@ typedef enum token_kind_t {
 
   // Constructors
   // TODO: Move the definition of these types higher up instead of hardcoding
-  TOKEN_INT,
+  TOKEN_CHAR,
   TOKEN_STRING,
+  TOKEN_INT,
   TOKEN_FN,
-  // TOKEN_CHAR
 
   // Syntax
   TOKEN_COLON,      // :
