@@ -32,7 +32,7 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   }
 
   // TODO: if statements return type not int then error - something like this.
-  // Do this in runtime or parser - probably parser?
+  // Do this in runtime or parser - parser looks hard.
 
   EXPECT_TOKEN(lexer, TOKEN_RPAREN); // TODO: Unnecessary?
   lexer_advance(lexer);
@@ -213,20 +213,22 @@ static atom_t *parse_atom(lexer_t *lexer) {
 
   switch (lexer->cur_token->kind) {
   case TOKEN_CHAR_LITERAL:
+    atom->type = ATOM_CHAR;
     atom->char_value = lexer->cur_token->char_literal;
     break;
   case TOKEN_STRING_LITERAL:
-    // Copy to avoid sharing memory, so we can free lexer ASAP
+    atom->type = ATOM_STRING;
     atom->string_value = strdup(lexer->cur_token->string_literal);
     break;
   case TOKEN_INTEGER_LITERAL:
+    atom->type = ATOM_INT;
     atom->int_value = lexer->cur_token->integer_literal;
     break;
   case TOKEN_NAME:
-    // Copy to avoid sharing memory, so we can free lexer ASAP
+    atom->type = ATOM_NAME;
     atom->name = strdup(lexer->cur_token->name);
     break;
-  // TODO: list, etc.
+  // TODO: list, nil, bool, etc.
   default:
     err_illegal_token(lexer->cur_token);
   }
@@ -504,15 +506,8 @@ ast_t *parse(lexer_t *lexer) {
   ast_t *ast = malloc(sizeof(*ast));
   ast->statements = list_init(10, sizeof(statement_t));
 
-  while (1) {
-    if (lexer->cur_token->kind == TOKEN_EOF) {
-      break;
-    }
-
-    statement_t *statement = parse_statement(lexer);
-    printf("%d\n", statement->type);
-    list_push_back(ast->statements, statement);
-  }
+  while (lexer->cur_token->kind != TOKEN_EOF)
+    list_push_back(ast->statements, parse_statement(lexer));
 
 #ifdef DEBUG
   finish_parsing("ast");

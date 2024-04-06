@@ -57,6 +57,13 @@ typedef struct keb_type_t {
 ///////////////////
 
 typedef struct atom_t {
+  enum {
+    ATOM_CHAR,
+    ATOM_STRING,
+    ATOM_INT,
+    ATOM_NAME,
+    ATOM_LIST,
+  } type;
   union {
     char char_value;
     const char *string_value;
@@ -78,6 +85,7 @@ typedef struct primary_t {
 } primary_t;
 
 typedef struct factor_t {
+  // TODO: inline enum?
   unary_operator_t prefix; // e.g. -2, +1, ~false
   primary_t *primary;
 } factor_t;
