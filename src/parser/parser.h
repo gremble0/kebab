@@ -6,9 +6,9 @@
 #define EXPECT_TOKEN(lexer, token_kind)                                        \
   do {                                                                         \
     if (lexer->cur_token->kind != token_kind) {                                \
-      err_illegal_token(lexer->cur_token);                                     \
+      err_wrong_token(#token_kind, lexer->cur_token);                          \
     }                                                                          \
-  } while (0);
+  } while (0)
 
 #define LIST_START_SIZE 5
 
@@ -33,6 +33,8 @@ typedef enum binary_operator_t {
   BINARY_NO_OP, // Indicates missing operator
 } binary_operator_t;
 
+// TODO: use somethingl like this? or just leave typing to runtime?
+///////////////////
 typedef enum keb_type_raw_t {
   TYPE_CHAR,
   TYPE_STRING,
@@ -52,6 +54,7 @@ typedef struct keb_type_t {
     };
   };
 } keb_type_t;
+///////////////////
 
 typedef struct atom_t {
   union {
@@ -95,8 +98,8 @@ typedef struct int_constructor_t {
 typedef struct constructor_t constructor_t;
 
 typedef struct fn_param_t {
-  keb_type_t type;
   const char *name;
+  const char *type_name;
 } fn_param_t;
 
 typedef struct fn_constructor_t {

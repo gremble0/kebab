@@ -4,11 +4,11 @@ def should-be-ok = int(2
                        3)
 def some-string = string("yolo")
 
-def c = fn(num1 : int, num2 : int => int(
+def c = fn((num1 : int, num2 : int) => int(
   num1 + num2 ; should be ignoreda jdkljflks
 ))
 
-def kebab-case = fn(multi-word-type var => int(
+def kebab-case = fn((my-var : my-type) => int(
   2
 ))
 

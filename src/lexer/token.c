@@ -152,8 +152,15 @@ token_t *token_make_name(const char *name) {
   return name_tok;
 }
 
+_Noreturn void err_wrong_token(const char *expected, token_t *actual) {
+  err_print_stacktrace();
+  fprintf(stderr, "ERR_WRONG_TOKEN: expected '%s', got '%s'\n", expected,
+          token_to_string(actual));
+  exit(1);
+}
+
 _Noreturn void err_illegal_token(token_t *token) {
   err_print_stacktrace();
-  fprintf(stderr, "ERR_ILLEGAL_TOKEN: '%s'\n", token_to_string(token));
+  fprintf(stderr, "ERR_ILLEGAL_TOKEN: %s'\n", token_to_string(token));
   exit(1);
 }

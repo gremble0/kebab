@@ -114,16 +114,50 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   lexer_advance(lexer);
 
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
-  fnc->params = list_init(LIST_START_SIZE, sizeof(statement_t));
+  fnc->params = list_init(LIST_START_SIZE, sizeof(fn_param_t));
 
   // parse params
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    list_push_back(fnc->params, "");
+    fn_param_t *param = malloc(sizeof(*param));
+
+    EXPECT_TOKEN(lexer, TOKEN_NAME);
+    param->name = strdup(lexer->cur_token->name);
+    lexer_advance(lexer);
+
+    EXPECT_TOKEN(lexer, TOKEN_COLON);
+    lexer_advance(lexer);
+
+    // token should be some constructor name
+    // TODO: redo this, this is temporary. Need to extract the stringified name
+    // of the constructor
+    param->type_name = token_to_string(lexer->cur_token);
+    lexer_advance(lexer);
+
+    // Next token should be comma unless its the final param (then it should be
+    // rparen, which will terminate the loop)
+    if (lexer->cur_token->kind != TOKEN_RPAREN) {
+      EXPECT_TOKEN(lexer, TOKEN_COMMA);
+      lexer_advance(lexer);
+    }
+
+    list_push_back(fnc->params, param);
   }
 
+  // TODO: unnecessary expect?
+  EXPECT_TOKEN(lexer, TOKEN_RPAREN);
+  lexer_advance(lexer);
+
+  EXPECT_TOKEN(lexer, TOKEN_FAT_RARROW);
+  lexer_advance(lexer);
+
+  // parse function body
   fnc->body = parse_constructor(lexer);
 
+  EXPECT_TOKEN(lexer, TOKEN_RPAREN);
+  lexer_advance(lexer);
+
 #ifdef DEBUG
+  // TODO: make variadic and print debug info in finish_parsing/start_parsing
   finish_parsing("fn_constructor");
 #endif
 
@@ -138,7 +172,7 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
 #endif
 
   constructor_t *constr = malloc(sizeof(*constr));
-  lexer_advance(lexer);
+  // lexer_advance(lexer);
 
   switch (lexer->cur_token->kind) {
   case TOKEN_CHAR:
@@ -375,11 +409,11 @@ static definition_t *parse_definition(lexer_t *lexer) {
   }
 
   EXPECT_TOKEN(lexer, TOKEN_NAME);
-
   def->name = strdup(lexer->cur_token->name);
-
   lexer_advance(lexer);
+
   EXPECT_TOKEN(lexer, TOKEN_EQUALS);
+  lexer_advance(lexer);
 
   def->constructor = parse_constructor(lexer);
 

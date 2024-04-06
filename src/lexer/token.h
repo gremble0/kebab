@@ -65,3 +65,4 @@ token_t *token_make_int_lit(int int_lit);
 token_t *token_make_name(const char *name);
 
 _Noreturn void err_illegal_token(token_t *token);
+_Noreturn void err_wrong_token(const char *expected, token_t *actual);
