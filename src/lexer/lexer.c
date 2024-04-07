@@ -25,8 +25,10 @@ static void lexer_load_next_line(lexer_t *lexer) {
   }
 
   size_t _ = 0;
-  lexer->line_len = getline(&lexer->line, &_, lexer->source_file);
+  lexer->line_len = getline(&lexer->line, &_, lexer->source_file->f);
   lexer->line_pos = 0;
+  lexer->prev_pos = 0;
+  ++lexer->line_number;
 }
 
 /**
@@ -51,7 +53,7 @@ static int lexer_line_is_done(lexer_t *lexer) {
  */
 static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
   size_t i = 0;
-  // TODO: && line->pos < line->line_len
+  // TODO: && line->pos < line->line_len ?
   while (pred(lexer->line[lexer->line_pos + i])) {
     ++i;
   }
@@ -170,9 +172,17 @@ lexer_t *lexer_init(const char *file_path) {
   if (f == NULL) {
     err_io_fail(file_path);
   }
-  lexer->source_file = f;
+  lexer->source_file = malloc(sizeof(*lexer->source_file));
+  lexer->source_file->f = f;
+  lexer->source_file->f_name = file_path; // TODO: strdup maybe?
+
   lexer->line = NULL;
+  lexer->line_len = 0;
+  lexer->prev_pos = 0;
+  lexer->line_pos = 0;
+  lexer->line_number = 0;
   lexer->cur_token = NULL;
+
   lexer_load_next_line(lexer);
   lexer_advance(lexer);
 
@@ -206,6 +216,8 @@ void lexer_advance(lexer_t *lexer) {
     lexer_load_next_line(lexer);
     return lexer_advance(lexer);
   }
+
+  lexer->prev_pos = lexer->line_pos; // For error handling
 
   switch (lexer->line[lexer->line_pos]) {
   // Whitespace
@@ -343,7 +355,7 @@ void lexer_advance(lexer_t *lexer) {
  * @param lexer lexer to free
  */
 void lexer_free(lexer_t *lexer) {
-  fclose(lexer->source_file);
+  fclose(lexer->source_file->f);
   // ASSERT(lexer->cur_token->kind == TOKEN_EOF);
   // ASSERT is ok compared to EXPECT_TOKEN, because this will only be false if
   // kebab does something wrong, not the user

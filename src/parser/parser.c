@@ -19,9 +19,9 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   start_parsing("int_constructor");
 #endif
 
-  EXPECT_TOKEN(lexer, TOKEN_INT);
+  EXPECT_TOKEN(TOKEN_INT, lexer);
   lexer_advance(lexer);
-  EXPECT_TOKEN(lexer, TOKEN_LPAREN);
+  EXPECT_TOKEN(TOKEN_LPAREN, lexer);
   lexer_advance(lexer);
 
   int_constructor_t *intc = malloc(sizeof(*intc));
@@ -34,7 +34,7 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   // TODO: if statements return type not int then error - something like this.
   // Do this in runtime or parser - parser looks hard.
 
-  EXPECT_TOKEN(lexer, TOKEN_RPAREN); // TODO: Unnecessary?
+  EXPECT_TOKEN(TOKEN_RPAREN, lexer); // TODO: Unnecessary?
   lexer_advance(lexer);
 
 #ifdef DEBUG
@@ -51,9 +51,9 @@ static char_constructor_t *parse_char_constructor(lexer_t *lexer) {
   // TODO: very similar to int_constructor, maybe redo into one func with enum
   // as param or something
 
-  EXPECT_TOKEN(lexer, TOKEN_CHAR);
+  EXPECT_TOKEN(TOKEN_CHAR, lexer);
   lexer_advance(lexer);
-  EXPECT_TOKEN(lexer, TOKEN_LPAREN);
+  EXPECT_TOKEN(TOKEN_LPAREN, lexer);
   lexer_advance(lexer);
 
   char_constructor_t *chc = malloc(sizeof(*chc));
@@ -63,7 +63,7 @@ static char_constructor_t *parse_char_constructor(lexer_t *lexer) {
     list_push_back(chc->statements, parse_statement(lexer));
   }
 
-  EXPECT_TOKEN(lexer, TOKEN_RPAREN); // TODO: Unnecessary?
+  EXPECT_TOKEN(TOKEN_RPAREN, lexer); // TODO: Unnecessary?
   lexer_advance(lexer);
 
 #ifdef DEBUG
@@ -80,9 +80,9 @@ static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
   // TODO: very similar to int_constructor, maybe redo into one func with enum
   // as param or something
 
-  EXPECT_TOKEN(lexer, TOKEN_STRING);
+  EXPECT_TOKEN(TOKEN_STRING, lexer);
   lexer_advance(lexer);
-  EXPECT_TOKEN(lexer, TOKEN_LPAREN);
+  EXPECT_TOKEN(TOKEN_LPAREN, lexer);
   lexer_advance(lexer);
 
   string_constructor_t *strc = malloc(sizeof(*strc));
@@ -92,7 +92,7 @@ static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
     list_push_back(strc->statements, parse_statement(lexer));
   }
 
-  EXPECT_TOKEN(lexer, TOKEN_RPAREN); // TODO: Unnecessary?
+  EXPECT_TOKEN(TOKEN_RPAREN, lexer); // TODO: Unnecessary?
   lexer_advance(lexer);
 
 #ifdef DEBUG
@@ -107,11 +107,11 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   start_parsing("fn_constructor");
 #endif
 
-  EXPECT_TOKEN(lexer, TOKEN_FN);
+  EXPECT_TOKEN(TOKEN_FN, lexer);
   lexer_advance(lexer);
-  EXPECT_TOKEN(lexer, TOKEN_LPAREN);
+  EXPECT_TOKEN(TOKEN_LPAREN, lexer);
   lexer_advance(lexer);
-  EXPECT_TOKEN(lexer, TOKEN_LPAREN);
+  EXPECT_TOKEN(TOKEN_LPAREN, lexer);
   lexer_advance(lexer);
 
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
@@ -121,11 +121,11 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
     fn_param_t *param = malloc(sizeof(*param));
 
-    EXPECT_TOKEN(lexer, TOKEN_NAME);
+    EXPECT_TOKEN(TOKEN_NAME, lexer);
     param->name = strdup(lexer->cur_token->name);
     lexer_advance(lexer);
 
-    EXPECT_TOKEN(lexer, TOKEN_COLON);
+    EXPECT_TOKEN(TOKEN_COLON, lexer);
     lexer_advance(lexer);
 
     // token should be some constructor name
@@ -137,7 +137,7 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
     // Next token should be comma unless its the final param (then it should be
     // rparen, which will terminate the loop)
     if (lexer->cur_token->kind != TOKEN_RPAREN) {
-      EXPECT_TOKEN(lexer, TOKEN_COMMA);
+      EXPECT_TOKEN(TOKEN_COMMA, lexer);
       lexer_advance(lexer);
     }
 
@@ -145,17 +145,17 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   }
 
   // TODO: unnecessary expect?
-  EXPECT_TOKEN(lexer, TOKEN_RPAREN);
+  EXPECT_TOKEN(TOKEN_RPAREN, lexer);
   lexer_advance(lexer);
 
-  EXPECT_TOKEN(lexer, TOKEN_FAT_RARROW);
+  EXPECT_TOKEN(TOKEN_FAT_RARROW, lexer);
   lexer_advance(lexer);
 
   // parse function body
   fnc->body = parse_constructor(lexer);
 
   // Close the opening paren of the fn constructor
-  EXPECT_TOKEN(lexer, TOKEN_RPAREN);
+  EXPECT_TOKEN(TOKEN_RPAREN, lexer);
   lexer_advance(lexer);
 
 #ifdef DEBUG
@@ -194,7 +194,7 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
     break;
 
   default:
-    err_illegal_token(lexer->cur_token);
+    err_illegal_token(lexer);
   }
 
 #ifdef DEBUG
@@ -230,7 +230,7 @@ static atom_t *parse_atom(lexer_t *lexer) {
     break;
   // TODO: list, nil, bool, etc.
   default:
-    err_illegal_token(lexer->cur_token);
+    err_illegal_token(lexer);
   }
 
   lexer_advance(lexer);
@@ -381,7 +381,7 @@ static expression_t *parse_expr(lexer_t *lexer) {
       break;
 
     default:
-      err_illegal_token(lexer->cur_token);
+      err_illegal_token(lexer);
     }
   }
 
@@ -397,7 +397,7 @@ static definition_t *parse_definition(lexer_t *lexer) {
   start_parsing("definition");
 #endif
 
-  EXPECT_TOKEN(lexer, TOKEN_DEF);
+  EXPECT_TOKEN(TOKEN_DEF, lexer);
   lexer_advance(lexer);
 
   definition_t *def = malloc(sizeof(*def));
@@ -413,11 +413,11 @@ static definition_t *parse_definition(lexer_t *lexer) {
     def->is_mutable = 0;
   }
 
-  EXPECT_TOKEN(lexer, TOKEN_NAME);
+  EXPECT_TOKEN(TOKEN_NAME, lexer);
   def->name = strdup(lexer->cur_token->name);
   lexer_advance(lexer);
 
-  EXPECT_TOKEN(lexer, TOKEN_EQUALS);
+  EXPECT_TOKEN(TOKEN_EQUALS, lexer);
   lexer_advance(lexer);
 
   def->constructor = parse_constructor(lexer);
@@ -434,7 +434,7 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
   start_parsing("assignment");
 #endif
 
-  EXPECT_TOKEN(lexer, TOKEN_SET);
+  EXPECT_TOKEN(TOKEN_SET, lexer);
   lexer_advance(lexer);
 
   assignment_t *ass = malloc(sizeof(*ass));
@@ -442,11 +442,11 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
     err_malloc_fail();
   }
 
-  EXPECT_TOKEN(lexer, TOKEN_NAME);
+  EXPECT_TOKEN(TOKEN_NAME, lexer);
   ass->name = strdup(lexer->cur_token->name);
   lexer_advance(lexer);
 
-  EXPECT_TOKEN(lexer, TOKEN_EQUALS);
+  EXPECT_TOKEN(TOKEN_EQUALS, lexer);
   lexer_advance(lexer);
 
   ass->constructor = parse_constructor(lexer);
@@ -488,7 +488,7 @@ static statement_t *parse_statement(lexer_t *lexer) {
     break;
 
   default:
-    err_illegal_token(lexer->cur_token);
+    err_illegal_token(lexer);
   }
 
 #ifdef DEBUG

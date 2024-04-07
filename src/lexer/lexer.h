@@ -4,11 +4,18 @@
 
 #include "token.h"
 
+typedef struct source_file_t {
+  FILE *f;
+  const char *f_name; // used for error handling
+} source_file_t;
+
 typedef struct lexer_t {
-  FILE *source_file;
+  source_file_t *source_file;
   char *line;
   ssize_t line_len;
-  size_t line_pos;
+  size_t prev_pos; // start position of previous token (used for error handling)
+  size_t line_pos; // start position of current token
+  size_t line_number; // current line number in source file
   token_t *cur_token;
 } lexer_t;
 

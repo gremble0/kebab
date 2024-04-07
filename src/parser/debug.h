@@ -1,5 +1,4 @@
 #pragma once
-// TODO: move to parser/
 
 #include <stddef.h>
 
