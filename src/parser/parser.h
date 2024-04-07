@@ -84,6 +84,8 @@ typedef struct primary_t {
   list_t *arguments; // for function calls, TODO: suffix for more syntax like []
 } primary_t;
 
+// TODO: nullable types?
+
 typedef struct factor_t {
   // TODO: inline enum?
   unary_operator_t prefix; // e.g. -2, +1, ~false
@@ -97,7 +99,10 @@ typedef enum constructor_type_t {
   CONSTR_STRING,
   CONSTR_INT,
   CONSTR_FN,
+  // TODO: nil? bool map list etc.
 } constructor_type_t;
+
+// TODO: reduce duplication here
 
 typedef struct char_constructor_t {
   list_t *statements; // list<statement_t>
@@ -111,9 +116,35 @@ typedef struct int_constructor_t {
   list_t *statements; // list<statement_t>
 } int_constructor_t;
 
+// for functions that take functions as a parameter, these will have
+// some more richly typed information (the parameters of that function, and
+// its return type)
+typedef struct fn_fn_param_t {
+  list_t *param_types;            // list<constructor_type_t> ?
+  constructor_type_t return_type; // ??
+} fn_fn_param_t;
+
+// TODO: implement this
+typedef struct fn_list_param_t {
+  constructor_type_t type; // ??
+} fn_list_param_t;
+
 typedef struct fn_param_t {
   const char *name;
-  const char *type_name;
+  enum {
+    PARAM_CHAR,
+    PARAM_STRING,
+    PARAM_INT,
+    PARAM_FN,
+    // TODO: param nil bool list etc
+  } type;
+
+  // Some parameter types can hold extra parametrized information (e.g.
+  // functions, lists)
+  union {
+    fn_fn_param_t *fn;
+    fn_list_param_t *list;
+  } parametrized;
 } fn_param_t;
 
 typedef struct fn_constructor_t {

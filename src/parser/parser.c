@@ -102,6 +102,97 @@ static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
   return strc;
 }
 
+static constructor_type_t parse_constructor_type(lexer_t *lexer) {
+  constructor_type_t ct;
+
+  switch (lexer->cur_token->kind) {
+  case TOKEN_CHAR:
+    ct = CONSTR_CHAR;
+    break;
+  case TOKEN_STRING:
+    ct = CONSTR_STRING;
+    break;
+  case TOKEN_INT:
+    ct = CONSTR_INT;
+    break;
+  case TOKEN_FN:
+    ct = CONSTR_FN;
+    break;
+  default:
+    err_illegal_token(lexer);
+  }
+
+  lexer_advance(lexer);
+
+  return ct;
+}
+
+// TODO: continue this look into nested function params
+static fn_fn_param_t *parse_fn_fn_param(lexer_t *lexer) {
+  EXPECT_TOKEN(TOKEN_FN, lexer);
+  lexer_advance(lexer);
+
+  EXPECT_TOKEN(TOKEN_LPAREN, lexer);
+  lexer_advance(lexer);
+
+  fn_fn_param_t *fnfnp = malloc(sizeof(*fnfnp));
+  fnfnp->param_types = list_init(LIST_START_SIZE, sizeof(constructor_type_t));
+
+  while (lexer->cur_token->kind != TOKEN_RPAREN) {
+    constructor_type_t ct = parse_constructor_type(lexer);
+    list_push_back(fnfnp->param_types, &ct);
+
+    if (lexer->cur_token->kind != TOKEN_RPAREN) {
+      EXPECT_TOKEN(TOKEN_COMMA, lexer);
+      lexer_advance(lexer);
+    }
+  }
+
+  return fnfnp;
+}
+
+static fn_param_t *parse_fn_param(lexer_t *lexer) {
+  fn_param_t *param = malloc(sizeof(*param));
+
+  EXPECT_TOKEN(TOKEN_NAME, lexer);
+  param->name = strdup(lexer->cur_token->name);
+  lexer_advance(lexer);
+
+  EXPECT_TOKEN(TOKEN_COLON, lexer);
+  lexer_advance(lexer);
+
+  switch (lexer->cur_token->kind) {
+  case TOKEN_CHAR:
+    param->type = PARAM_CHAR;
+    lexer_advance(lexer);
+    break;
+  case TOKEN_STRING:
+    param->type = PARAM_STRING;
+    lexer_advance(lexer);
+    break;
+  case TOKEN_INT:
+    param->type = PARAM_INT;
+    lexer_advance(lexer);
+    break;
+  case TOKEN_FN:
+    param->type = PARAM_FN;
+    param->parametrized.fn = parse_fn_fn_param(lexer);
+    break;
+
+  default:
+    err_illegal_token(lexer);
+  }
+
+  // Next token should be comma unless its the final param (then it should be
+  // rparen, which will terminate the loop)
+  if (lexer->cur_token->kind != TOKEN_RPAREN) {
+    EXPECT_TOKEN(TOKEN_COMMA, lexer);
+    lexer_advance(lexer);
+  }
+
+  return param;
+}
+
 static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
 #ifdef DEBUG
   start_parsing("fn_constructor");
@@ -119,29 +210,7 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
 
   // parse params
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    fn_param_t *param = malloc(sizeof(*param));
-
-    EXPECT_TOKEN(TOKEN_NAME, lexer);
-    param->name = strdup(lexer->cur_token->name);
-    lexer_advance(lexer);
-
-    EXPECT_TOKEN(TOKEN_COLON, lexer);
-    lexer_advance(lexer);
-
-    // token should be some constructor name
-    // TODO: redo this, this is temporary. Need to extract the stringified name
-    // of the constructor
-    param->type_name = token_to_string(lexer->cur_token);
-    lexer_advance(lexer);
-
-    // Next token should be comma unless its the final param (then it should be
-    // rparen, which will terminate the loop)
-    if (lexer->cur_token->kind != TOKEN_RPAREN) {
-      EXPECT_TOKEN(TOKEN_COMMA, lexer);
-      lexer_advance(lexer);
-    }
-
-    list_push_back(fnc->params, param);
+    list_push_back(fnc->params, parse_fn_param(lexer));
   }
 
   // TODO: unnecessary expect?

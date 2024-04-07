@@ -1,4 +1,4 @@
-def add = int(2 + 2)
+def add = int(def nested = int(5) 2 + nested)
 def should-be-ok = int(2
                        +
                        3)
@@ -8,8 +8,8 @@ def c = fn((num1 : int, num2 : int) => int(
   num1 + num2 ; should be ignoreda jdkljflks
 ))
 
-def kebab-case = fn((my-var : my-type) => int(
-  2
+def takes-fn-case = fn((my-function : fn(int, string) => int) => int(
+  my-function(4, "hello")
 ))
 
 ; mutability (constant by default)
