@@ -13,6 +13,7 @@
 // TODO: clean up forward declarations
 static statement_t *parse_statement(lexer_t *lexer);
 static constructor_t *parse_constructor(lexer_t *lexer);
+static keb_type_t *parse_type(lexer_t *lexer);
 
 static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
 #ifdef DEBUG
@@ -102,45 +103,25 @@ static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
   return strc;
 }
 
-static constructor_type_t parse_constructor_type(lexer_t *lexer) {
-  constructor_type_t ct;
+static keb_type_fn_t *parse_fn_type(lexer_t *lexer) {
+  // function types should look something like `fn(int, int) => int`
+  // for example:
+  //     def fn-showcase = fn(some-param : fn(int, int) => int) => ...
+#ifdef DEBUG
+  start_parsing("fn_type");
+#endif
 
-  switch (lexer->cur_token->kind) {
-  case TOKEN_CHAR:
-    ct = CONSTR_CHAR;
-    break;
-  case TOKEN_STRING:
-    ct = CONSTR_STRING;
-    break;
-  case TOKEN_INT:
-    ct = CONSTR_INT;
-    break;
-  case TOKEN_FN:
-    ct = CONSTR_FN;
-    break;
-  default:
-    err_illegal_token(lexer);
-  }
-
-  lexer_advance(lexer);
-
-  return ct;
-}
-
-// TODO: continue this look into nested function params
-static fn_fn_param_t *parse_fn_fn_param(lexer_t *lexer) {
   EXPECT_TOKEN(TOKEN_FN, lexer);
   lexer_advance(lexer);
 
   EXPECT_TOKEN(TOKEN_LPAREN, lexer);
   lexer_advance(lexer);
 
-  fn_fn_param_t *fnfnp = malloc(sizeof(*fnfnp));
-  fnfnp->param_types = list_init(LIST_START_SIZE, sizeof(constructor_type_t));
+  keb_type_fn_t *fnt = malloc(sizeof(*fnt));
+  fnt->param_types = list_init(LIST_START_SIZE, sizeof(keb_type_t));
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    constructor_type_t ct = parse_constructor_type(lexer);
-    list_push_back(fnfnp->param_types, &ct);
+    list_push_back(fnt->param_types, parse_type(lexer));
 
     if (lexer->cur_token->kind != TOKEN_RPAREN) {
       EXPECT_TOKEN(TOKEN_COMMA, lexer);
@@ -148,10 +129,64 @@ static fn_fn_param_t *parse_fn_fn_param(lexer_t *lexer) {
     }
   }
 
-  return fnfnp;
+  EXPECT_TOKEN(TOKEN_RPAREN, lexer);
+  lexer_advance(lexer);
+
+  EXPECT_TOKEN(TOKEN_FAT_RARROW, lexer);
+  lexer_advance(lexer);
+
+  fnt->return_type = parse_type(lexer);
+
+#ifdef DEBUG
+  finish_parsing("fn_type");
+#endif
+
+  return fnt;
+}
+
+static keb_type_t *parse_type(lexer_t *lexer) {
+#ifdef DEBUG
+  start_parsing("type");
+#endif
+
+  keb_type_t *kt = malloc(sizeof(*kt));
+
+  switch (lexer->cur_token->kind) {
+    // TODO: debug info for primitive types
+  case TOKEN_CHAR:
+    kt->type = TYPE_CHAR;
+    lexer_advance(lexer);
+    break;
+  case TOKEN_STRING:
+    kt->type = TYPE_STRING;
+    lexer_advance(lexer);
+    break;
+  case TOKEN_INT:
+    kt->type = TYPE_INT;
+    lexer_advance(lexer);
+    break;
+  case TOKEN_FN:
+    kt->type = TYPE_FN;
+    kt->fn = parse_fn_type(lexer);
+    break;
+    // TODO: list
+
+  default:
+    err_illegal_token(lexer);
+  }
+
+#ifdef DEBUG
+  finish_parsing("type");
+#endif
+
+  return kt;
 }
 
 static fn_param_t *parse_fn_param(lexer_t *lexer) {
+#ifdef DEBUG
+  start_parsing("fn_param");
+#endif
+
   fn_param_t *param = malloc(sizeof(*param));
 
   EXPECT_TOKEN(TOKEN_NAME, lexer);
@@ -161,27 +196,7 @@ static fn_param_t *parse_fn_param(lexer_t *lexer) {
   EXPECT_TOKEN(TOKEN_COLON, lexer);
   lexer_advance(lexer);
 
-  switch (lexer->cur_token->kind) {
-  case TOKEN_CHAR:
-    param->type = PARAM_CHAR;
-    lexer_advance(lexer);
-    break;
-  case TOKEN_STRING:
-    param->type = PARAM_STRING;
-    lexer_advance(lexer);
-    break;
-  case TOKEN_INT:
-    param->type = PARAM_INT;
-    lexer_advance(lexer);
-    break;
-  case TOKEN_FN:
-    param->type = PARAM_FN;
-    param->parametrized.fn = parse_fn_fn_param(lexer);
-    break;
-
-  default:
-    err_illegal_token(lexer);
-  }
+  param->type = parse_type(lexer);
 
   // Next token should be comma unless its the final param (then it should be
   // rparen, which will terminate the loop)
@@ -189,6 +204,10 @@ static fn_param_t *parse_fn_param(lexer_t *lexer) {
     EXPECT_TOKEN(TOKEN_COMMA, lexer);
     lexer_advance(lexer);
   }
+
+#ifdef DEBUG
+  finish_parsing("fn_param");
+#endif
 
   return param;
 }

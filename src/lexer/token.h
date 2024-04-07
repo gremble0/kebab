@@ -5,6 +5,7 @@ typedef enum token_kind_t {
   TOKEN_DEF,
   TOKEN_SET,
   TOKEN_MUT,
+  // TOKEN_DEC ? declare variable with type?
 
   // Constructors
   // TODO: Move the definition of these types higher up instead of hardcoding

@@ -8,7 +8,7 @@ def c = fn((num1 : int, num2 : int) => int(
   num1 + num2 ; should be ignoreda jdkljflks
 ))
 
-def takes-fn-case = fn((my-function : fn(int, string) => int) => int(
+def takes-fn = fn((my-function : fn(int, string) => int) => int(
   my-function(4, "hello")
 ))
 

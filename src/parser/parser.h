@@ -33,28 +33,31 @@ typedef enum binary_operator_t {
   BINARY_NO_OP, // Indicates missing operator
 } binary_operator_t;
 
-// TODO: use somethingl like this? or just leave typing to runtime?
-///////////////////
-typedef enum keb_type_raw_t {
-  TYPE_CHAR,
-  TYPE_STRING,
-  TYPE_INT,
-  TYPE_LIST,
-  TYPE_FN,
-} keb_type_raw_t;
+// TODO: merge this with existing constructor type things
+typedef struct keb_type_t keb_type_t;
 
-typedef struct keb_type_t {
-  keb_type_raw_t type;
+typedef struct keb_type_fn_t {
+  list_t *param_types; // list<keb_type_t>
+  keb_type_t *return_type;
+} keb_type_fn_t;
+
+typedef struct keb_type_list_t {
+  keb_type_t *type;
+} keb_type_list_t;
+
+struct keb_type_t {
+  enum {
+    TYPE_CHAR,
+    TYPE_STRING,
+    TYPE_INT,
+    TYPE_LIST,
+    TYPE_FN,
+  } type;
   union {
-    keb_type_raw_t generic_type; // for lists e.g. list<int>
-    struct {
-      // for fns, e.g. fn((a : int) => int(...))
-      list_t *param_types; // list<keb_type_raw_t>
-      keb_type_raw_t return_type;
-    };
+    keb_type_fn_t *fn;
+    keb_type_list_t *list;
   };
-} keb_type_t;
-///////////////////
+};
 
 typedef struct atom_t {
   enum {
@@ -116,35 +119,9 @@ typedef struct int_constructor_t {
   list_t *statements; // list<statement_t>
 } int_constructor_t;
 
-// for functions that take functions as a parameter, these will have
-// some more richly typed information (the parameters of that function, and
-// its return type)
-typedef struct fn_fn_param_t {
-  list_t *param_types;            // list<constructor_type_t> ?
-  constructor_type_t return_type; // ??
-} fn_fn_param_t;
-
-// TODO: implement this
-typedef struct fn_list_param_t {
-  constructor_type_t type; // ??
-} fn_list_param_t;
-
 typedef struct fn_param_t {
   const char *name;
-  enum {
-    PARAM_CHAR,
-    PARAM_STRING,
-    PARAM_INT,
-    PARAM_FN,
-    // TODO: param nil bool list etc
-  } type;
-
-  // Some parameter types can hold extra parametrized information (e.g.
-  // functions, lists)
-  union {
-    fn_fn_param_t *fn;
-    fn_list_param_t *list;
-  } parametrized;
+  keb_type_t *type;
 } fn_param_t;
 
 typedef struct fn_constructor_t {
