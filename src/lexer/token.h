@@ -56,6 +56,7 @@ typedef struct token_t {
 } token_t;
 
 char *token_to_string(token_t *token);
+char *token_kind_to_string(token_kind_t kind);
 void token_free(token_t *token);
 
 token_t *token_make_simple(token_kind_t token_kind);

@@ -3,10 +3,10 @@
 #include "lexer.h"
 #include "nlist.h"
 
-#define EXPECT_TOKEN(token_kind, lexer)                                        \
+#define EXPECT_TOKEN(expected_kind, lexer)                                     \
   do {                                                                         \
-    if (lexer->cur_token->kind != token_kind) {                                \
-      err_wrong_token(#token_kind, lexer);                                     \
+    if (lexer->cur_token->kind != expected_kind) {                             \
+      err_wrong_token(expected_kind, lexer);                                   \
     }                                                                          \
   } while (0)
 
