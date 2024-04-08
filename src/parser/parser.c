@@ -14,6 +14,7 @@
 static statement_t *parse_statement(lexer_t *lexer);
 static constructor_t *parse_constructor(lexer_t *lexer);
 static keb_type_t *parse_type(lexer_t *lexer);
+static expression_t *parse_expr(lexer_t *lexer);
 
 static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
 #ifdef DEBUG
@@ -343,6 +344,31 @@ static primary_t *parse_primary(lexer_t *lexer) {
 
   prm->atom = parse_atom(lexer);
 
+  // If next token is a left paren, parse arguments for function call.
+  if (lexer->cur_token->kind == TOKEN_LPAREN) {
+    if (prm->atom->type != ATOM_NAME) {
+      // TODO: raise error (uncallable)
+    }
+
+    lexer_advance(lexer);
+
+    prm->arguments = list_init(LIST_START_SIZE, sizeof(expression_t));
+    while (lexer->cur_token->kind != TOKEN_RPAREN) {
+      // TODO: maybe not parse_expr?
+      list_push_back(prm->arguments, parse_expr(lexer));
+
+      if (lexer->cur_token->kind != TOKEN_RPAREN) {
+        EXPECT_TOKEN(TOKEN_COMMA, lexer);
+        lexer_advance(lexer);
+      }
+    }
+
+    EXPECT_TOKEN(TOKEN_RPAREN, lexer);
+    lexer_advance(lexer);
+  } else {
+    prm->arguments = NULL;
+  }
+
 #ifdef DEBUG
   finish_parsing("primary");
 #endif
@@ -449,10 +475,12 @@ static expression_t *parse_expr(lexer_t *lexer) {
   }
 
   expr->factors = list_init(LIST_START_SIZE, sizeof(factor_t));
+  // TODO: don't always init operators
   expr->operators = list_init(LIST_START_SIZE, sizeof(binary_operator_t));
 
-  // TODO: is condition always right?
-  while (lexer->cur_token->kind != TOKEN_RPAREN) {
+  // TODO: is condition always right? ITS NOT IN FUNCTION CALLS !!
+  // while (lexer->cur_token->kind != TOKEN_RPAREN) {
+  while (1) {
     switch (lexer->cur_token->kind) {
     case TOKEN_CHAR_LITERAL:
     case TOKEN_STRING_LITERAL:
@@ -461,17 +489,20 @@ static expression_t *parse_expr(lexer_t *lexer) {
       list_push_back(expr->factors, parse_factor(lexer));
 
       binary_operator_t bo = parse_binary_operator(lexer);
-      if (bo != BINARY_NO_OP) {
-        binary_operator_t *bo_p = malloc(sizeof(*bo_p));
-        *bo_p = bo;
-        list_push_back(expr->operators, bo_p);
+      if (bo == BINARY_NO_OP) {
+        goto exit_loop;
       }
+
+      binary_operator_t *bo_p = malloc(sizeof(*bo_p));
+      *bo_p = bo;
+      list_push_back(expr->operators, bo_p);
       break;
 
     default:
       err_illegal_token(lexer);
     }
   }
+exit_loop:
 
 #ifdef DEBUG
   finish_parsing("expr");
@@ -480,6 +511,8 @@ static expression_t *parse_expr(lexer_t *lexer) {
   return expr;
 }
 
+// TODO: don't require constructor here, allow definition of primitives like
+// `def a = 2` and infer type
 static definition_t *parse_definition(lexer_t *lexer) {
 #ifdef DEBUG
   start_parsing("definition");
