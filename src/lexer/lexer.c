@@ -302,7 +302,7 @@ void lexer_advance(lexer_t *lexer) {
     lexer->cur_token = token_make_int_lit(lexer_read_int(lexer));
     return;
 
-  // Keywords
+  // Keywords and builtin types
   default: {
     const char *word = lexer_read_word(lexer);
     // TODO: hash and switch case
@@ -339,6 +339,11 @@ void lexer_advance(lexer_t *lexer) {
     } else if (strcmp(word, "fn") == 0) {
       free((void *)word);
       lexer->cur_token = token_make_simple(TOKEN_FN);
+      return;
+
+    } else if (strcmp(word, "list") == 0) {
+      free((void *)word);
+      lexer->cur_token = token_make_simple(TOKEN_LIST);
       return;
 
     } else {

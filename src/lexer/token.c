@@ -26,6 +26,8 @@ char *token_to_string(token_t *token) {
     return strdup("int");
   case TOKEN_FN:
     return strdup("fn");
+  case TOKEN_LIST:
+    return strdup("list");
   case TOKEN_COLON:
     return strdup(":");
   case TOKEN_EQUALS:
@@ -95,6 +97,8 @@ char *token_kind_to_string(token_kind_t kind) {
     return strdup("int");
   case TOKEN_FN:
     return strdup("fn");
+  case TOKEN_LIST:
+    return strdup("list");
   case TOKEN_COLON:
     return strdup(":");
   case TOKEN_EQUALS:

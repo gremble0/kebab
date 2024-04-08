@@ -13,6 +13,7 @@ typedef enum token_kind_t {
   TOKEN_STRING,
   TOKEN_INT,
   TOKEN_FN,
+  TOKEN_LIST,
 
   // Syntax
   TOKEN_COLON,      // :

@@ -11,6 +11,7 @@
 #include "token.h"
 
 // TODO: clean up forward declarations
+// These are the main functions that will be called recursively
 static statement_t *parse_statement(lexer_t *lexer);
 static constructor_t *parse_constructor(lexer_t *lexer);
 static keb_type_t *parse_type(lexer_t *lexer);
@@ -121,6 +122,10 @@ static keb_type_fn_t *parse_fn_type(lexer_t *lexer) {
   keb_type_fn_t *fnt = malloc(sizeof(*fnt));
   fnt->param_types = list_init(LIST_START_SIZE, sizeof(keb_type_t));
 
+#ifdef DEBUG
+  start_parsing("fn_params");
+#endif
+
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
     list_push_back(fnt->param_types, parse_type(lexer));
 
@@ -130,19 +135,56 @@ static keb_type_fn_t *parse_fn_type(lexer_t *lexer) {
     }
   }
 
+#ifdef DEBUG
+  finish_parsing("fn_params");
+#endif
+
   EXPECT_TOKEN(TOKEN_RPAREN, lexer);
   lexer_advance(lexer);
 
   EXPECT_TOKEN(TOKEN_FAT_RARROW, lexer);
   lexer_advance(lexer);
 
+#ifdef DEBUG
+  start_parsing("fn_return_type");
+#endif
+
   fnt->return_type = parse_type(lexer);
+
+#ifdef DEBUG
+  finish_parsing("return_type");
+#endif
 
 #ifdef DEBUG
   finish_parsing("fn_type");
 #endif
 
   return fnt;
+}
+
+static keb_type_list_t *parse_list_type(lexer_t *lexer) {
+  // list types should look like `list(string)`
+#ifdef DEBUG
+  start_parsing("list_type");
+#endif
+
+  EXPECT_TOKEN(TOKEN_LIST, lexer);
+  lexer_advance(lexer);
+
+  EXPECT_TOKEN(TOKEN_LPAREN, lexer);
+  lexer_advance(lexer);
+
+  keb_type_list_t *klt = malloc(sizeof(*klt));
+  klt->type = parse_type(lexer);
+
+  EXPECT_TOKEN(TOKEN_RPAREN, lexer);
+  lexer_advance(lexer);
+
+#ifdef DEBUG
+  finish_parsing("list_type");
+#endif
+
+  return klt;
 }
 
 static keb_type_t *parse_type(lexer_t *lexer) {
@@ -170,7 +212,10 @@ static keb_type_t *parse_type(lexer_t *lexer) {
     kt->type = TYPE_FN;
     kt->fn = parse_fn_type(lexer);
     break;
-    // TODO: list
+  case TOKEN_LIST:
+    kt->type = TYPE_LIST;
+    kt->list = parse_list_type(lexer);
+    break;
 
   default:
     err_illegal_token(lexer);
@@ -478,31 +523,34 @@ static expression_t *parse_expr(lexer_t *lexer) {
   // TODO: don't always init operators
   expr->operators = list_init(LIST_START_SIZE, sizeof(binary_operator_t));
 
-  // TODO: is condition always right? ITS NOT IN FUNCTION CALLS !!
-  // while (lexer->cur_token->kind != TOKEN_RPAREN) {
-  while (1) {
+  // First parse one factor and binary operator
+  list_push_back(expr->factors, parse_factor(lexer));
+  binary_operator_t bo = parse_binary_operator(lexer);
+
+  // Continue parsing until there are no more binary operators
+  while (bo != BINARY_NO_OP) {
     switch (lexer->cur_token->kind) {
     case TOKEN_CHAR_LITERAL:
     case TOKEN_STRING_LITERAL:
     case TOKEN_INTEGER_LITERAL:
-    case TOKEN_NAME:
-      list_push_back(expr->factors, parse_factor(lexer));
-
-      binary_operator_t bo = parse_binary_operator(lexer);
-      if (bo == BINARY_NO_OP) {
-        goto exit_loop;
-      }
-
+    case TOKEN_NAME: {
       binary_operator_t *bo_p = malloc(sizeof(*bo_p));
       *bo_p = bo;
+
+      // Add the operator from the last iteration, and the factor for this
+      // iteration
       list_push_back(expr->operators, bo_p);
+      list_push_back(expr->factors, parse_factor(lexer));
+
+      bo = parse_binary_operator(lexer); // operator for next iteration
+
       break;
+    }
 
     default:
       err_illegal_token(lexer);
     }
   }
-exit_loop:
 
 #ifdef DEBUG
   finish_parsing("expr");
