@@ -17,7 +17,7 @@
 static statement_t *parse_statement(lexer_t *lexer);
 static constructor_t *parse_constructor(lexer_t *lexer);
 static keb_type_t *parse_type(lexer_t *lexer);
-static expression_t *parse_expr(lexer_t *lexer);
+static expression_t *parse_expression(lexer_t *lexer);
 
 static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
   START_PARSING("int_constructor");
@@ -126,7 +126,8 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
 }
 
 static keb_type_list_t *parse_type_list(lexer_t *lexer) {
-  // list types should look like `list(string)`
+  // list types should look like `list(string)`, more advanced:
+  // `list(fn(int, char) => string)`
   START_PARSING("list_type");
 
   SKIP_TOKEN(TOKEN_LIST, lexer);
@@ -250,18 +251,22 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
 
   switch (lexer->cur_token->kind) {
   case TOKEN_CHAR:
+    constr->type = CONSTR_CHAR;
     constr->char_constructor = parse_char_constructor(lexer);
     break;
 
   case TOKEN_STRING:
+    constr->type = CONSTR_STRING;
     constr->string_constructor = parse_string_constructor(lexer);
     break;
 
   case TOKEN_INT:
+    constr->type = CONSTR_INT;
     constr->int_constructor = parse_int_constructor(lexer);
     break;
 
   case TOKEN_FN:
+    constr->type = CONSTR_FN;
     constr->fn_constructor = parse_fn_constructor(lexer);
     break;
 
@@ -332,7 +337,7 @@ static primary_t *parse_primary(lexer_t *lexer) {
     prm->arguments = list_init(LIST_START_SIZE, sizeof(expression_t));
     while (lexer->cur_token->kind != TOKEN_RPAREN) {
       // TODO: maybe not parse_expr?
-      list_push_back(prm->arguments, parse_expr(lexer));
+      list_push_back(prm->arguments, parse_expression(lexer));
 
       if (lexer->cur_token->kind != TOKEN_RPAREN) {
         SKIP_TOKEN(TOKEN_COMMA, lexer);
@@ -366,6 +371,7 @@ static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
   case TOKEN_NOT:
     lexer_advance(lexer);
     uo = UNARY_NOT;
+    break;
   default:
     uo = UNARY_NO_OP;
   }
@@ -432,7 +438,7 @@ static binary_operator_t parse_binary_operator(lexer_t *lexer) {
 }
 
 // TODO: change condition to parse until not expr instead of newline/paren
-static expression_t *parse_expr(lexer_t *lexer) {
+static expression_t *parse_expression(lexer_t *lexer) {
   START_PARSING("expr");
 
   expression_t *expr = malloc(sizeof(*expr));
@@ -557,8 +563,14 @@ static statement_t *parse_statement(lexer_t *lexer) {
   case TOKEN_CHAR_LITERAL:
   case TOKEN_STRING_LITERAL:
   case TOKEN_INTEGER_LITERAL:
+  // factor prefixes
+  case TOKEN_PLUS:
+  case TOKEN_MINUS:
+  case TOKEN_MULT:
+  case TOKEN_DIV:
+  case TOKEN_NOT:
     stmt->type = STMT_EXPRESSION;
-    stmt->expr = parse_expr(lexer);
+    stmt->expr = parse_expression(lexer);
     break;
 
   default:
@@ -574,7 +586,7 @@ ast_t *parse(lexer_t *lexer) {
   START_PARSING("ast");
 
   ast_t *ast = malloc(sizeof(*ast));
-  ast->statements = list_init(10, sizeof(statement_t));
+  ast->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
 
   while (lexer->cur_token->kind != TOKEN_EOF)
     list_push_back(ast->statements, parse_statement(lexer));
@@ -584,13 +596,78 @@ ast_t *parse(lexer_t *lexer) {
   return ast;
 }
 
+// Cleanup functions
+
+static void statement_free(statement_t *stmt);
+
+static void fn_param_free(fn_param_t *fnp) {}
+
+static void fn_constructor_free(fn_constructor_t *fnc) {
+  switch (fnc->body->type) {}
+}
+
+static void constructor_free(constructor_t *constr) {
+  switch (constr->type) {
+  case CONSTR_CHAR:
+    for (size_t i = 0; i < constr->char_constructor->statements->cur_size;
+         ++i) {
+      statement_free(list_get(constr->char_constructor->statements, i));
+    }
+    break;
+  case CONSTR_STRING:
+    for (size_t i = 0; i < constr->string_constructor->statements->cur_size;
+         ++i) {
+      statement_free(list_get(constr->string_constructor->statements, i));
+    }
+    break;
+  case CONSTR_INT:
+    for (size_t i = 0; i < constr->int_constructor->statements->cur_size; ++i) {
+      statement_free(list_get(constr->int_constructor->statements, i));
+    }
+    break;
+  case CONSTR_FN:
+    for (size_t i = 0; i < constr->fn_constructor->params->cur_size; ++i) {
+      fn_param_free(list_get(constr->fn_constructor->params, i));
+    }
+    fn_constructor_free(constr->fn_constructor);
+    break;
+  }
+}
+
+static void definition_free(definition_t *def) {
+  constructor_free(def->constructor);
+  free((void *)def->name);
+}
+static void assignment_free(assignment_t *ass) {}
+static void expression_free(expression_t *expr) {}
+
+static void statement_free(statement_t *stmt) {
+  switch (stmt->type) {
+  case STMT_DEFINITION:
+    definition_free(stmt->definition);
+    // free(stmt->definition);
+  case STMT_ASSIGNMENT:
+    assignment_free(stmt->assignment);
+    // free(stmt->assignment);
+  case STMT_EXPRESSION:
+    expression_free(stmt->expr);
+    // free(stmt->expr);
+  }
+}
+
 void ast_free(ast_t *ast) {
+  // statement_t *stmt = list_get(ast->statements, 0);
+  // definition_t *def = stmt->definition;
+  // printf("%s\n", def->name);
+  // constructor_t *cnstr = def->constructor;
+  // printf("%d\n", cnstr->type);
+
+  // First recursively descend into statements and free all associated data
   for (size_t i = 0; i < ast->statements->cur_size; ++i) {
-    // TODO: tricky
-    // make generic parser_free_statement() or something
-    // needs to not free the statement itself as it will be freed by list_free()
+    statement_free(list_get(ast->statements, i));
   }
 
-  // list_free(ast->statements);
+  // Then free datastructures
+  list_free(ast->statements);
   free(ast);
 }

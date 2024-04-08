@@ -276,6 +276,10 @@ void lexer_advance(lexer_t *lexer) {
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_MULT);
     return;
+  case '~':
+    ++lexer->line_pos;
+    lexer->cur_token = token_make_simple(TOKEN_NOT);
+    return;
   case '/':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_DIV);

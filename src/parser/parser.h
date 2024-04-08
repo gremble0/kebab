@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO: abbreviate references to generic types e.g. definition -> def?
+
 #include "lexer.h"
 #include "nlist.h"
 
@@ -136,8 +138,7 @@ typedef struct fn_param_t {
 } fn_param_t;
 
 typedef struct fn_constructor_t {
-  list_t *params; // Only for functions, NULL for primitives
-  constructor_type_t type;
+  list_t *params; // list<fn_param_t>
   constructor_t *body;
 } fn_constructor_t;
 
@@ -159,15 +160,13 @@ typedef struct expression_t {
 // Binds a symbol to an expression
 typedef struct definition_t {
   const char *name;
-  int is_mutable; // flag for seeing if this definition is mutable
-  constructor_type_t type;
+  char is_mutable; // flag for seeing if this definition is mutable
   constructor_t *constructor;
 } definition_t;
 
 // Same as a definition, but is only allowed for mutable bindings
 typedef struct assignment_t {
   const char *name;
-  constructor_type_t type;
   constructor_t *constructor;
 } assignment_t;
 
