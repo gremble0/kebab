@@ -14,11 +14,18 @@
     lexer_advance(lexer);                                                      \
   } while (0)
 
-#define LIST_START_SIZE 5
-
 #ifdef DEBUG
 static size_t cur_indent_depth = 0;
+#define START_PARSING(section) start_parsing(section)
+#define FINISH_PARSING(section) finish_parsing(section)
+#define START_AND_FINISH_PARSING(section) start_and_finish_parsing(section)
+#else
+#define START_PARSING(section)
+#define FINISH_PARSING(section)
+#define START_AND_FINISH_PARSING(section)
 #endif
+
+#define LIST_START_SIZE 5
 
 typedef enum unary_operator_t {
   UNARY_PLUS,  // +1

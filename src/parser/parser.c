@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef DEBUG
 #include "debug.h"
+#endif
 #include "lexer.h"
 #include "nerror.h"
 #include "nlist.h"
@@ -18,9 +20,7 @@ static keb_type_t *parse_type(lexer_t *lexer);
 static expression_t *parse_expr(lexer_t *lexer);
 
 static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("int_constructor");
-#endif
+  START_PARSING("int_constructor");
 
   SKIP_TOKEN(TOKEN_INT, lexer);
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
@@ -37,17 +37,13 @@ static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
 
-#ifdef DEBUG
-  finish_parsing("int_constructor");
-#endif
+  FINISH_PARSING("int_constructor");
 
   return intc;
 }
 
 static char_constructor_t *parse_char_constructor(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("char_constructor");
-#endif
+  START_PARSING("char_constructor");
   // TODO: very similar to int_constructor, maybe redo into one func with enum
   // as param or something
 
@@ -63,17 +59,13 @@ static char_constructor_t *parse_char_constructor(lexer_t *lexer) {
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
 
-#ifdef DEBUG
-  finish_parsing("char_constructor");
-#endif
+  FINISH_PARSING("char_constructor");
 
   return chc;
 }
 
 static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("string_constructor");
-#endif
+  START_PARSING("string_constructor");
   // TODO: very similar to int_constructor, maybe redo into one func with enum
   // as param or something
 
@@ -89,9 +81,7 @@ static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
 
-#ifdef DEBUG
-  finish_parsing("string_constructor");
-#endif
+  FINISH_PARSING("string_constructor");
 
   return strc;
 }
@@ -100,9 +90,7 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   // function types should look something like `fn(int, int) => int`
   // for example:
   //     def fn-showcase = fn(some-param : fn(int, int) => int) => ...
-#ifdef DEBUG
-  start_parsing("fn_type");
-#endif
+  START_PARSING("fn_type");
 
   SKIP_TOKEN(TOKEN_FN, lexer);
 
@@ -111,9 +99,7 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   keb_type_fn_t *fnt = malloc(sizeof(*fnt));
   fnt->param_types = list_init(LIST_START_SIZE, sizeof(keb_type_t));
 
-#ifdef DEBUG
-  start_parsing("fn_params");
-#endif
+  START_PARSING("fn_params");
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
     list_push_back(fnt->param_types, parse_type(lexer));
@@ -123,35 +109,25 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
     }
   }
 
-#ifdef DEBUG
-  finish_parsing("fn_params");
-#endif
+  FINISH_PARSING("fn_params");
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
   SKIP_TOKEN(TOKEN_FAT_RARROW, lexer);
 
-#ifdef DEBUG
-  start_parsing("fn_return_type");
-#endif
+  START_PARSING("fn_return_type");
 
   fnt->return_type = parse_type(lexer);
 
-#ifdef DEBUG
-  finish_parsing("fn_return_type");
-#endif
+  FINISH_PARSING("fn_return_type");
 
-#ifdef DEBUG
-  finish_parsing("fn_type");
-#endif
+  FINISH_PARSING("fn_type");
 
   return fnt;
 }
 
 static keb_type_list_t *parse_type_list(lexer_t *lexer) {
   // list types should look like `list(string)`
-#ifdef DEBUG
-  start_parsing("list_type");
-#endif
+  START_PARSING("list_type");
 
   SKIP_TOKEN(TOKEN_LIST, lexer);
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
@@ -161,39 +137,33 @@ static keb_type_list_t *parse_type_list(lexer_t *lexer) {
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
 
-#ifdef DEBUG
-  finish_parsing("list_type");
-#endif
+  FINISH_PARSING("list_type");
 
   return klt;
 }
 
 static keb_type_t *parse_type(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("type");
-#endif
+  START_PARSING("type");
 
   keb_type_t *kt = malloc(sizeof(*kt));
 
   switch (lexer->cur_token->kind) {
     // TODO: debug info for primitive types
   case TOKEN_CHAR:
-#ifdef DEBUG
-    start_and_finish_parsing("type_char");
-#endif
+    START_AND_FINISH_PARSING("type_char");
     kt->type = TYPE_CHAR;
     lexer_advance(lexer);
     break;
   case TOKEN_STRING:
 #ifdef DEBUG
-    start_and_finish_parsing("type_string");
+    START_AND_FINISH_PARSING("type_string");
 #endif
     kt->type = TYPE_STRING;
     lexer_advance(lexer);
     break;
   case TOKEN_INT:
 #ifdef DEBUG
-    start_and_finish_parsing("type_int");
+    START_AND_FINISH_PARSING("type_int");
 #endif
     kt->type = TYPE_INT;
     lexer_advance(lexer);
@@ -211,17 +181,13 @@ static keb_type_t *parse_type(lexer_t *lexer) {
     err_illegal_token(lexer);
   }
 
-#ifdef DEBUG
-  finish_parsing("type");
-#endif
+  FINISH_PARSING("type");
 
   return kt;
 }
 
 static fn_param_t *parse_fn_param(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("fn_param");
-#endif
+  START_PARSING("fn_param");
 
   fn_param_t *param = malloc(sizeof(*param));
 
@@ -239,17 +205,13 @@ static fn_param_t *parse_fn_param(lexer_t *lexer) {
     SKIP_TOKEN(TOKEN_COMMA, lexer);
   }
 
-#ifdef DEBUG
-  finish_parsing("fn_param");
-#endif
+  FINISH_PARSING("fn_param");
 
   return param;
 }
 
 static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("fn_constructor");
-#endif
+  START_PARSING("fn_constructor");
 
   SKIP_TOKEN(TOKEN_FN, lexer);
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
@@ -272,10 +234,8 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   // Close the opening paren of the fn constructor
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
 
-#ifdef DEBUG
   // TODO: make variadic and print debug info in finish_parsing/start_parsing
-  finish_parsing("fn_constructor");
-#endif
+  FINISH_PARSING("fn_constructor");
 
   return fnc;
 }
@@ -283,9 +243,7 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
 // TODO: modularize parser into multiple files, e.g. parse_constructor,
 // parse_atom, parse_def, etc.
 static constructor_t *parse_constructor(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("constructor");
-#endif
+  START_PARSING("constructor");
 
   constructor_t *constr = malloc(sizeof(*constr));
   // lexer_advance(lexer);
@@ -311,9 +269,7 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
     err_illegal_token(lexer);
   }
 
-#ifdef DEBUG
-  finish_parsing("constructor");
-#endif
+  FINISH_PARSING("constructor");
 
   return constr;
 }
@@ -349,17 +305,13 @@ static atom_t *parse_atom(lexer_t *lexer) {
 
   lexer_advance(lexer);
 
-#ifdef DEBUG
-  start_and_finish_parsing("atom");
-#endif
+  START_AND_FINISH_PARSING("atom");
 
   return atom;
 }
 
 static primary_t *parse_primary(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("primary");
-#endif
+  START_PARSING("primary");
 
   primary_t *prm = malloc(sizeof(*prm));
   if (prm == NULL) {
@@ -392,9 +344,7 @@ static primary_t *parse_primary(lexer_t *lexer) {
     prm->arguments = NULL;
   }
 
-#ifdef DEBUG
-  finish_parsing("primary");
-#endif
+  FINISH_PARSING("primary");
 
   return prm;
 }
@@ -422,8 +372,7 @@ static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
 
 #ifdef DEBUG
   if (uo != UNARY_NO_OP) {
-    start_parsing("factor_prefix");
-    finish_parsing("factor_prefix");
+    start_and_finish_parsing("factor_prefix");
   }
 #endif
 
@@ -431,9 +380,7 @@ static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
 }
 
 static factor_t *parse_factor(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("factor");
-#endif
+  START_PARSING("factor");
 
   factor_t *ft = malloc(sizeof(*ft));
   if (ft == NULL) {
@@ -447,9 +394,7 @@ static factor_t *parse_factor(lexer_t *lexer) {
   // Parse primary
   ft->primary = parse_primary(lexer);
 
-#ifdef DEBUG
-  finish_parsing("factor");
-#endif
+  FINISH_PARSING("factor");
 
   return ft;
 }
@@ -488,9 +433,7 @@ static binary_operator_t parse_binary_operator(lexer_t *lexer) {
 
 // TODO: change condition to parse until not expr instead of newline/paren
 static expression_t *parse_expr(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("expr");
-#endif
+  START_PARSING("expr");
 
   expression_t *expr = malloc(sizeof(*expr));
   if (expr == NULL) {
@@ -530,9 +473,7 @@ static expression_t *parse_expr(lexer_t *lexer) {
     }
   }
 
-#ifdef DEBUG
-  finish_parsing("expr");
-#endif
+  FINISH_PARSING("expr");
 
   return expr;
 }
@@ -540,9 +481,7 @@ static expression_t *parse_expr(lexer_t *lexer) {
 // TODO: don't require constructor here, allow definition of primitives like
 // `def a = 2` and infer type
 static definition_t *parse_definition(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("definition");
-#endif
+  START_PARSING("definition");
 
   SKIP_TOKEN(TOKEN_DEF, lexer);
 
@@ -567,17 +506,13 @@ static definition_t *parse_definition(lexer_t *lexer) {
 
   def->constructor = parse_constructor(lexer);
 
-#ifdef DEBUG
-  finish_parsing("definition");
-#endif
+  FINISH_PARSING("definition");
 
   return def;
 }
 
 static assignment_t *parse_assignment(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("assignment");
-#endif
+  START_PARSING("assignment");
 
   SKIP_TOKEN(TOKEN_SET, lexer);
 
@@ -594,17 +529,13 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
 
   ass->constructor = parse_constructor(lexer);
 
-#ifdef DEBUG
-  finish_parsing("assignment");
-#endif
+  FINISH_PARSING("assignment");
 
   return ass;
 }
 
 static statement_t *parse_statement(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("statement");
-#endif
+  START_PARSING("statement");
 
   statement_t *stmt = malloc(sizeof(*stmt));
   if (stmt == NULL) {
@@ -634,17 +565,13 @@ static statement_t *parse_statement(lexer_t *lexer) {
     err_illegal_token(lexer);
   }
 
-#ifdef DEBUG
-  finish_parsing("statement");
-#endif
+  FINISH_PARSING("statement");
 
   return stmt;
 }
 
 ast_t *parse(lexer_t *lexer) {
-#ifdef DEBUG
-  start_parsing("ast");
-#endif
+  START_PARSING("ast");
 
   ast_t *ast = malloc(sizeof(*ast));
   ast->statements = list_init(10, sizeof(statement_t));
@@ -652,9 +579,7 @@ ast_t *parse(lexer_t *lexer) {
   while (lexer->cur_token->kind != TOKEN_EOF)
     list_push_back(ast->statements, parse_statement(lexer));
 
-#ifdef DEBUG
-  finish_parsing("ast");
-#endif
+  FINISH_PARSING("ast");
 
   return ast;
 }
