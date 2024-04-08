@@ -598,76 +598,150 @@ ast_t *parse(lexer_t *lexer) {
 
 // Cleanup functions
 
-static void statement_free(statement_t *stmt);
+static void statement_free(void *stmt);
+static void constructor_free(constructor_t *constr);
+static void type_free(void *kt);
+static void expression_free(void *expr);
 
-static void fn_param_free(fn_param_t *fnp) {}
+static void type_free(void *kt) {
+  keb_type_t *k = kt;
+  switch (k->type) {
+  case TYPE_LIST:
+    type_free(k->list->type);
+    free(k->list);
+    break;
+  case TYPE_FN:
+    list_free(k->fn->param_types, type_free);
+    type_free(k->fn->return_type);
+    free(k->fn);
+    break;
+  default:
+    break;
+  }
+
+  free(kt);
+}
+
+static void fn_param_free(void *fnp) {
+  fn_param_t *f = fnp;
+  free((void *)f->name);
+  type_free(f->type);
+}
+
+// TODO: these free constructor functions are the same essentialy. Same other
+// places. Should generalize
+static void char_constructor_free(char_constructor_t *chc) {
+  list_free(chc->statements, statement_free);
+  free(chc);
+}
+
+static void string_constructor_free(string_constructor_t *strc) {
+  list_free(strc->statements, statement_free);
+  free(strc);
+}
+
+static void int_constructor_free(int_constructor_t *intc) {
+  list_free(intc->statements, statement_free);
+  free(intc);
+}
 
 static void fn_constructor_free(fn_constructor_t *fnc) {
-  switch (fnc->body->type) {}
+  list_free(fnc->params, fn_param_free);
+  constructor_free(fnc->body);
+  free(fnc);
 }
 
 static void constructor_free(constructor_t *constr) {
   switch (constr->type) {
   case CONSTR_CHAR:
-    for (size_t i = 0; i < constr->char_constructor->statements->cur_size;
-         ++i) {
-      statement_free(list_get(constr->char_constructor->statements, i));
-    }
+    char_constructor_free(constr->char_constructor);
     break;
   case CONSTR_STRING:
-    for (size_t i = 0; i < constr->string_constructor->statements->cur_size;
-         ++i) {
-      statement_free(list_get(constr->string_constructor->statements, i));
-    }
+    string_constructor_free(constr->string_constructor);
     break;
   case CONSTR_INT:
-    for (size_t i = 0; i < constr->int_constructor->statements->cur_size; ++i) {
-      statement_free(list_get(constr->int_constructor->statements, i));
-    }
+    int_constructor_free(constr->int_constructor);
     break;
   case CONSTR_FN:
-    for (size_t i = 0; i < constr->fn_constructor->params->cur_size; ++i) {
-      fn_param_free(list_get(constr->fn_constructor->params, i));
-    }
     fn_constructor_free(constr->fn_constructor);
     break;
   }
+
+  free(constr);
+}
+
+static void atom_free(atom_t *atom) {
+  switch (atom->type) {
+  case ATOM_STRING:
+    free((void *)atom->string_value);
+    break;
+  case ATOM_NAME:
+    free((void *)atom->name);
+    break;
+  // TODO: list atom
+  default:
+    break;
+  }
+
+  free(atom);
+}
+
+static void primary_free(primary_t *prm) {
+  atom_free(prm->atom);
+
+  if (prm->arguments != NULL) {
+    list_free(prm->arguments, expression_free);
+  }
+
+  free(prm);
+}
+
+// TODO: DOC
+static void factor_free(void *fac) {
+  factor_t *f = fac;
+  primary_free(f->primary);
+  free(f);
 }
 
 static void definition_free(definition_t *def) {
   constructor_free(def->constructor);
   free((void *)def->name);
+  free(def);
 }
-static void assignment_free(assignment_t *ass) {}
-static void expression_free(expression_t *expr) {}
 
-static void statement_free(statement_t *stmt) {
-  switch (stmt->type) {
+static void assignment_free(assignment_t *ass) {}
+
+static void expression_free(void *expr) {
+  expression_t *e = expr;
+  list_free(e->factors, factor_free);
+  list_free(e->operators, free);
+  free(expr);
+}
+
+/**
+ * @brief Recursively free all data associated with a statement
+ *
+ * @param stmt statement to be freed. should be of type `statement_t`
+ */
+static void statement_free(void *stmt) {
+  statement_t *s = stmt;
+
+  switch (s->type) {
   case STMT_DEFINITION:
-    definition_free(stmt->definition);
-    // free(stmt->definition);
+    definition_free(s->definition);
+    break;
   case STMT_ASSIGNMENT:
-    assignment_free(stmt->assignment);
-    // free(stmt->assignment);
+    assignment_free(s->assignment);
+    break;
   case STMT_EXPRESSION:
-    expression_free(stmt->expr);
-    // free(stmt->expr);
+    expression_free(s->expr);
+    break;
   }
+
+  free(stmt);
 }
 
 void ast_free(ast_t *ast) {
-  // statement_t *stmt = list_get(ast->statements, 0);
-  // definition_t *def = stmt->definition;
-  // printf("%s\n", def->name);
-  // constructor_t *cnstr = def->constructor;
-  // printf("%d\n", cnstr->type);
-
-  // First recursively descend into statements and free all associated data
-  for (size_t i = 0; i < ast->statements->cur_size; ++i) {
-    statement_free(list_get(ast->statements, i));
-  }
-
-  // Then free datastructures
-  list_free(ast->statements);
+  list_free(ast->statements, statement_free);
   free(ast);
 }

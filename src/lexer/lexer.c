@@ -369,5 +369,6 @@ void lexer_free(lexer_t *lexer) {
   // ASSERT is ok compared to EXPECT_TOKEN, because this will only be false if
   // kebab does something wrong, not the user
   token_free(lexer->cur_token);
+  free(lexer->source_file);
   free(lexer);
 }

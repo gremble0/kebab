@@ -1,6 +1,7 @@
 #pragma once
 
 // TODO: abbreviate references to generic types e.g. definition -> def?
+// TODO: list_literal [1, 2, 3] ?
 
 #include "lexer.h"
 #include "nlist.h"
@@ -58,6 +59,8 @@ typedef struct keb_type_list_t {
   keb_type_t *type;
 } keb_type_list_t;
 
+// TODO: create these types sparingly, as they will most of the time be
+// duplicated
 struct keb_type_t {
   enum {
     TYPE_CHAR,
@@ -95,6 +98,7 @@ typedef struct atom_t {
   };
 } atom_t;
 
+// TODO: unnecessary? combine with factor
 typedef struct primary_t {
   atom_t *atom;
   list_t *arguments; // for function calls, TODO: suffix for more syntax like []
@@ -110,6 +114,7 @@ typedef struct factor_t {
 
 // Forward declaration because its used in fn_constructor
 typedef struct constructor_t constructor_t;
+
 typedef enum constructor_type_t {
   CONSTR_CHAR,
   CONSTR_STRING,
@@ -144,6 +149,7 @@ typedef struct fn_constructor_t {
 
 struct constructor_t {
   constructor_type_t type;
+  // TODO: unnecessary indirection here
   union {
     char_constructor_t *char_constructor;
     string_constructor_t *string_constructor;
