@@ -66,6 +66,7 @@ struct keb_type_t {
     TYPE_CHAR,
     TYPE_STRING,
     TYPE_INT,
+    TYPE_BOOL,
     TYPE_LIST,
     TYPE_FN,
   } type;
@@ -80,6 +81,7 @@ typedef struct atom_t {
     ATOM_CHAR,
     ATOM_STRING,
     ATOM_INT,
+    ATOM_BOOL,
     ATOM_NAME,
     ATOM_LIST,
   } type;
@@ -87,6 +89,7 @@ typedef struct atom_t {
     char char_value;
     const char *string_value;
     int int_value;
+    char bool_value;
     const char *name;
     list_t *list_value;
 
@@ -119,6 +122,7 @@ typedef enum constructor_type_t {
   CONSTR_CHAR,
   CONSTR_STRING,
   CONSTR_INT,
+  CONSTR_BOOL,
   CONSTR_FN,
   // TODO: nil? bool map list etc.
 } constructor_type_t;
@@ -137,6 +141,10 @@ typedef struct int_constructor_t {
   list_t *statements; // list<statement_t>
 } int_constructor_t;
 
+typedef struct bool_constructor_t {
+  list_t *statements; // list<statement_t>
+} bool_constructor_t;
+
 typedef struct fn_param_t {
   const char *name;
   keb_type_t *type;
@@ -154,6 +162,7 @@ struct constructor_t {
     char_constructor_t *char_constructor;
     string_constructor_t *string_constructor;
     int_constructor_t *int_constructor;
+    bool_constructor_t *bool_constructor;
     fn_constructor_t *fn_constructor;
   };
 };

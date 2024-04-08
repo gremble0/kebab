@@ -19,31 +19,6 @@ static constructor_t *parse_constructor(lexer_t *lexer);
 static keb_type_t *parse_type(lexer_t *lexer);
 static expression_t *parse_expression(lexer_t *lexer);
 
-static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
-  START_PARSING("int_constructor");
-
-  SKIP_TOKEN(TOKEN_INT, lexer);
-  SKIP_TOKEN(TOKEN_LPAREN, lexer);
-
-  int_constructor_t *intc = malloc(sizeof(*intc));
-  intc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
-
-  while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    statement_t *stmt = parse_statement(lexer);
-    list_push_back(intc->statements, stmt);
-    free(stmt);
-  }
-
-  // TODO: if statements return type not int then error - something like this.
-  // Do this in runtime or parser - parser looks hard.
-
-  SKIP_TOKEN(TOKEN_RPAREN, lexer);
-
-  FINISH_PARSING("int_constructor");
-
-  return intc;
-}
-
 static char_constructor_t *parse_char_constructor(lexer_t *lexer) {
   START_PARSING("char_constructor");
   // TODO: very similar to int_constructor, maybe redo into one func with enum
@@ -90,6 +65,55 @@ static string_constructor_t *parse_string_constructor(lexer_t *lexer) {
   FINISH_PARSING("string_constructor");
 
   return strc;
+}
+
+static int_constructor_t *parse_int_constructor(lexer_t *lexer) {
+  START_PARSING("int_constructor");
+
+  SKIP_TOKEN(TOKEN_INT, lexer);
+  SKIP_TOKEN(TOKEN_LPAREN, lexer);
+
+  int_constructor_t *intc = malloc(sizeof(*intc));
+  intc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
+
+  while (lexer->cur_token->kind != TOKEN_RPAREN) {
+    // list_push_back copies
+    statement_t *stmt = parse_statement(lexer);
+    list_push_back(intc->statements, stmt);
+    free(stmt);
+  }
+
+  // TODO: if statements return type not int then error - something like this.
+  // Do this in runtime or parser - parser looks hard.
+
+  SKIP_TOKEN(TOKEN_RPAREN, lexer);
+
+  FINISH_PARSING("int_constructor");
+
+  return intc;
+}
+
+static bool_constructor_t *parse_bool_constructor(lexer_t *lexer) {
+  START_PARSING("bool_constructor");
+
+  SKIP_TOKEN(TOKEN_BOOL, lexer);
+  SKIP_TOKEN(TOKEN_LPAREN, lexer);
+
+  bool_constructor_t *bc = malloc(sizeof(*bc));
+  bc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
+
+  while (lexer->cur_token->kind != TOKEN_RPAREN) {
+    // list_push_back copies
+    statement_t *stmt = parse_statement(lexer);
+    list_push_back(bc->statements, stmt);
+    free(stmt);
+  }
+
+  SKIP_TOKEN(TOKEN_RPAREN, lexer);
+
+  FINISH_PARSING("bool_constructor");
+
+  return bc;
 }
 
 static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
@@ -273,6 +297,11 @@ static constructor_t *parse_constructor(lexer_t *lexer) {
   case TOKEN_INT:
     constr->type = CONSTR_INT;
     constr->int_constructor = parse_int_constructor(lexer);
+    break;
+
+  case TOKEN_BOOL:
+    constr->type = CONSTR_BOOL;
+    constr->bool_constructor = parse_bool_constructor(lexer);
     break;
 
   case TOKEN_FN:
@@ -670,6 +699,11 @@ static void int_constructor_free(int_constructor_t *intc) {
   free(intc);
 }
 
+static void bool_constructor_free(bool_constructor_t *bc) {
+  list_free(bc->statements, statement_free);
+  free(bc);
+}
+
 static void fn_constructor_free(fn_constructor_t *fnc) {
   list_free(fnc->params, fn_param_free);
   constructor_free(fnc->body);
@@ -686,6 +720,9 @@ static void constructor_free(constructor_t *constr) {
     break;
   case CONSTR_INT:
     int_constructor_free(constr->int_constructor);
+    break;
+  case CONSTR_BOOL:
+    bool_constructor_free(constr->bool_constructor);
     break;
   case CONSTR_FN:
     fn_constructor_free(constr->fn_constructor);

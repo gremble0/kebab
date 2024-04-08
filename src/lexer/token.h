@@ -12,6 +12,7 @@ typedef enum token_kind_t {
   TOKEN_CHAR,
   TOKEN_STRING,
   TOKEN_INT,
+  TOKEN_BOOL,
   TOKEN_FN,
   TOKEN_LIST,
 

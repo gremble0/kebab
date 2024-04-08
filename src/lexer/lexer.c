@@ -340,6 +340,11 @@ void lexer_advance(lexer_t *lexer) {
       lexer->cur_token = token_make_simple(TOKEN_INT);
       return;
 
+    } else if (strcmp(word, "bool") == 0) {
+      free((void *)word);
+      lexer->cur_token = token_make_simple(TOKEN_BOOL);
+      return;
+
     } else if (strcmp(word, "fn") == 0) {
       free((void *)word);
       lexer->cur_token = token_make_simple(TOKEN_FN);
