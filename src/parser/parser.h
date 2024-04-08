@@ -4,10 +4,14 @@
 #include "nlist.h"
 
 #define EXPECT_TOKEN(expected_kind, lexer)                                     \
+  if (lexer->cur_token->kind != expected_kind) {                               \
+    err_wrong_token(expected_kind, lexer);                                     \
+  }
+
+#define SKIP_TOKEN(expected_kind, lexer)                                       \
   do {                                                                         \
-    if (lexer->cur_token->kind != expected_kind) {                             \
-      err_wrong_token(expected_kind, lexer);                                   \
-    }                                                                          \
+    EXPECT_TOKEN(expected_kind, lexer);                                        \
+    lexer_advance(lexer);                                                      \
   } while (0)
 
 #define LIST_START_SIZE 5
