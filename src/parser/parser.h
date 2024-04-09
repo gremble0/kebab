@@ -142,7 +142,7 @@ typedef struct fn_constructor_t {
 } fn_constructor_t;
 
 typedef struct {
-  list_t *exprs; // list<expression_t>
+  list_t *stmts; // list<statement_t>
   keb_type_t *type;
 } list_constructor_t;
 

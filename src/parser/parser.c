@@ -87,7 +87,7 @@ static keb_type_t *parse_type(lexer_t *lexer) {
   case TOKEN_NAME:
     START_AND_FINISH_PARSING("type_primitive");
     kt->type = TYPE_PRIMITIVE;
-    // TODO: not strdup - i think necessary??
+    // TODO: maybe not strdup - i think necessary??
     kt->name = strdup(lexer->cur_token->name);
     lexer_advance(lexer);
     break;
@@ -196,15 +196,15 @@ static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
 
   list_constructor_t *lc = malloc(sizeof(*lc));
-  lc->exprs = list_init(LIST_START_SIZE, sizeof(expression_t));
+  lc->stmts = list_init(LIST_START_SIZE, sizeof(statement_t));
   lc->type = parse_type(lexer);
 
   SKIP_TOKEN(TOKEN_FAT_RARROW, lexer);
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    expression_t *expr = parse_expression(lexer);
-    list_push_back(lc->exprs, expr);
-    free(expr);
+    statement_t *stmt = parse_statement(lexer);
+    list_push_back(lc->stmts, stmt);
+    free(stmt);
 
     if (lexer->cur_token->kind != TOKEN_RPAREN) {
       SKIP_TOKEN(TOKEN_COMMA, lexer);
@@ -591,6 +591,9 @@ static void type_free(void *kt) {
   keb_type_t *k = kt;
 
   switch (k->type) {
+  case TYPE_PRIMITIVE:
+    free((void *)k->name);
+    break;
   case TYPE_LIST:
     type_free(k->list->type);
     free(k->list);
@@ -599,8 +602,6 @@ static void type_free(void *kt) {
     list_free(k->fn->param_types, type_free);
     type_free(k->fn->return_type);
     free(k->fn);
-    break;
-  default:
     break;
   }
 
@@ -616,9 +617,9 @@ static void fn_param_free(void *fnp) {
 
 // TODO: these free constructor functions are the same essentialy. Same other
 // places. Should generalize
-static void primitive_constructor_free(primitive_constructor_t *bc) {
-  list_free(bc->statements, statement_free);
-  free(bc);
+static void primitive_constructor_free(primitive_constructor_t *pc) {
+  list_free(pc->statements, statement_free);
+  free(pc);
 }
 
 static void fn_constructor_free(fn_constructor_t *fnc) {
@@ -628,7 +629,7 @@ static void fn_constructor_free(fn_constructor_t *fnc) {
 }
 
 static void list_constructor_free(list_constructor_t *lc) {
-  list_free(lc->exprs, fn_param_free);
+  list_free(lc->stmts, statement_free);
   type_free(lc->type);
   free(lc);
 }
