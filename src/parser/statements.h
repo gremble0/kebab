@@ -1,6 +1,7 @@
 #pragma once
 
 #include "constructors.h"
+#include "expressions.h"
 
 // Binds a symbol to an expression
 typedef struct definition_t {
@@ -14,20 +15,6 @@ typedef struct assignment_t {
   const char *name;
   constructor_t *constructor;
 } assignment_t;
-
-typedef enum binary_operator_t {
-  BINARY_PLUS,  // x + y
-  BINARY_MINUS, // x - y
-  BINARY_MULT,  // x * y
-  BINARY_DIV,   // x / y
-
-  BINARY_NO_OP, // Indicates missing operator
-} binary_operator_t;
-
-typedef struct expression_t {
-  list_t *factors;   // list<factor_t>
-  list_t *operators; // list<binary_operator_t>
-} expression_t;
 
 // Sort of abstract/generic type to represent all possible statements.
 // Actual statements are the types in the union of this struct.
@@ -48,4 +35,3 @@ statement_t *parse_statement(lexer_t *lexer);
 expression_t *parse_expression(lexer_t *lexer);
 
 void statement_free(void *stmt);
-void expression_free(void *expr);
