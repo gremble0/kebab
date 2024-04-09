@@ -10,30 +10,48 @@ static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
 
   switch (lexer->cur_token->kind) {
   case TOKEN_PLUS:
-    lexer_advance(lexer);
     *bo = BINARY_PLUS;
     break;
   case TOKEN_MINUS:
-    lexer_advance(lexer);
     *bo = BINARY_MINUS;
     break;
   case TOKEN_MULT:
-    lexer_advance(lexer);
     *bo = BINARY_MULT;
     break;
   case TOKEN_DIV:
-    lexer_advance(lexer);
     *bo = BINARY_DIV;
     break;
+
+  case TOKEN_LT:
+    *bo = BINARY_LT;
+    break;
+  case TOKEN_LE:
+    *bo = BINARY_LE;
+    break;
+  case TOKEN_EQ:
+    *bo = BINARY_EQ;
+    break;
+  case TOKEN_GT:
+    *bo = BINARY_GT;
+    break;
+  case TOKEN_GE:
+    *bo = BINARY_GE;
+    break;
+
+    // If next token is not a binary operator set to no-op and return without
+    // advancing lexer
   default:
     *bo = BINARY_NO_OP;
+    goto skip;
   }
 
+  lexer_advance(lexer);
+
 #ifdef DEBUG
-  if (*bo != BINARY_NO_OP)
-    start_and_finish_parsing("binary_operator");
+  start_and_finish_parsing("binary_operator");
 #endif
 
+skip:
   return bo;
 }
 

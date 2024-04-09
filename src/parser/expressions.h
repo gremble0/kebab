@@ -4,10 +4,18 @@
 #include "nlist.h"
 
 typedef enum binary_operator_t {
+  // Maths
   BINARY_PLUS,  // x + y
   BINARY_MINUS, // x - y
   BINARY_MULT,  // x * y
   BINARY_DIV,   // x / y
+
+  // Comparisons
+  BINARY_LT, // x < y
+  BINARY_LE, // x <= y
+  BINARY_EQ, // x == y
+  BINARY_GT, // x > y
+  BINARY_GE, // x >= y
 
   BINARY_NO_OP, // Indicates missing operator
 } binary_operator_t;

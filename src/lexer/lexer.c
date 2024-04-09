@@ -236,9 +236,11 @@ void lexer_advance(lexer_t *lexer) {
     case '>':
       lexer->line_pos += 2;
       lexer->cur_token = token_make_simple(TOKEN_FAT_RARROW);
+      return;
     case '=':
       lexer->line_pos += 2;
       lexer->cur_token = token_make_simple(TOKEN_EQ);
+      return;
     default:
       ++lexer->line_pos;
       lexer->cur_token = token_make_simple(TOKEN_EQUALS);
@@ -287,18 +289,19 @@ void lexer_advance(lexer_t *lexer) {
     if (lexer_peek_char(lexer, 1) == '=') {
       lexer->line_pos += 2;
       lexer->cur_token = token_make_simple(TOKEN_LE);
-    } else {
-      ++lexer->line_pos;
-      lexer->cur_token = token_make_simple(TOKEN_LT);
+      return;
     }
+    ++lexer->line_pos;
+    lexer->cur_token = token_make_simple(TOKEN_LT);
+    return;
   case '>':
     if (lexer_peek_char(lexer, 1) == '=') {
       lexer->line_pos += 2;
       lexer->cur_token = token_make_simple(TOKEN_GE);
-    } else {
-      ++lexer->line_pos;
-      lexer->cur_token = token_make_simple(TOKEN_GT);
+      return;
     }
+    ++lexer->line_pos;
+    lexer->cur_token = token_make_simple(TOKEN_GT);
   case '/':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_DIV);
