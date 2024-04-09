@@ -1,17 +1,17 @@
 NONSTDLIBSRC := ../../lib/nonstdlib/src
 LEXERSRC := ../lexer
+PARSERSRC := ../parser
 
 CC := clang
 CFLAGS := -Wall -Wextra -g -DDEBUG
 LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
-OBJS := atoms.o constructors.o expressions.o factors.o parser.o parser_error.o primaries.o statements.o types.o utils.o
+OBJS := eval.o
 
 all: clean $(OBJS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I$(NONSTDLIBSRC) -I$(LEXERSRC) -c $< -o $@
+	$(CC) $(CFLAGS) -I$(NONSTDLIBSRC) -I$(LEXERSRC) -I$(PARSERSRC) -c $< -o $@
 
 clean:
 	rm -f *.o
-

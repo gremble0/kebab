@@ -1,14 +1,15 @@
-CC=clang
-CFLAGS=-Wall -Wextra -g -DDEBUG
-LIBS=-L$(NONSTDLIBSRC) -lnonstdlib
+NONSTDLIBSRC := ../lib/nonstdlib/src
+LEXERSRC := lexer
+PARSERSRC := parser
+RUNTIMESRC := runtime
 
-NONSTDLIBSRC=../lib/nonstdlib/src
-LEXERSRC=lexer
-PARSERSRC=parser
+CC := clang
+CFLAGS := -Wall -Wextra -g -DDEBUG
+LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
-OBJS=$(LEXERSRC)/*.o $(PARSERSRC)/*.o
+OBJS := $(LEXERSRC)/*.o $(PARSERSRC)/*.o $(RUNTIMESRC)/*.o
 
-all: lexer parser
+all: lexer parser runtime
 	$(CC) $(CFLAGS) $(OBJS) -I$(LEXERSRC) -I$(PARSERSRC) -I$(NONSTDLIBSRC) main.c -o kebab $(LIBS)
 
 lexer:
@@ -17,6 +18,9 @@ lexer:
 parser:
 	$(MAKE) -C $(PARSERSRC)
 
+runtime:
+	$(MAKE) -C $(RUNTIMESRC)
+
 nonstdlib:
 	$(MAKE) -C $(NONSTDLIBSRC) clean
 	$(MAKE) -C $(NONSTDLIBSRC)
@@ -24,6 +28,7 @@ nonstdlib:
 clean:
 	$(MAKE) -C $(LEXERSRC) clean
 	$(MAKE) -C $(PARSERSRC) clean
+	$(MAKE) -C $(RUNTIMESRC) clean
 	rm -f kebab
 
-.PHONY: lexer parser
+.PHONY: lexer parser runtime

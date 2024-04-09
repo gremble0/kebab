@@ -1,11 +1,11 @@
-CC := clang
-CFLAGS := -Wall -Wextra -g -O0
-LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
-
+NONSTDLIBSRC := ../lib/nonstdlib/src
 SRC := ../src
 LEXERSRC := $(SRC)/lexer
 PARSERSRC := $(SRC)/parser
-NONSTDLIBSRC := ../lib/nonstdlib/src
+
+CC := clang
+CFLAGS := -Wall -Wextra -g -O0
+LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
 TESTOBJS := test_lexer.o
 LEXEROBJS := $(LEXERSRC)/*.o
