@@ -6,7 +6,7 @@ NONSTDLIBSRC=../../lib/nonstdlib/src
 LEXERSRC=../lexer
 UTILSRC=../util
 
-OBJS=parser.o debug.o parser_error.o
+OBJS=atoms.o constructors.o factors.o parser.o parser_error.o primaries.o statements.o types.o utils.o
 
 all: clean $(OBJS)
 
@@ -15,3 +15,4 @@ all: clean $(OBJS)
 
 clean:
 	rm -f *.o
+

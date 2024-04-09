@@ -1,22 +1,25 @@
-CC=clang
-CFLAGS=-Wall -Wextra -g -O0
-OBJS=test_lexer.o
-SRC=../src
-NONSTDLIBSRC=../lib/nonstdlib/src
-LIBS=-L$(SRC) -lkebab -L$(NONSTDLIBSRC) -lnonstdlib
+CC := clang
+CFLAGS := -Wall -Wextra -g -O0
+LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
-all: clean src $(OBJS)
-	$(CC) $(CFLAGS) -o test_all $(OBJS) test_all.c $(LIBS)
+SRC := ../src
+LEXERSRC := $(SRC)/lexer
+PARSERSRC := $(SRC)/parser
+NONSTDLIBSRC := ../lib/nonstdlib/src
+
+TESTOBJS := test_lexer.o
+LEXEROBJS := $(LEXERSRC)/*.o
+PARSEROBJS := $(PARSEROBJS)/*.o
+
+all: clean $(TESTOBJS)
+	$(CC) $(CFLAGS) $(TESTOBJS) -o test_all test_all.c $(LIBS)
 
 test_lexer.o:
-	$(CC) $(CFLAGS) -I$(SRC) -I$(NONSTDLIBSRC) -c test_lexer.c -o test_lexer.o
-
-# %.o: %.c:
-# 	$(CC) $(CFLAGS) -I$(SRC) -c $< -o $@
-
-src:
-	$(MAKE) -C $(SRC) clean
-	$(MAKE) -C $(SRC) lib
+	$(MAKE) -C $(LEXERSRC) clean
+	$(MAKE) -C $(LEXERSRC)
+	$(CC) $(CFLAGS) -I$(LEXERSRC) -I$(NONSTDLIBSRC) $(LEXEROBJS) -c test_lexer.c -o test_lexer.o
 
 clean:
 	rm test_all *.o -f
+
+.PHONY: *.o

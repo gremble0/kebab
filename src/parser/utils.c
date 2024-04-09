@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "debug.h"
 #include "nerror.h"
+#include "utils.h"
 
 static char *make_indent(size_t indent_depth) {
   if (indent_depth == 0) {
