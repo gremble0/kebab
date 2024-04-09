@@ -18,14 +18,6 @@ char *token_to_string(token_t *token) {
     return strdup("set");
   case TOKEN_MUT:
     return strdup("mut");
-  case TOKEN_CHAR:
-    return strdup("char");
-  case TOKEN_STRING:
-    return strdup("string");
-  case TOKEN_INT:
-    return strdup("int");
-  case TOKEN_BOOL:
-    return strdup("bool");
   case TOKEN_FN:
     return strdup("fn");
   case TOKEN_LIST:
@@ -91,14 +83,6 @@ char *token_kind_to_string(token_kind_t kind) {
     return strdup("set");
   case TOKEN_MUT:
     return strdup("mut");
-  case TOKEN_CHAR:
-    return strdup("char");
-  case TOKEN_STRING:
-    return strdup("string");
-  case TOKEN_INT:
-    return strdup("int");
-  case TOKEN_BOOL:
-    return strdup("bool");
   case TOKEN_FN:
     return strdup("fn");
   case TOKEN_LIST:

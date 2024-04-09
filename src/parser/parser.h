@@ -63,16 +63,15 @@ typedef struct keb_type_list_t {
 // duplicated
 struct keb_type_t {
   enum {
-    TYPE_CHAR,
-    TYPE_STRING,
-    TYPE_INT,
-    TYPE_BOOL,
+    TYPE_PRIMITIVE, // TODO: rename and use for user defined types when/if
+                    // implemented?
     TYPE_LIST,
     TYPE_FN,
   } type;
   union {
     keb_type_fn_t *fn;
     keb_type_list_t *list;
+    const char *name;
   };
 };
 
@@ -119,31 +118,18 @@ typedef struct factor_t {
 typedef struct constructor_t constructor_t;
 
 typedef enum constructor_type_t {
-  CONSTR_CHAR,
-  CONSTR_STRING,
-  CONSTR_INT,
-  CONSTR_BOOL,
+  CONSTR_PRIMITIVE,
   CONSTR_FN,
+  CONSTR_LIST,
   // TODO: nil? bool map list etc.
 } constructor_type_t;
 
 // TODO: reduce duplication here
 
-typedef struct char_constructor_t {
+// Primitivies are types like char, int, string, bool, etc.
+typedef struct primitive_constructor_t {
   list_t *statements; // list<statement_t>
-} char_constructor_t;
-
-typedef struct string_constructor_t {
-  list_t *statements; // list<statement_t>
-} string_constructor_t;
-
-typedef struct int_constructor_t {
-  list_t *statements; // list<statement_t>
-} int_constructor_t;
-
-typedef struct bool_constructor_t {
-  list_t *statements; // list<statement_t>
-} bool_constructor_t;
+} primitive_constructor_t;
 
 typedef struct fn_param_t {
   const char *name;
@@ -155,15 +141,18 @@ typedef struct fn_constructor_t {
   constructor_t *body;
 } fn_constructor_t;
 
+typedef struct {
+  list_t *exprs; // list<expression_t>
+  keb_type_t *type;
+} list_constructor_t;
+
 struct constructor_t {
   constructor_type_t type;
   // TODO: unnecessary indirection here
   union {
-    char_constructor_t *char_constructor;
-    string_constructor_t *string_constructor;
-    int_constructor_t *int_constructor;
-    bool_constructor_t *bool_constructor;
+    primitive_constructor_t *primitive_constructor;
     fn_constructor_t *fn_constructor;
+    list_constructor_t *list_constructor;
   };
 };
 
