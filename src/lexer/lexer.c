@@ -69,7 +69,7 @@ static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
  * @param offset how many indexes to the right to peek
  * @return the character at the offset, 0 if offset is out of bounds
  */
-static char lexer_peek_char(lexer_t *lexer, size_t offset) {
+static inline char lexer_peek_char(lexer_t *lexer, size_t offset) {
   if (lexer->line_pos + offset >= (size_t)lexer->line_len) {
     return 0;
   }
@@ -232,11 +232,14 @@ void lexer_advance(lexer_t *lexer) {
     lexer->cur_token = token_make_simple(TOKEN_COLON);
     return;
   case '=': {
-    if (lexer_peek_char(lexer, 1) == '>') {
+    switch (lexer_peek_char(lexer, 1)) {
+    case '>':
       lexer->line_pos += 2;
       lexer->cur_token = token_make_simple(TOKEN_FAT_RARROW);
-      return;
-    } else {
+    case '=':
+      lexer->line_pos += 2;
+      lexer->cur_token = token_make_simple(TOKEN_EQ);
+    default:
       ++lexer->line_pos;
       lexer->cur_token = token_make_simple(TOKEN_EQUALS);
       return;
@@ -280,6 +283,22 @@ void lexer_advance(lexer_t *lexer) {
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_NOT);
     return;
+  case '<':
+    if (lexer_peek_char(lexer, 1) == '=') {
+      lexer->line_pos += 2;
+      lexer->cur_token = token_make_simple(TOKEN_LE);
+    } else {
+      ++lexer->line_pos;
+      lexer->cur_token = token_make_simple(TOKEN_LT);
+    }
+  case '>':
+    if (lexer_peek_char(lexer, 1) == '=') {
+      lexer->line_pos += 2;
+      lexer->cur_token = token_make_simple(TOKEN_GE);
+    } else {
+      ++lexer->line_pos;
+      lexer->cur_token = token_make_simple(TOKEN_GT);
+    }
   case '/':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_DIV);

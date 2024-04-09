@@ -2,15 +2,15 @@
 
 typedef enum token_kind_t {
   // Keywords
-  TOKEN_DEF,
-  TOKEN_SET,
-  TOKEN_MUT,
+  TOKEN_DEF, // def
+  TOKEN_SET, // set
+  TOKEN_MUT, // mut
   // TOKEN_DEC ? declare variable with type?
 
   // Constructors
   // TODO: Move the definition of these types higher up instead of hardcoding
-  TOKEN_FN,
-  TOKEN_LIST,
+  TOKEN_FN,   // fn
+  TOKEN_LIST, // list
 
   // Syntax
   TOKEN_COLON,      // :
@@ -22,24 +22,31 @@ typedef enum token_kind_t {
   TOKEN_RBRACE,     // ]
   TOKEN_FAT_RARROW, // =>
 
-  // Primitives
+  // Operators
   TOKEN_PLUS,  // +
   TOKEN_MINUS, // -
   TOKEN_MULT,  // *
   TOKEN_DIV,   // /
   TOKEN_NOT,   // ~
 
+  // Comparisons
+  TOKEN_LT, // <
+  TOKEN_LE, // <=
+  TOKEN_EQ, // ==
+  TOKEN_GT, // >
+  TOKEN_GE, // >=
+
   // Booleans
-  TOKEN_TRUE,
-  TOKEN_FALSE,
+  TOKEN_TRUE,  // true
+  TOKEN_FALSE, // false
 
   // Special
   TOKEN_EOF, // <end of file>
 
   // Values
-  TOKEN_CHAR_LITERAL,
-  TOKEN_STRING_LITERAL,
-  TOKEN_INTEGER_LITERAL,
+  TOKEN_CHAR_LITERAL,    // c
+  TOKEN_STRING_LITERAL,  // string
+  TOKEN_INTEGER_LITERAL, // 123
   // TODO: TOKEN_FLOAT_LITERAL,
   TOKEN_NAME,
 } token_kind_t;
