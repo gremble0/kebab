@@ -54,6 +54,8 @@ char *token_to_string(token_t *token) {
     return strdup("<=");
   case TOKEN_EQ:
     return strdup("==");
+  case TOKEN_NEQ:
+    return strdup("~=");
   case TOKEN_GT:
     return strdup(">");
   case TOKEN_GE:
@@ -123,6 +125,18 @@ char *token_kind_to_string(token_kind_t kind) {
     return strdup("/");
   case TOKEN_NOT:
     return strdup("~");
+  case TOKEN_LT:
+    return strdup("<");
+  case TOKEN_LE:
+    return strdup("<=");
+  case TOKEN_NEQ:
+    return strdup("~=");
+  case TOKEN_EQ:
+    return strdup("==");
+  case TOKEN_GT:
+    return strdup(">");
+  case TOKEN_GE:
+    return strdup(">=");
   case TOKEN_TRUE:
     return strdup("true");
   case TOKEN_FALSE:

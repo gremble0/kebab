@@ -282,6 +282,11 @@ void lexer_advance(lexer_t *lexer) {
     lexer->cur_token = token_make_simple(TOKEN_MULT);
     return;
   case '~':
+    if (lexer_peek_char(lexer, 1) == '=') {
+      lexer->line_pos += 2;
+      lexer->cur_token = token_make_simple(TOKEN_NEQ);
+      return;
+    }
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_NOT);
     return;

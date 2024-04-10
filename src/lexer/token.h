@@ -30,11 +30,12 @@ typedef enum {
   TOKEN_NOT,   // ~
 
   // Comparisons
-  TOKEN_LT, // <
-  TOKEN_LE, // <=
-  TOKEN_EQ, // ==
-  TOKEN_GT, // >
-  TOKEN_GE, // >=
+  TOKEN_LT,  // <
+  TOKEN_LE,  // <=
+  TOKEN_EQ,  // ==
+  TOKEN_NEQ, // ~=
+  TOKEN_GT,  // >
+  TOKEN_GE,  // >=
 
   // Booleans
   TOKEN_TRUE,  // true

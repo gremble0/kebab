@@ -31,6 +31,9 @@ static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
   case TOKEN_EQ:
     *bo = BINARY_EQ;
     break;
+  case TOKEN_NEQ:
+    *bo = BINARY_NEQ;
+    break;
   case TOKEN_GT:
     *bo = BINARY_GT;
     break;

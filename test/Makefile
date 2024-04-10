@@ -15,8 +15,7 @@ all: clean $(TESTOBJS)
 	$(CC) $(CFLAGS) $(TESTOBJS) -o test_all test_all.c $(LIBS)
 
 test_lexer.o:
-	$(MAKE) -C $(LEXERSRC) clean
-	$(MAKE) -C $(LEXERSRC)
+	$(MAKE) -C $(LEXERSRC) clean all
 	$(CC) $(CFLAGS) -I$(LEXERSRC) -I$(NONSTDLIBSRC) $(LEXEROBJS) -c test_lexer.c -o test_lexer.o
 
 clean:
