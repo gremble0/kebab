@@ -2,7 +2,7 @@
 
 #include "primaries.h"
 
-typedef enum unary_operator_t {
+typedef enum {
   UNARY_PLUS,  // +1
   UNARY_MINUS, // -1
   UNARY_NOT,   // ~true
@@ -11,7 +11,7 @@ typedef enum unary_operator_t {
 } unary_operator_t;
 
 // TODO: nullable types - would be in factor probably?
-typedef struct factor_t {
+typedef struct {
   // TODO: inline enum?
   unary_operator_t prefix; // e.g. -2, +1, ~false
   primary_t *primary;

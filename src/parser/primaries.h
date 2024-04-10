@@ -4,7 +4,7 @@
 #include "nlist.h"
 
 // TODO: unnecessary? combine with factor
-typedef struct primary_t {
+typedef struct {
   atom_t *atom;
   list_t *arguments; // for function calls, TODO: suffix for more syntax like []
 } primary_t;

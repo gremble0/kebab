@@ -4,12 +4,12 @@
 
 #include "token.h"
 
-typedef struct source_file_t {
+typedef struct {
   FILE *f;
   const char *f_name; // used for error handling
 } source_file_t;
 
-typedef struct lexer_t {
+typedef struct {
   source_file_t *source_file;
   char *line;
   ssize_t line_len;

@@ -6,7 +6,7 @@
 #include "nlist.h"
 
 // Entrypoint to build/use the contents of a program
-typedef struct ast_t {
+typedef struct {
   list_t *stmts; // list<statement_t>
 } ast_t;
 

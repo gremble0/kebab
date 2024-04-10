@@ -12,7 +12,7 @@ typedef enum {
   ATOM_LIST,
 } atom_type_t;
 
-typedef struct atom_t {
+typedef struct {
   atom_type_t type;
   union {
     char char_value;

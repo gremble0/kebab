@@ -1,6 +1,6 @@
 #pragma once
 
-typedef enum token_kind_t {
+typedef enum {
   // Keywords
   TOKEN_DEF, // def
   TOKEN_SET, // set
@@ -51,7 +51,7 @@ typedef enum token_kind_t {
   TOKEN_NAME,
 } token_kind_t;
 
-typedef struct token_t {
+typedef struct {
   token_kind_t kind;
   union {
     const char *name;
