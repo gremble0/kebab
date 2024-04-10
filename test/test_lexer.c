@@ -7,25 +7,13 @@
 #include "nerror.h"
 #include "token.h"
 
-// Move to lexer?
-static int lexer_write_cur_token(lexer_t *lexer, FILE *f) {
-  lexer_advance(lexer);
-
+static void lexer_write_cur_token(lexer_t *lexer, FILE *f) {
   char *token_string = token_to_string(lexer->cur_token);
   int token_string_len = strlen(token_string);
   fwrite(token_string, 1, token_string_len, f);
   fwrite("\n", 1, 1, f);
 
-  int ret;
-  if (lexer->cur_token->kind == TOKEN_EOF) {
-    ret = 1;
-  } else {
-    ret = 0;
-  }
-
   free(token_string);
-
-  return ret;
 }
 
 static void assert_file_contents_equal(FILE *f1, FILE *f2) {
@@ -47,30 +35,40 @@ static void test_lexer_on_file(const char *path, const char *actual_path,
   // Lex the source code file and log it to a txt file
   lexer_t *lexer = lexer_init(path);
 
-  FILE *actual = fopen(actual_path, "w+");
-  if (actual == NULL) {
+  FILE *actual_f = fopen(actual_path, "w+");
+  if (actual_f == NULL) {
     err_io_fail("");
   }
 
-  FILE *expected = fopen(expected_path, "r");
-  if (expected == NULL) {
+  FILE *expected_f = fopen(expected_path, "r");
+  if (expected_f == NULL) {
     err_io_fail("");
   }
 
-  while (lexer_write_cur_token(lexer, actual) != 1)
-    ;
+  while (lexer->cur_token->kind != TOKEN_EOF) {
+    lexer_write_cur_token(lexer, actual_f);
+    lexer_advance(lexer);
+  }
 
   // Reset the new file to the start and assert its contents are the same as the
   // expected lexed version
-  fseek(actual, 0, SEEK_SET);
-  assert_file_contents_equal(actual, expected);
+  fseek(actual_f, 0, SEEK_SET);
+  assert_file_contents_equal(actual_f, expected_f);
 
-  fclose(actual);
-  fclose(expected);
+  fclose(actual_f);
+  fclose(expected_f);
   lexer_free(lexer);
 }
 
 void test_lexer() {
-  test_lexer_on_file("./lexer/test-lexer.keb", "./lexer/test-lexer.txt",
-                     "./lexer/test-lexer-expected.txt");
+  test_lexer_on_file("./lexer/constructors.keb",
+                     "./lexer/constructors-actual.txt",
+                     "./lexer/constructors-expected.txt");
+  test_lexer_on_file("./lexer/comparisons.keb",
+                     "./lexer/comparisons-actual.txt",
+                     "./lexer/comparisons-expected.txt");
+  test_lexer_on_file("./lexer/operators.keb", "./lexer/operators-actual.txt",
+                     "./lexer/operators-expected.txt");
+  test_lexer_on_file("./lexer/comments.keb", "./lexer/comments-actual.txt",
+                     "./lexer/comments-expected.txt");
 }

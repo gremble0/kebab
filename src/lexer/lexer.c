@@ -93,6 +93,7 @@ static int lexer_read_int(lexer_t *lexer) {
   num[i] = '\0';
   lexer->line_pos += i;
 
+  // TODO: use longs for integers, and check for overflow/underflow here
   return atoi(num);
 }
 
@@ -307,6 +308,7 @@ void lexer_advance(lexer_t *lexer) {
     }
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_GT);
+    return;
   case '/':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_DIV);

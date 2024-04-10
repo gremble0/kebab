@@ -1,0 +1,9 @@
+; These should all error at some point, but not while lexing
+
+def a = bool(b < 2)
+def b = bool("string" < true)
+def c = int(33 <= 2)
+def d = bool(g == 3)
+def d = bool(g ~= 3)
+def e = bool(h > 0)
+def f = bool("a" >= 'g')

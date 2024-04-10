@@ -1,5 +1,6 @@
 *.o
 *.a
+*-actual.txt
 *.out
 kebab
 test_all

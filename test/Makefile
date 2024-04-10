@@ -12,7 +12,7 @@ LEXEROBJS := $(LEXERSRC)/*.o
 PARSEROBJS := $(PARSEROBJS)/*.o
 
 all: clean $(TESTOBJS)
-	$(CC) $(CFLAGS) $(TESTOBJS) -o test_all test_all.c $(LIBS)
+	$(CC) $(CFLAGS) $(TESTOBJS) $(LEXEROBJS) -o test_all test_all.c $(LIBS)
 
 test_lexer.o:
 	$(MAKE) -C $(LEXERSRC) clean all

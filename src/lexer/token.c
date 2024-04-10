@@ -67,22 +67,27 @@ char *token_to_string(token_t *token) {
   case TOKEN_EOF:
     return strdup("<eof>");
   case TOKEN_CHAR_LITERAL: {
-    char *res = malloc(2); // char and null term
-    res[0] = token->char_literal;
-    res[1] = '\0';
+    char *res = malloc(sizeof("char-literal: ' '") + 1);
+    sprintf(res, "char-literal: '%c'", token->char_literal);
     return res;
   }
   case TOKEN_STRING_LITERAL: {
-    return strdup(token->string_literal);
+    char *res = malloc(sizeof("string-literal: \"\"") +
+                       strlen(token->string_literal) + 1);
+    sprintf(res, "string-literal: \"%s\"", token->string_literal);
+    return res;
   }
   case TOKEN_INTEGER_LITERAL: {
+    // Get length to malloc before actually writing to `res`
     int len = snprintf(NULL, 0, "%d", token->integer_literal);
-    char *res = malloc(len + 1);
-    sprintf(res, "%d", token->integer_literal);
+    char *res = malloc(sizeof("integer-literal: ") + len + 1);
+    sprintf(res, "integer-literal: %d", token->integer_literal);
     return res;
   }
   case TOKEN_NAME: {
-    return strdup(token->name);
+    char *res = malloc(sizeof("name: \"\"") + strlen(token->name) + 1);
+    sprintf(res, "name: \"%s\"", token->name);
+    return res;
   }
   }
 }
