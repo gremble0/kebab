@@ -17,9 +17,8 @@ primary_t *parse_primary(lexer_t *lexer) {
 
   // If next token is a left paren, parse arguments for function call.
   if (lexer->cur_token->kind == TOKEN_LPAREN) {
-    if (prm->atom->type != ATOM_NAME) {
-      // TODO: raise error (uncallable)
-    }
+    // Here we could handle a small portion of wrong function calls (e.g. `1()`,
+    // `""()`, etc), but we will leave them all to the runtime instead
 
     lexer_advance(lexer);
 
@@ -48,7 +47,6 @@ void primary_free(primary_t *prm) {
   atom_free(prm->atom);
 
   if (prm->arguments != NULL) {
-    // TODO: why expression? move from statements?
     list_free(prm->arguments, expression_free);
   }
 

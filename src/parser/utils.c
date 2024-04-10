@@ -47,3 +47,23 @@ void start_and_finish_parsing(const char *node_name) {
   printf("%s<%s />\n", indent, node_name);
   free(indent);
 }
+
+/**
+ * @brief Creates a new string consisting of the character `c` repeated `n`
+ * times.
+ *
+ * @param c The character to repeat.
+ * @param n The number of times to repeat `c`.
+ * @return A malloc'd string of `c` repeated `n` times
+ */
+char *repeat_char(char c, size_t n) {
+  char *str = malloc(n + 1);
+  if (str == NULL) {
+    err_malloc_fail();
+  }
+
+  memset(str, c, n);
+  str[n] = '\0';
+
+  return str;
+}

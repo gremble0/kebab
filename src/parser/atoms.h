@@ -3,15 +3,17 @@
 #include "lexer.h"
 #include "nlist.h"
 
+typedef enum {
+  ATOM_CHAR,
+  ATOM_STRING,
+  ATOM_INT,
+  ATOM_BOOL,
+  ATOM_NAME,
+  ATOM_LIST,
+} atom_type_t;
+
 typedef struct atom_t {
-  enum {
-    ATOM_CHAR,
-    ATOM_STRING,
-    ATOM_INT,
-    ATOM_BOOL,
-    ATOM_NAME,
-    ATOM_LIST,
-  } type;
+  atom_type_t type;
   union {
     char char_value;
     const char *string_value;
@@ -29,4 +31,5 @@ typedef struct atom_t {
 } atom_t;
 
 atom_t *parse_atom(lexer_t *lexer);
+char *atom_type_to_string(atom_type_t at);
 void atom_free(atom_t *atom);
