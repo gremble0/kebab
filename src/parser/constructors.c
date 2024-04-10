@@ -80,7 +80,6 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   // Close the opening paren of the fn constructor
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
 
-  // TODO: make variadic and print debug info in finish_parsing/start_parsing
   FINISH_PARSING("fn_constructor");
 
   return fnc;
@@ -115,8 +114,6 @@ static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
   return lc;
 }
 
-// TODO: modularize parser into multiple files, e.g. parse_constructor,
-// parse_atom, parse_def, etc.
 constructor_t *parse_constructor(lexer_t *lexer) {
   START_PARSING("constructor");
 
@@ -154,8 +151,6 @@ static void fn_param_free(void *fnp) {
   free(fnp);
 }
 
-// TODO: these free constructor functions are the same essentialy. Same other
-// places. Should generalize
 static void primitive_constructor_free(primitive_constructor_t *pc) {
   list_free(pc->statements, statement_free);
   free(pc);

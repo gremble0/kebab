@@ -71,7 +71,6 @@ keb_type_t *parse_type(lexer_t *lexer) {
   case TOKEN_NAME:
     START_AND_FINISH_PARSING("type_primitive");
     kt->type = TYPE_PRIMITIVE;
-    // TODO: maybe not strdup - i think necessary??
     kt->name = strdup(lexer->cur_token->name);
     lexer_advance(lexer);
     break;

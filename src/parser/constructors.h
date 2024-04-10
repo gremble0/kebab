@@ -3,17 +3,14 @@
 #include "nlist.h"
 #include "types.h"
 
-// Forward declaration because its used in fn_constructor
+// Forward declaration because its used recusively
 typedef struct constructor_struct constructor_t;
 
 typedef enum {
   CONSTR_PRIMITIVE,
   CONSTR_FN,
   CONSTR_LIST,
-  // TODO: nil? bool map list etc.
 } constructor_type_t;
-
-// TODO: reduce duplication here
 
 // Primitivies are types like char, int, string, bool, etc.
 typedef struct {
@@ -37,7 +34,6 @@ typedef struct {
 
 struct constructor_struct {
   constructor_type_t type;
-  // TODO: unnecessary indirection here
   union {
     primitive_constructor_t *primitive_constructor;
     fn_constructor_t *fn_constructor;

@@ -12,7 +12,6 @@ typedef enum {
 
 // TODO: nullable types - would be in factor probably?
 typedef struct {
-  // TODO: inline enum?
   unary_operator_t prefix; // e.g. -2, +1, ~false
   primary_t *primary;
 } factor_t;

@@ -53,8 +53,8 @@ static int lexer_line_is_done(lexer_t *lexer) {
  */
 static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
   size_t i = 0;
-  // TODO: && line->pos < line->line_len ?
-  while (pred(lexer->line[lexer->line_pos + i])) {
+  while (lexer->line_pos + i < (size_t)lexer->line_len &&
+         pred(lexer->line[lexer->line_pos + i])) {
     ++i;
   }
 
@@ -69,7 +69,7 @@ static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
  * @param offset how many indexes to the right to peek
  * @return the character at the offset, 0 if offset is out of bounds
  */
-static inline char lexer_peek_char(lexer_t *lexer, size_t offset) {
+static char lexer_peek_char(lexer_t *lexer, size_t offset) {
   if (lexer->line_pos + offset >= (size_t)lexer->line_len) {
     return 0;
   }

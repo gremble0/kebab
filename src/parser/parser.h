@@ -1,7 +1,5 @@
 #pragma once
 
-// TODO: abbreviate references to generic types e.g. definition -> def?
-
 #include "lexer.h"
 #include "nlist.h"
 
