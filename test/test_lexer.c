@@ -4,6 +4,7 @@
 
 #include "lexer.h"
 #include "nerror.h"
+#include "test.h"
 #include "token.h"
 
 static const char *base_dir = "./lexer/";
@@ -46,15 +47,12 @@ static void test_lexer_on_file(const char *base_file) {
   lexer_t *lexer = lexer_init(keb_path);
 
   FILE *actual_f = fopen(actual_path, "w+");
-  if (actual_f == NULL) {
-    printf("%s\n", actual_path);
+  if (actual_f == NULL)
     err_io_fail(actual_path);
-  }
 
   FILE *expected_f = fopen(expected_path, "r");
-  if (expected_f == NULL) {
+  if (expected_f == NULL)
     err_io_fail(expected_path);
-  }
 
   while (lexer->cur_token->kind != TOKEN_EOF) {
     lexer_write_cur_token(lexer, actual_f);
@@ -72,8 +70,12 @@ static void test_lexer_on_file(const char *base_file) {
 }
 
 void test_lexer(void) {
+  TEST_MODULE_START("lexer");
+
   test_lexer_on_file("constructors");
   test_lexer_on_file("comparisons");
   test_lexer_on_file("operators");
   test_lexer_on_file("comments");
+
+  TEST_MODULE_END("lexer");
 }
