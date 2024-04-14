@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdio.h>
+
 #define TEST_MODULE_START(module)                                              \
   printf("\033[1mTesting module '%s'\033[0;37m\n", module)
 #define TEST_MODULE_END(module)                                                \

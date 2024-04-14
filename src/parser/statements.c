@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "constructors.h"
+#include "nlist.h"
 #include "statements.h"
 #include "utils.h"
 
@@ -138,4 +139,20 @@ void statement_free(void *stmt) {
   }
 
   free(s);
+}
+
+void statement_build_strs(statement_t *stmt, list_t *strs) {
+  switch (stmt->type) {
+  case STMT_EXPRESSION:
+    list_push_back(strs, "<stmt type='expression'>");
+    break;
+  case STMT_ASSIGNMENT:
+    list_push_back(strs, "<stmt type='assignment'>");
+    break;
+  case STMT_DEFINITION:
+    list_push_back(strs, "<stmt type='definition'>");
+    break;
+  }
+
+  list_push_back(strs, "</stmt>");
 }

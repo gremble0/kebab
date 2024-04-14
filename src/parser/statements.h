@@ -32,6 +32,5 @@ typedef struct {
 } statement_t;
 
 statement_t *parse_statement(lexer_t *lexer);
-expression_t *parse_expression(lexer_t *lexer);
-
 void statement_free(void *stmt);
+void statement_build_strs(statement_t *stmt, list_t *strs);

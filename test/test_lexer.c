@@ -32,6 +32,18 @@ static void assert_file_contents_equal(FILE *f1, FILE *f2) {
   }
 }
 
+/**
+ * @param base_file the base of the file to be tested, will be formatted into
+ * three separate files:
+ *
+ * 1: base-file.keb
+ * 2: base-file-expected.txt
+ * 3: base-file-actual.txt.
+ *
+ * Out of these files, base-file.keb and base-file-expected.txt should be
+ * present under `base_dir` before running this function. The function will
+ * generate the base-file-actual.txt file
+ */
 static void test_lexer_on_file(const char *base_file) {
   char keb_path[strlen(base_dir) + strlen(base_file) + sizeof(".keb")];
   sprintf(keb_path, "%s%s.keb", base_dir, base_file);
