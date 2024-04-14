@@ -26,9 +26,8 @@ static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
   }
 
 #ifdef DEBUG
-  if (uo != UNARY_NO_OP) {
-    start_and_finish_parsing("factor_prefix");
-  }
+  if (uo != UNARY_NO_OP)
+    START_AND_FINISH_PARSING("factor_prefix");
 #endif
 
   return uo;

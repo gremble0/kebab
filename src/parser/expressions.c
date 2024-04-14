@@ -50,9 +50,7 @@ static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
 
   lexer_advance(lexer);
 
-#ifdef DEBUG
-  start_and_finish_parsing("binary_operator");
-#endif
+START_AND_FINISH_PARSING("binary_operator");
 
 skip:
   return bo;
