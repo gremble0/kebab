@@ -1,7 +1,8 @@
 #include <stdlib.h>
 
+#include "expressions.h"
+#include "nlist.h"
 #include "primaries.h"
-#include "statements.h"
 #include "utils.h"
 
 primary_t *parse_primary(lexer_t *lexer) {
@@ -22,11 +23,9 @@ primary_t *parse_primary(lexer_t *lexer) {
 
     lexer_advance(lexer);
 
-    prm->arguments = list_init(LIST_START_SIZE, sizeof(expression_t));
+    prm->arguments = list_init(LIST_START_SIZE); // list<expression_t *>
     while (lexer->cur_token->kind != TOKEN_RPAREN) {
-      expression_t *expr = parse_expression(lexer);
-      list_push_back(prm->arguments, expr);
-      free(expr);
+      list_push_back(prm->arguments, parse_expression(lexer));
 
       if (lexer->cur_token->kind != TOKEN_RPAREN) {
         SKIP_TOKEN(TOKEN_COMMA, lexer);
@@ -52,7 +51,8 @@ void primary_free(primary_t *prm) {
   atom_free(prm->atom);
 
   if (prm->arguments != NULL) {
-    list_free(prm->arguments, expression_free);
+    list_map(prm->arguments, expression_free);
+    list_free(prm->arguments);
   }
 
   free(prm);

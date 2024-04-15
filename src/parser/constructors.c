@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "constructors.h"
+#include "nlist.h"
 #include "statements.h"
 #include "string.h"
 #include "types.h"
@@ -14,13 +15,10 @@ static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
 
   primitive_constructor_t *pc = malloc(sizeof(*pc));
-  pc->statements = list_init(LIST_START_SIZE, sizeof(statement_t));
+  pc->statements = list_init(LIST_START_SIZE); // list<statement_t>
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    // list_push_back copies
-    statement_t *stmt = parse_statement(lexer);
-    list_push_back(pc->statements, stmt);
-    free(stmt);
+    list_push_back(pc->statements, parse_statement(lexer));
   }
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
@@ -62,13 +60,11 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
 
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
-  fnc->params = list_init(LIST_START_SIZE, sizeof(fn_param_t));
+  fnc->params = list_init(LIST_START_SIZE); // list<fn_param_t>
 
   // parse params
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    fn_param_t *fnp = parse_fn_param(lexer);
-    list_push_back(fnc->params, fnp);
-    free(fnp);
+    list_push_back(fnc->params, parse_fn_param(lexer));
   }
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
@@ -92,15 +88,13 @@ static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
 
   list_constructor_t *lc = malloc(sizeof(*lc));
-  lc->stmts = list_init(LIST_START_SIZE, sizeof(statement_t));
+  lc->stmts = list_init(LIST_START_SIZE); // list<statement_t>
   lc->type = parse_type(lexer);
 
   SKIP_TOKEN(TOKEN_FAT_RARROW, lexer);
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    statement_t *stmt = parse_statement(lexer);
-    list_push_back(lc->stmts, stmt);
-    free(stmt);
+    list_push_back(lc->stmts, parse_statement(lexer));
 
     if (lexer->cur_token->kind != TOKEN_RPAREN) {
       SKIP_TOKEN(TOKEN_COMMA, lexer);
@@ -152,18 +146,21 @@ static void fn_param_free(void *fnp) {
 }
 
 static void primitive_constructor_free(primitive_constructor_t *pc) {
-  list_free(pc->statements, statement_free);
+  list_map(pc->statements, statement_free);
+  list_free(pc->statements);
   free(pc);
 }
 
 static void fn_constructor_free(fn_constructor_t *fnc) {
-  list_free(fnc->params, fn_param_free);
+  list_map(fnc->params, fn_param_free);
+  list_free(fnc->params);
   constructor_free(fnc->body);
   free(fnc);
 }
 
 static void list_constructor_free(list_constructor_t *lc) {
-  list_free(lc->stmts, statement_free);
+  list_map(lc->stmts, statement_free);
+  list_free(lc->stmts);
   type_free(lc->type);
   free(lc);
 }

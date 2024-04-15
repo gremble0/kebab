@@ -5,6 +5,7 @@
 #include "nlist.h"
 #include "utils.h"
 
+// TODO: not malloc
 static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
   binary_operator_t *bo = malloc(sizeof(*bo));
 
@@ -50,7 +51,7 @@ static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
 
   lexer_advance(lexer);
 
-START_AND_FINISH_PARSING("binary_operator");
+  START_AND_FINISH_PARSING("binary_operator");
 
 skip:
   return bo;
@@ -64,15 +65,13 @@ expression_t *parse_expression(lexer_t *lexer) {
     err_malloc_fail();
   }
 
-  expr->factors = list_init(LIST_START_SIZE, sizeof(factor_t));
+  expr->factors = list_init(LIST_START_SIZE); // list<factor_t>
   // TODO: don't always init operators
-  expr->operators = list_init(LIST_START_SIZE, sizeof(binary_operator_t));
+  expr->operators = list_init(LIST_START_SIZE); // list<binary_operator_t>
 
   // Continue parsing until there are no more binary operators
   while (1) {
-    factor_t *ft = parse_factor(lexer);
-    list_push_back(expr->factors, ft);
-    free(ft);
+    list_push_back(expr->factors, parse_factor(lexer));
 
     binary_operator_t *bo = parse_binary_operator(lexer);
     if (*bo == BINARY_NO_OP) {
@@ -81,7 +80,6 @@ expression_t *parse_expression(lexer_t *lexer) {
     }
 
     list_push_back(expr->operators, bo);
-    free(bo);
   }
 
   FINISH_PARSING("expr");
@@ -94,7 +92,10 @@ expression_t *parse_expression(lexer_t *lexer) {
  */
 void expression_free(void *expr) {
   expression_t *e = expr;
-  list_free(e->factors, factor_free);
-  list_free(e->operators, free);
-  free(expr);
+  list_map(e->factors, factor_free);
+  list_map(e->operators, free);
+
+  list_free(e->factors);
+  list_free(e->operators);
+  free(e);
 }

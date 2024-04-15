@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "nlist.h"
 #include "parser.h"
 #include "test.h"
 
@@ -11,6 +12,12 @@ void test_parser(void) {
 
   // test_parser_on_file("constructors");
   ast_t *ast = parse(lexer_init("./parser/constructors.keb"));
+  build_strs(ast);
+
+  size_t indent_width = 0;
+  for (size_t i = 0; i < ast->strs->cur_size; ++i) {
+    printf("%s\n", (char *)list_get(ast->strs, i));
+  }
 
   TEST_MODULE_END("parser");
 }

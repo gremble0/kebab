@@ -14,14 +14,12 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
 
   keb_type_fn_t *fnt = malloc(sizeof(*fnt));
-  fnt->param_types = list_init(LIST_START_SIZE, sizeof(keb_type_t));
+  fnt->param_types = list_init(LIST_START_SIZE); // list<keb_type_t>
 
   START_PARSING("fn_params");
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    keb_type_t *kt = parse_type(lexer);
-    list_push_back(fnt->param_types, kt);
-    free(kt);
+    list_push_back(fnt->param_types, parse_type(lexer));
 
     if (lexer->cur_token->kind != TOKEN_RPAREN) {
       SKIP_TOKEN(TOKEN_COMMA, lexer);
@@ -107,7 +105,8 @@ void type_free(void *kt) {
     free(k->list);
     break;
   case TYPE_FN:
-    list_free(k->fn->param_types, type_free);
+    list_map(k->fn->param_types, type_free);
+    list_free(k->fn->param_types);
     type_free(k->fn->return_type);
     free(k->fn);
     break;
