@@ -15,7 +15,7 @@ static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
 
   primitive_constructor_t *pc = malloc(sizeof(*pc));
-  pc->statements = list_init(LIST_START_SIZE); // list<statement_t>
+  pc->statements = list_init(LIST_START_SIZE); // list<statement_t *>
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
     list_push_back(pc->statements, parse_statement(lexer));
@@ -60,7 +60,7 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
 
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
-  fnc->params = list_init(LIST_START_SIZE); // list<fn_param_t>
+  fnc->params = list_init(LIST_START_SIZE); // list<fn_param_t *>
 
   // parse params
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
@@ -88,7 +88,7 @@ static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
 
   list_constructor_t *lc = malloc(sizeof(*lc));
-  lc->stmts = list_init(LIST_START_SIZE); // list<statement_t>
+  lc->stmts = list_init(LIST_START_SIZE); // list<statement_t *>
   lc->type = parse_type(lexer);
 
   SKIP_TOKEN(TOKEN_FAT_RARROW, lexer);

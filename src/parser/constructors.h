@@ -14,7 +14,7 @@ typedef enum {
 
 // Primitivies are types like char, int, string, bool, etc.
 typedef struct {
-  list_t *statements; // list<statement_t>
+  list_t *statements; // list<statement_t *>
 } primitive_constructor_t;
 
 typedef struct {
@@ -23,12 +23,12 @@ typedef struct {
 } fn_param_t;
 
 typedef struct {
-  list_t *params; // list<fn_param_t>
+  list_t *params; // list<fn_param_t *>
   constructor_t *body;
 } fn_constructor_t;
 
 typedef struct {
-  list_t *stmts; // list<statement_t>
+  list_t *stmts; // list<statement_t *>
   keb_type_t *type;
 } list_constructor_t;
 

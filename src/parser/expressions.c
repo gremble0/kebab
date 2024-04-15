@@ -5,56 +5,57 @@
 #include "nlist.h"
 #include "utils.h"
 
-// TODO: not malloc
 static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
-  binary_operator_t *bo = malloc(sizeof(*bo));
+  binary_operator_t bo;
 
   switch (lexer->cur_token->kind) {
+  // Maths
   case TOKEN_PLUS:
-    *bo = BINARY_PLUS;
+    bo = BINARY_PLUS;
     break;
   case TOKEN_MINUS:
-    *bo = BINARY_MINUS;
+    bo = BINARY_MINUS;
     break;
   case TOKEN_MULT:
-    *bo = BINARY_MULT;
+    bo = BINARY_MULT;
     break;
   case TOKEN_DIV:
-    *bo = BINARY_DIV;
+    bo = BINARY_DIV;
     break;
 
+  // Comparisons
   case TOKEN_LT:
-    *bo = BINARY_LT;
+    bo = BINARY_LT;
     break;
   case TOKEN_LE:
-    *bo = BINARY_LE;
+    bo = BINARY_LE;
     break;
   case TOKEN_EQ:
-    *bo = BINARY_EQ;
+    bo = BINARY_EQ;
     break;
   case TOKEN_NEQ:
-    *bo = BINARY_NEQ;
+    bo = BINARY_NEQ;
     break;
   case TOKEN_GT:
-    *bo = BINARY_GT;
+    bo = BINARY_GT;
     break;
   case TOKEN_GE:
-    *bo = BINARY_GE;
+    bo = BINARY_GE;
     break;
 
-    // If next token is not a binary operator set to no-op and return without
-    // advancing lexer
+  // If next token is not a binary operator return without further processing
   default:
-    *bo = BINARY_NO_OP;
-    goto skip;
+    return NULL;
   }
 
   lexer_advance(lexer);
 
   START_AND_FINISH_PARSING("binary_operator");
 
-skip:
-  return bo;
+  binary_operator_t *ret = malloc(sizeof(*ret));
+  *ret = bo;
+
+  return ret;
 }
 
 expression_t *parse_expression(lexer_t *lexer) {
@@ -65,19 +66,17 @@ expression_t *parse_expression(lexer_t *lexer) {
     err_malloc_fail();
   }
 
-  expr->factors = list_init(LIST_START_SIZE); // list<factor_t>
+  expr->factors = list_init(LIST_START_SIZE); // list<factor_t *>
   // TODO: don't always init operators
-  expr->operators = list_init(LIST_START_SIZE); // list<binary_operator_t>
+  expr->operators = list_init(LIST_START_SIZE); // list<binary_operator_t *>
 
   // Continue parsing until there are no more binary operators
   while (1) {
     list_push_back(expr->factors, parse_factor(lexer));
 
     binary_operator_t *bo = parse_binary_operator(lexer);
-    if (*bo == BINARY_NO_OP) {
-      free(bo);
+    if (bo == NULL)
       break;
-    }
 
     list_push_back(expr->operators, bo);
   }

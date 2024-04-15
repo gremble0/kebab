@@ -6,7 +6,7 @@
 typedef struct keb_type_struct keb_type_t;
 
 typedef struct {
-  list_t *param_types; // list<keb_type_t>
+  list_t *param_types; // list<keb_type_t *>
   keb_type_t *return_type;
 } keb_type_fn_t;
 

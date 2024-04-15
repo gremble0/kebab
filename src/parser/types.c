@@ -14,7 +14,7 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
 
   keb_type_fn_t *fnt = malloc(sizeof(*fnt));
-  fnt->param_types = list_init(LIST_START_SIZE); // list<keb_type_t>
+  fnt->param_types = list_init(LIST_START_SIZE); // list<keb_type_t *>
 
   START_PARSING("fn_params");
 

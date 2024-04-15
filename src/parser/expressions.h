@@ -17,13 +17,11 @@ typedef enum {
   BINARY_NEQ, // x ~= y
   BINARY_GT,  // x > y
   BINARY_GE,  // x >= y
-
-  BINARY_NO_OP, // Indicates missing operator
 } binary_operator_t;
 
 typedef struct {
-  list_t *factors;   // list<factor_t>
-  list_t *operators; // list<binary_operator_t>
+  list_t *factors;   // list<factor_t *>
+  list_t *operators; // list<binary_operator_t *>
 } expression_t;
 
 expression_t *parse_expression(lexer_t *lexer);
