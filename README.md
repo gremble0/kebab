@@ -57,34 +57,7 @@ def takes-fn = fn((my-function : fn(int, string) => string) => int(
 ; You get the point :)
 ```
 
-## Constructors vs. type declarations
-There are two ways through which kebab, gets information about types. The first is through constructor calls. These are some examples of constructor type inference.
-```clj
-; int constructor means a is now bound to the int type
-def a = int(2)
-; string constructor means b is now bound to the string type
-def s = string("hello")
-
-; list constructor, parametrized to be of type `string`. Here the list(...)
-; is the constructor call, while the string inside the list constructor
-; is a type declaration the list constructor uses to bind it to that type
-def b = list(string => "hello", "world")
-```
-
-The strongest combination of constructors and type declarations are seen in functions. Let's analyze this function:
-```clj
-def my-function = fn((a : int, l : list(string)) => int(
-  a + 5
-))
-```
-1. First we call the `fn` constructor.
-2. Then we parse the parameters of the function.
-    1. The first parameter is called `a` and is declared to be of type `int`
-    2. The second parameter is called `l` and is declared to be of type `list`.
-        1. The list is parametrized to be of type string.
-3. Then we parse the function body by calling another constructor - in this case the `int` constructor. This constructor also gives us the return type of the funciton, meaning this function must return an `int`.
-
-## How to use constructors
+## Constructors
 ### Primitives
 Primitive constructors allows for any number of statements, including local `def` bindings and other functions with side effects, but will return the first expression in its body. Some primitive constructors are `char`, `bool`, `int` and `string`. You can use them like this:
 ```clj
@@ -107,6 +80,39 @@ list(fn(int) => string => ...)
 ```
 Following the parametrized type of the list should be a `=>` following a comma separated list of the contents of the list. Lists do not support nested statements (maybe they could).
 
+### Functions
+Function constructors follow this pattern:
+```
+fn((<list of parameters>) => <constructor>)
+```
+Where the list of parameters is a comma separated list where each element should look like `<name> : <type>`. NOTE: The space before the `:` is very important here, as if you were to omit it, it would be included as a part of the name of the parameter which would cause a syntax error. The constructor in the functions body could be any other constructor.
+
+## Constructors vs. type declarations
+There are two ways through which kebab gets information about types. The first is through constructor calls. These are some examples of constructor type inference.
+```clj
+; int constructor means a is now bound to the int type
+def a = int(2)
+; string constructor means b is now bound to the string type
+def s = string("hello")
+
+; list constructor, parametrized to be of type `string`. Here the list(...)
+; is the constructor call, while the string inside the list constructor
+; is a type declaration the list constructor uses to bind it to that type
+def b = list(string => "hello", "world")
+```
+
+The strongest combination of constructors and type declarations are seen in functions. Let's analyze this function:
+```clj
+def my-function = fn((a : int, l : list(string)) => int(
+  a + 5
+))
+```
+1. First we enter the `fn` constructor.
+2. Then we parse the parameters of the function.
+    1. The first parameter is called `a` and is declared to be of type `int`
+    2. The second parameter is called `l` and is declared to be of type `list`.
+        1. The list is parametrized to be of type string.
+3. Then we parse the function body by calling another constructor - in this case the `int` constructor. This constructor also gives us the return type of the funciton, meaning this function must return an `int`.
 
 ## Mutability
 Variables are constant by default, but mutable if you add the `mut` qualifier. To change a mutable variable use a `set` statement.
