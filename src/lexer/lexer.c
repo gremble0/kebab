@@ -1,6 +1,4 @@
-#include <assert.h>
 #include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -85,7 +83,7 @@ static char lexer_peek_char(lexer_t *lexer, size_t offset) {
  * @return the integer at the current line position
  */
 static int lexer_read_int(lexer_t *lexer) {
-  assert(isdigit(lexer->line[lexer->line_pos]));
+  ASSERT(isdigit(lexer->line[lexer->line_pos]));
   size_t i = lexer_seek_while(lexer, isdigit);
 
   char num[i + 1];
@@ -105,7 +103,7 @@ static int lexer_read_int(lexer_t *lexer) {
  * @return the string between two '"'-s
  */
 static const char *lexer_read_str(lexer_t *lexer) {
-  assert(lexer->line[lexer->line_pos] == '"');
+  ASSERT(lexer->line[lexer->line_pos] == '"');
   ++lexer->line_pos;
   size_t i = lexer_seek_while(lexer, is_not_dquote);
 
@@ -116,15 +114,15 @@ static const char *lexer_read_str(lexer_t *lexer) {
 
   memcpy(word, &lexer->line[lexer->line_pos], i);
   word[i] = '\0';
-  assert(lexer->line[lexer->line_pos + i] == '"');
+  ASSERT(lexer->line[lexer->line_pos + i] == '"');
   lexer->line_pos += i + 1; // +1 to skip closing '"'
 
   return word;
 }
 
 static char lexer_read_char(lexer_t *lexer) {
-  assert(lexer->line[lexer->line_pos] == '\'');
-  assert(lexer->line[lexer->line_pos + 2] == '\'');
+  ASSERT(lexer->line[lexer->line_pos] == '\'');
+  ASSERT(lexer->line[lexer->line_pos + 2] == '\'');
 
   char c = lexer->line[lexer->line_pos + 1];
 
@@ -199,7 +197,8 @@ lexer_t *lexer_init(const char *file_path) {
  */
 void lexer_advance(lexer_t *lexer) {
   if (lexer->cur_token != NULL) {
-    // Free previous token
+    // Handle previous token
+    LOG_TOKEN(lexer->cur_token);
     token_free(lexer->cur_token);
     // For recursive calls we reset cur_token to NULL to not double free
     lexer->cur_token = NULL;
@@ -260,6 +259,7 @@ void lexer_advance(lexer_t *lexer) {
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_RPAREN);
     return;
+  // Currently unused
   case '[':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_LBRACE);
@@ -379,9 +379,11 @@ void lexer_advance(lexer_t *lexer) {
  */
 void lexer_free(lexer_t *lexer) {
   fclose(lexer->source_file->f);
-  // ASSERT(lexer->cur_token->kind == TOKEN_EOF);
-  // ASSERT is ok compared to EXPECT_TOKEN, because this will only be false if
-  // kebab does something wrong, not the user
+
+  // If we try to free the lexer before we have reached the end of the file,
+  // something has gone wrong
+  ASSERT(lexer->cur_token->kind == TOKEN_EOF);
+
   token_free(lexer->cur_token);
   free(lexer->source_file);
   free(lexer);

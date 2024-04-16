@@ -4,7 +4,7 @@ PARSERSRC := parser
 RUNTIMESRC := runtime
 
 CC := clang
-CFLAGS := -Wall -Wextra -g -DDEBUG
+CFLAGS := -Wall -Wextra -g
 LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
 OBJS := $(LEXERSRC)/*.o $(PARSERSRC)/*.o $(RUNTIMESRC)/*.o

@@ -1,7 +1,7 @@
 NONSTDLIBSRC=../../lib/nonstdlib/src
 
 CC=clang
-CFLAGS=-Wall -Wextra -g -DDEBUG
+CFLAGS=-Wall -Wextra -g
 LIBS=-L$(NONSTDLIBSRC) -lnonstdlib
 
 OBJS=lexer.o token.o

@@ -3,8 +3,7 @@
 #include "nerror.h"
 #include "parser_error.h"
 
-#ifdef DEBUG
-#define ONE_INDENT "  "
+#ifdef DEBUG_PARSER
 #define START_PARSING(section) start_parsing(section)
 #define FINISH_PARSING(section) finish_parsing(section)
 #define START_AND_FINISH_PARSING(section) start_and_finish_parsing(section)
@@ -14,6 +13,7 @@
 #define START_AND_FINISH_PARSING(section)
 #endif
 
+#define ONE_INDENT "  "
 #define LIST_START_SIZE 5
 #define EXPECT_TOKEN(expected_kind, lexer)                                     \
   if (lexer->cur_token->kind != expected_kind) {                               \
