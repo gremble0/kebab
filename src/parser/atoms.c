@@ -57,9 +57,9 @@ char *atom_to_string(atom_t *atom) {
     return res;
   }
   case ATOM_INT: {
-    int len = snprintf(NULL, 0, "%d", atom->int_value);
+    int len = snprintf(NULL, 0, "%ld", atom->int_value);
     char *res = malloc(sizeof("<atom type='int'></atom>") + len);
-    sprintf(res, "<atom type='int'>%d</atom>", atom->int_value);
+    sprintf(res, "<atom type='int'>%ld</atom>", atom->int_value);
     return res;
   }
   case ATOM_BOOL: {

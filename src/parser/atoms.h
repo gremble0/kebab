@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 #include "lexer.h"
 
 typedef enum {
@@ -15,7 +17,7 @@ typedef struct {
   union {
     char char_value;
     const char *string_value;
-    int int_value;
+    int64_t int_value;
     char bool_value;
     const char *name;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdint.h>
 
 typedef enum {
   // Keywords (has to be at top of enum for array for iterations)
@@ -130,8 +131,8 @@ typedef struct {
   union {
     const char *name;
     const char *string_literal;
-    char char_literal; // TODO: int for unicode or something? idk
-    int integer_literal;
+    char char_literal;       // TODO: int for unicode or something? idk
+    int64_t integer_literal; // Ints in kebab are 64 bits
   };
 } token_t;
 
@@ -142,5 +143,5 @@ void token_free(token_t *token);
 token_t *token_make_simple(token_kind_t token_kind);
 token_t *token_make_str_lit(const char *str_lit);
 token_t *token_make_char_lit(char char_lit);
-token_t *token_make_int_lit(int int_lit);
+token_t *token_make_int_lit(int64_t int_lit);
 token_t *token_make_name(const char *name);

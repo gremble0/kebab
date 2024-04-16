@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,9 +21,9 @@ char *token_to_string(token_t *token) {
   }
   case TOKEN_INTEGER_LITERAL: {
     // Get length to malloc before actually writing to `res`
-    int len = snprintf(NULL, 0, "%d", token->integer_literal);
+    int len = snprintf(NULL, 0, "%ld", token->integer_literal);
     char *res = malloc(sizeof("integer-literal: ") + len + 1);
-    sprintf(res, "integer-literal: %d", token->integer_literal);
+    sprintf(res, "integer-literal: %ld", token->integer_literal);
     return res;
   }
   case TOKEN_NAME: {
@@ -86,7 +87,7 @@ token_t *token_make_char_lit(char char_lit) {
   return char_lit_tok;
 }
 
-token_t *token_make_int_lit(int int_lit) {
+token_t *token_make_int_lit(int64_t int_lit) {
   token_t *int_lit_tok = malloc(sizeof(*int_lit_tok));
   if (int_lit_tok == NULL) {
     err_malloc_fail();

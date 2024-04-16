@@ -1,4 +1,6 @@
 #include <ctype.h>
+#include <inttypes.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -82,17 +84,15 @@ static char lexer_peek_char(lexer_t *lexer, size_t offset) {
  * @param lexer lexer to read the int from
  * @return the integer at the current line position
  */
-static int lexer_read_int(lexer_t *lexer) {
+static int64_t lexer_read_int(lexer_t *lexer) {
   ASSERT(isdigit(lexer->line[lexer->line_pos]));
-  size_t i = lexer_seek_while(lexer, isdigit);
 
-  char num[i + 1];
-  memcpy(num, &lexer->line[lexer->line_pos], i);
-  num[i] = '\0';
-  lexer->line_pos += i;
+  char *endptr;
+  int64_t ret = strtoimax(&lexer->line[lexer->line_pos], &endptr, 10);
+  size_t chars_read = endptr - &lexer->line[lexer->line_pos];
+  lexer->line_pos += chars_read;
 
-  // TODO: use longs for integers, and check for overflow/underflow here
-  return atoi(num);
+  return ret;
 }
 
 /**
