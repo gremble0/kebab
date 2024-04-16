@@ -5,12 +5,13 @@ typedef enum {
   TOKEN_DEF, // def
   TOKEN_SET, // set
   TOKEN_MUT, // mut
+  TOKEN_NIL, // nil
   // TOKEN_DEC ? declare variable with type?
-
   // Constructors
-  // TODO: Move the definition of these types higher up instead of hardcoding
   TOKEN_FN,   // fn
   TOKEN_LIST, // list
+
+  NOT_A_KEYWORD, // NOT A VALID TOKEN (just used to compare with keywords)
 
   // Syntax
   TOKEN_COLON,      // :
@@ -51,6 +52,11 @@ typedef enum {
   // TODO: TOKEN_FLOAT_LITERAL,
   TOKEN_NAME,
 } token_kind_t;
+
+static const char *keywords[] = {
+    [TOKEN_DEF] = "def", [TOKEN_SET] = "set", [TOKEN_MUT] = "mut",
+    [TOKEN_NIL] = "nil", [TOKEN_FN] = "fn",   [TOKEN_LIST] = "list",
+};
 
 typedef struct {
   token_kind_t kind;

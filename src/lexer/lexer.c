@@ -335,39 +335,20 @@ void lexer_advance(lexer_t *lexer) {
     lexer->cur_token = token_make_int_lit(lexer_read_int(lexer));
     return;
 
-  // Keywords and builtin types
+  // If the current char is none of the above read the next word and tokenize it
+  // as either a keyword or a name
   default: {
     const char *word = lexer_read_word(lexer);
-    // TODO: hash and switch case
-    if (strcmp(word, "def") == 0) {
-      free((void *)word);
-      lexer->cur_token = token_make_simple(TOKEN_DEF);
-      return;
 
-    } else if (strcmp(word, "set") == 0) {
-      free((void *)word);
-      lexer->cur_token = token_make_simple(TOKEN_SET);
-      return;
-
-    } else if (strcmp(word, "mut") == 0) {
-      free((void *)word);
-      lexer->cur_token = token_make_simple(TOKEN_MUT);
-      return;
-
-    } else if (strcmp(word, "fn") == 0) {
-      free((void *)word);
-      lexer->cur_token = token_make_simple(TOKEN_FN);
-      return;
-
-    } else if (strcmp(word, "list") == 0) {
-      free((void *)word);
-      lexer->cur_token = token_make_simple(TOKEN_LIST);
-      return;
-
-    } else {
-      lexer->cur_token = token_make_name(word);
-      return;
+    for (size_t i = 0; i < NOT_A_KEYWORD; ++i) {
+      if (strcmp(word, keywords[i]) == 0) {
+        free((void *)word);
+        lexer->cur_token = token_make_simple(i);
+        return;
+      }
     }
+
+    lexer->cur_token = token_make_name(word);
   }
   }
 }
