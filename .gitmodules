@@ -1,4 +1,3 @@
 [submodule "lib/nonstdlib"]
 	path = lib/nonstdlib
 	url = https://github.com/gremble0/nonstdlib
-	branch = primitive-list

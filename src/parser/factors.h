@@ -17,4 +17,4 @@ typedef struct {
 } factor_t;
 
 factor_t *parse_factor(lexer_t *lexer);
-void factor_free(void *fac);
+void factor_free(factor_t *fac);

@@ -123,22 +123,20 @@ static void assignment_free(assignment_t *ass) {
  *
  * @param stmt statement to be freed. should be of type `statement_t`
  */
-void statement_free(void *stmt) {
-  statement_t *s = stmt;
-
-  switch (s->type) {
+void statement_free(statement_t *stmt) {
+  switch (stmt->type) {
   case STMT_DEFINITION:
-    definition_free(s->definition);
+    definition_free(stmt->definition);
     break;
   case STMT_ASSIGNMENT:
-    assignment_free(s->assignment);
+    assignment_free(stmt->assignment);
     break;
   case STMT_EXPRESSION:
-    expression_free(s->expr);
+    expression_free(stmt->expr);
     break;
   }
 
-  free(s);
+  free(stmt);
 }
 
 void statement_build_strs(statement_t *stmt, list_t *strs) {

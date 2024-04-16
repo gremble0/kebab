@@ -31,4 +31,4 @@ struct keb_type_struct {
 };
 
 keb_type_t *parse_type(lexer_t *lexer);
-void type_free(void *kt);
+void type_free(keb_type_t *kt);

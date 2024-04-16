@@ -14,7 +14,7 @@ name: "bool"
 (
 string-literal: "string"
 <
-name: "true"
+true
 )
 def
 name: "c"

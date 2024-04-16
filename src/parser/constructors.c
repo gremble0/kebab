@@ -146,7 +146,7 @@ static void fn_param_free(void *fnp) {
 }
 
 static void primitive_constructor_free(primitive_constructor_t *pc) {
-  list_map(pc->statements, statement_free);
+  list_map(pc->statements, (list_map_func)statement_free);
   list_free(pc->statements);
   free(pc);
 }
@@ -159,7 +159,7 @@ static void fn_constructor_free(fn_constructor_t *fnc) {
 }
 
 static void list_constructor_free(list_constructor_t *lc) {
-  list_map(lc->stmts, statement_free);
+  list_map(lc->stmts, (list_map_func)statement_free);
   list_free(lc->stmts);
   type_free(lc->type);
   free(lc);

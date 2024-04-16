@@ -30,7 +30,7 @@ name: "d"
 =
 name: "int"
 (
-integer-literal: 1316134912
+integer-literal: 10000000000000
 *
 integer-literal: 4123
 )
@@ -40,5 +40,5 @@ name: "e"
 name: "bool"
 (
 ~
-name: "true"
+true
 )

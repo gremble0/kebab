@@ -38,7 +38,7 @@ void build_strs(ast_t *ast) {
 // Cleanup functions
 
 void ast_free(ast_t *ast) {
-  list_map(ast->stmts, statement_free);
+  list_map(ast->stmts, (list_map_func)statement_free);
   list_free(ast->stmts);
 
   if (ast->strs != NULL) {

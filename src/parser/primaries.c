@@ -51,7 +51,7 @@ void primary_free(primary_t *prm) {
   atom_free(prm->atom);
 
   if (prm->arguments != NULL) {
-    list_map(prm->arguments, expression_free);
+    list_map(prm->arguments, (list_map_func)expression_free);
     list_free(prm->arguments);
   }
 

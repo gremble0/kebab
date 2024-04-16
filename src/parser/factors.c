@@ -56,8 +56,7 @@ factor_t *parse_factor(lexer_t *lexer) {
 /**
  * @param fac factor to free, should be type `factor_t`
  */
-void factor_free(void *fac) {
-  factor_t *f = fac;
-  primary_free(f->primary);
-  free(f);
+void factor_free(factor_t *fac) {
+  primary_free(fac->primary);
+  free(fac);
 }

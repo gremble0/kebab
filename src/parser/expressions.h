@@ -25,4 +25,4 @@ typedef struct {
 } expression_t;
 
 expression_t *parse_expression(lexer_t *lexer);
-void expression_free(void *expr);
+void expression_free(expression_t *expr);

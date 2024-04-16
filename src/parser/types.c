@@ -93,22 +93,20 @@ keb_type_t *parse_type(lexer_t *lexer) {
 /**
  * @param kt type to be freed, should be type `keb_type_t`
  */
-void type_free(void *kt) {
-  keb_type_t *k = kt;
-
-  switch (k->type) {
+void type_free(keb_type_t *kt) {
+  switch (kt->type) {
   case TYPE_PRIMITIVE:
-    free((void *)k->name);
+    free((void *)kt->name);
     break;
   case TYPE_LIST:
-    type_free(k->list->type);
-    free(k->list);
+    type_free(kt->list->type);
+    free(kt->list);
     break;
   case TYPE_FN:
-    list_map(k->fn->param_types, type_free);
-    list_free(k->fn->param_types);
-    type_free(k->fn->return_type);
-    free(k->fn);
+    list_map(kt->fn->param_types, (list_map_func)type_free);
+    list_free(kt->fn->param_types);
+    type_free(kt->fn->return_type);
+    free(kt->fn);
     break;
   }
 

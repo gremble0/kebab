@@ -89,12 +89,11 @@ expression_t *parse_expression(lexer_t *lexer) {
 /**
  * @param expr expression to free, should be type `expression_t`
  */
-void expression_free(void *expr) {
-  expression_t *e = expr;
-  list_map(e->factors, factor_free);
-  list_map(e->operators, free);
+void expression_free(expression_t *expr) {
+  list_map(expr->factors, (list_map_func)factor_free);
+  list_map(expr->operators, free);
 
-  list_free(e->factors);
-  list_free(e->operators);
-  free(e);
+  list_free(expr->factors);
+  list_free(expr->operators);
+  free(expr);
 }
