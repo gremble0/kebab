@@ -5,69 +5,8 @@
 #include "nerror.h"
 #include "token.h"
 
-/**
- * @brief converts a token to a string for debugging information
- *
- * @param token token to stringify
- */
 char *token_to_string(token_t *token) {
   switch (token->kind) {
-  case TOKEN_DEF:
-    return strdup("def");
-  case TOKEN_SET:
-    return strdup("set");
-  case TOKEN_MUT:
-    return strdup("mut");
-  case TOKEN_NIL:
-    return strdup("nil");
-  case TOKEN_FN:
-    return strdup("fn");
-  case TOKEN_LIST:
-    return strdup("list");
-  case TOKEN_COLON:
-    return strdup(":");
-  case TOKEN_EQUALS:
-    return strdup("=");
-  case TOKEN_COMMA:
-    return strdup(",");
-  case TOKEN_LPAREN:
-    return strdup("(");
-  case TOKEN_RPAREN:
-    return strdup(")");
-  case TOKEN_LBRACE:
-    return strdup("[");
-  case TOKEN_RBRACE:
-    return strdup("]");
-  case TOKEN_FAT_RARROW:
-    return strdup("=>");
-  case TOKEN_PLUS:
-    return strdup("+");
-  case TOKEN_MINUS:
-    return strdup("-");
-  case TOKEN_MULT:
-    return strdup("*");
-  case TOKEN_DIV:
-    return strdup("/");
-  case TOKEN_NOT:
-    return strdup("~");
-  case TOKEN_LT:
-    return strdup("<");
-  case TOKEN_LE:
-    return strdup("<=");
-  case TOKEN_EQ:
-    return strdup("==");
-  case TOKEN_NEQ:
-    return strdup("~=");
-  case TOKEN_GT:
-    return strdup(">");
-  case TOKEN_GE:
-    return strdup(">=");
-  case TOKEN_TRUE:
-    return strdup("true");
-  case TOKEN_FALSE:
-    return strdup("false");
-  case TOKEN_EOF:
-    return strdup("<eof>");
   case TOKEN_CHAR_LITERAL: {
     char *res = malloc(sizeof("char-literal: ' '") + 1);
     sprintf(res, "char-literal: '%c'", token->char_literal);
@@ -91,80 +30,13 @@ char *token_to_string(token_t *token) {
     sprintf(res, "name: \"%s\"", token->name);
     return res;
   }
+  default:
+    return token_kind_to_string(token->kind);
   }
 }
 
 char *token_kind_to_string(token_kind_t kind) {
-  switch (kind) {
-  case TOKEN_DEF:
-    return strdup("def");
-  case TOKEN_SET:
-    return strdup("set");
-  case TOKEN_MUT:
-    return strdup("mut");
-  case TOKEN_NIL:
-    return strdup("nil");
-  case TOKEN_FN:
-    return strdup("fn");
-  case TOKEN_LIST:
-    return strdup("list");
-  case TOKEN_COLON:
-    return strdup(":");
-  case TOKEN_EQUALS:
-    return strdup("=");
-  case TOKEN_COMMA:
-    return strdup(",");
-  case TOKEN_LPAREN:
-    return strdup("(");
-  case TOKEN_RPAREN:
-    return strdup(")");
-  case TOKEN_LBRACE:
-    return strdup("[");
-  case TOKEN_RBRACE:
-    return strdup("]");
-  case TOKEN_FAT_RARROW:
-    return strdup("=>");
-  case TOKEN_PLUS:
-    return strdup("+");
-  case TOKEN_MINUS:
-    return strdup("-");
-  case TOKEN_MULT:
-    return strdup("*");
-  case TOKEN_DIV:
-    return strdup("/");
-  case TOKEN_NOT:
-    return strdup("~");
-  case TOKEN_LT:
-    return strdup("<");
-  case TOKEN_LE:
-    return strdup("<=");
-  case TOKEN_NEQ:
-    return strdup("~=");
-  case TOKEN_EQ:
-    return strdup("==");
-  case TOKEN_GT:
-    return strdup(">");
-  case TOKEN_GE:
-    return strdup(">=");
-  case TOKEN_TRUE:
-    return strdup("true");
-  case TOKEN_FALSE:
-    return strdup("false");
-  case TOKEN_EOF:
-    return strdup("<eof>");
-  case TOKEN_CHAR_LITERAL: {
-    return strdup("<char literal>");
-  }
-  case TOKEN_STRING_LITERAL: {
-    return strdup("<string literal>");
-  }
-  case TOKEN_INTEGER_LITERAL: {
-    return strdup("<integer literal>");
-  }
-  case TOKEN_NAME: {
-    return strdup("<name>");
-  }
-  }
+  return strdup(token_kind_map[kind]);
 }
 
 void token_free(token_t *token) {

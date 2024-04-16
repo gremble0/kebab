@@ -335,20 +335,21 @@ void lexer_advance(lexer_t *lexer) {
     lexer->cur_token = token_make_int_lit(lexer_read_int(lexer));
     return;
 
-  // If the current char is none of the above read the next word and tokenize it
-  // as either a keyword or a name
+  // Keywords and builtin types
   default: {
     const char *word = lexer_read_word(lexer);
 
-    for (size_t i = 0; i < NOT_A_KEYWORD; ++i) {
-      if (strcmp(word, keywords[i]) == 0) {
+    for (size_t i = 0;
+         i < sizeof(reserved_word_map) / sizeof(reserved_word_map[0]); ++i) {
+      if (strcmp(reserved_word_map[i].word, word) == 0) {
         free((void *)word);
-        lexer->cur_token = token_make_simple(i);
+        lexer->cur_token = token_make_simple(reserved_word_map[i].kind);
         return;
       }
     }
 
     lexer->cur_token = token_make_name(word);
+    return;
   }
   }
 }
