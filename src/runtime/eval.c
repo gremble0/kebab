@@ -1,6 +1,6 @@
 #include "nlist.h"
-#include "parser.h"
-#include "statements.h"
+#include "parser/parser.h"
+#include "parser/statements.h"
 
 void eval_statement(statement_t *stmt) {}
 

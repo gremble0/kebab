@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include "lexer.h"
+#include "lexer/lexer.h"
 
 typedef enum {
   ATOM_CHAR,

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lexer.h"
+#include "lexer/lexer.h"
 #include "nlist.h"
 
 // Entrypoint to build/use the contents of a program

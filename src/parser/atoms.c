@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 #include "atoms.h"
+#include "error.h"
 #include "nerror.h"
-#include "parser_error.h"
 #include "string.h"
 #include "utils.h"
 

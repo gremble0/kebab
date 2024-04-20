@@ -10,7 +10,7 @@ LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 OBJS := $(LEXERSRC)/*.o $(PARSERSRC)/*.o $(RUNTIMESRC)/*.o
 
 all: lexer parser runtime
-	$(CC) $(CFLAGS) $(OBJS) -I$(LEXERSRC) -I$(PARSERSRC) -I$(NONSTDLIBSRC) main.c -o kebab $(LIBS)
+	$(CC) $(CFLAGS) -I$(NONSTDLIBSRC) -I. $(OBJS) main.c -o kebab $(LIBS)
 
 lexer:
 	$(MAKE) -C $(LEXERSRC)
@@ -31,4 +31,4 @@ clean:
 	$(MAKE) -C $(RUNTIMESRC) clean
 	rm -f kebab
 
-.PHONY: lexer parser runtime
+.PHONY: lexer parser runtime nonstdlib clean

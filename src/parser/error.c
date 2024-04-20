@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "parser_error.h"
-#include "token.h"
+#include "error.h"
+#include "lexer/token.h"
 #include "utils.h"
 
 /**

@@ -1,6 +1,5 @@
 NONSTDLIBSRC := ../../lib/nonstdlib/src
-LEXERSRC := ../lexer
-PARSERSRC := ../parser
+KEBABSRC := ..
 
 CC := clang
 CFLAGS := -Wall -Wextra -g -DDEBUG
@@ -11,7 +10,7 @@ OBJS := eval.o
 all: clean $(OBJS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I$(NONSTDLIBSRC) -I$(LEXERSRC) -I$(PARSERSRC) -c $< -o $@
+	$(CC) $(CFLAGS) -I$(NONSTDLIBSRC) -I$(KEBABSRC) -c $< -o $@
 
 clean:
 	rm -f *.o

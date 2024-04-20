@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lexer.h"
+#include "lexer/lexer.h"
 #include "nlist.h"
 
 typedef enum {

@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lexer.h"
+#include "lexer/lexer.h"
+#include "lexer/token.h"
 #include "nerror.h"
 #include "test.h"
-#include "token.h"
 
 static const char *base_dir = "./lexer/";
 

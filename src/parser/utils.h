@@ -1,7 +1,7 @@
 #pragma once
 
+#include "error.h"
 #include "nerror.h"
-#include "parser_error.h"
 
 #ifdef DEBUG_PARSER
 #define START_PARSING(section) start_parsing(section)
