@@ -20,10 +20,10 @@ static void print_lexer_pos(lexer_t *lexer) {
   fprintf(stderr, "%s%s^\n", lexer->line, repeat_char(' ', lexer->prev_pos));
 }
 
-_Noreturn void err_wrong_token(token_kind_t expected_kind, lexer_t *lexer) {
+// TODO: expected as string?
+_Noreturn void err_wrong_token(const char *expected, lexer_t *lexer) {
   print_lexer_pos(lexer);
-  fprintf(stderr, "ERR_WRONG_TOKEN: expected '%s', got '%s'\n",
-          token_kind_to_string(expected_kind),
+  fprintf(stderr, "ERR_WRONG_TOKEN: expected '%s', got '%s'\n", expected,
           token_to_string(lexer->cur_token));
 
   exit(1);

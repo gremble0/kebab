@@ -15,14 +15,14 @@
 
 #define ONE_INDENT "  "
 #define LIST_START_SIZE 5
-#define EXPECT_TOKEN(expected_kind, lexer)                                     \
-  if (lexer->cur_token->kind != expected_kind) {                               \
-    err_wrong_token(expected_kind, lexer);                                     \
+#define EXPECT_TOKEN(expected, lexer)                                          \
+  if (lexer->cur_token->kind != expected) {                                    \
+    err_wrong_token(token_kind_to_string(expected), lexer);                    \
   }
 
-#define SKIP_TOKEN(expected_kind, lexer)                                       \
+#define SKIP_TOKEN(expected, lexer)                                            \
   do {                                                                         \
-    EXPECT_TOKEN(expected_kind, lexer);                                        \
+    EXPECT_TOKEN(expected, lexer);                                             \
     lexer_advance(lexer);                                                      \
   } while (0)
 
