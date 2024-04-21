@@ -7,7 +7,7 @@
 #include "parser/utils.h"
 
 ast_t *parse(lexer_t *lexer) {
-  START_PARSING("ast");
+  PARSER_LOG_START();
 
   ast_t *ast = malloc(sizeof(*ast));
   ast->stmts = list_init(LIST_START_SIZE); // list<statement_t *>
@@ -16,7 +16,7 @@ ast_t *parse(lexer_t *lexer) {
     list_push_back(ast->stmts, parse_statement(lexer));
   }
 
-  FINISH_PARSING("ast");
+  PARSER_LOG_FINISH();
 
   return ast;
 }

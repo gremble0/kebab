@@ -5,6 +5,14 @@
 #include "nonstdlib/nerror.h"
 #include "parser/utils.h"
 
+void parser_log_start() { log_file = fopen("keb-parser.log", "w"); }
+void parser_log_finish() { fclose(log_file); }
+
+/**
+ * @brief Generate a string of `indent_depth * ONE_INDENT` ' ' chars
+ *
+ * @return string of some amount of repeated ' '-s
+ */
 static char *make_indent() {
   if (indent_depth == 0) {
     return strdup("");
@@ -25,26 +33,36 @@ static char *make_indent() {
   return indent;
 }
 
-void start_parsing(const char *node_name) {
+/**
+ * @brief Log opening of a node to the logfile - something like `<node>`
+ *
+ * @param node_name name of node to close
+ */
+void parser_log_node_start(const char *node_name) {
   char *indent = make_indent();
-  printf("%s<%s>\n", indent, node_name);
+  fprintf(log_file, "%s<%s>\n", indent, node_name);
   free(indent);
   ++indent_depth;
 }
 
-void finish_parsing(const char *node_name) {
+/**
+ * @brief Log closing of a node - something like `</node>`
+ *
+ * @param node_name name of node to close
+ */
+void parser_log_node_finish(const char *node_name) {
   --indent_depth;
   char *indent = make_indent();
-  printf("%s</%s>\n", indent, node_name);
+  fprintf(log_file, "%s</%s>\n", indent, node_name);
   free(indent);
 }
 
 /**
- * @brief Used to debug self closing nodes, e.g. nodes with no children.
+ * @brief Log a self closing node to the log file - something like `<node />`
  */
-void start_and_finish_parsing(const char *node_name) {
+void parser_log_node_self_closing(const char *node_name) {
   char *indent = make_indent();
-  printf("%s<%s />\n", indent, node_name);
+  fprintf(log_file, "%s<%s />\n", indent, node_name);
   free(indent);
 }
 

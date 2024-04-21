@@ -6,7 +6,7 @@
 #include "parser/utils.h"
 
 primary_t *parse_primary(lexer_t *lexer) {
-  START_PARSING("primary");
+  PARSER_LOG_NODE_START("primary");
 
   primary_t *prm = malloc(sizeof(*prm));
   if (prm == NULL) {
@@ -37,7 +37,7 @@ primary_t *parse_primary(lexer_t *lexer) {
     prm->arguments = NULL;
   }
 
-  FINISH_PARSING("primary");
+  PARSER_LOG_NODE_FINISH("primary");
 
   return prm;
 }

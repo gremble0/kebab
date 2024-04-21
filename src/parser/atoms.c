@@ -38,7 +38,7 @@ atom_t *parse_atom(lexer_t *lexer) {
 
   lexer_advance(lexer);
 
-  START_AND_FINISH_PARSING("atom");
+  PARSER_LOG_NODE_SELF_CLOSING("atom");
 
   return atom;
 }

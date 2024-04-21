@@ -9,7 +9,7 @@
 // TODO: don't require constructor here, allow definition of primitives like
 // `def a = 2` and infer type
 static definition_t *parse_definition(lexer_t *lexer) {
-  START_PARSING("definition");
+  PARSER_LOG_NODE_START("definition");
 
   SKIP_TOKEN(TOKEN_DEF, lexer);
 
@@ -34,13 +34,13 @@ static definition_t *parse_definition(lexer_t *lexer) {
 
   def->constructor = parse_constructor(lexer);
 
-  FINISH_PARSING("definition");
+  PARSER_LOG_NODE_FINISH("definition");
 
   return def;
 }
 
 static assignment_t *parse_assignment(lexer_t *lexer) {
-  START_PARSING("assignment");
+  PARSER_LOG_NODE_START("assignment");
 
   SKIP_TOKEN(TOKEN_SET, lexer);
 
@@ -57,13 +57,13 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
 
   ass->constructor = parse_constructor(lexer);
 
-  FINISH_PARSING("assignment");
+  PARSER_LOG_NODE_FINISH("assignment");
 
   return ass;
 }
 
 statement_t *parse_statement(lexer_t *lexer) {
-  START_PARSING("statement");
+  PARSER_LOG_NODE_START("statement");
 
   statement_t *stmt = malloc(sizeof(*stmt));
   if (stmt == NULL) {
@@ -101,7 +101,7 @@ statement_t *parse_statement(lexer_t *lexer) {
     err_illegal_token(lexer);
   }
 
-  FINISH_PARSING("statement");
+  PARSER_LOG_NODE_FINISH("statement");
 
   return stmt;
 }

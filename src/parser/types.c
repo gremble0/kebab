@@ -8,7 +8,7 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   // function types should look something like `fn(int, int) => int`
   // for example:
   //     def fn-showcase = fn(some-param : fn(int, int) => int) => ...
-  START_PARSING("fn_type");
+  PARSER_LOG_NODE_START("fn_type");
 
   SKIP_TOKEN(TOKEN_FN, lexer);
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
@@ -16,7 +16,7 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   keb_type_fn_t *fnt = malloc(sizeof(*fnt));
   fnt->param_types = list_init(LIST_START_SIZE); // list<keb_type_t *>
 
-  START_PARSING("fn_params");
+  PARSER_LOG_NODE_START("fn_params");
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
     list_push_back(fnt->param_types, parse_type(lexer));
@@ -26,18 +26,17 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
     }
   }
 
-  FINISH_PARSING("fn_params");
+  PARSER_LOG_NODE_FINISH("fn_params");
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
   SKIP_TOKEN(TOKEN_FAT_RARROW, lexer);
 
-  START_PARSING("fn_return_type");
+  PARSER_LOG_NODE_START("fn_return_type");
 
   fnt->return_type = parse_type(lexer);
 
-  FINISH_PARSING("fn_return_type");
-
-  FINISH_PARSING("fn_type");
+  PARSER_LOG_NODE_FINISH("fn_return_type");
+  PARSER_LOG_NODE_FINISH("fn_type");
 
   return fnt;
 }
@@ -45,7 +44,7 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
 static keb_type_list_t *parse_type_list(lexer_t *lexer) {
   // list types should look like `list(string)`, more advanced:
   // `list(fn(int, char) => string)`
-  START_PARSING("list_type");
+  PARSER_LOG_NODE_START("list_type");
 
   SKIP_TOKEN(TOKEN_LIST, lexer);
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
@@ -55,19 +54,19 @@ static keb_type_list_t *parse_type_list(lexer_t *lexer) {
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
 
-  FINISH_PARSING("list_type");
+  PARSER_LOG_NODE_FINISH("list_type");
 
   return klt;
 }
 
 keb_type_t *parse_type(lexer_t *lexer) {
-  START_PARSING("type");
+  PARSER_LOG_NODE_START("type");
 
   keb_type_t *kt = malloc(sizeof(*kt));
 
   switch (lexer->cur_token->kind) {
   case TOKEN_NAME:
-    START_AND_FINISH_PARSING("type_primitive");
+    PARSER_LOG_NODE_SELF_CLOSING("type_primitive");
     kt->type = TYPE_PRIMITIVE;
     kt->name = strdup(lexer->cur_token->name);
     lexer_advance(lexer);
@@ -85,7 +84,7 @@ keb_type_t *parse_type(lexer_t *lexer) {
     err_illegal_token(lexer);
   }
 
-  FINISH_PARSING("type");
+  PARSER_LOG_NODE_FINISH("type");
 
   return kt;
 }

@@ -1,16 +1,22 @@
 #pragma once
 
+#include <stdio.h>
+
 #include "nonstdlib/nerror.h"
 #include "parser/error.h"
 
 #ifdef DEBUG_PARSER
-#define START_PARSING(section) start_parsing(section)
-#define FINISH_PARSING(section) finish_parsing(section)
-#define START_AND_FINISH_PARSING(section) start_and_finish_parsing(section)
+#define PARSER_LOG_START() parser_log_start();
+#define PARSER_LOG_FINISH() parser_log_finish();
+#define PARSER_LOG_NODE_START(node) parser_log_node_start(node)
+#define PARSER_LOG_NODE_FINISH(node) parser_log_node_finish(node)
+#define PARSER_LOG_NODE_SELF_CLOSING(node) parser_log_node_self_closing(node)
 #else
-#define START_PARSING(section)
-#define FINISH_PARSING(section)
-#define START_AND_FINISH_PARSING(section)
+#define PARSER_LOG_START()
+#define PARSER_LOG_FINISH()
+#define PARSER_LOG_NODE_START(node)
+#define PARSER_LOG_NODE_FINISH(node)
+#define PARSER_LOG_NODE_SELF_CLOSING(node)
 #endif
 
 #define ONE_INDENT "  "
@@ -29,8 +35,11 @@
   } while (0)
 
 static size_t indent_depth = 0;
+static FILE *log_file;
 
-void start_parsing(const char *node_name);
-void finish_parsing(const char *node_name);
-void start_and_finish_parsing(const char *node_name);
+void parser_log_start();
+void parser_log_finish();
+void parser_log_node_start(const char *node_name);
+void parser_log_node_finish(const char *node_name);
+void parser_log_node_self_closing(const char *node_name);
 char *repeat_char(char c, size_t n);

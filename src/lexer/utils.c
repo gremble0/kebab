@@ -5,7 +5,7 @@
 #include "lexer/utils.h"
 
 /**
- * @brief Write the current token into a log file
+ * @brief Write a token into the log file
  *
  * @param token token to log
  */

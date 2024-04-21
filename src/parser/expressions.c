@@ -50,7 +50,7 @@ static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
 
   lexer_advance(lexer);
 
-  START_AND_FINISH_PARSING("binary_operator");
+  PARSER_LOG_NODE_SELF_CLOSING("binary_operator");
 
   binary_operator_t *ret = malloc(sizeof(*ret));
   *ret = bo;
@@ -59,7 +59,7 @@ static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
 }
 
 expression_t *parse_expression(lexer_t *lexer) {
-  START_PARSING("expr");
+  PARSER_LOG_NODE_START("expr");
 
   expression_t *expr = malloc(sizeof(*expr));
   if (expr == NULL) {
@@ -81,7 +81,7 @@ expression_t *parse_expression(lexer_t *lexer) {
     list_push_back(expr->operators, bo);
   }
 
-  FINISH_PARSING("expr");
+  PARSER_LOG_NODE_FINISH("expr");
 
   return expr;
 }

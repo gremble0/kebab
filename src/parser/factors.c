@@ -27,14 +27,14 @@ static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
 
 #ifdef DEBUG
   if (uo != UNARY_NO_OP)
-    START_AND_FINISH_PARSING("factor_prefix");
+    PARSER_LOG_NODE_SELF_CLOSING("factor_prefix");
 #endif
 
   return uo;
 }
 
 factor_t *parse_factor(lexer_t *lexer) {
-  START_PARSING("factor");
+  PARSER_LOG_NODE_START("factor");
 
   factor_t *ft = malloc(sizeof(*ft));
   if (ft == NULL) {
@@ -48,7 +48,7 @@ factor_t *parse_factor(lexer_t *lexer) {
   // Parse primary
   ft->primary = parse_primary(lexer);
 
-  FINISH_PARSING("factor");
+  PARSER_LOG_NODE_FINISH("factor");
 
   return ft;
 }

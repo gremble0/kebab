@@ -8,7 +8,7 @@
 #include "string.h"
 
 static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
-  START_PARSING("bool_constructor");
+  PARSER_LOG_NODE_START("bool_constructor");
 
   // NAME?
   SKIP_TOKEN(TOKEN_NAME, lexer);
@@ -23,13 +23,13 @@ static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
 
-  FINISH_PARSING("bool_constructor");
+  PARSER_LOG_NODE_FINISH("bool_constructor");
 
   return pc;
 }
 
 static fn_param_t *parse_fn_param(lexer_t *lexer) {
-  START_PARSING("fn_param");
+  PARSER_LOG_NODE_START("fn_param");
 
   fn_param_t *param = malloc(sizeof(*param));
 
@@ -47,13 +47,13 @@ static fn_param_t *parse_fn_param(lexer_t *lexer) {
     SKIP_TOKEN(TOKEN_COMMA, lexer);
   }
 
-  FINISH_PARSING("fn_param");
+  PARSER_LOG_NODE_FINISH("fn_param");
 
   return param;
 }
 
 static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
-  START_PARSING("fn_constructor");
+  PARSER_LOG_NODE_START("fn_constructor");
 
   SKIP_TOKEN(TOKEN_FN, lexer);
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
@@ -76,13 +76,13 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   // Close the opening paren of the fn constructor
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
 
-  FINISH_PARSING("fn_constructor");
+  PARSER_LOG_NODE_FINISH("fn_constructor");
 
   return fnc;
 }
 
 static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
-  START_PARSING("list_constructor");
+  PARSER_LOG_NODE_START("list_constructor");
 
   SKIP_TOKEN(TOKEN_LIST, lexer);
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
@@ -103,13 +103,13 @@ static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
 
   SKIP_TOKEN(TOKEN_RPAREN, lexer);
 
-  FINISH_PARSING("list_constructor");
+  PARSER_LOG_NODE_FINISH("list_constructor");
 
   return lc;
 }
 
 constructor_t *parse_constructor(lexer_t *lexer) {
-  START_PARSING("constructor");
+  PARSER_LOG_NODE_START("constructor");
 
   constructor_t *constr = malloc(sizeof(*constr));
 
@@ -133,7 +133,7 @@ constructor_t *parse_constructor(lexer_t *lexer) {
     err_illegal_token(lexer);
   }
 
-  FINISH_PARSING("constructor");
+  PARSER_LOG_NODE_FINISH("constructor");
 
   return constr;
 }
