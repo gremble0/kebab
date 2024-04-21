@@ -1,15 +1,18 @@
-NONSTDLIBSRC=../../lib/nonstdlib/src
+NONSTDLIBROOT := ../../lib/nonstdlib
+NONSTDLIBSRC := $(NONSTDLIBROOT)/src
+NONSTDLIBINCLUDE := $(NONSTDLIBROOT)/include
+KEBABSRC := ..
 
-CC=clang
-CFLAGS=-Wall -Wextra -g -DDEBUG_LEXER
-LIBS=-L$(NONSTDLIBSRC) -lnonstdlib
+CC := clang
+CFLAGS := -Wall -Wextra -g -DDEBUG_LEXER
+LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
-OBJS=lexer.o token.o
+OBJS := lexer.o token.o
 
 all: clean $(OBJS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I$(NONSTDLIBSRC) -c $< -o $@
+	$(CC) $(CFLAGS) -I$(NONSTDLIBINCLUDE) -I$(KEBABSRC) -c $< -o $@
 
 clean:
 	rm -f *.o

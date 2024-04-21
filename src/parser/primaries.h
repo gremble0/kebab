@@ -1,7 +1,7 @@
 #pragma once
 
 #include "atoms.h"
-#include "nlist.h"
+#include "nonstdlib/nlist.h"
 
 // TODO: unnecessary? combine with factor
 typedef struct {

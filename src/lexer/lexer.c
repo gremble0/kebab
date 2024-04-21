@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "lexer.h"
-#include "nerror.h"
+#include "nonstdlib/nerror.h"
 #include "token.h"
 
 static int is_not_dquote(int c) { return c != '"'; }

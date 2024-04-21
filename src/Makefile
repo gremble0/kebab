@@ -1,4 +1,6 @@
-NONSTDLIBSRC := ../lib/nonstdlib/src
+NONSTDLIBROOT := ../lib/nonstdlib
+NONSTDLIBSRC := $(NONSTDLIBROOT)/src
+NONSTDLIBINCLUDE := $(NONSTDLIBROOT)/include
 LEXERSRC := lexer
 PARSERSRC := parser
 RUNTIMESRC := runtime
@@ -10,7 +12,7 @@ LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 OBJS := $(LEXERSRC)/*.o $(PARSERSRC)/*.o $(RUNTIMESRC)/*.o
 
 all: lexer parser runtime
-	$(CC) $(CFLAGS) -I$(NONSTDLIBSRC) -I. $(OBJS) main.c -o kebab $(LIBS)
+	$(CC) $(CFLAGS) -I$(NONSTDLIBINCLUDE) -I. $(OBJS) main.c -o kebab $(LIBS)
 
 lexer:
 	$(MAKE) -C $(LEXERSRC)

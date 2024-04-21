@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "lexer/lexer.h"
-#include "nlist.h"
+#include "nonstdlib/nlist.h"
 #include "parser.h"
 #include "statements.h"
 #include "utils.h"

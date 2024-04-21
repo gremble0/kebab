@@ -1,7 +1,7 @@
 #pragma once
 
 #include "lexer/lexer.h"
-#include "nlist.h"
+#include "nonstdlib/nlist.h"
 
 // Entrypoint to build/use the contents of a program
 typedef struct {

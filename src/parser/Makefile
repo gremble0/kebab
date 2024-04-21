@@ -1,4 +1,6 @@
-NONSTDLIBSRC := ../../lib/nonstdlib/src
+NONSTDLIBROOT := ../../lib/nonstdlib
+NONSTDLIBSRC := $(NONSTDLIBROOT)/src
+NONSTDLIBINCLUDE := $(NONSTDLIBROOT)/include
 KEBABSRC := ..
 
 CC := clang
@@ -10,7 +12,7 @@ OBJS := atoms.o constructors.o expressions.o factors.o parser.o error.o primarie
 all: clean $(OBJS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I$(NONSTDLIBSRC) -I$(KEBABSRC) -c $< -o $@
+	$(CC) $(CFLAGS) -I$(NONSTDLIBINCLUDE) -I$(KEBABSRC) -c $< -o $@
 
 clean:
 	rm -f *.o
