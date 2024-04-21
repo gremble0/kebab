@@ -1,11 +1,11 @@
 #include <stdlib.h>
 
-#include "constructors.h"
 #include "nonstdlib/nlist.h"
-#include "statements.h"
+#include "parser/constructors.h"
+#include "parser/statements.h"
+#include "parser/types.h"
+#include "parser/utils.h"
 #include "string.h"
-#include "types.h"
-#include "utils.h"
 
 static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
   START_PARSING("bool_constructor");

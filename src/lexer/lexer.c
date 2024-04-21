@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lexer.h"
+#include "lexer/lexer.h"
+#include "lexer/token.h"
 #include "nonstdlib/nerror.h"
-#include "token.h"
 
 static int is_not_dquote(int c) { return c != '"'; }
 static int is_kebab_case(int c) {

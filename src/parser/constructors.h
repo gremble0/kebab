@@ -1,7 +1,7 @@
 #pragma once
 
 #include "nonstdlib/nlist.h"
-#include "types.h"
+#include "parser/types.h"
 
 // Forward declaration because its used recusively
 typedef struct constructor_struct constructor_t;

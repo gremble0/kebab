@@ -1,9 +1,9 @@
 #include <stdlib.h>
 
-#include "expressions.h"
-#include "factors.h"
 #include "nonstdlib/nlist.h"
-#include "utils.h"
+#include "parser/expressions.h"
+#include "parser/factors.h"
+#include "parser/utils.h"
 
 static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
   binary_operator_t bo;

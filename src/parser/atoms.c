@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "atoms.h"
-#include "error.h"
 #include "nonstdlib/nerror.h"
+#include "parser/atoms.h"
+#include "parser/error.h"
+#include "parser/utils.h"
 #include "string.h"
-#include "utils.h"
 
 atom_t *parse_atom(lexer_t *lexer) {
   // TODO: maybe free some strings here?

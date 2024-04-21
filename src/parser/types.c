@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "types.h"
-#include "utils.h"
+#include "parser/types.h"
+#include "parser/utils.h"
 
 static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   // function types should look something like `fn(int, int) => int`

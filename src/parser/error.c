@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "error.h"
 #include "lexer/token.h"
-#include "utils.h"
+#include "parser/error.h"
+#include "parser/utils.h"
 
 /**
  * @brief Prints the current position in the lexer. Should print something like:
@@ -20,7 +20,6 @@ static void print_lexer_pos(lexer_t *lexer) {
   fprintf(stderr, "%s%s^\n", lexer->line, repeat_char(' ', lexer->prev_pos));
 }
 
-// TODO: expected as string?
 _Noreturn void err_wrong_token(const char *expected, lexer_t *lexer) {
   print_lexer_pos(lexer);
   fprintf(stderr, "ERR_WRONG_TOKEN: expected '%s', got '%s'\n", expected,
@@ -33,15 +32,5 @@ _Noreturn void err_illegal_token(lexer_t *lexer) {
   print_lexer_pos(lexer);
   fprintf(stderr, "ERR_ILLEGAL_TOKEN: '%s'\n",
           token_to_string(lexer->cur_token));
-  exit(1);
-}
-
-// TODO: this is a runtime error
-_Noreturn void err_set_constant(lexer_t *lexer, token_t *constant) {
-  print_lexer_pos(lexer);
-  fprintf(stderr,
-          "ERR_SET_CONSTANT: cannot mutate '%s' with 'set'. Define variable "
-          "with 'mut'\n",
-          token_to_string(constant));
   exit(1);
 }

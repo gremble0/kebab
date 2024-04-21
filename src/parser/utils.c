@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "nonstdlib/nerror.h"
-#include "utils.h"
+#include "parser/utils.h"
 
 static char *make_indent() {
   if (indent_depth == 0) {

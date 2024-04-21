@@ -1,6 +1,6 @@
 #pragma once
 
-#include "primaries.h"
+#include "parser/primaries.h"
 
 typedef enum {
   UNARY_PLUS,  // +1

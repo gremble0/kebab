@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
-#include "factors.h"
-#include "utils.h"
+#include "parser/factors.h"
+#include "parser/utils.h"
 
 // TODO: rename -> parse_unary_operator?
 static unary_operator_t parse_factor_prefix(lexer_t *lexer) {

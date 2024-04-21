@@ -1,9 +1,9 @@
 #include <stdlib.h>
 
-#include "expressions.h"
 #include "nonstdlib/nlist.h"
-#include "primaries.h"
-#include "utils.h"
+#include "parser/expressions.h"
+#include "parser/primaries.h"
+#include "parser/utils.h"
 
 primary_t *parse_primary(lexer_t *lexer) {
   START_PARSING("primary");

@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lexer/token.h"
 #include "nonstdlib/nerror.h"
-#include "token.h"
 
 char *token_to_string(const token_t *token) {
   switch (token->kind) {

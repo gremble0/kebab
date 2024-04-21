@@ -1,7 +1,7 @@
 #pragma once
 
-#include "constructors.h"
-#include "expressions.h"
+#include "parser/constructors.h"
+#include "parser/expressions.h"
 
 // Binds a symbol to an expression
 typedef struct {
