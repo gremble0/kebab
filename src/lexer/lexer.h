@@ -4,17 +4,6 @@
 
 #include "token.h"
 
-#ifdef DEBUG_LEXER
-#define LOG_TOKEN(token)                                                       \
-  do {                                                                         \
-    char *tok_string = token_to_string(token);                                 \
-    printf("%s\n", tok_string);                                                \
-    free(tok_string);                                                          \
-  } while (0)
-#else
-#define LOG_TOKEN(token)
-#endif
-
 typedef struct {
   FILE *f;
   const char *f_name; // used for error handling

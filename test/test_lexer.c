@@ -11,7 +11,7 @@ static const char *base_dir = "./lexer/";
 
 static void lexer_write_cur_token(lexer_t *lexer, FILE *f) {
   char *token_string = token_to_string(lexer->cur_token);
-  int token_string_len = strlen(token_string);
+  int token_string_len = strnlen(token_string, lexer->line_len);
   fwrite(token_string, 1, token_string_len, f);
   fwrite("\n", 1, 1, f);
 

@@ -6,6 +6,7 @@
 
 #include "lexer/lexer.h"
 #include "lexer/token.h"
+#include "lexer/utils.h"
 #include "nonstdlib/nerror.h"
 
 static int is_not_dquote(int c) { return c != '"'; }
@@ -170,6 +171,7 @@ static char *lexer_read_word(lexer_t *lexer) {
  * @return lexer at the start of the file at file_path
  */
 lexer_t *lexer_init(const char *file_path) {
+  START_LEXING();
   lexer_t *lexer = malloc(sizeof(*lexer));
   if (lexer == NULL) {
     err_malloc_fail();
@@ -370,6 +372,7 @@ void lexer_advance(lexer_t *lexer) {
  * @param lexer lexer to free
  */
 void lexer_free(lexer_t *lexer) {
+  FINISH_LEXING();
   fclose(lexer->source_file->f);
 
   // If we try to free the lexer before we have reached the end of the file,

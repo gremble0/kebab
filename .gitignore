@@ -2,6 +2,7 @@
 *.a
 *-actual.txt
 *.out
+*.log
 kebab
 test_all
 compile_commands.json
