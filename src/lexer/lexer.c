@@ -39,7 +39,7 @@ static void lexer_load_next_line(lexer_t *lexer) {
  * @param lexer lexer to check
  * @return 1 if line is done 0 if not
  */
-static int lexer_line_is_done(lexer_t *lexer) {
+static int lexer_line_is_done(const lexer_t *lexer) {
   return lexer->line[lexer->line_pos] == '\n' ||
          lexer->line[lexer->line_pos] == ';';
 }
@@ -53,7 +53,7 @@ static int lexer_line_is_done(lexer_t *lexer) {
  * @return how many characters away from the current position the
  * predicate first fails.
  */
-static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
+static size_t lexer_seek_while(const lexer_t *lexer, int pred(int)) {
   size_t i = 0;
   while (lexer->line_pos + i < (size_t)lexer->line_len &&
          pred(lexer->line[lexer->line_pos + i])) {
@@ -71,7 +71,7 @@ static size_t lexer_seek_while(lexer_t *lexer, int pred(int)) {
  * @param offset how many indexes to the right to peek
  * @return the character at the offset, 0 if offset is out of bounds
  */
-static char lexer_peek_char(lexer_t *lexer, size_t offset) {
+static char lexer_peek_char(const lexer_t *lexer, size_t offset) {
   if (lexer->line_pos + offset >= (size_t)lexer->line_len) {
     return 0;
   }
@@ -171,7 +171,7 @@ static char *lexer_read_word(lexer_t *lexer) {
  * @return lexer at the start of the file at file_path
  */
 lexer_t *lexer_init(const char *file_path) {
-  START_LEXING();
+  LEXER_LOG_START();
   lexer_t *lexer = malloc(sizeof(*lexer));
   if (lexer == NULL) {
     err_malloc_fail();
@@ -183,7 +183,7 @@ lexer_t *lexer_init(const char *file_path) {
   }
   lexer->source_file = malloc(sizeof(*lexer->source_file));
   lexer->source_file->f = f;
-  lexer->source_file->f_name = file_path; // TODO: strdup maybe?
+  lexer->source_file->f_name = file_path;
 
   lexer->line = NULL;
   lexer->line_len = 0;
@@ -192,7 +192,9 @@ lexer_t *lexer_init(const char *file_path) {
   lexer->line_number = 0;
   lexer->cur_token = NULL;
 
+  // Load the first line
   lexer_load_next_line(lexer);
+  // Load the first token
   lexer_advance(lexer);
 
   return lexer;
@@ -209,7 +211,7 @@ void lexer_advance(lexer_t *lexer) {
   // Handle previous tokens and recursive calls
   if (lexer->cur_token != NULL) {
     // Handle previous token
-    LOG_TOKEN(lexer->cur_token);
+    LEXER_LOG_TOKEN(lexer->cur_token);
     token_free(lexer->cur_token);
     // For recursive calls we reset cur_token to NULL to not double free
     lexer->cur_token = NULL;
@@ -217,6 +219,7 @@ void lexer_advance(lexer_t *lexer) {
 
   // If line_len is negative reading the next line has failed indicating EOF
   if (lexer->line_len < 0) {
+    LEXER_LOG_FINISH();
     free(lexer->line);
     lexer->cur_token = token_make_simple(TOKEN_EOF);
     return;
@@ -372,7 +375,6 @@ void lexer_advance(lexer_t *lexer) {
  * @param lexer lexer to free
  */
 void lexer_free(lexer_t *lexer) {
-  FINISH_LEXING();
   fclose(lexer->source_file->f);
 
   // If we try to free the lexer before we have reached the end of the file,

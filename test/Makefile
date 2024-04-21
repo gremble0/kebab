@@ -9,7 +9,7 @@ CC := clang
 CFLAGS := -Wall -Wextra -g -O0
 LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
-TESTOBJS := test_lexer.o test_parser.o
+TESTOBJS := test_lexer.o test_parser.o utils.o
 LEXEROBJS := $(LEXERSRC)/*.o
 PARSEROBJS := $(PARSERSRC)/*.o
 
@@ -24,7 +24,10 @@ test_parser.o:
 	$(MAKE) -C $(PARSERSRC) clean all
 	$(CC) $(CFLAGS) -I$(KEBABSRC) -I$(NONSTDLIBINCLUDE) $(PARSEROBJS) -c test_parser.c -o test_parser.o
 
+utils.o:
+	$(CC) $(CFLAGS) -I$(NONSTDLIBINCLUDE) -c utils.c -o utils.o
+
 clean:
-	rm test_all *.o -f
+	rm test_all *.o -f *.log
 
 .PHONY: *.o

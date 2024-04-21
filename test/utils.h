@@ -9,3 +9,4 @@
 
 void test_lexer(void);
 void test_parser(void);
+void assert_file_contents_equal(FILE *f1, FILE *f2);

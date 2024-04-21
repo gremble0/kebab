@@ -5,16 +5,17 @@
 #include "lexer/token.h"
 
 #ifdef DEBUG_LEXER
-#define START_LEXING() start_lexing();
-#define FINISH_LEXING() finish_lexing();
-#define LOG_TOKEN(token) log_token(token);
+#define LEXER_LOG_START() lexer_log_start();
+#define LEXER_LOG_FINISH() lexer_log_finish();
+#define LEXER_LOG_TOKEN(token) lexer_log_token(token);
 #else
-#define LOG_TOKEN(token)
-#define START_LEXING()
+#define LEXER_LOG_START()
+#define LEXER_LOG_FINISH()
+#define LEXER_LOG_TOKEN(token)
 #endif
 
 static FILE *log_file;
 
-void log_token(token_t *token);
-void start_lexing();
-void finish_lexing();
+void lexer_log_token(const token_t *token);
+void lexer_log_start();
+void lexer_log_finish();
