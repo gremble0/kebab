@@ -15,11 +15,11 @@ typedef enum {
 typedef struct {
   atom_type_t type;
   union {
-    char char_value;
+    char *name;
     char *string_value;
+    char char_value;
     int64_t int_value;
     char bool_value;
-    char *name;
 
     // TODO:
     // float

@@ -1,7 +1,9 @@
-NONSTDLIBSRC := ../lib/nonstdlib/src
-SRC := ../src
-LEXERSRC := $(SRC)/lexer
-PARSERSRC := $(SRC)/parser
+NONSTDLIBROOT := ../lib/nonstdlib
+NONSTDLIBSRC := $(NONSTDLIBROOT)/src
+NONSTDLIBINCLUDE := $(NONSTDLIBROOT)/include
+KEBABSRC := ../src
+LEXERSRC := $(KEBABSRC)/lexer
+PARSERSRC := $(KEBABSRC)/parser
 
 CC := clang
 CFLAGS := -Wall -Wextra -g -O0
@@ -16,11 +18,11 @@ all: clean $(TESTOBJS)
 
 test_lexer.o:
 	$(MAKE) -C $(LEXERSRC) clean all
-	$(CC) $(CFLAGS) -I$(LEXERSRC) -I$(NONSTDLIBSRC) $(LEXEROBJS) -c test_lexer.c -o test_lexer.o
+	$(CC) $(CFLAGS) -I$(KEBABSRC) -I$(NONSTDLIBINCLUDE) $(LEXEROBJS) -c test_lexer.c -o test_lexer.o
 
 test_parser.o:
 	$(MAKE) -C $(PARSERSRC) clean all
-	$(CC) $(CFLAGS) -I$(LEXERSRC) -I$(PARSERSRC) -I$(NONSTDLIBSRC) $(PARSEROBJS) -c test_parser.c -o test_parser.o
+	$(CC) $(CFLAGS) -I$(KEBABSRC) -I$(NONSTDLIBINCLUDE) $(PARSEROBJS) -c test_parser.c -o test_parser.o
 
 clean:
 	rm test_all *.o -f

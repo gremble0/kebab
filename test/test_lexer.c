@@ -4,7 +4,7 @@
 
 #include "lexer/lexer.h"
 #include "lexer/token.h"
-#include "nerror.h"
+#include "nonstdlib/nerror.h"
 #include "test.h"
 
 static const char *base_dir = "./lexer/";

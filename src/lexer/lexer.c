@@ -121,6 +121,13 @@ static char *lexer_read_str(lexer_t *lexer) {
   return word;
 }
 
+/**
+ * @brief Read a single character between a pair of '\''-s. Also increments the
+ * lexer's line position
+ *
+ * @param lexer lexer to read char from
+ * @return the char between the two '\''-s
+ */
 static char lexer_read_char(lexer_t *lexer) {
   ASSERT(lexer->line[lexer->line_pos] == '\'');
   ASSERT(lexer->line[lexer->line_pos + 2] == '\'');

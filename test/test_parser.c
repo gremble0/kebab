@@ -1,6 +1,6 @@
 #include "lexer/lexer.h"
-#include "nlist.h"
-#include "parser.h"
+#include "nonstdlib/nlist.h"
+#include "parser/parser.h"
 #include "test.h"
 
 static const char *base_dir = "./parser/";
