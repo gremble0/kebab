@@ -11,5 +11,4 @@ typedef struct {
 } primary_t;
 
 primary_t *parse_primary(lexer_t *lexer);
-char *primary_to_string(primary_t *prm);
 void primary_free(primary_t *prm);

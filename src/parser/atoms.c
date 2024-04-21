@@ -43,40 +43,6 @@ atom_t *parse_atom(lexer_t *lexer) {
   return atom;
 }
 
-char *atom_to_string(const atom_t *atom) {
-  switch (atom->type) {
-  case ATOM_CHAR: {
-    char *res = malloc(sizeof("<atom type='char'> </atom>"));
-    sprintf(res, "<atom type='char'>%c</atom>", atom->char_value);
-    return res;
-  }
-  case ATOM_STRING: {
-    char *res = malloc(sizeof("<atom type='string'></atom>") +
-                       strlen(atom->string_value));
-    sprintf(res, "<atom type='string'>%s</atom>", atom->string_value);
-    return res;
-  }
-  case ATOM_INT: {
-    int len = snprintf(NULL, 0, "%ld", atom->int_value);
-    char *res = malloc(sizeof("<atom type='int'></atom>") + len);
-    sprintf(res, "<atom type='int'>%ld</atom>", atom->int_value);
-    return res;
-  }
-  case ATOM_BOOL: {
-    if (atom->bool_value)
-      return strdup("<atom type='bool'>true</atom>");
-    else
-      return strdup("<atom type='bool'>false</atom>");
-  }
-  case ATOM_NAME: {
-    char *res =
-        malloc(sizeof("<atom type='name'></atom>") + strlen(atom->name));
-    sprintf(res, "<atom type='name'>%s</atom>", atom->name);
-    return res;
-  }
-  }
-}
-
 void atom_free(atom_t *atom) {
   switch (atom->type) {
   case ATOM_STRING:

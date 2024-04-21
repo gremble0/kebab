@@ -30,5 +30,4 @@ typedef struct {
 } atom_t;
 
 atom_t *parse_atom(lexer_t *lexer);
-char *atom_to_string(const atom_t *atom);
 void atom_free(atom_t *atom);

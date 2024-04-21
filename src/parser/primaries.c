@@ -42,11 +42,6 @@ primary_t *parse_primary(lexer_t *lexer) {
   return prm;
 }
 
-char *primary_to_string(primary_t *prm) {
-  char *res = "<primary>";
-  return res;
-}
-
 void primary_free(primary_t *prm) {
   atom_free(prm->atom);
 
