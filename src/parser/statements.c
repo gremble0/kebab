@@ -108,12 +108,12 @@ statement_t *parse_statement(lexer_t *lexer) {
 
 static void definition_free(definition_t *def) {
   constructor_free(def->constructor);
-  free((void *)def->name);
+  free(def->name);
   free(def);
 }
 
 static void assignment_free(assignment_t *ass) {
-  free((void *)ass->name);
+  free(ass->name);
   constructor_free(ass->constructor);
   free(ass);
 }

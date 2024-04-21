@@ -22,6 +22,7 @@ static int is_kebab_case(int c) {
 static void lexer_load_next_line(lexer_t *lexer) {
   if (lexer->line != NULL) {
     free(lexer->line);
+    lexer->line = NULL;
   }
 
   size_t _ = 0;
@@ -102,7 +103,7 @@ static int64_t lexer_read_int(lexer_t *lexer) {
  * @param lexer lexer to read string from
  * @return the string between two '"'-s
  */
-static const char *lexer_read_str(lexer_t *lexer) {
+static char *lexer_read_str(lexer_t *lexer) {
   ASSERT(lexer->line[lexer->line_pos] == '"');
   ++lexer->line_pos;
   size_t i = lexer_seek_while(lexer, is_not_dquote);
@@ -139,7 +140,7 @@ static char lexer_read_char(lexer_t *lexer) {
  * @param lexer lexer to read word from
  * @return the string until the next whitespace or newline
  */
-static const char *lexer_read_word(lexer_t *lexer) {
+static char *lexer_read_word(lexer_t *lexer) {
   size_t i = lexer_seek_while(lexer, is_kebab_case);
 
   char *word = malloc(sizeof(char) * i + 1);
@@ -196,6 +197,7 @@ lexer_t *lexer_init(const char *file_path) {
  * @param lexer lexer to advance
  */
 void lexer_advance(lexer_t *lexer) {
+  // Handle previous tokens and recursive calls
   if (lexer->cur_token != NULL) {
     // Handle previous token
     LOG_TOKEN(lexer->cur_token);
@@ -211,8 +213,9 @@ void lexer_advance(lexer_t *lexer) {
     return;
   }
 
+  // Kebab does not care about newlines, so if we read a `;` (comment) or a
+  // newline, ignore it and go to the next line
   if (lexer_line_is_done(lexer)) {
-    // Kebab does not care about newlines, so simply ignore them
     lexer_load_next_line(lexer);
     return lexer_advance(lexer);
   }
@@ -337,12 +340,12 @@ void lexer_advance(lexer_t *lexer) {
 
   // Keywords and builtin types
   default: {
-    const char *word = lexer_read_word(lexer);
+    char *word = lexer_read_word(lexer);
 
     for (size_t i = 0;
          i < sizeof(reserved_word_map) / sizeof(reserved_word_map[0]); ++i) {
       if (strcmp(reserved_word_map[i].word, word) == 0) {
-        free((void *)word);
+        free(word);
         lexer->cur_token = token_make_simple(reserved_word_map[i].kind);
         return;
       }

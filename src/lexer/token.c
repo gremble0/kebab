@@ -6,7 +6,7 @@
 #include "nonstdlib/nerror.h"
 #include "token.h"
 
-char *token_to_string(token_t *token) {
+char *token_to_string(const token_t *token) {
   switch (token->kind) {
   case TOKEN_CHAR_LITERAL: {
     char *res = malloc(sizeof("char-literal: ' '") + 1);
@@ -43,11 +43,11 @@ char *token_kind_to_string(token_kind_t kind) {
 void token_free(token_t *token) {
   switch (token->kind) {
   case TOKEN_NAME:
-    free((void *)token->name);
+    free(token->name);
     free(token);
     break;
   case TOKEN_STRING_LITERAL:
-    free((void *)token->string_literal);
+    free(token->string_literal);
     free(token);
     break;
   default:
@@ -55,6 +55,12 @@ void token_free(token_t *token) {
   }
 }
 
+/**
+ * @brief Make a token with no special metadata on it based on a token kind
+ *
+ * @param token_kind what to make a token from
+ * @return a malloc'd token with the appropriate token_kind
+ */
 token_t *token_make_simple(token_kind_t token_kind) {
   token_t *token = malloc(sizeof(*token));
   if (token == NULL) {
@@ -65,7 +71,7 @@ token_t *token_make_simple(token_kind_t token_kind) {
   return token;
 }
 
-token_t *token_make_str_lit(const char *str_lit) {
+token_t *token_make_str_lit(char *str_lit) {
   token_t *str_lit_tok = malloc(sizeof(*str_lit_tok));
   if (str_lit_tok == NULL) {
     err_malloc_fail();
@@ -98,7 +104,7 @@ token_t *token_make_int_lit(int64_t int_lit) {
   return int_lit_tok;
 }
 
-token_t *token_make_name(const char *name) {
+token_t *token_make_name(char *name) {
   token_t *name_tok = malloc(sizeof(*name_tok));
   if (name_tok == NULL) {
     err_malloc_fail();

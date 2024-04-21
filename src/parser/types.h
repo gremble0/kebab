@@ -26,7 +26,7 @@ struct keb_type_struct {
   union {
     keb_type_fn_t *fn;
     keb_type_list_t *list;
-    const char *name;
+    char *name;
   };
 };
 

@@ -18,7 +18,7 @@ typedef struct {
 } primitive_constructor_t;
 
 typedef struct {
-  const char *name;
+  char *name;
   keb_type_t *type;
 } fn_param_t;
 

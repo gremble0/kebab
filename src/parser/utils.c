@@ -5,7 +5,7 @@
 #include "nonstdlib/nerror.h"
 #include "utils.h"
 
-static char *make_indent(size_t indent_depth) {
+static char *make_indent() {
   if (indent_depth == 0) {
     return strdup("");
   }
@@ -26,7 +26,7 @@ static char *make_indent(size_t indent_depth) {
 }
 
 void start_parsing(const char *node_name) {
-  char *indent = make_indent(indent_depth);
+  char *indent = make_indent();
   printf("%s<%s>\n", indent, node_name);
   free(indent);
   ++indent_depth;
@@ -34,7 +34,7 @@ void start_parsing(const char *node_name) {
 
 void finish_parsing(const char *node_name) {
   --indent_depth;
-  char *indent = make_indent(indent_depth);
+  char *indent = make_indent();
   printf("%s</%s>\n", indent, node_name);
   free(indent);
 }
@@ -43,7 +43,7 @@ void finish_parsing(const char *node_name) {
  * @brief Used to debug self closing nodes, e.g. nodes with no children.
  */
 void start_and_finish_parsing(const char *node_name) {
-  char *indent = make_indent(indent_depth);
+  char *indent = make_indent();
   printf("%s<%s />\n", indent, node_name);
   free(indent);
 }

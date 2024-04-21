@@ -138,10 +138,9 @@ constructor_t *parse_constructor(lexer_t *lexer) {
   return constr;
 }
 
-static void fn_param_free(void *fnp) {
-  fn_param_t *f = fnp;
-  free((void *)f->name);
-  type_free(f->type);
+static void fn_param_free(fn_param_t *fnp) {
+  free(fnp->name);
+  type_free(fnp->type);
   free(fnp);
 }
 
@@ -152,7 +151,7 @@ static void primitive_constructor_free(primitive_constructor_t *pc) {
 }
 
 static void fn_constructor_free(fn_constructor_t *fnc) {
-  list_map(fnc->params, fn_param_free);
+  list_map(fnc->params, (list_map_func)fn_param_free);
   list_free(fnc->params);
   constructor_free(fnc->body);
   free(fnc);

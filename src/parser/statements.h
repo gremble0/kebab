@@ -5,14 +5,14 @@
 
 // Binds a symbol to an expression
 typedef struct {
-  const char *name;
+  char *name;
   char is_mutable; // flag for seeing if this definition is mutable
   constructor_t *constructor;
 } definition_t;
 
 // Same as a definition, but is only allowed for mutable bindings
 typedef struct {
-  const char *name;
+  char *name;
   constructor_t *constructor;
 } assignment_t;
 

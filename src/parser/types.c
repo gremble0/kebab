@@ -96,7 +96,7 @@ keb_type_t *parse_type(lexer_t *lexer) {
 void type_free(keb_type_t *kt) {
   switch (kt->type) {
   case TYPE_PRIMITIVE:
-    free((void *)kt->name);
+    free(kt->name);
     break;
   case TYPE_LIST:
     type_free(kt->list->type);

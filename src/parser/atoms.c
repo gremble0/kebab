@@ -43,7 +43,7 @@ atom_t *parse_atom(lexer_t *lexer) {
   return atom;
 }
 
-char *atom_to_string(atom_t *atom) {
+char *atom_to_string(const atom_t *atom) {
   switch (atom->type) {
   case ATOM_CHAR: {
     char *res = malloc(sizeof("<atom type='char'> </atom>"));
@@ -80,10 +80,10 @@ char *atom_to_string(atom_t *atom) {
 void atom_free(atom_t *atom) {
   switch (atom->type) {
   case ATOM_STRING:
-    free((void *)atom->string_value);
+    free(atom->string_value);
     break;
   case ATOM_NAME:
-    free((void *)atom->name);
+    free(atom->name);
     break;
   // TODO: list atom
   default:
