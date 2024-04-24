@@ -1,6 +1,5 @@
 *.o
 *.a
-*-actual.txt
 *.out
 *.log
 kebab

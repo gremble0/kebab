@@ -17,9 +17,9 @@ typedef struct {
   union {
     char *name;
     char *string_value;
-    char char_value;
+    uint8_t char_value; // Maybe use more bits in the future for unicode
     int64_t int_value;
-    char bool_value;
+    uint8_t bool_value;
 
     // TODO:
     // float

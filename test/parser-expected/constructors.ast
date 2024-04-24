@@ -1,0 +1,230 @@
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+            <binary_operator />
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <fn_constructor>
+        <fn_param>
+          <type>
+            <type_primitive />
+          </type>
+        </fn_param>
+        <constructor>
+          <bool_constructor>
+            <statement>
+              <expr>
+                <factor>
+                  <primary>
+                    <atom />
+                  </primary>
+                </factor>
+              </expr>
+            </statement>
+          </bool_constructor>
+        </constructor>
+      </fn_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <assignment>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </assignment>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <assignment>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </assignment>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <list_constructor>
+        <type>
+          <type_primitive />
+        </type>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </list_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <fn_constructor>
+        <fn_param>
+          <type>
+            <type_primitive />
+          </type>
+        </fn_param>
+        <fn_param>
+          <type>
+            <list_type>
+              <type>
+                <type_primitive />
+              </type>
+            </list_type>
+          </type>
+        </fn_param>
+        <constructor>
+          <bool_constructor>
+            <statement>
+              <expr>
+                <factor>
+                  <primary>
+                    <atom />
+                  </primary>
+                </factor>
+                <binary_operator />
+                <factor>
+                  <primary>
+                    <atom />
+                  </primary>
+                </factor>
+              </expr>
+            </statement>
+          </bool_constructor>
+        </constructor>
+      </fn_constructor>
+    </constructor>
+  </definition>
+</statement>

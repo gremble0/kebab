@@ -18,11 +18,11 @@ all: clean $(TESTOBJS)
 
 test_lexer.o:
 	$(MAKE) -C $(LEXERSRC) clean all
-	$(CC) $(CFLAGS) -I$(KEBABSRC) -I$(NONSTDLIBINCLUDE) $(LEXEROBJS) -c test_lexer.c -o test_lexer.o
+	$(CC) $(CFLAGS) -I$(KEBABSRC) -I$(NONSTDLIBINCLUDE) -c test_lexer.c -o test_lexer.o
 
 test_parser.o:
 	$(MAKE) -C $(PARSERSRC) clean all
-	$(CC) $(CFLAGS) -I$(KEBABSRC) -I$(NONSTDLIBINCLUDE) $(PARSEROBJS) -c test_parser.c -o test_parser.o
+	$(CC) $(CFLAGS) -I$(KEBABSRC) -I$(NONSTDLIBINCLUDE) -c test_parser.c -o test_parser.o
 
 utils.o:
 	$(CC) $(CFLAGS) -I$(NONSTDLIBINCLUDE) -c utils.c -o utils.o

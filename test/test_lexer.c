@@ -23,7 +23,7 @@ static void test_lexer_on_file(const char *base_file) {
   char expected_path[strlen(lexer_expected_dir_path) + strlen(base_file) +
                      sizeof(".log") + 1];
   sprintf(keb_file_path, "%s/%s.keb", keb_dir_path, base_file);
-  sprintf(expected_path, "%s/%s.log", lexer_expected_dir_path, base_file);
+  sprintf(expected_path, "%s/%s.lex", lexer_expected_dir_path, base_file);
 
   lexer_t *lexer = lexer_init(keb_file_path);
 

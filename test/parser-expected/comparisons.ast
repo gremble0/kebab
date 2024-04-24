@@ -1,0 +1,161 @@
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+            <binary_operator />
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+            <binary_operator />
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+            <binary_operator />
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+            <binary_operator />
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+            <binary_operator />
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+            <binary_operator />
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
+<statement>
+  <definition>
+    <constructor>
+      <bool_constructor>
+        <statement>
+          <expr>
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+            <binary_operator />
+            <factor>
+              <primary>
+                <atom />
+              </primary>
+            </factor>
+          </expr>
+        </statement>
+      </bool_constructor>
+    </constructor>
+  </definition>
+</statement>
