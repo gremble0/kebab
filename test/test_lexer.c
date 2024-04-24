@@ -9,7 +9,7 @@
 
 static const char *actual_path = "keb-lexer.log";
 static const char *expected_dir = "lexer-expected";
-static const char *keb_dir = "lexer-keb";
+static const char *keb_dir = "keb";
 
 /**
  * @brief Run the lexer on `keb_dir/base_file.keb` and assert that its file
@@ -27,16 +27,9 @@ static void test_lexer_on_file(const char *base_file) {
   sprintf(keb_path, "%s/%s.keb", keb_dir, base_file);
   sprintf(expected_path, "%s/%s.log", expected_dir, base_file);
 
-// LEXER_DEBUG must be defined for the lexer to log its output (not actually
-// sure if this works, or if the lexer just cares about what was defined when it
-// was compiled)
-#ifndef LEXER_DEBUG
-#define LEXER_DEBUG
-#endif
-
   lexer_t *lexer = lexer_init(keb_path);
 
-  FILE *actual_f = fopen(actual_path, "w+");
+  FILE *actual_f = fopen(actual_path, "r");
   if (actual_f == NULL)
     err_io_fail(actual_path);
 
