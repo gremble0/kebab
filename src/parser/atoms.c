@@ -31,7 +31,15 @@ atom_t *parse_atom(lexer_t *lexer) {
     atom->type = ATOM_NAME;
     atom->name = strdup(lexer->cur_token->name);
     break;
-  // TODO: list, nil, bool, etc.
+  case TOKEN_TRUE:
+    atom->type = ATOM_BOOL;
+    atom->bool_value = 1;
+    break;
+  case TOKEN_FALSE:
+    atom->type = ATOM_BOOL;
+    atom->bool_value = 0;
+    break;
+  // TODO: list, nil, etc.
   default:
     err_illegal_token(lexer);
   }
