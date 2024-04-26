@@ -10,7 +10,7 @@ typedef enum {
   ATOM_INT,
   ATOM_BOOL,
   ATOM_NAME,
-} atom_type_t;
+} atom_type_t; // TODO: inline in struct below?
 
 typedef struct {
   atom_type_t type;
