@@ -4,8 +4,8 @@
 
 #include "nonstdlib/nlist.h"
 #include "parser/parser.h"
-#include "parser/types.h"
-
+// #include "parser/types.h"
+//
 // typedef struct {
 // } runtime_fn_t;
 //
@@ -37,4 +37,6 @@ struct scope_t {
   scope_t *outer;
 };
 
+scope_t *scope_init(scope_t *outer);
+void scope_free(scope_t *scope);
 void eval(ast_t *ast);
