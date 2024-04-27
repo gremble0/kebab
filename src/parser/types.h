@@ -3,7 +3,7 @@
 #include "lexer/lexer.h"
 #include "nonstdlib/nlist.h"
 
-typedef struct keb_type_struct keb_type_t;
+typedef struct keb_type_t keb_type_t;
 
 typedef struct {
   list_t *param_types; // list<keb_type_t *>
@@ -16,7 +16,7 @@ typedef struct {
 
 // TODO: create these types sparingly, as they will most of the time be
 // duplicated
-struct keb_type_struct {
+struct keb_type_t {
   enum {
     TYPE_PRIMITIVE, // TODO: rename and use for user defined types when/if
                     // implemented?
