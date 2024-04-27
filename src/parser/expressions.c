@@ -62,9 +62,8 @@ expression_t *parse_expression(lexer_t *lexer) {
   PARSER_LOG_NODE_START("expr");
 
   expression_t *expr = malloc(sizeof(*expr));
-  if (expr == NULL) {
+  if (expr == NULL)
     err_malloc_fail();
-  }
 
   expr->factors = list_init(LIST_START_SIZE); // list<factor_t *>
   // TODO: don't always init operators

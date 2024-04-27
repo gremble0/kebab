@@ -31,7 +31,8 @@ typedef struct {
 } fn_constructor_t;
 
 typedef struct {
-  list_t *stmts; // list<statement_t *>
+  list_t *stmts;  // list<statement_t *>
+  list_t *values; // list<statement *> statement expressions of the lists values
   keb_type_t *type;
 } list_constructor_t;
 

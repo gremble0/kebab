@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "nonstdlib/nlist.h"
 #include "parser/constructors.h"
 #include "parser/statements.h"
 #include "parser/utils.h"
@@ -128,9 +127,11 @@ void statement_free(statement_t *stmt) {
   case STMT_DEFINITION:
     definition_free(stmt->definition);
     break;
+
   case STMT_ASSIGNMENT:
     assignment_free(stmt->assignment);
     break;
+
   case STMT_EXPRESSION:
     expression_free(stmt->expr);
     break;
