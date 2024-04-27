@@ -354,8 +354,11 @@ void lexer_advance(lexer_t *lexer) {
   default: {
     char *word = lexer_read_word(lexer);
 
+    // Check if its a reserved word
     for (size_t i = 0;
          i < sizeof(reserved_word_map) / sizeof(reserved_word_map[0]); ++i) {
+      // TODO: strncmp based on lexer->pos - lexer->prev_pos or something to not
+      // have to free
       if (strcmp(reserved_word_map[i].word, word) == 0) {
         free(word);
         lexer->cur_token = token_make_simple(reserved_word_map[i].kind);
@@ -363,6 +366,7 @@ void lexer_advance(lexer_t *lexer) {
       }
     }
 
+    // If its not its just some identifier/name
     lexer->cur_token = token_make_name(word);
     return;
   }

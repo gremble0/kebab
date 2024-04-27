@@ -12,6 +12,10 @@ typedef enum {
   // TOKEN_DEC ? declare variable with type?
 
   // Constructors
+  TOKEN_CHAR,
+  TOKEN_STRING,
+  TOKEN_INT,
+  TOKEN_BOOL,
   TOKEN_FN,   // fn
   TOKEN_LIST, // list
 
@@ -68,6 +72,10 @@ static const reserved_word_map_t reserved_word_map[] = {
     {"set", TOKEN_SET},
 
     // Constructors
+    {"char", TOKEN_CHAR},
+    {"string", TOKEN_STRING},
+    {"int", TOKEN_INT},
+    {"bool", TOKEN_BOOL},
     {"fn", TOKEN_FN},
     {"list", TOKEN_LIST},
 
@@ -84,6 +92,10 @@ static const char *token_kind_map[] = {
     [TOKEN_NIL] = "nil",
 
     // Constructors
+    [TOKEN_CHAR] = "char",
+    [TOKEN_STRING] = "string",
+    [TOKEN_INT] = "int",
+    [TOKEN_BOOL] = "bool",
     [TOKEN_FN] = "fn",
     [TOKEN_LIST] = "list",
 

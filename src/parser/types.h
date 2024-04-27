@@ -18,15 +18,16 @@ typedef struct {
 // duplicated
 struct keb_type_t {
   enum {
-    TYPE_PRIMITIVE, // TODO: rename and use for user defined types when/if
-                    // implemented?
+    TYPE_CHAR,
+    TYPE_STRING,
+    TYPE_INT,
+    TYPE_BOOL,
     TYPE_LIST,
     TYPE_FN,
   } type;
   union {
     keb_type_fn_t *fn;
     keb_type_list_t *list;
-    char *name;
   };
 };
 

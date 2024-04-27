@@ -12,7 +12,10 @@ void eval_definition(definition_t *def, scope_t *scope) {
   runtime_value_t *rtv;
 
   switch (def->constructor->type) {
-  case CONSTR_PRIMITIVE:
+  case CONSTR_CHAR:
+  case CONSTR_STRING:
+  case CONSTR_INT:
+  case CONSTR_BOOL:
     rtv = eval_primitive_constructor(def->constructor, scope);
     break;
   case CONSTR_FN:
@@ -24,6 +27,7 @@ void eval_definition(definition_t *def, scope_t *scope) {
   }
 
   ht_put(scope->bindings, def->name, strlen(def->name), rtv, sizeof(*rtv));
+  // TODO: free(rtv) / fix nonstdlib ?
 }
 
 // Look up symbol in scope

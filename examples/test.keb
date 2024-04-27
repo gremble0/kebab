@@ -11,7 +11,8 @@ def asd1 = fn((var : list(fn(list(int)) => string)) => char('c'))
 
 def ret-fn = fn((outer : int) => fn((inner : int) => int(outer + inner)))
 def ret-fn-rets-list = fn((outer : int) => fn((inner : int) => list(int => 
-  outer, inner
+  def local-var = int(2)
+  local-var, outer, inner
 )))
 
 def add = int(def nested = int(5) 2 + nested)

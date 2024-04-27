@@ -7,7 +7,10 @@
 typedef struct constructor_struct constructor_t;
 
 typedef enum {
-  CONSTR_PRIMITIVE,
+  CONSTR_CHAR,
+  CONSTR_STRING,
+  CONSTR_INT,
+  CONSTR_BOOL,
   CONSTR_FN,
   CONSTR_LIST,
 } constructor_type_t;

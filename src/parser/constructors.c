@@ -10,8 +10,7 @@
 static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primitive_constructor");
 
-  // NAME?
-  SKIP_TOKEN(TOKEN_NAME, lexer);
+  lexer_advance(lexer); // should
   SKIP_TOKEN(TOKEN_LPAREN, lexer);
 
   primitive_constructor_t *pc = malloc(sizeof(*pc));
@@ -111,8 +110,23 @@ constructor_t *parse_constructor(lexer_t *lexer) {
   constructor_t *constr = malloc(sizeof(*constr));
 
   switch (lexer->cur_token->kind) {
-  case TOKEN_NAME:
-    constr->type = CONSTR_PRIMITIVE;
+  case TOKEN_CHAR:
+    constr->type = CONSTR_CHAR;
+    constr->primitive_constructor = parse_primitive_constructor(lexer);
+    break;
+
+  case TOKEN_STRING:
+    constr->type = CONSTR_STRING;
+    constr->primitive_constructor = parse_primitive_constructor(lexer);
+    break;
+
+  case TOKEN_INT:
+    constr->type = CONSTR_INT;
+    constr->primitive_constructor = parse_primitive_constructor(lexer);
+    break;
+
+  case TOKEN_BOOL:
+    constr->type = CONSTR_BOOL;
     constr->primitive_constructor = parse_primitive_constructor(lexer);
     break;
 
@@ -163,7 +177,10 @@ static void list_constructor_free(list_constructor_t *lc) {
 
 void constructor_free(constructor_t *constr) {
   switch (constr->type) {
-  case CONSTR_PRIMITIVE:
+  case CONSTR_CHAR:
+  case CONSTR_STRING:
+  case CONSTR_INT:
+  case CONSTR_BOOL:
     primitive_constructor_free(constr->primitive_constructor);
     break;
 

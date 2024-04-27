@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <string.h>
 
 #include "parser/types.h"
 #include "parser/utils.h"
@@ -65,21 +64,41 @@ keb_type_t *parse_type(lexer_t *lexer) {
   keb_type_t *kt = malloc(sizeof(*kt));
 
   switch (lexer->cur_token->kind) {
-  case TOKEN_NAME:
-    PARSER_LOG_NODE_SELF_CLOSING("type_primitive");
-    kt->type = TYPE_PRIMITIVE;
-    kt->name = strdup(lexer->cur_token->name);
+  case TOKEN_CHAR:
+    PARSER_LOG_NODE_SELF_CLOSING("type-char");
+    kt->type = TYPE_CHAR;
     lexer_advance(lexer);
     break;
+
+  case TOKEN_STRING:
+    PARSER_LOG_NODE_SELF_CLOSING("type-string");
+    kt->type = TYPE_STRING;
+    lexer_advance(lexer);
+    break;
+
+  case TOKEN_INT:
+    PARSER_LOG_NODE_SELF_CLOSING("type-int");
+    kt->type = TYPE_INT;
+    lexer_advance(lexer);
+    break;
+
+  case TOKEN_BOOL:
+    PARSER_LOG_NODE_SELF_CLOSING("type-bool");
+    kt->type = TYPE_BOOL;
+    lexer_advance(lexer);
+    break;
+
   case TOKEN_FN:
     kt->type = TYPE_FN;
     kt->fn = parse_type_fn(lexer);
     break;
+
   case TOKEN_LIST:
     kt->type = TYPE_LIST;
     kt->list = parse_type_list(lexer);
     break;
 
+  // TODO: TOKEN_NAME for user defined types/structs?
   default:
     err_illegal_token(lexer);
   }
@@ -94,18 +113,19 @@ keb_type_t *parse_type(lexer_t *lexer) {
  */
 void type_free(keb_type_t *kt) {
   switch (kt->type) {
-  case TYPE_PRIMITIVE:
-    free(kt->name);
-    break;
   case TYPE_LIST:
     type_free(kt->list->type);
     free(kt->list);
     break;
+
   case TYPE_FN:
     list_map(kt->fn->param_types, (list_map_func)type_free);
     list_free(kt->fn->param_types);
     type_free(kt->fn->return_type);
     free(kt->fn);
+    break;
+
+  default:
     break;
   }
 
