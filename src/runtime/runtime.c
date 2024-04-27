@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "nonstdlib/nhashtable.h"
 #include "nonstdlib/nlist.h"
 #include "parser/parser.h"
 #include "runtime/runtime.h"
@@ -9,14 +10,14 @@
 scope_t *scope_init(scope_t *outer) {
   scope_t *scope = malloc(sizeof(*scope));
   scope->outer = outer;
-  scope->bindings = list_init(LIST_START_SIZE);
+  scope->bindings = ht_init(LIST_START_SIZE); // TODO: maybe change macro here
 
   return scope;
 }
 
 void scope_free(scope_t *scope) {
   // TODO: map other function than free
-  list_map(scope->bindings, free);
+  ht_free(scope->bindings);
   free(scope);
 }
 

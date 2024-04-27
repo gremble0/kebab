@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include "nonstdlib/nhashtable.h"
 #include "nonstdlib/nlist.h"
 #include "parser/constructors.h"
 #include "parser/parser.h"
@@ -32,7 +33,7 @@ typedef struct {
 
 typedef struct scope_t scope_t;
 struct scope_t {
-  list_t *bindings; // list<binding_t *>
+  ht_t *bindings; // ht_t<char *, runtime_value_t>
   scope_t *outer;
 };
 
