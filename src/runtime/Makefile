@@ -7,7 +7,7 @@ CC := clang
 CFLAGS := -Wall -Wextra -g -DDEBUG
 LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
-OBJS := runtime.o statements.o expressions.o
+OBJS := runtime.o statements.o expressions.o constructors.o
 
 all: clean $(OBJS)
 

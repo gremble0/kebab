@@ -5,11 +5,6 @@
 #include "nonstdlib/nlist.h"
 #include "parser/constructors.h"
 #include "parser/parser.h"
-#include "parser/types.h"
-
-// typedef union {
-//
-// } runtime_fn_t;
 
 typedef struct {
   enum {
@@ -18,15 +13,16 @@ typedef struct {
     RUNTIME_INT,
     RUNTIME_FN,
     RUNTIME_BOOL,
+    RUNTIME_LIST,
   } type;
   union {
-    char *string_value;
     uint8_t char_value; // Maybe use more bits in the future for unicode
-    int64_t int_value;  // TODO: revisit ordering inside struct maybe?
+    char *string_value;
+    int64_t int_value;
     uint8_t bool_value;
     fn_constructor_t *fn_value;
     list_t *list_value; // list<runtime_value_t*>
-  };
+  } value;
 } runtime_value_t;
 
 typedef struct {
