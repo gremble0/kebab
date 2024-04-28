@@ -10,7 +10,7 @@
 static definition_t *parse_definition(lexer_t *lexer) {
   PARSER_LOG_NODE_START("definition");
 
-  SKIP_TOKEN(TOKEN_DEF, lexer);
+  SKIP_TOKEN(lexer, TOKEN_DEF);
 
   definition_t *def = malloc(sizeof(*def));
   if (def == NULL) {
@@ -25,11 +25,11 @@ static definition_t *parse_definition(lexer_t *lexer) {
     def->is_mutable = 0;
   }
 
-  EXPECT_TOKEN(TOKEN_NAME, lexer);
+  EXPECT_TOKEN(lexer, TOKEN_NAME);
   def->name = strdup(lexer->cur_token->name);
   lexer_advance(lexer);
 
-  SKIP_TOKEN(TOKEN_EQUALS, lexer);
+  SKIP_TOKEN(lexer, TOKEN_EQUALS);
 
   def->constructor = parse_constructor(lexer);
 
@@ -41,18 +41,18 @@ static definition_t *parse_definition(lexer_t *lexer) {
 static assignment_t *parse_assignment(lexer_t *lexer) {
   PARSER_LOG_NODE_START("assignment");
 
-  SKIP_TOKEN(TOKEN_SET, lexer);
+  SKIP_TOKEN(lexer, TOKEN_SET);
 
   assignment_t *ass = malloc(sizeof(*ass));
   if (ass == NULL) {
     err_malloc_fail();
   }
 
-  EXPECT_TOKEN(TOKEN_NAME, lexer);
+  EXPECT_TOKEN(lexer, TOKEN_NAME);
   ass->name = strdup(lexer->cur_token->name);
   lexer_advance(lexer);
 
-  SKIP_TOKEN(TOKEN_EQUALS, lexer);
+  SKIP_TOKEN(lexer, TOKEN_EQUALS);
 
   ass->constructor = parse_constructor(lexer);
 

@@ -28,11 +28,11 @@ primary_t *parse_primary(lexer_t *lexer) {
       list_push_back(prm->arguments, parse_expression(lexer));
 
       if (lexer->cur_token->kind != TOKEN_RPAREN) {
-        SKIP_TOKEN(TOKEN_COMMA, lexer);
+        SKIP_TOKEN(lexer, TOKEN_COMMA);
       }
     }
 
-    SKIP_TOKEN(TOKEN_RPAREN, lexer);
+    SKIP_TOKEN(lexer, TOKEN_RPAREN);
   } else {
     prm->arguments = NULL;
   }

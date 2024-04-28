@@ -7,11 +7,13 @@
 
 /**
  * @brief Prints the current position in the lexer. Should print something like:
- * """some_file.keb:1:21:
- *    def some-wrong-code 3
- *                        ^"""
+ * ```
+ * some_file.keb:1:21:
+ * def some-wrong-code 3
+ *                     ^
+ * ```
  *
- * @param lexer lexer to get error position from.
+ * @param lexer lexer to print position of
  */
 static void print_lexer_pos(lexer_t *lexer) {
   // NOTE: lexer->line should always have a newline
@@ -20,6 +22,18 @@ static void print_lexer_pos(lexer_t *lexer) {
   fprintf(stderr, "%s%s^\n", lexer->line, repeat_char(' ', lexer->prev_pos));
 }
 
+/**
+ * @brief Prints a line from a start position to the current position in the
+ * lexer. Should print something like:
+ * ```
+ * some_file.keb:1:21:
+ * some-wrong-code int(2)
+ *                 ^~~~~
+ * ```
+ *
+ * @param start_pos where to start printing line from.
+ * @param lexer lexer to print position of
+ */
 static void print_lexer_pos_from(lexer_t *lexer, size_t start_pos) {
   fprintf(stderr, "%s:%zu:%zu\n", lexer->source_file->f_name,
           lexer->line_number, lexer->prev_pos);
@@ -40,7 +54,7 @@ _Noreturn void err_illegal_token(lexer_t *lexer) {
   exit(1);
 }
 
-_Noreturn void err_wrong_token(const char *expected, lexer_t *lexer) {
+_Noreturn void err_wrong_token(lexer_t *lexer, const char *expected) {
   print_lexer_pos(lexer);
   fprintf(stderr, "ERR_WRONG_TOKEN: expected '%s', got '%s'\n", expected,
           token_to_string(lexer->cur_token));

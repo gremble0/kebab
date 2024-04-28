@@ -10,8 +10,9 @@
 static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primitive-constructor");
 
-  lexer_advance(lexer); // should
-  SKIP_TOKEN(TOKEN_LPAREN, lexer);
+  lexer_advance(lexer); // current token should be one of the primitive types
+                        // such as int, char string etc
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   primitive_constructor_t *pc = malloc(sizeof(*pc));
   pc->statements = list_init(LIST_START_SIZE); // list<statement_t *>
@@ -19,7 +20,7 @@ static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
   while (lexer->cur_token->kind != TOKEN_RPAREN)
     list_push_back(pc->statements, parse_statement(lexer));
 
-  SKIP_TOKEN(TOKEN_RPAREN, lexer);
+  SKIP_TOKEN(lexer, TOKEN_RPAREN);
 
   PARSER_LOG_NODE_FINISH("primitive-constructor");
 
@@ -31,18 +32,18 @@ static fn_param_t *parse_fn_param(lexer_t *lexer) {
 
   fn_param_t *param = malloc(sizeof(*param));
 
-  EXPECT_TOKEN(TOKEN_NAME, lexer);
+  EXPECT_TOKEN(lexer, TOKEN_NAME);
   param->name = strdup(lexer->cur_token->name);
   lexer_advance(lexer);
 
-  SKIP_TOKEN(TOKEN_COLON, lexer);
+  SKIP_TOKEN(lexer, TOKEN_COLON);
 
   param->type = parse_type(lexer);
 
   // Next token should be comma unless its the final param (then it should be
   // rparen, which will terminate the loop)
   if (lexer->cur_token->kind != TOKEN_RPAREN)
-    SKIP_TOKEN(TOKEN_COMMA, lexer);
+    SKIP_TOKEN(lexer, TOKEN_COMMA);
 
   PARSER_LOG_NODE_FINISH("fn-param");
 
@@ -52,9 +53,9 @@ static fn_param_t *parse_fn_param(lexer_t *lexer) {
 static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   PARSER_LOG_NODE_START("fn-constructor");
 
-  SKIP_TOKEN(TOKEN_FN, lexer);
-  SKIP_TOKEN(TOKEN_LPAREN, lexer);
-  SKIP_TOKEN(TOKEN_LPAREN, lexer);
+  SKIP_TOKEN(lexer, TOKEN_FN);
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
   fnc->params = list_init(LIST_START_SIZE); // list<fn_param_t *>
@@ -63,14 +64,14 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   while (lexer->cur_token->kind != TOKEN_RPAREN)
     list_push_back(fnc->params, parse_fn_param(lexer));
 
-  SKIP_TOKEN(TOKEN_RPAREN, lexer);
-  SKIP_TOKEN(TOKEN_FAT_RARROW, lexer);
+  SKIP_TOKEN(lexer, TOKEN_RPAREN);
+  SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
 
   // parse function body
   fnc->body = parse_constructor(lexer);
 
   // Close the opening paren of the fn constructor
-  SKIP_TOKEN(TOKEN_RPAREN, lexer);
+  SKIP_TOKEN(lexer, TOKEN_RPAREN);
 
   PARSER_LOG_NODE_FINISH("fn-constructor");
 
@@ -80,15 +81,15 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
 static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
   PARSER_LOG_NODE_START("list-constructor");
 
-  SKIP_TOKEN(TOKEN_LIST, lexer);
-  SKIP_TOKEN(TOKEN_LPAREN, lexer);
+  SKIP_TOKEN(lexer, TOKEN_LIST);
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   list_constructor_t *lc = malloc(sizeof(*lc));
   lc->stmts = list_init(LIST_START_SIZE);
   lc->values = list_init(LIST_START_SIZE);
   lc->type = parse_type(lexer);
 
-  SKIP_TOKEN(TOKEN_FAT_RARROW, lexer);
+  SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
 
   // Parse any eventual statements preceding the return value
   // For example:
@@ -111,7 +112,7 @@ static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
     if (lexer->cur_token->kind == TOKEN_RPAREN)
       break;
     else
-      SKIP_TOKEN(TOKEN_COMMA, lexer);
+      SKIP_TOKEN(lexer, TOKEN_COMMA);
 
     size_t lexer_pos_before = lexer->prev_pos; // For error handling
     stmt = parse_statement(lexer);
@@ -121,7 +122,7 @@ static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
       err_illegal_statement(lexer, lexer_pos_before);
   }
 
-  SKIP_TOKEN(TOKEN_RPAREN, lexer);
+  SKIP_TOKEN(lexer, TOKEN_RPAREN);
 
   PARSER_LOG_NODE_FINISH("list-constructor");
 

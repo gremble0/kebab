@@ -21,16 +21,16 @@
 
 #define ONE_INDENT "  "
 #define LIST_START_SIZE 5
-#define EXPECT_TOKEN(expected, lexer)                                          \
+#define EXPECT_TOKEN(lexer, expected)                                          \
   do {                                                                         \
     if (lexer->cur_token->kind != expected) {                                  \
-      err_wrong_token(token_kind_to_string(expected), lexer);                  \
+      err_wrong_token(lexer, token_kind_to_string(expected));                  \
     }                                                                          \
   } while (0)
 
-#define SKIP_TOKEN(expected, lexer)                                            \
+#define SKIP_TOKEN(lexer, expected)                                            \
   do {                                                                         \
-    EXPECT_TOKEN(expected, lexer);                                             \
+    EXPECT_TOKEN(lexer, expected);                                             \
     lexer_advance(lexer);                                                      \
   } while (0)
 
