@@ -4,10 +4,10 @@ NONSTDLIBINCLUDE := $(NONSTDLIBROOT)/include
 KEBABSRC := ..
 
 CC := clang
-CFLAGS := -Wall -Wextra -g -DDEBUG
+CFLAGS := -Wall -Wextra -g
 LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
-OBJS := runtime.o statements.o expressions.o constructors.o
+OBJS := runtime.o statements.o expressions.o constructors.o scope.o error.o
 
 all: clean $(OBJS)
 
