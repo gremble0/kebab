@@ -7,6 +7,7 @@
 #include "runtime/statements.h"
 #include "runtime/utils.h"
 
+// TODO: scope to own file?
 scope_t *scope_init(scope_t *outer) {
   scope_t *scope = malloc(sizeof(*scope));
   scope->outer = outer;

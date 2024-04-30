@@ -7,15 +7,17 @@
 #include "parser/constructors.h"
 #include "parser/parser.h"
 
+typedef enum {
+  RUNTIME_CHAR,
+  RUNTIME_STRING,
+  RUNTIME_INT,
+  RUNTIME_FN,
+  RUNTIME_BOOL,
+  RUNTIME_LIST,
+} rt_type_t;
+
 typedef struct {
-  enum {
-    RUNTIME_CHAR,
-    RUNTIME_STRING,
-    RUNTIME_INT,
-    RUNTIME_FN,
-    RUNTIME_BOOL,
-    RUNTIME_LIST,
-  } type;
+  rt_type_t type;
   union {
     uint8_t char_value; // Maybe use more bits in the future for unicode
     char *string_value;
@@ -25,11 +27,6 @@ typedef struct {
     list_t *list_value; // list<runtime_value_t*>
   } value;
 } rt_value_t;
-
-typedef struct {
-  char *symbol;
-  rt_value_t *value;
-} binding_t;
 
 typedef struct scope_t scope_t;
 struct scope_t {
