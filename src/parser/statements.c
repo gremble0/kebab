@@ -65,9 +65,8 @@ statement_t *parse_statement(lexer_t *lexer) {
   PARSER_LOG_NODE_START("statement");
 
   statement_t *stmt = malloc(sizeof(*stmt));
-  if (stmt == NULL) {
+  if (stmt == NULL)
     err_malloc_fail();
-  }
 
   switch (lexer->cur_token->kind) {
   case TOKEN_DEF:

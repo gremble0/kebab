@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 
-#include "nonstdlib/nhashtable.h"
 #include "nonstdlib/nlist.h"
 #include "parser/constructors.h"
 #include "parser/parser.h"
@@ -25,7 +24,7 @@ typedef struct {
     uint8_t bool_value;
     fn_constructor_t *fn_value;
     list_t *list_value; // list<runtime_value_t*>
-  } value;
+  };
 } rt_value_t;
 
 void eval(ast_t *ast);

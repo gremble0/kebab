@@ -106,6 +106,8 @@ static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
   //   a, b ; this starts with a STMT_EXPRESSION so we break after parsing `a`
   // )
   statement_t *stmt = parse_statement(lexer);
+  if (lexer->cur_token->kind == TOKEN_RPAREN)
+    err_missing_return(lexer);
   while (stmt->type != STMT_EXPRESSION) {
     list_push_back(lc->stmts, stmt);
     stmt = parse_statement(lexer);
