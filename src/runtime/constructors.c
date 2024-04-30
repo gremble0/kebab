@@ -44,15 +44,11 @@ static rt_value_t *eval_constructor_body(constructor_t *constr,
 }
 
 rt_value_t *eval_primitive_constructor(constructor_t *constr, scope_t *scope) {
-  rt_value_t *rtv = malloc(sizeof(*rtv));
-  if (rtv == NULL)
-    err_malloc_fail();
-
   scope_t *local_scope = scope_init(scope);
 
-  rtv = eval_constructor_body(constr, local_scope);
-  if (rtv->type != constructor_to_runtime_type(constr->type))
-    err_type_error("", "");
+  rt_value_t *rtv = eval_constructor_body(constr, local_scope);
+  if (constructor_to_runtime_type(constr->type) != rtv->type)
+    err_type_error(constructor_type_map[constr->type], rt_type_map[rtv->type]);
 
   scope_free(local_scope);
 

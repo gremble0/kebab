@@ -15,6 +15,11 @@ typedef enum {
   CONSTR_LIST,
 } constructor_type_t;
 
+static const char *constructor_type_map[] = {
+    [CONSTR_CHAR] = "char", [CONSTR_STRING] = "string", [CONSTR_INT] = "int",
+    [CONSTR_BOOL] = "bool", [CONSTR_FN] = "fn",         [CONSTR_LIST] = "list",
+};
+
 // Primitivies are types like char, int, string, bool, etc.
 typedef struct {
   list_t *statements; // list<statement_t *>

@@ -10,10 +10,18 @@ typedef enum {
   RUNTIME_CHAR,
   RUNTIME_STRING,
   RUNTIME_INT,
-  RUNTIME_FN,
   RUNTIME_BOOL,
+  RUNTIME_FN,
   RUNTIME_LIST,
 } rt_type_t;
+
+// Not sure if I'm satisfied with this (essentially duplicate from
+// parser/constructor.h"
+static const char *rt_type_map[] = {
+    [RUNTIME_CHAR] = "char", [RUNTIME_STRING] = "string",
+    [RUNTIME_INT] = "int",   [RUNTIME_BOOL] = "bool",
+    [RUNTIME_FN] = "fn",     [RUNTIME_LIST] = "list",
+};
 
 typedef struct {
   rt_type_t type;
