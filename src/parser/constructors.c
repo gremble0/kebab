@@ -20,14 +20,14 @@ static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
   while (lexer->cur_token->kind != TOKEN_RPAREN)
     list_push_back(pc->statements, parse_statement(lexer));
 
-  SKIP_TOKEN(lexer, TOKEN_RPAREN);
-
   // Last statement in constructor should be an expression (the return type of
   // the constructor)
-  statement_t *last_stmt =
-      list_get(pc->statements, pc->statements->cur_size - 1);
-  if (last_stmt->type != STMT_EXPRESSION)
+  if (pc->statements->cur_size == 0 ||
+      ((statement_t *)list_get(pc->statements, pc->statements->cur_size - 1))
+              ->type != STMT_EXPRESSION)
     err_missing_return(lexer);
+
+  SKIP_TOKEN(lexer, TOKEN_RPAREN);
 
   PARSER_LOG_NODE_FINISH("primitive-constructor");
 
