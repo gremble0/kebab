@@ -25,6 +25,45 @@ rt_value_t *eval_char_constructor(constructor_t *constr, scope_t *scope) {
   return rtv;
 }
 
+rt_value_t *eval_string_constructor(constructor_t *constr, scope_t *scope) {
+  rt_value_t *rtv = malloc(sizeof(*rtv));
+  scope_t *local_scope = scope_init(scope);
+
+  eval_constructor_body(constr, local_scope);
+
+  // Get return type of body
+
+  scope_free(local_scope);
+
+  return rtv;
+}
+
+rt_value_t *eval_int_constructor(constructor_t *constr, scope_t *scope) {
+  rt_value_t *rtv = malloc(sizeof(*rtv));
+  scope_t *local_scope = scope_init(scope);
+
+  eval_constructor_body(constr, local_scope);
+
+  // Get return type of body
+
+  scope_free(local_scope);
+
+  return rtv;
+}
+
+rt_value_t *eval_bool_constructor(constructor_t *constr, scope_t *scope) {
+  rt_value_t *rtv = malloc(sizeof(*rtv));
+  scope_t *local_scope = scope_init(scope);
+
+  eval_constructor_body(constr, local_scope);
+
+  // Get return type of body
+
+  scope_free(local_scope);
+
+  return rtv;
+}
+
 rt_value_t *eval_fn_constructor(constructor_t *constr, scope_t *scope) {
   ASSERT(constr->type == CONSTR_FN);
 

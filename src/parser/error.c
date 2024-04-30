@@ -49,15 +49,23 @@ _Noreturn void err_illegal_statement(lexer_t *lexer, size_t stmt_start) {
 
 _Noreturn void err_illegal_token(lexer_t *lexer) {
   print_lexer_pos(lexer);
-  fprintf(stderr, "ERR_ILLEGAL_TOKEN: '%s'\n",
+  fprintf(stderr, "ERROR_ILLEGAL_TOKEN: '%s'\n",
           token_to_string(lexer->cur_token));
   exit(1);
 }
 
 _Noreturn void err_wrong_token(lexer_t *lexer, const char *expected) {
   print_lexer_pos(lexer);
-  fprintf(stderr, "ERR_WRONG_TOKEN: expected '%s', got '%s'\n", expected,
+  fprintf(stderr, "ERROR_WRONG_TOKEN: expected '%s', got '%s'\n", expected,
           token_to_string(lexer->cur_token));
 
+  exit(1);
+}
+
+_Noreturn void err_missing_return(lexer_t *lexer) {
+  print_lexer_pos(lexer);
+  // TODO: trace the type of the primitive constructor here
+  fprintf(stderr, "ERROR_MISSING_RETURN: primitive constructors must end with "
+                  "an expression\n");
   exit(1);
 }

@@ -13,10 +13,16 @@ void eval_definition(definition_t *def, scope_t *scope) {
 
   switch (def->constructor->type) {
   case CONSTR_CHAR:
+    rtv = eval_char_constructor(def->constructor, scope);
+    break;
   case CONSTR_STRING:
+    rtv = eval_string_constructor(def->constructor, scope);
+    break;
   case CONSTR_INT:
+    rtv = eval_int_constructor(def->constructor, scope);
+    break;
   case CONSTR_BOOL:
-    rtv = eval_primitive_constructor(def->constructor, scope);
+    rtv = eval_bool_constructor(def->constructor, scope);
     break;
   case CONSTR_FN:
     rtv = eval_fn_constructor(def->constructor, scope);
