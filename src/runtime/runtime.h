@@ -24,11 +24,11 @@ typedef struct {
     fn_constructor_t *fn_value;
     list_t *list_value; // list<runtime_value_t*>
   } value;
-} runtime_value_t;
+} rt_value_t;
 
 typedef struct {
   char *symbol;
-  runtime_value_t *value;
+  rt_value_t *value;
 } binding_t;
 
 typedef struct scope_t scope_t;

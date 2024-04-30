@@ -1,39 +1,42 @@
 #include <stdlib.h>
 
 #include "nonstdlib/nerror.h"
+#include "nonstdlib/nlist.h"
 #include "runtime/constructors.h"
+#include "runtime/runtime.h"
+#include "runtime/statements.h"
 
-// TODO: this is not sufficient, need to have separate types for each
-// constructor
-runtime_value_t *eval_primitive_constructor(constructor_t *constr,
-                                            scope_t *scope) {
-  switch (constr->type) {
-  case CONSTR_CHAR:
-  case CONSTR_STRING:
-  case CONSTR_INT:
-  case CONSTR_BOOL:
-  case CONSTR_FN:
-  case CONSTR_LIST:
-    break;
-  }
+static void eval_constructor_body(constructor_t *constr, scope_t *scope) {
+  list_t *constr_body = constr->primitive_constructor->statements;
+  for (size_t i = 0; i < constr_body->cur_size; ++i)
+    eval_statement(list_get(constr_body, i), scope);
+}
 
-  runtime_value_t *rtv = malloc(sizeof(*rtv));
+rt_value_t *eval_char_constructor(constructor_t *constr, scope_t *scope) {
+  rt_value_t *rtv = malloc(sizeof(*rtv));
+  scope_t *local_scope = scope_init(scope);
+
+  eval_constructor_body(constr, local_scope);
+
+  // Get return type of body
+
+  scope_free(local_scope);
 
   return rtv;
 }
 
-runtime_value_t *eval_fn_constructor(constructor_t *constr, scope_t *scope) {
+rt_value_t *eval_fn_constructor(constructor_t *constr, scope_t *scope) {
   ASSERT(constr->type == CONSTR_FN);
 
-  runtime_value_t *rtv = malloc(sizeof(*rtv));
+  rt_value_t *rtv = malloc(sizeof(*rtv));
 
   return rtv;
 }
 
-runtime_value_t *eval_list_constructor(constructor_t *constr, scope_t *scope) {
+rt_value_t *eval_list_constructor(constructor_t *constr, scope_t *scope) {
   ASSERT(constr->type == CONSTR_LIST);
 
-  runtime_value_t *rtv = malloc(sizeof(*rtv));
+  rt_value_t *rtv = malloc(sizeof(*rtv));
 
   return rtv;
 }

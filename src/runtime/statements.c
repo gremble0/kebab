@@ -9,7 +9,7 @@
 // Add symbol to scope
 // assign value to symbol
 void eval_definition(definition_t *def, scope_t *scope) {
-  runtime_value_t *rtv;
+  rt_value_t *rtv;
 
   switch (def->constructor->type) {
   case CONSTR_CHAR:
@@ -26,7 +26,7 @@ void eval_definition(definition_t *def, scope_t *scope) {
     break;
   }
 
-  ht_put(scope->bindings, def->name, strlen(def->name), rtv, sizeof(*rtv));
+  ht_put(scope->bindings, def->name, strlen(def->name), rtv);
   // TODO: free(rtv) / fix nonstdlib ?
 }
 

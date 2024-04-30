@@ -1,3 +1,3 @@
 #pragma once
 
-#define LIST_START_SIZE 8
+#define TABLE_START_SIZE 8

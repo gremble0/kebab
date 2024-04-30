@@ -10,13 +10,12 @@
 scope_t *scope_init(scope_t *outer) {
   scope_t *scope = malloc(sizeof(*scope));
   scope->outer = outer;
-  scope->bindings = ht_init(LIST_START_SIZE); // TODO: maybe change macro here
+  scope->bindings = ht_init(TABLE_START_SIZE);
 
   return scope;
 }
 
 void scope_free(scope_t *scope) {
-  // TODO: map other function than free
   ht_free(scope->bindings);
   free(scope);
 }
