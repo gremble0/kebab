@@ -6,20 +6,6 @@
 // Forward declaration because its used recusively
 typedef struct constructor_struct constructor_t;
 
-typedef enum {
-  CONSTR_CHAR,
-  CONSTR_STRING,
-  CONSTR_INT,
-  CONSTR_BOOL,
-  CONSTR_FN,
-  CONSTR_LIST,
-} constructor_type_t;
-
-static const char *constructor_type_map[] = {
-    [CONSTR_CHAR] = "char", [CONSTR_STRING] = "string", [CONSTR_INT] = "int",
-    [CONSTR_BOOL] = "bool", [CONSTR_FN] = "fn",         [CONSTR_LIST] = "list",
-};
-
 // Primitivies are types like char, int, string, bool, etc.
 typedef struct {
   list_t *statements; // list<statement_t *>
@@ -42,7 +28,7 @@ typedef struct {
 } list_constructor_t;
 
 struct constructor_struct {
-  constructor_type_t type;
+  keb_type_kind_t type;
   union {
     primitive_constructor_t *primitive_constructor;
     fn_constructor_t *fn_constructor;

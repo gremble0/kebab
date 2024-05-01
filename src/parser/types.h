@@ -16,19 +16,26 @@ typedef struct {
 
 // TODO: create these types sparingly, as they will most of the time be
 // duplicated
+typedef enum {
+  TYPE_CHAR,
+  TYPE_STRING,
+  TYPE_INT,
+  TYPE_BOOL,
+  TYPE_LIST,
+  TYPE_FN,
+} keb_type_kind_t;
+
 struct keb_type_t {
-  enum {
-    TYPE_CHAR,
-    TYPE_STRING,
-    TYPE_INT,
-    TYPE_BOOL,
-    TYPE_LIST,
-    TYPE_FN,
-  } type;
+  keb_type_kind_t type;
   union {
     keb_type_fn_t *fn;
     keb_type_list_t *list;
   };
+};
+
+static const char *type_kind_map[] = {
+    [TYPE_CHAR] = "char", [TYPE_STRING] = "string", [TYPE_INT] = "int",
+    [TYPE_BOOL] = "bool", [TYPE_FN] = "fn",         [TYPE_LIST] = "list",
 };
 
 keb_type_t *parse_type(lexer_t *lexer);

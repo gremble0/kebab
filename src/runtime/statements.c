@@ -12,16 +12,16 @@ void eval_definition(definition_t *def, scope_t *scope) {
   rt_value_t *rtv;
 
   switch (def->constructor->type) {
-  case CONSTR_CHAR:
-  case CONSTR_STRING:
-  case CONSTR_INT:
-  case CONSTR_BOOL:
+  case TYPE_CHAR:
+  case TYPE_STRING:
+  case TYPE_INT:
+  case TYPE_BOOL:
     rtv = eval_primitive_constructor(def->constructor, scope);
     break;
-  case CONSTR_FN:
+  case TYPE_FN:
     rtv = eval_fn_constructor(def->constructor, scope);
     break;
-  case CONSTR_LIST:
+  case TYPE_LIST:
     rtv = eval_list_constructor(def->constructor, scope);
     break;
   }

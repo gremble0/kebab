@@ -8,25 +8,6 @@
 #include "runtime/runtime.h"
 #include "runtime/statements.h"
 
-static rt_type_t constructor_to_runtime_type(constructor_type_t ctype) {
-  switch (ctype) {
-  case CONSTR_CHAR:
-    return RUNTIME_CHAR;
-
-  case CONSTR_STRING:
-    return RUNTIME_STRING;
-
-  case CONSTR_INT:
-    return RUNTIME_INT;
-
-  case CONSTR_BOOL:
-    return RUNTIME_BOOL;
-
-  default:
-    ASSERT(0);
-  }
-}
-
 static rt_value_t *eval_constructor_body(constructor_t *constr,
                                          scope_t *scope) {
   list_t *constr_body = constr->primitive_constructor->statements;
@@ -47,8 +28,8 @@ rt_value_t *eval_primitive_constructor(constructor_t *constr, scope_t *scope) {
   scope_t *local_scope = scope_init(scope);
 
   rt_value_t *rtv = eval_constructor_body(constr, local_scope);
-  if (constructor_to_runtime_type(constr->type) != rtv->type)
-    err_type_error(constructor_type_map[constr->type], rt_type_map[rtv->type]);
+  if (constr->type != rtv->type)
+    err_type_error(type_kind_map[constr->type], type_kind_map[rtv->type]);
 
   scope_free(local_scope);
 
@@ -56,7 +37,7 @@ rt_value_t *eval_primitive_constructor(constructor_t *constr, scope_t *scope) {
 }
 
 rt_value_t *eval_fn_constructor(constructor_t *constr, scope_t *scope) {
-  ASSERT(constr->type == CONSTR_FN);
+  ASSERT(constr->type == TYPE_FN);
 
   rt_value_t *rtv = malloc(sizeof(*rtv));
 
@@ -64,7 +45,7 @@ rt_value_t *eval_fn_constructor(constructor_t *constr, scope_t *scope) {
 }
 
 rt_value_t *eval_list_constructor(constructor_t *constr, scope_t *scope) {
-  ASSERT(constr->type == CONSTR_LIST);
+  ASSERT(constr->type == TYPE_LIST);
 
   rt_value_t *rtv = malloc(sizeof(*rtv));
 
