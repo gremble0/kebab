@@ -20,6 +20,7 @@ static rt_value_t *eval_constructor_body(constructor_t *constr,
   // verified in the parser)
   // @see `parse_primitive_constructor`
   statement_t *last = list_get(constr_body, constr_body->cur_size - 1);
+  ASSERT(last->type == STMT_EXPRESSION);
 
   return eval_expression(last->expr, scope);
 }

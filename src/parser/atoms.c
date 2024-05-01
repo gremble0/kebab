@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "nonstdlib/nerror.h"
@@ -18,26 +17,38 @@ atom_t *parse_atom(lexer_t *lexer) {
   case TOKEN_CHAR_LITERAL:
     atom->type = ATOM_CHAR;
     atom->char_value = lexer->cur_token->char_literal;
+    lexer_advance(lexer);
+    PARSER_LOG_NODE_SELF_CLOSING("atom-char-literal");
     break;
   case TOKEN_STRING_LITERAL:
     atom->type = ATOM_STRING;
     atom->string_value = strdup(lexer->cur_token->string_literal);
+    lexer_advance(lexer);
+    PARSER_LOG_NODE_SELF_CLOSING("atom-string-literal");
     break;
   case TOKEN_INTEGER_LITERAL:
     atom->type = ATOM_INT;
     atom->int_value = lexer->cur_token->integer_literal;
+    lexer_advance(lexer);
+    PARSER_LOG_NODE_SELF_CLOSING("atom-integer-literal");
     break;
   case TOKEN_NAME:
     atom->type = ATOM_NAME;
     atom->name = strdup(lexer->cur_token->name);
+    lexer_advance(lexer);
+    PARSER_LOG_NODE_SELF_CLOSING("atom-name");
     break;
   case TOKEN_TRUE:
     atom->type = ATOM_BOOL;
     atom->bool_value = 1;
+    lexer_advance(lexer);
+    PARSER_LOG_NODE_SELF_CLOSING("atom-true");
     break;
   case TOKEN_FALSE:
     atom->type = ATOM_BOOL;
     atom->bool_value = 0;
+    lexer_advance(lexer);
+    PARSER_LOG_NODE_SELF_CLOSING("atom-false");
     break;
   case TOKEN_LPAREN:
     atom->type = ATOM_INNER_EXPR;
@@ -47,10 +58,6 @@ atom_t *parse_atom(lexer_t *lexer) {
   default:
     err_illegal_token(lexer);
   }
-
-  lexer_advance(lexer);
-
-  PARSER_LOG_NODE_SELF_CLOSING("atom");
 
   return atom;
 }
@@ -62,6 +69,9 @@ void atom_free(atom_t *atom) {
     break;
   case ATOM_NAME:
     free(atom->name);
+    break;
+  case ATOM_INNER_EXPR:
+    // expression_free(atom->inner_expr_value);
     break;
   // TODO: list atom
   default:

@@ -13,9 +13,8 @@ static definition_t *parse_definition(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_DEF);
 
   definition_t *def = malloc(sizeof(*def));
-  if (def == NULL) {
+  if (def == NULL)
     err_malloc_fail();
-  }
 
   // Definition can optionally be mutable, if omitted default is immutable
   if (lexer->cur_token->kind == TOKEN_MUT) {
@@ -44,9 +43,8 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_SET);
 
   assignment_t *ass = malloc(sizeof(*ass));
-  if (ass == NULL) {
+  if (ass == NULL)
     err_malloc_fail();
-  }
 
   EXPECT_TOKEN(lexer, TOKEN_NAME);
   ass->name = strdup(lexer->cur_token->name);
