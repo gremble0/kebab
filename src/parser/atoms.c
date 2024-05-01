@@ -4,15 +4,15 @@
 #include "nonstdlib/nerror.h"
 #include "parser/atoms.h"
 #include "parser/error.h"
+#include "parser/expressions.h"
 #include "parser/utils.h"
 #include "string.h"
 
 atom_t *parse_atom(lexer_t *lexer) {
   // TODO: maybe free some strings here?
   atom_t *atom = malloc(sizeof(*atom));
-  if (atom == NULL) {
+  if (atom == NULL)
     err_malloc_fail();
-  }
 
   switch (lexer->cur_token->kind) {
   case TOKEN_CHAR_LITERAL:
@@ -38,6 +38,10 @@ atom_t *parse_atom(lexer_t *lexer) {
   case TOKEN_FALSE:
     atom->type = ATOM_BOOL;
     atom->bool_value = 0;
+    break;
+  case TOKEN_LPAREN:
+    atom->type = ATOM_INNER_EXPR;
+    atom->inner_expr_value = parse_inner_expression(lexer);
     break;
   // TODO: list, nil, etc.
   default:

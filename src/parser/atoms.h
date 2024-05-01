@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "lexer/lexer.h"
+#include "parser/expressions.h"
 
 typedef enum {
   ATOM_CHAR,
@@ -10,7 +11,8 @@ typedef enum {
   ATOM_INT,
   ATOM_BOOL,
   ATOM_NAME,
-} atom_type_t; // TODO: inline in struct below?
+  ATOM_INNER_EXPR, // nested expression like (1 + 2)
+} atom_type_t;
 
 typedef struct {
   atom_type_t type;
@@ -20,6 +22,7 @@ typedef struct {
     uint8_t char_value; // Maybe use more bits in the future for unicode
     int64_t int_value;
     uint8_t bool_value;
+    expression_t *inner_expr_value;
 
     // TODO:
     // float

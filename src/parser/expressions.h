@@ -19,10 +19,12 @@ typedef enum {
   BINARY_GE,  // x >= y
 } binary_operator_t;
 
+// TODO: if expression?
 typedef struct {
   list_t *factors;   // list<factor_t *>
   list_t *operators; // list<binary_operator_t *>
 } expression_t;
 
 expression_t *parse_expression(lexer_t *lexer);
+expression_t *parse_inner_expression(lexer_t *lexer);
 void expression_free(expression_t *expr);

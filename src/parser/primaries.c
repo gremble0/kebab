@@ -9,10 +9,8 @@ primary_t *parse_primary(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primary");
 
   primary_t *prm = malloc(sizeof(*prm));
-  if (prm == NULL) {
-    lexer_free(lexer);
+  if (prm == NULL)
     err_malloc_fail();
-  }
 
   prm->atom = parse_atom(lexer);
 
@@ -27,9 +25,8 @@ primary_t *parse_primary(lexer_t *lexer) {
     while (lexer->cur_token->kind != TOKEN_RPAREN) {
       list_push_back(prm->arguments, parse_expression(lexer));
 
-      if (lexer->cur_token->kind != TOKEN_RPAREN) {
+      if (lexer->cur_token->kind != TOKEN_RPAREN)
         SKIP_TOKEN(lexer, TOKEN_COMMA);
-      }
     }
 
     SKIP_TOKEN(lexer, TOKEN_RPAREN);

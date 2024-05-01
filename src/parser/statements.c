@@ -91,6 +91,8 @@ statement_t *parse_statement(lexer_t *lexer) {
   case TOKEN_MULT:
   case TOKEN_DIV:
   case TOKEN_NOT:
+  // Inner expression wrapped in parens, e.g. (1 + 2)
+  case TOKEN_LPAREN:
     stmt->type = STMT_EXPRESSION;
     stmt->expr = parse_expression(lexer);
     break;

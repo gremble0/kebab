@@ -85,6 +85,16 @@ expression_t *parse_expression(lexer_t *lexer) {
   return expr;
 }
 
+expression_t *parse_inner_expression(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("inner-expr");
+
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
+  expression_t *inner_expr = parse_expression(lexer);
+  SKIP_TOKEN(lexer, TOKEN_RPAREN);
+
+  PARSER_LOG_NODE_FINISH("inner-expr");
+}
+
 /**
  * @param expr expression to free, should be type `expression_t`
  */

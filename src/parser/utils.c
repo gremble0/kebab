@@ -5,8 +5,15 @@
 #include "nonstdlib/nerror.h"
 #include "parser/utils.h"
 
-void parser_log_start() { log_file = fopen("keb-parser.log", "w"); }
-void parser_log_finish() { fclose(log_file); }
+void parser_log_start() {
+  log_file = fopen("keb-parser.log", "w");
+  parser_log_node_start("ast");
+}
+
+void parser_log_finish() {
+  parser_log_node_finish("ast");
+  fclose(log_file);
+}
 
 /**
  * @brief Generate a string of `indent_depth * ONE_INDENT` ' ' chars
