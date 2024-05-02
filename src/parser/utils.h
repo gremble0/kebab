@@ -22,7 +22,7 @@
 #define PARSER_LOG_NODE_SELF_CLOSING(node)
 #endif
 
-#define ONE_INDENT "  "
+#define ONE_INDENT_WIDTH 2
 #define LIST_START_SIZE 5
 #define EXPECT_TOKEN(lexer, expected)                                          \
   do {                                                                         \
