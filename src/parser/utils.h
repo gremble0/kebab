@@ -15,11 +15,11 @@
 #define PARSER_LOG_NODE_SELF_CLOSING(node, ...)                                \
   parser_log_node_self_closing(node, ##__VA_ARGS__)
 #else
-#define PARSER_LOG_START()
-#define PARSER_LOG_FINISH()
-#define PARSER_LOG_NODE_START(node)
-#define PARSER_LOG_NODE_FINISH(node)
-#define PARSER_LOG_NODE_SELF_CLOSING(node)
+#define PARSER_LOG_START(...)
+#define PARSER_LOG_FINISH(...)
+#define PARSER_LOG_NODE_START(node, ...)
+#define PARSER_LOG_NODE_FINISH(node, ...)
+#define PARSER_LOG_NODE_SELF_CLOSING(node, ...)
 #endif
 
 #define ONE_INDENT_WIDTH 2

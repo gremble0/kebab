@@ -6,6 +6,28 @@
 #include "nonstdlib/nerror.h"
 #include "parser/utils.h"
 
+// TODO: this is more of a logging file than utils, only util here is
+// repeat_char
+
+/**
+ * @brief Creates a malloc'd string consisting of the character `c` repeated `n`
+ * times.
+ *
+ * @param c The character to repeat.
+ * @param n The number of times to repeat `c`.
+ * @return A malloc'd string of `c` repeated `n` times
+ */
+char *repeat_char(char c, size_t n) {
+  char *str = malloc(n + 1);
+  if (str == NULL)
+    err_malloc_fail();
+
+  memset(str, c, n);
+  str[n] = '\0';
+
+  return str;
+}
+
 void parser_log_start() {
   log_file = fopen("keb-parser.log", "w");
   parser_log_node_start("ast");
@@ -69,23 +91,4 @@ void parser_log_node_self_closing(const char *node_name, ...) {
   va_end(args);
 
   free(indent);
-}
-
-/**
- * @brief Creates a new string consisting of the character `c` repeated `n`
- * times.
- *
- * @param c The character to repeat.
- * @param n The number of times to repeat `c`.
- * @return A malloc'd string of `c` repeated `n` times
- */
-char *repeat_char(char c, size_t n) {
-  char *str = malloc(n + 1);
-  if (str == NULL)
-    err_malloc_fail();
-
-  memset(str, c, n);
-  str[n] = '\0';
-
-  return str;
 }
