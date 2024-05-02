@@ -8,8 +8,11 @@ typedef enum {
   TOKEN_DEF, // def
   TOKEN_SET, // set
   TOKEN_MUT, // mut
-  TOKEN_NIL, // nil
   // TOKEN_DEC ? declare variable with type?
+  TOKEN_NIL,  // nil
+  TOKEN_IF,   // if
+  TOKEN_ELIF, // elif
+  TOKEN_ELSE, // else
 
   // Constructors
   TOKEN_CHAR,
@@ -29,8 +32,6 @@ typedef enum {
   TOKEN_COMMA,      // ,
   TOKEN_LPAREN,     // (
   TOKEN_RPAREN,     // )
-  TOKEN_LBRACE,     // [
-  TOKEN_RBRACE,     // ]
   TOKEN_FAT_RARROW, // =>
 
   // Operators
@@ -67,9 +68,13 @@ typedef struct {
 static const reserved_word_map_t reserved_word_map[] = {
     // Keywords
     {"def", TOKEN_DEF},
-    {"mut", TOKEN_MUT},
-    {"nil", TOKEN_NIL},
     {"set", TOKEN_SET},
+    {"mut", TOKEN_MUT},
+    {"if", TOKEN_IF},
+    {"elif", TOKEN_ELIF},
+    {"else", TOKEN_ELSE},
+
+    {"nil", TOKEN_NIL},
 
     // Constructors
     {"char", TOKEN_CHAR},
@@ -89,6 +94,9 @@ static const char *token_kind_map[] = {
     [TOKEN_DEF] = "def",
     [TOKEN_SET] = "set",
     [TOKEN_MUT] = "mut",
+    [TOKEN_IF] = "if",
+    [TOKEN_ELIF] = "elif",
+    [TOKEN_ELSE] = "else",
     [TOKEN_NIL] = "nil",
 
     // Constructors
@@ -109,8 +117,6 @@ static const char *token_kind_map[] = {
     [TOKEN_COMMA] = ",",
     [TOKEN_LPAREN] = "(",
     [TOKEN_RPAREN] = ")",
-    [TOKEN_LBRACE] = "[",
-    [TOKEN_RBRACE] = "]",
     [TOKEN_FAT_RARROW] = "=>",
 
     // Operators

@@ -274,15 +274,6 @@ void lexer_advance(lexer_t *lexer) {
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_RPAREN);
     return;
-  // Currently unused
-  case '[':
-    ++lexer->line_pos;
-    lexer->cur_token = token_make_simple(TOKEN_LBRACE);
-    return;
-  case ']':
-    ++lexer->line_pos;
-    lexer->cur_token = token_make_simple(TOKEN_RBRACE);
-    return;
 
   // Primitives
   case '+':

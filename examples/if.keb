@@ -1,0 +1,8 @@
+def a = int(
+  if true =>
+    0
+  elif 1 == 2 =>
+    -1
+  else =>
+    1
+)

@@ -2,7 +2,7 @@ def d = int((2 + 3) * 2)
 def a = list(int => 1, 2, 3)
 def l = list(string => "123", "gg", "hhh")
 def b = fn((a : int) => int(2))
-def c = bool(1 == -2) ; TODO: fix bool() index out of bounds underflow
+def c = bool(1 == -2)
 
 def asd = fn((gg : fn(int, int) => string) => int(
   2 + 4 + 2
