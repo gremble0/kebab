@@ -17,43 +17,49 @@ atom_t *parse_atom(lexer_t *lexer) {
     atom->type = ATOM_CHAR;
     atom->char_value = lexer->cur_token->char_literal;
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("atom-char-literal='%c'", atom->char_value);
+    PARSER_LOG_NODE_SELF_CLOSING("char-literal='%c'", atom->char_value);
     break;
+
   case TOKEN_STRING_LITERAL:
     atom->type = ATOM_STRING;
     atom->string_value = strdup(lexer->cur_token->string_literal);
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("atom-string-literal=\"%s\"",
-                                 atom->string_value);
+    PARSER_LOG_NODE_SELF_CLOSING("string-literal=\"%s\"", atom->string_value);
     break;
+
   case TOKEN_INTEGER_LITERAL:
     atom->type = ATOM_INT;
     atom->int_value = lexer->cur_token->integer_literal;
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("atom-integer-literal=%ld", atom->int_value);
+    PARSER_LOG_NODE_SELF_CLOSING("integer-literal=%ld", atom->int_value);
     break;
+
   case TOKEN_NAME:
     atom->type = ATOM_NAME;
     atom->name = strdup(lexer->cur_token->name);
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("atom-name=\"%s\"", atom->name);
+    PARSER_LOG_NODE_SELF_CLOSING("name=\"%s\"", atom->name);
     break;
+
   case TOKEN_TRUE:
     atom->type = ATOM_BOOL;
     atom->bool_value = 1;
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("atom-true");
+    PARSER_LOG_NODE_SELF_CLOSING("true");
     break;
+
   case TOKEN_FALSE:
     atom->type = ATOM_BOOL;
     atom->bool_value = 0;
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("atom-false");
+    PARSER_LOG_NODE_SELF_CLOSING("false");
     break;
+
   case TOKEN_LPAREN:
     atom->type = ATOM_INNER_EXPR;
     atom->inner_expr_value = parse_inner_expression(lexer);
     break;
+
   default:
     err_illegal_token(lexer);
   }
@@ -72,7 +78,6 @@ void atom_free(atom_t *atom) {
   case ATOM_INNER_EXPR:
     expression_free(atom->inner_expr_value);
     break;
-  // TODO: list atom
   default:
     break;
   }

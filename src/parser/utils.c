@@ -48,7 +48,14 @@ static char *make_indent() {
  */
 void parser_log_node_start(const char *node_name, ...) {
   char *indent = make_indent();
-  fprintf(log_file, "%s<%s>\n", indent, node_name);
+
+  va_list args;
+  va_start(args, node_name);
+  fprintf(log_file, "%s<", indent);
+  vfprintf(log_file, node_name, args);
+  fprintf(log_file, ">\n");
+  va_end(args);
+
   free(indent);
   ++indent_depth;
 }
@@ -61,20 +68,31 @@ void parser_log_node_start(const char *node_name, ...) {
 void parser_log_node_finish(const char *node_name, ...) {
   --indent_depth;
   char *indent = make_indent();
-  fprintf(log_file, "%s</%s>\n", indent, node_name);
+
+  va_list args;
+  va_start(args, node_name);
+  fprintf(log_file, "%s<", indent);
+  vfprintf(log_file, node_name, args);
+  fprintf(log_file, "/>\n");
+  va_end(args);
+
   free(indent);
 }
 
 /**
- * @brief Log a self closing node to the log file - something like `<node />`
+ * @brief Log a self closing node to the log file - something like
+ * `<node='c' />`
  */
 void parser_log_node_self_closing(const char *node_name, ...) {
   char *indent = make_indent();
+
   va_list args;
   va_start(args, node_name);
-  // vfprintf(log_file, "%s<%s />\n", args);
+  fprintf(log_file, "%s<", indent);
   vfprintf(log_file, node_name, args);
+  fprintf(log_file, " />\n");
   va_end(args);
+
   free(indent);
 }
 
