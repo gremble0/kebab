@@ -8,9 +8,12 @@
 #ifdef DEBUG_PARSER
 #define PARSER_LOG_START() parser_log_start();
 #define PARSER_LOG_FINISH() parser_log_finish();
-#define PARSER_LOG_NODE_START(node) parser_log_node_start(node)
-#define PARSER_LOG_NODE_FINISH(node) parser_log_node_finish(node)
-#define PARSER_LOG_NODE_SELF_CLOSING(node) parser_log_node_self_closing(node)
+#define PARSER_LOG_NODE_START(node, ...)                                       \
+  parser_log_node_start(node, ##__VA_ARGS__)
+#define PARSER_LOG_NODE_FINISH(node, ...)                                      \
+  parser_log_node_finish(node, ##__VA_ARGS__)
+#define PARSER_LOG_NODE_SELF_CLOSING(node, ...)                                \
+  parser_log_node_self_closing(node, ##__VA_ARGS__)
 #else
 #define PARSER_LOG_START()
 #define PARSER_LOG_FINISH()
@@ -37,9 +40,12 @@
 static size_t indent_depth = 0;
 static FILE *log_file;
 
+char *repeat_char(char c, size_t n);
 void parser_log_start();
 void parser_log_finish();
-void parser_log_node_start(const char *node_name);
-void parser_log_node_finish(const char *node_name);
-void parser_log_node_self_closing(const char *node_name);
-char *repeat_char(char c, size_t n);
+void parser_log_node_start(const char *node_name, ...)
+    __attribute__((format(printf, 1, 2)));
+void parser_log_node_finish(const char *node_name, ...)
+    __attribute__((format(printf, 1, 2)));
+void parser_log_node_self_closing(const char *node_name, ...)
+    __attribute__((format(printf, 1, 2)));

@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,7 +46,7 @@ static char *make_indent() {
  *
  * @param node_name name of node to close
  */
-void parser_log_node_start(const char *node_name) {
+void parser_log_node_start(const char *node_name, ...) {
   char *indent = make_indent();
   fprintf(log_file, "%s<%s>\n", indent, node_name);
   free(indent);
@@ -57,7 +58,7 @@ void parser_log_node_start(const char *node_name) {
  *
  * @param node_name name of node to close
  */
-void parser_log_node_finish(const char *node_name) {
+void parser_log_node_finish(const char *node_name, ...) {
   --indent_depth;
   char *indent = make_indent();
   fprintf(log_file, "%s</%s>\n", indent, node_name);
@@ -67,9 +68,13 @@ void parser_log_node_finish(const char *node_name) {
 /**
  * @brief Log a self closing node to the log file - something like `<node />`
  */
-void parser_log_node_self_closing(const char *node_name) {
+void parser_log_node_self_closing(const char *node_name, ...) {
   char *indent = make_indent();
-  fprintf(log_file, "%s<%s />\n", indent, node_name);
+  va_list args;
+  va_start(args, node_name);
+  // vfprintf(log_file, "%s<%s />\n", args);
+  vfprintf(log_file, node_name, args);
+  va_end(args);
   free(indent);
 }
 

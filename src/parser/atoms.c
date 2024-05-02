@@ -8,7 +8,6 @@
 #include "string.h"
 
 atom_t *parse_atom(lexer_t *lexer) {
-  // TODO: maybe free some strings here?
   atom_t *atom = malloc(sizeof(*atom));
   if (atom == NULL)
     err_malloc_fail();
@@ -18,25 +17,26 @@ atom_t *parse_atom(lexer_t *lexer) {
     atom->type = ATOM_CHAR;
     atom->char_value = lexer->cur_token->char_literal;
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("atom-char-literal");
+    PARSER_LOG_NODE_SELF_CLOSING("atom-char-literal='%c'", atom->char_value);
     break;
   case TOKEN_STRING_LITERAL:
     atom->type = ATOM_STRING;
     atom->string_value = strdup(lexer->cur_token->string_literal);
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("atom-string-literal");
+    PARSER_LOG_NODE_SELF_CLOSING("atom-string-literal=\"%s\"",
+                                 atom->string_value);
     break;
   case TOKEN_INTEGER_LITERAL:
     atom->type = ATOM_INT;
     atom->int_value = lexer->cur_token->integer_literal;
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("atom-integer-literal");
+    PARSER_LOG_NODE_SELF_CLOSING("atom-integer-literal=%ld", atom->int_value);
     break;
   case TOKEN_NAME:
     atom->type = ATOM_NAME;
     atom->name = strdup(lexer->cur_token->name);
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("atom-name");
+    PARSER_LOG_NODE_SELF_CLOSING("atom-name=\"%s\"", atom->name);
     break;
   case TOKEN_TRUE:
     atom->type = ATOM_BOOL;
@@ -54,7 +54,6 @@ atom_t *parse_atom(lexer_t *lexer) {
     atom->type = ATOM_INNER_EXPR;
     atom->inner_expr_value = parse_inner_expression(lexer);
     break;
-  // TODO: list, nil, etc.
   default:
     err_illegal_token(lexer);
   }
@@ -71,7 +70,7 @@ void atom_free(atom_t *atom) {
     free(atom->name);
     break;
   case ATOM_INNER_EXPR:
-    // expression_free(atom->inner_expr_value);
+    expression_free(atom->inner_expr_value);
     break;
   // TODO: list atom
   default:
