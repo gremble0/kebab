@@ -9,7 +9,6 @@
 
 static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primitive-constructor");
-
   lexer_advance(lexer); // current token should be one of the primitive types
                         // such as int, char string etc
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
@@ -27,7 +26,6 @@ static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
     err_missing_return(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
-
   PARSER_LOG_NODE_FINISH("primitive-constructor");
 
   return pc;
@@ -58,7 +56,6 @@ static fn_param_t *parse_fn_param(lexer_t *lexer) {
 
 static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   PARSER_LOG_NODE_START("fn-constructor");
-
   SKIP_TOKEN(lexer, TOKEN_FN);
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
@@ -78,7 +75,6 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
 
   // Close the opening paren of the fn constructor
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
-
   PARSER_LOG_NODE_FINISH("fn-constructor");
 
   return fnc;
@@ -86,7 +82,6 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
 
 static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
   PARSER_LOG_NODE_START("list-constructor");
-
   SKIP_TOKEN(lexer, TOKEN_LIST);
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
@@ -108,7 +103,6 @@ static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
     err_missing_return(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
-
   PARSER_LOG_NODE_FINISH("list-constructor");
 
   return lc;

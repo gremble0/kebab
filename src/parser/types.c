@@ -7,15 +7,14 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   // function types should look something like `fn(int, int) => int`
   // for example:
   //     def fn-showcase = fn(some-param : fn(int, int) => int) => ...
-  PARSER_LOG_NODE_START("fn_type");
-
+  PARSER_LOG_NODE_START("fn-type");
   SKIP_TOKEN(lexer, TOKEN_FN);
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   keb_type_fn_t *fnt = malloc(sizeof(*fnt));
   fnt->param_types = list_init(LIST_START_SIZE); // list<keb_type_t *>
 
-  PARSER_LOG_NODE_START("fn_params");
+  PARSER_LOG_NODE_START("fn-params");
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
     list_push_back(fnt->param_types, parse_type(lexer));
@@ -25,17 +24,15 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
     }
   }
 
-  PARSER_LOG_NODE_FINISH("fn_params");
-
+  PARSER_LOG_NODE_FINISH("fn-params");
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
   SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
-
-  PARSER_LOG_NODE_START("fn_return_type");
+  PARSER_LOG_NODE_START("fn-return-type");
 
   fnt->return_type = parse_type(lexer);
 
-  PARSER_LOG_NODE_FINISH("fn_return_type");
-  PARSER_LOG_NODE_FINISH("fn_type");
+  PARSER_LOG_NODE_FINISH("fn-return_type");
+  PARSER_LOG_NODE_FINISH("fn-type");
 
   return fnt;
 }
@@ -44,7 +41,6 @@ static keb_type_list_t *parse_type_list(lexer_t *lexer) {
   // list types should look like `list(string)`, more advanced:
   // `list(fn(int, char) => string)`
   PARSER_LOG_NODE_START("list_type");
-
   SKIP_TOKEN(lexer, TOKEN_LIST);
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
@@ -52,7 +48,6 @@ static keb_type_list_t *parse_type_list(lexer_t *lexer) {
   klt->type = parse_type(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
-
   PARSER_LOG_NODE_FINISH("list_type");
 
   return klt;

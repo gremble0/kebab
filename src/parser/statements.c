@@ -11,7 +11,6 @@
 // `def a = 2` and infer type
 static definition_t *parse_definition(lexer_t *lexer) {
   PARSER_LOG_NODE_START("definition");
-
   SKIP_TOKEN(lexer, TOKEN_DEF);
 
   definition_t *def = malloc(sizeof(*def));
@@ -41,7 +40,6 @@ static definition_t *parse_definition(lexer_t *lexer) {
 
 static assignment_t *parse_assignment(lexer_t *lexer) {
   PARSER_LOG_NODE_START("assignment");
-
   SKIP_TOKEN(lexer, TOKEN_SET);
 
   assignment_t *ass = malloc(sizeof(*ass));

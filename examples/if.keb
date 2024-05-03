@@ -11,7 +11,7 @@ def c = list((int) =>
   def q = int(1 + 2)
   if 1 == 2 =>
     def w = int(6) ; local to this if (not visible in elif or else)
-    [q, 6]
+    [q, w]
   elif 2 == 2 =>
     [q, 1]
   else =>

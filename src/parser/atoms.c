@@ -10,11 +10,11 @@
 
 static expression_t *parse_inner_expression(lexer_t *lexer) {
   PARSER_LOG_NODE_START("inner-expr");
-
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
-  expression_t *expr = parse_expression(lexer);
-  SKIP_TOKEN(lexer, TOKEN_RPAREN);
 
+  expression_t *expr = parse_expression(lexer);
+
+  SKIP_TOKEN(lexer, TOKEN_RPAREN);
   PARSER_LOG_NODE_FINISH("inner-expr");
 
   return expr;
@@ -22,9 +22,10 @@ static expression_t *parse_inner_expression(lexer_t *lexer) {
 
 static list_t *parse_list(lexer_t *lexer) {
   PARSER_LOG_NODE_START("list");
-
   SKIP_TOKEN(lexer, TOKEN_LBRACE);
+
   list_t *list = list_init(LIST_START_SIZE);
+
   while (1) {
     list_push_back(list, parse_expression(lexer));
     if (lexer->cur_token->kind == TOKEN_RBRACE)
@@ -32,8 +33,8 @@ static list_t *parse_list(lexer_t *lexer) {
     else
       SKIP_TOKEN(lexer, TOKEN_COMMA);
   }
-  SKIP_TOKEN(lexer, TOKEN_RBRACE);
 
+  SKIP_TOKEN(lexer, TOKEN_RBRACE);
   PARSER_LOG_NODE_FINISH("list");
 
   return list;

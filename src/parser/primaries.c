@@ -1,12 +1,31 @@
 #include <stdlib.h>
 
+#include "lexer/lexer.h"
 #include "nonstdlib/nlist.h"
 #include "parser/expressions.h"
 #include "parser/primaries.h"
 #include "parser/utils.h"
 
-// TODO: static ... parse_primary_arguments or something instead of long if
-// inside parse_primary
+static list_t *parse_primary_arguments(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("primary-arguments");
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
+
+  list_t *args = list_init(LIST_START_SIZE); // list<expression_t *>
+
+  // Here we could handle a small portion of wrong function calls (e.g. `1()`,
+  // `""()`, etc), but we will leave them all to the runtime instead
+  while (lexer->cur_token->kind != TOKEN_RPAREN) {
+    list_push_back(args, parse_expression(lexer));
+
+    if (lexer->cur_token->kind != TOKEN_RPAREN)
+      SKIP_TOKEN(lexer, TOKEN_COMMA);
+  }
+
+  SKIP_TOKEN(lexer, TOKEN_RPAREN);
+  PARSER_LOG_NODE_FINISH("primary-arguments");
+
+  return args;
+}
 
 primary_t *parse_primary(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primary");
@@ -16,26 +35,10 @@ primary_t *parse_primary(lexer_t *lexer) {
     err_malloc_fail();
 
   prm->atom = parse_atom(lexer);
-
-  // If next token is a left paren, parse arguments for function call.
-  if (lexer->cur_token->kind == TOKEN_LPAREN) {
-    // Here we could handle a small portion of wrong function calls (e.g. `1()`,
-    // `""()`, etc), but we will leave them all to the runtime instead
-
-    lexer_advance(lexer);
-
-    prm->arguments = list_init(LIST_START_SIZE); // list<expression_t *>
-    while (lexer->cur_token->kind != TOKEN_RPAREN) {
-      list_push_back(prm->arguments, parse_expression(lexer));
-
-      if (lexer->cur_token->kind != TOKEN_RPAREN)
-        SKIP_TOKEN(lexer, TOKEN_COMMA);
-    }
-
-    SKIP_TOKEN(lexer, TOKEN_RPAREN);
-  } else {
+  if (lexer->cur_token->kind == TOKEN_LPAREN)
+    prm->arguments = parse_primary_arguments(lexer);
+  else
     prm->arguments = NULL;
-  }
 
   PARSER_LOG_NODE_FINISH("primary");
 
