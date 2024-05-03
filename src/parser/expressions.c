@@ -222,10 +222,13 @@ static void cond_free(cond_t *cond) {
     expression_free(cond->test);
 
   list_map(cond->body, (list_map_func)statement_free);
+  list_free(cond->body);
+  free(cond);
 }
 
 static void expr_cond_free(expr_cond_t *excd) {
   list_map(excd->conds, (list_map_func)cond_free);
+  list_free(excd->conds);
   free(excd);
 }
 
