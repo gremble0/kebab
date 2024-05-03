@@ -3,8 +3,7 @@
 #include "parser/factors.h"
 #include "parser/utils.h"
 
-// TODO: rename -> parse_unary_operator?
-static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
+static unary_operator_t parse_unary_operator(lexer_t *lexer) {
   unary_operator_t uo;
 
   // TODO: some sort of error handling
@@ -25,7 +24,7 @@ static unary_operator_t parse_factor_prefix(lexer_t *lexer) {
     uo = UNARY_NO_OP;
   }
 
-#ifdef DEBUG
+#ifdef DEBUG_PARSER
   if (uo != UNARY_NO_OP)
     PARSER_LOG_NODE_SELF_CLOSING("factor_prefix");
 #endif
@@ -37,13 +36,11 @@ factor_t *parse_factor(lexer_t *lexer) {
   PARSER_LOG_NODE_START("factor");
 
   factor_t *ft = malloc(sizeof(*ft));
-  if (ft == NULL) {
-    lexer_free(lexer); // TODO: add macro/function for this repetetive cleanup?
-    err_malloc_fail(); // TODO: add malloc fail checks everywhere.
-  }
+  if (ft == NULL)
+    err_malloc_fail();
 
   // Check for prefixes
-  ft->prefix = parse_factor_prefix(lexer);
+  ft->prefix = parse_unary_operator(lexer);
 
   // Parse primary
   ft->primary = parse_primary(lexer);
@@ -53,9 +50,6 @@ factor_t *parse_factor(lexer_t *lexer) {
   return ft;
 }
 
-/**
- * @param fac factor to free, should be type `factor_t`
- */
 void factor_free(factor_t *fac) {
   primary_free(fac->primary);
   free(fac);

@@ -5,6 +5,9 @@
 #include "parser/primaries.h"
 #include "parser/utils.h"
 
+// TODO: static ... parse_primary_arguments or something instead of long if
+// inside parse_primary
+
 primary_t *parse_primary(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primary");
 

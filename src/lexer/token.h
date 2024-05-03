@@ -32,6 +32,8 @@ typedef enum {
   TOKEN_COMMA,      // ,
   TOKEN_LPAREN,     // (
   TOKEN_RPAREN,     // )
+  TOKEN_LBRACE,     // [
+  TOKEN_RBRACE,     // ]
   TOKEN_FAT_RARROW, // =>
 
   // Operators
@@ -117,6 +119,8 @@ static const char *token_kind_map[] = {
     [TOKEN_COMMA] = ",",
     [TOKEN_LPAREN] = "(",
     [TOKEN_RPAREN] = ")",
+    [TOKEN_LBRACE] = "[",
+    [TOKEN_RBRACE] = "]",
     [TOKEN_FAT_RARROW] = "=>",
 
     // Operators

@@ -45,6 +45,7 @@ static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
     bo = BINARY_GE;
     break;
 
+  // TODO: BINARY_NO_OP like we do in unary_operator_t?
   // If next token is not a binary operator return without further processing
   default:
     return NULL;
@@ -145,7 +146,7 @@ static expression_cond_t *parse_expression_cond(lexer_t *lexer) {
   while (lexer->cur_token->kind == TOKEN_ELIF)
     list_push_back(excd->conds, parse_cond_elif(lexer));
 
-  // parse 1 else
+  // parse 1 else (else is mandatory since expression must return something)
   list_push_back(excd->conds, parse_cond_else(lexer));
 
   PARSER_LOG_NODE_FINISH("expr-cond");
@@ -193,38 +194,26 @@ expression_t *parse_expression(lexer_t *lexer) {
     expr->cond = parse_expression_cond(lexer);
     break;
 
-  // TODO: this is kinda shit, dont want default here
   case TOKEN_NAME:
   case TOKEN_CHAR_LITERAL:
   case TOKEN_STRING_LITERAL:
   case TOKEN_INTEGER_LITERAL:
-  // Factor prefixes
   case TOKEN_PLUS:
   case TOKEN_MINUS:
   case TOKEN_MULT:
   case TOKEN_DIV:
   case TOKEN_NOT:
-  // Inner expression wrapped in parens, e.g. (1 + 2)
   case TOKEN_LPAREN:
+  case TOKEN_LBRACE:
     expr->type = EXPR_NORMAL;
     expr->normal = parse_expression_normal(lexer);
+    break;
+
   default:
     err_illegal_token(lexer);
   }
 
   PARSER_LOG_NODE_FINISH("expr");
-
-  return expr;
-}
-
-expression_t *parse_inner_expression(lexer_t *lexer) {
-  PARSER_LOG_NODE_START("inner-expr");
-
-  SKIP_TOKEN(lexer, TOKEN_LPAREN);
-  expression_t *expr = parse_expression(lexer);
-  SKIP_TOKEN(lexer, TOKEN_RPAREN);
-
-  PARSER_LOG_NODE_FINISH("inner-expr");
 
   return expr;
 }

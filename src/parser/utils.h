@@ -23,7 +23,7 @@
 #endif
 
 #define ONE_INDENT_WIDTH 2
-#define LIST_START_SIZE 5
+#define LIST_START_SIZE 8
 #define EXPECT_TOKEN(lexer, expected)                                          \
   do {                                                                         \
     if (lexer->cur_token->kind != expected) {                                  \

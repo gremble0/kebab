@@ -12,9 +12,8 @@ ast_t *parse(lexer_t *lexer) {
   ast_t *ast = malloc(sizeof(*ast));
   ast->stmts = list_init(LIST_START_SIZE); // list<statement_t *>
 
-  while (lexer->cur_token->kind != TOKEN_EOF) {
+  while (lexer->cur_token->kind != TOKEN_EOF)
     list_push_back(ast->stmts, parse_statement(lexer));
-  }
 
   PARSER_LOG_FINISH();
 

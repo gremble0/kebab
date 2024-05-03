@@ -1,11 +1,45 @@
 #include <stdlib.h>
 
 #include "nonstdlib/nerror.h"
+#include "nonstdlib/nlist.h"
 #include "parser/atoms.h"
 #include "parser/error.h"
 #include "parser/expressions.h"
 #include "parser/utils.h"
 #include "string.h"
+
+static expression_t *parse_inner_expression(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("inner-expr");
+
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
+  PARSER_LOG_NODE_START("ASKL:JLASD1");
+  expression_t *expr = parse_expression(lexer);
+  PARSER_LOG_NODE_START("ASKL:JLASD2");
+  SKIP_TOKEN(lexer, TOKEN_RPAREN);
+
+  PARSER_LOG_NODE_FINISH("inner-expr");
+
+  return expr;
+}
+
+static list_t *parse_list(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("list");
+
+  SKIP_TOKEN(lexer, TOKEN_LBRACE);
+  list_t *list = list_init(LIST_START_SIZE);
+  while (1) {
+    list_push_back(list, parse_expression(lexer));
+    if (lexer->cur_token->kind == TOKEN_RBRACE)
+      break;
+    else
+      SKIP_TOKEN(lexer, TOKEN_COMMA);
+  }
+  SKIP_TOKEN(lexer, TOKEN_RBRACE);
+
+  PARSER_LOG_NODE_FINISH("list");
+
+  return list;
+}
 
 atom_t *parse_atom(lexer_t *lexer) {
   atom_t *atom = malloc(sizeof(*atom));
@@ -36,9 +70,9 @@ atom_t *parse_atom(lexer_t *lexer) {
 
   case TOKEN_NAME:
     atom->type = ATOM_NAME;
-    atom->name = strdup(lexer->cur_token->name);
+    atom->name_value = strdup(lexer->cur_token->name);
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("name=\"%s\"", atom->name);
+    PARSER_LOG_NODE_SELF_CLOSING("name=\"%s\"", atom->name_value);
     break;
 
   case TOKEN_TRUE:
@@ -60,6 +94,11 @@ atom_t *parse_atom(lexer_t *lexer) {
     atom->inner_expr_value = parse_inner_expression(lexer);
     break;
 
+  case TOKEN_LBRACE:
+    atom->type = ATOM_LIST;
+    atom->list_value = parse_list(lexer);
+    break;
+
   default:
     err_illegal_token(lexer);
   }
@@ -73,7 +112,7 @@ void atom_free(atom_t *atom) {
     free(atom->string_value);
     break;
   case ATOM_NAME:
-    free(atom->name);
+    free(atom->name_value);
     break;
   case ATOM_INNER_EXPR:
     expression_free(atom->inner_expr_value);
