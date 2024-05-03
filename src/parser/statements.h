@@ -16,18 +16,25 @@ typedef struct {
   constructor_t *constructor;
 } assignment_t;
 
+typedef struct {
+  list_t *tests;  // list<expression_t *>
+  list_t *bodies; // list<statement_t *>
+} cond_t;
+
 // Sort of abstract/generic type to represent all possible statements.
 // Actual statements are the types in the union of this struct.
 typedef struct {
   enum {
     STMT_DEFINITION,
     STMT_ASSIGNMENT,
+    STMT_COND,
     STMT_EXPRESSION,
   } type;
   union {
     definition_t *definition;
     assignment_t *assignment;
     expression_t *expr;
+    cond_t *cond;
   };
 } statement_t;
 

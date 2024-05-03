@@ -1,7 +1,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "nonstdlib/nerror.h"
+#include "nonstdlib/nlist.h"
 #include "parser/constructors.h"
+#include "parser/expressions.h"
 #include "parser/statements.h"
 #include "parser/utils.h"
 
@@ -59,6 +62,28 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
   return ass;
 }
 
+static cond_t *parse_cond(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("cond");
+
+  SKIP_TOKEN(lexer, TOKEN_IF);
+
+  cond_t *cond = malloc(sizeof(*cond));
+  if (cond == NULL)
+    err_malloc_fail();
+
+  cond->tests = list_init(LIST_START_SIZE);
+  cond->bodies = list_init(LIST_START_SIZE);
+
+  // do this in a loop, also parse bodies and else
+
+  list_push_back(cond->bodies, parse_expression(lexer));
+  SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
+
+  PARSER_LOG_NODE_FINISH("cond");
+
+  return cond;
+}
+
 statement_t *parse_statement(lexer_t *lexer) {
   PARSER_LOG_NODE_START("statement");
 
@@ -75,6 +100,11 @@ statement_t *parse_statement(lexer_t *lexer) {
   case TOKEN_SET:
     stmt->type = STMT_ASSIGNMENT;
     stmt->assignment = parse_assignment(lexer);
+    break;
+
+  case TOKEN_IF:
+    stmt->type = STMT_COND;
+    stmt->cond = parse_cond(lexer);
     break;
 
   // Expressions can also be statements (expression statements)
@@ -116,6 +146,12 @@ static void assignment_free(assignment_t *ass) {
   free(ass);
 }
 
+static void cond_free(cond_t *cond) {
+  list_map(cond->tests, (list_map_func)expression_free);
+  list_map(cond->bodies, (list_map_func)statement_free);
+  free(cond);
+}
+
 /**
  * @brief Recursively free all data associated with a statement
  *
@@ -129,6 +165,10 @@ void statement_free(statement_t *stmt) {
 
   case STMT_ASSIGNMENT:
     assignment_free(stmt->assignment);
+    break;
+
+  case STMT_COND:
+    cond_free(stmt->cond);
     break;
 
   case STMT_EXPRESSION:

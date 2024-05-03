@@ -6,3 +6,10 @@ def a = int(
   else =>
     1
 )
+
+def b = int(
+  cond true => 1,
+       false => 2,
+       1 == 2 => 3,
+       else => 4,
+)
