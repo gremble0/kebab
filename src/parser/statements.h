@@ -18,7 +18,8 @@ typedef struct {
 
 typedef struct {
   list_t *tests;  // list<expression_t *>
-  list_t *bodies; // list<statement_t *>
+  list_t *bodies; // list<list<statement_t *>*> where the last statement_t in
+                  // each list should be a STMT_EXPRESSION
 } cond_t;
 
 // Sort of abstract/generic type to represent all possible statements.

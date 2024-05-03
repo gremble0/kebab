@@ -62,10 +62,26 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
   return ass;
 }
 
+static list_t *parse_cond_body(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("cond-body");
+
+  list_t *body = list_init(LIST_START_SIZE);
+
+  while (1) {
+    statement_t *stmt = parse_statement(lexer);
+    list_push_back(body, stmt);
+
+    if (stmt->type == STMT_EXPRESSION)
+      break;
+  }
+
+  PARSER_LOG_NODE_FINISH("cond-body");
+
+  return body;
+}
+
 static cond_t *parse_cond(lexer_t *lexer) {
   PARSER_LOG_NODE_START("cond");
-
-  SKIP_TOKEN(lexer, TOKEN_IF);
 
   cond_t *cond = malloc(sizeof(*cond));
   if (cond == NULL)
@@ -74,10 +90,24 @@ static cond_t *parse_cond(lexer_t *lexer) {
   cond->tests = list_init(LIST_START_SIZE);
   cond->bodies = list_init(LIST_START_SIZE);
 
-  // do this in a loop, also parse bodies and else
-
-  list_push_back(cond->bodies, parse_expression(lexer));
+  // parse 1 if
+  SKIP_TOKEN(lexer, TOKEN_IF);
+  list_push_back(cond->tests, parse_expression(lexer));
   SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
+  list_push_back(cond->bodies, parse_cond_body(lexer));
+
+  // parse 0 or more elifs
+  while (lexer->cur_token->kind == TOKEN_ELIF) {
+    SKIP_TOKEN(lexer, TOKEN_ELIF);
+    list_push_back(cond->tests, parse_expression(lexer));
+    SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
+    list_push_back(cond->bodies, parse_cond_body(lexer));
+  }
+
+  // parse 1 else
+  SKIP_TOKEN(lexer, TOKEN_ELSE);
+  SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
+  list_push_back(cond->bodies, parse_cond_body(lexer));
 
   PARSER_LOG_NODE_FINISH("cond");
 

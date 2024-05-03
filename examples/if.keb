@@ -7,9 +7,13 @@ def a = int(
     1
 )
 
-def b = int(
-  cond true => 1,
-       false => 2,
-       1 == 2 => 3,
-       else => 4,
+def c = list(int =>
+  def q = int(1 + 2)
+  if 1 == 2 =>
+    def w = int(6) ; local to this if (not visible in elif or else)
+    q, 6,
+  elif 2 == 2 =>
+    q, 1
+  else =>
+    1, 2
 )
