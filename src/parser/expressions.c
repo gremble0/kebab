@@ -1,8 +1,10 @@
 #include <stdlib.h>
 
+#include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
 #include "parser/expressions.h"
 #include "parser/factors.h"
+#include "parser/statements.h"
 #include "parser/utils.h"
 
 static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
@@ -58,6 +60,86 @@ static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
   return ret;
 }
 
+static list_t *parse_cond_body(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("cond-body");
+
+  list_t *body = list_init(LIST_START_SIZE);
+
+  while (1) {
+    statement_t *stmt = parse_statement(lexer);
+    list_push_back(body, stmt);
+
+    if (stmt->type == STMT_EXPRESSION)
+      break;
+  }
+
+  PARSER_LOG_NODE_FINISH("cond-body");
+
+  return body;
+}
+
+static expr_cond_t *parse_expr_cond(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("expr-cond");
+
+  expr_cond_t *excd = malloc(sizeof(*excd));
+  if (excd == NULL)
+    err_malloc_fail();
+
+  excd->tests = list_init(LIST_START_SIZE);
+  excd->bodies = list_init(LIST_START_SIZE);
+
+  // parse 1 if
+  SKIP_TOKEN(lexer, TOKEN_IF);
+  list_push_back(excd->tests, parse_expression(lexer));
+  SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
+  list_push_back(excd->bodies, parse_cond_body(lexer));
+
+  // parse 0 or more elifs
+  while (lexer->cur_token->kind == TOKEN_ELIF) {
+    SKIP_TOKEN(lexer, TOKEN_ELIF);
+    list_push_back(excd->tests, parse_expression(lexer));
+    SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
+    list_push_back(excd->bodies, parse_cond_body(lexer));
+  }
+
+  // parse 1 else
+  SKIP_TOKEN(lexer, TOKEN_ELSE);
+  SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
+  list_push_back(excd->bodies, parse_cond_body(lexer));
+
+  PARSER_LOG_NODE_FINISH("expr-cond");
+
+  return excd;
+}
+
+// TODO: expression->expr, statement->stmt?
+static expr_normal_t *parse_expr_normal(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("expr-normal");
+
+  expr_normal_t *exnr = malloc(sizeof(*exnr));
+  if (exnr == NULL)
+    err_malloc_fail();
+
+  exnr->factors = list_init(LIST_START_SIZE); // list<factor_t *>
+  // TODO: don't always init operators
+  exnr->operators = list_init(LIST_START_SIZE); // list<binary_operator_t *>
+
+  // Continue parsing until there are no more binary operators
+  while (1) {
+    list_push_back(exnr->factors, parse_factor(lexer));
+
+    binary_operator_t *bo = parse_binary_operator(lexer);
+    if (bo == NULL)
+      break;
+
+    list_push_back(exnr->operators, bo);
+  }
+
+  PARSER_LOG_NODE_FINISH("expr-normal");
+
+  return exnr;
+}
+
 expression_t *parse_expression(lexer_t *lexer) {
   PARSER_LOG_NODE_START("expr");
 
@@ -65,19 +147,16 @@ expression_t *parse_expression(lexer_t *lexer) {
   if (expr == NULL)
     err_malloc_fail();
 
-  expr->factors = list_init(LIST_START_SIZE); // list<factor_t *>
-  // TODO: don't always init operators
-  expr->operators = list_init(LIST_START_SIZE); // list<binary_operator_t *>
+  switch (lexer->cur_token->kind) {
+  case TOKEN_IF:
+    expr->type = EXPR_COND;
+    expr->cond = parse_expr_cond(lexer);
+    break;
 
-  // Continue parsing until there are no more binary operators
-  while (1) {
-    list_push_back(expr->factors, parse_factor(lexer));
-
-    binary_operator_t *bo = parse_binary_operator(lexer);
-    if (bo == NULL)
-      break;
-
-    list_push_back(expr->operators, bo);
+  // TODO: this is kinda shit, dont want default here
+  default:
+    expr->type = EXPR_NORMAL;
+    expr->normal = parse_expr_normal(lexer);
   }
 
   PARSER_LOG_NODE_FINISH("expr");
@@ -97,14 +176,30 @@ expression_t *parse_inner_expression(lexer_t *lexer) {
   return expr;
 }
 
-/**
- * @param expr expression to free, should be type `expression_t`
- */
-void expression_free(expression_t *expr) {
-  list_map(expr->factors, (list_map_func)factor_free);
-  list_map(expr->operators, free);
+static void expr_cond_free(expr_cond_t *excd) {
+  list_map(excd->tests, (list_map_func)expression_free);
+  list_map(excd->bodies, (list_map_func)statement_free);
+  free(excd);
+}
 
-  list_free(expr->factors);
-  list_free(expr->operators);
+static void expr_normal_free(expr_normal_t *exnr) {
+  list_map(exnr->factors, (list_map_func)factor_free);
+  list_map(exnr->operators, free);
+
+  list_free(exnr->factors);
+  list_free(exnr->operators);
+  free(exnr);
+}
+
+void expression_free(expression_t *expr) {
+  switch (expr->type) {
+  case EXPR_COND:
+    expr_cond_free(expr->cond);
+    break;
+  case EXPR_NORMAL:
+    expr_normal_free(expr->normal);
+    break;
+  }
+
   free(expr);
 }

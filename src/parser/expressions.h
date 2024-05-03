@@ -19,10 +19,26 @@ typedef enum {
   BINARY_GE,  // x >= y
 } binary_operator_t;
 
-// TODO: if expression?
+typedef struct {
+  list_t *tests;  // list<expression_t *>
+  list_t *bodies; // list<list<statement_t *>*> where the last statement_t in
+                  // each list should be a STMT_EXPRESSION
+} expr_cond_t;
+
 typedef struct {
   list_t *factors;   // list<factor_t *>
   list_t *operators; // list<binary_operator_t *>
+} expr_normal_t;
+
+typedef struct {
+  enum {
+    EXPR_COND,
+    EXPR_NORMAL,
+  } type;
+  union {
+    expr_normal_t *normal;
+    expr_cond_t *cond;
+  };
 } expression_t;
 
 expression_t *parse_expression(lexer_t *lexer);

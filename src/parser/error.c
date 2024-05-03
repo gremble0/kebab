@@ -47,6 +47,7 @@ _Noreturn void err_illegal_statement(lexer_t *lexer, size_t stmt_start) {
   exit(1);
 }
 
+// TODO: const char *context? statement, expression, etc.
 _Noreturn void err_illegal_token(lexer_t *lexer) {
   print_lexer_pos(lexer);
   fprintf(stderr, "illegal-token-error: '%s'\n",

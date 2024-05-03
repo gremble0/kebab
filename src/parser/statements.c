@@ -2,7 +2,6 @@
 #include <string.h>
 
 #include "nonstdlib/nerror.h"
-#include "nonstdlib/nlist.h"
 #include "parser/constructors.h"
 #include "parser/expressions.h"
 #include "parser/statements.h"
@@ -62,58 +61,6 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
   return ass;
 }
 
-static list_t *parse_cond_body(lexer_t *lexer) {
-  PARSER_LOG_NODE_START("cond-body");
-
-  list_t *body = list_init(LIST_START_SIZE);
-
-  while (1) {
-    statement_t *stmt = parse_statement(lexer);
-    list_push_back(body, stmt);
-
-    if (stmt->type == STMT_EXPRESSION)
-      break;
-  }
-
-  PARSER_LOG_NODE_FINISH("cond-body");
-
-  return body;
-}
-
-static cond_t *parse_cond(lexer_t *lexer) {
-  PARSER_LOG_NODE_START("cond");
-
-  cond_t *cond = malloc(sizeof(*cond));
-  if (cond == NULL)
-    err_malloc_fail();
-
-  cond->tests = list_init(LIST_START_SIZE);
-  cond->bodies = list_init(LIST_START_SIZE);
-
-  // parse 1 if
-  SKIP_TOKEN(lexer, TOKEN_IF);
-  list_push_back(cond->tests, parse_expression(lexer));
-  SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
-  list_push_back(cond->bodies, parse_cond_body(lexer));
-
-  // parse 0 or more elifs
-  while (lexer->cur_token->kind == TOKEN_ELIF) {
-    SKIP_TOKEN(lexer, TOKEN_ELIF);
-    list_push_back(cond->tests, parse_expression(lexer));
-    SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
-    list_push_back(cond->bodies, parse_cond_body(lexer));
-  }
-
-  // parse 1 else
-  SKIP_TOKEN(lexer, TOKEN_ELSE);
-  SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
-  list_push_back(cond->bodies, parse_cond_body(lexer));
-
-  PARSER_LOG_NODE_FINISH("cond");
-
-  return cond;
-}
-
 statement_t *parse_statement(lexer_t *lexer) {
   PARSER_LOG_NODE_START("statement");
 
@@ -132,17 +79,14 @@ statement_t *parse_statement(lexer_t *lexer) {
     stmt->assignment = parse_assignment(lexer);
     break;
 
-  case TOKEN_IF:
-    stmt->type = STMT_COND;
-    stmt->cond = parse_cond(lexer);
-    break;
-
-  // Expressions can also be statements (expression statements)
+  // Expressions can also be statements when used as implicit returns
   // Literals
   case TOKEN_NAME:
   case TOKEN_CHAR_LITERAL:
   case TOKEN_STRING_LITERAL:
   case TOKEN_INTEGER_LITERAL:
+  // Cond expressions (if/elif/else)
+  case TOKEN_IF:
   // Factor prefixes
   case TOKEN_PLUS:
   case TOKEN_MINUS:
@@ -176,12 +120,6 @@ static void assignment_free(assignment_t *ass) {
   free(ass);
 }
 
-static void cond_free(cond_t *cond) {
-  list_map(cond->tests, (list_map_func)expression_free);
-  list_map(cond->bodies, (list_map_func)statement_free);
-  free(cond);
-}
-
 /**
  * @brief Recursively free all data associated with a statement
  *
@@ -195,10 +133,6 @@ void statement_free(statement_t *stmt) {
 
   case STMT_ASSIGNMENT:
     assignment_free(stmt->assignment);
-    break;
-
-  case STMT_COND:
-    cond_free(stmt->cond);
     break;
 
   case STMT_EXPRESSION:
