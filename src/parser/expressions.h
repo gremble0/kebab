@@ -28,12 +28,12 @@ typedef struct {
 
 typedef struct {
   list_t *conds; // list<cond_t*>
-} expr_cond_t;
+} expression_cond_t;
 
 typedef struct {
   list_t *factors;   // list<factor_t *>
   list_t *operators; // list<binary_operator_t *>
-} expr_normal_t;
+} expression_normal_t;
 
 struct expression_t {
   enum {
@@ -41,8 +41,8 @@ struct expression_t {
     EXPR_NORMAL,
   } type;
   union {
-    expr_normal_t *normal;
-    expr_cond_t *cond;
+    expression_normal_t *normal;
+    expression_cond_t *cond;
   };
 };
 

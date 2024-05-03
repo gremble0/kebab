@@ -129,10 +129,10 @@ static cond_t *parse_cond_else(lexer_t *lexer) {
   return cond;
 }
 
-static expr_cond_t *parse_expr_cond(lexer_t *lexer) {
+static expression_cond_t *parse_expression_cond(lexer_t *lexer) {
   PARSER_LOG_NODE_START("expr-cond");
 
-  expr_cond_t *excd = malloc(sizeof(*excd));
+  expression_cond_t *excd = malloc(sizeof(*excd));
   if (excd == NULL)
     err_malloc_fail();
 
@@ -153,11 +153,10 @@ static expr_cond_t *parse_expr_cond(lexer_t *lexer) {
   return excd;
 }
 
-// TODO: expression->expr, statement->stmt?
-static expr_normal_t *parse_expr_normal(lexer_t *lexer) {
+static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
   PARSER_LOG_NODE_START("expr-normal");
 
-  expr_normal_t *exnr = malloc(sizeof(*exnr));
+  expression_normal_t *exnr = malloc(sizeof(*exnr));
   if (exnr == NULL)
     err_malloc_fail();
 
@@ -191,13 +190,26 @@ expression_t *parse_expression(lexer_t *lexer) {
   switch (lexer->cur_token->kind) {
   case TOKEN_IF:
     expr->type = EXPR_COND;
-    expr->cond = parse_expr_cond(lexer);
+    expr->cond = parse_expression_cond(lexer);
     break;
 
   // TODO: this is kinda shit, dont want default here
-  default:
+  case TOKEN_NAME:
+  case TOKEN_CHAR_LITERAL:
+  case TOKEN_STRING_LITERAL:
+  case TOKEN_INTEGER_LITERAL:
+  // Factor prefixes
+  case TOKEN_PLUS:
+  case TOKEN_MINUS:
+  case TOKEN_MULT:
+  case TOKEN_DIV:
+  case TOKEN_NOT:
+  // Inner expression wrapped in parens, e.g. (1 + 2)
+  case TOKEN_LPAREN:
     expr->type = EXPR_NORMAL;
-    expr->normal = parse_expr_normal(lexer);
+    expr->normal = parse_expression_normal(lexer);
+  default:
+    err_illegal_token(lexer);
   }
 
   PARSER_LOG_NODE_FINISH("expr");
@@ -226,13 +238,13 @@ static void cond_free(cond_t *cond) {
   free(cond);
 }
 
-static void expr_cond_free(expr_cond_t *excd) {
+static void expression_cond_free(expression_cond_t *excd) {
   list_map(excd->conds, (list_map_func)cond_free);
   list_free(excd->conds);
   free(excd);
 }
 
-static void expr_normal_free(expr_normal_t *exnr) {
+static void expression_normal_free(expression_normal_t *exnr) {
   list_map(exnr->factors, (list_map_func)factor_free);
   list_map(exnr->operators, free);
 
@@ -244,10 +256,10 @@ static void expr_normal_free(expr_normal_t *exnr) {
 void expression_free(expression_t *expr) {
   switch (expr->type) {
   case EXPR_COND:
-    expr_cond_free(expr->cond);
+    expression_cond_free(expr->cond);
     break;
   case EXPR_NORMAL:
-    expr_normal_free(expr->normal);
+    expression_normal_free(expr->normal);
     break;
   }
 

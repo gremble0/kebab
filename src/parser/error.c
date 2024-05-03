@@ -48,6 +48,7 @@ _Noreturn void err_illegal_statement(lexer_t *lexer, size_t stmt_start) {
 }
 
 // TODO: const char *context? statement, expression, etc.
+// TODO: also ideally none of these functions take the lexer as a param
 _Noreturn void err_illegal_token(lexer_t *lexer) {
   print_lexer_pos(lexer);
   fprintf(stderr, "illegal-token-error: '%s'\n",
