@@ -19,10 +19,15 @@ typedef enum {
   BINARY_GE,  // x >= y
 } binary_operator_t;
 
+typedef struct expression_t expression_t;
+
 typedef struct {
-  list_t *tests;  // list<expression_t *>
-  list_t *bodies; // list<list<statement_t *>*> where the last statement_t in
-                  // each list should be a STMT_EXPRESSION
+  expression_t *test;
+  list_t *body;
+} cond_t;
+
+typedef struct {
+  list_t *conds; // list<cond_t*>
 } expr_cond_t;
 
 typedef struct {
@@ -30,7 +35,7 @@ typedef struct {
   list_t *operators; // list<binary_operator_t *>
 } expr_normal_t;
 
-typedef struct {
+struct expression_t {
   enum {
     EXPR_COND,
     EXPR_NORMAL,
@@ -39,7 +44,7 @@ typedef struct {
     expr_normal_t *normal;
     expr_cond_t *cond;
   };
-} expression_t;
+};
 
 expression_t *parse_expression(lexer_t *lexer);
 expression_t *parse_inner_expression(lexer_t *lexer);
