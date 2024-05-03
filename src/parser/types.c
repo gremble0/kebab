@@ -40,7 +40,7 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
 static keb_type_list_t *parse_type_list(lexer_t *lexer) {
   // list types should look like `list(string)`, more advanced:
   // `list(fn(int, char) => string)`
-  PARSER_LOG_NODE_START("list_type");
+  PARSER_LOG_NODE_START("list-type");
   SKIP_TOKEN(lexer, TOKEN_LIST);
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
@@ -48,7 +48,7 @@ static keb_type_list_t *parse_type_list(lexer_t *lexer) {
   klt->type = parse_type(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
-  PARSER_LOG_NODE_FINISH("list_type");
+  PARSER_LOG_NODE_FINISH("list-type");
 
   return klt;
 }

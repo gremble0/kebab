@@ -116,7 +116,13 @@ void atom_free(atom_t *atom) {
   case ATOM_INNER_EXPR:
     expression_free(atom->inner_expr_value);
     break;
-  default:
+  case ATOM_LIST:
+    list_map(atom->list_value, (list_map_func)expression_free);
+    list_free(atom->list_value);
+    break;
+  case ATOM_CHAR:
+  case ATOM_INT:
+  case ATOM_BOOL:
     break;
   }
 

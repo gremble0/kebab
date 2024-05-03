@@ -4,32 +4,23 @@
 #include "parser/utils.h"
 
 static unary_operator_t parse_unary_operator(lexer_t *lexer) {
-  unary_operator_t uo;
-
   // TODO: some sort of error handling
   switch (lexer->cur_token->kind) {
   case TOKEN_PLUS:
+    PARSER_LOG_NODE_SELF_CLOSING("factor-prefix='+'");
     lexer_advance(lexer);
-    uo = UNARY_PLUS;
-    break;
+    return UNARY_PLUS;
   case TOKEN_MINUS:
+    PARSER_LOG_NODE_SELF_CLOSING("factor-prefix='-'");
     lexer_advance(lexer);
-    uo = UNARY_MINUS;
-    break;
+    return UNARY_MINUS;
   case TOKEN_NOT:
+    PARSER_LOG_NODE_SELF_CLOSING("unary-operator='~'");
     lexer_advance(lexer);
-    uo = UNARY_NOT;
-    break;
+    return UNARY_NOT;
   default:
-    uo = UNARY_NO_OP;
+    return UNARY_NO_OP;
   }
-
-#ifdef DEBUG_PARSER
-  if (uo != UNARY_NO_OP)
-    PARSER_LOG_NODE_SELF_CLOSING("factor_prefix");
-#endif
-
-  return uo;
 }
 
 factor_t *parse_factor(lexer_t *lexer) {

@@ -17,6 +17,8 @@ typedef enum {
   BINARY_NEQ, // x ~= y
   BINARY_GT,  // x > y
   BINARY_GE,  // x >= y
+
+  BINARY_NO_OP, // Indiciates missing operator
 } binary_operator_t;
 
 typedef struct expression_t expression_t;

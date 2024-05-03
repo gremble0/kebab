@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "lexer/lexer.h"
 #include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
 #include "parser/expressions.h"
@@ -7,58 +8,55 @@
 #include "parser/statements.h"
 #include "parser/utils.h"
 
-static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
-  binary_operator_t bo;
-
+static binary_operator_t parse_binary_operator(lexer_t *lexer) {
   switch (lexer->cur_token->kind) {
   // Maths
   case TOKEN_PLUS:
-    bo = BINARY_PLUS;
-    break;
+    PARSER_LOG_NODE_SELF_CLOSING("binary-operator='+'");
+    lexer_advance(lexer);
+    return BINARY_PLUS;
   case TOKEN_MINUS:
-    bo = BINARY_MINUS;
-    break;
+    PARSER_LOG_NODE_SELF_CLOSING("binary-operator='-'");
+    lexer_advance(lexer);
+    return BINARY_MINUS;
   case TOKEN_MULT:
-    bo = BINARY_MULT;
-    break;
+    PARSER_LOG_NODE_SELF_CLOSING("binary-operator='*'");
+    lexer_advance(lexer);
+    return BINARY_MULT;
   case TOKEN_DIV:
-    bo = BINARY_DIV;
-    break;
+    PARSER_LOG_NODE_SELF_CLOSING("binary-operator='/'");
+    lexer_advance(lexer);
+    return BINARY_DIV;
 
   // Comparisons
   case TOKEN_LT:
-    bo = BINARY_LT;
-    break;
+    PARSER_LOG_NODE_SELF_CLOSING("binary-operator='<'");
+    lexer_advance(lexer);
+    return BINARY_LT;
   case TOKEN_LE:
-    bo = BINARY_LE;
-    break;
+    PARSER_LOG_NODE_SELF_CLOSING("binary-operator='<='");
+    lexer_advance(lexer);
+    return BINARY_LE;
   case TOKEN_EQ:
-    bo = BINARY_EQ;
-    break;
+    PARSER_LOG_NODE_SELF_CLOSING("binary-operator='=='");
+    lexer_advance(lexer);
+    return BINARY_EQ;
   case TOKEN_NEQ:
-    bo = BINARY_NEQ;
-    break;
+    PARSER_LOG_NODE_SELF_CLOSING("binary-operator='~='");
+    lexer_advance(lexer);
+    return BINARY_NEQ;
   case TOKEN_GT:
-    bo = BINARY_GT;
-    break;
+    PARSER_LOG_NODE_SELF_CLOSING("binary-operator='>'");
+    lexer_advance(lexer);
+    return BINARY_GT;
   case TOKEN_GE:
-    bo = BINARY_GE;
-    break;
+    PARSER_LOG_NODE_SELF_CLOSING("binary-operator='>='");
+    lexer_advance(lexer);
+    return BINARY_GE;
 
-  // TODO: BINARY_NO_OP like we do in unary_operator_t?
-  // If next token is not a binary operator return without further processing
   default:
-    return NULL;
+    return BINARY_NO_OP;
   }
-
-  lexer_advance(lexer);
-
-  PARSER_LOG_NODE_SELF_CLOSING("binary-operator");
-
-  binary_operator_t *ret = malloc(sizeof(*ret));
-  *ret = bo;
-
-  return ret;
 }
 
 static expression_t *parse_cond_test(lexer_t *lexer) {
@@ -179,11 +177,13 @@ static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
   while (1) {
     list_push_back(exnr->factors, parse_factor(lexer));
 
-    binary_operator_t *bo = parse_binary_operator(lexer);
-    if (bo == NULL)
+    binary_operator_t bo = parse_binary_operator(lexer);
+    if (bo == BINARY_NO_OP)
       break;
 
-    list_push_back(exnr->operators, bo);
+    binary_operator_t *bo_p = malloc(sizeof(*bo_p));
+    *bo_p = bo;
+    list_push_back(exnr->operators, bo_p);
   }
 
   PARSER_LOG_NODE_FINISH("expr-normal");
