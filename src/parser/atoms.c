@@ -12,9 +12,7 @@ static expression_t *parse_inner_expression(lexer_t *lexer) {
   PARSER_LOG_NODE_START("inner-expr");
 
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
-  PARSER_LOG_NODE_START("ASKL:JLASD1");
   expression_t *expr = parse_expression(lexer);
-  PARSER_LOG_NODE_START("ASKL:JLASD2");
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
 
   PARSER_LOG_NODE_FINISH("inner-expr");

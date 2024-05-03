@@ -10,7 +10,7 @@
 
 static rt_value_t *eval_constructor_body(constructor_t *constr,
                                          scope_t *scope) {
-  list_t *constr_body = constr->primitive_constructor->statements;
+  list_t *constr_body = constr->primitive_constructor->stmts;
   ASSERT(constr_body->cur_size > 0);
 
   for (size_t i = 0; i < constr_body->cur_size - 1; ++i)

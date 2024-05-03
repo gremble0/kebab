@@ -1,6 +1,6 @@
 def d = int((2 + 3) * 2)
-def a = list(int => 1, 2, 3)
-def l = list(string => "123", "gg", "hhh")
+def a = list((int) => [1, 2, 3])
+def l = list((string) => ["123", "gg", "hhh"])
 def b = fn((a : int) => int(2))
 def c = bool(1 == -2)
 
@@ -11,10 +11,12 @@ def asd = fn((gg : fn(int, int) => string) => int(
 def asd1 = fn((var : list(fn(list(int)) => string)) => char('c'))
 
 def ret-fn = fn((outer : int) => fn((inner : int) => int(outer + inner)))
-def ret-fn-rets-list = fn((outer : int) => fn((inner : int) => list(int => 
-  def local-var = int(2)
-  local-var, outer, inner
-)))
+def ret-fn-rets-list = fn((outer : int) =>
+  fn((inner : int) => list((int) => 
+    def local-var = int(2)
+    [local-var, outer, inner]
+  ))
+)
 
 def add = int(def nested = int(5) 2 + nested)
 def should-be-ok = int(2
@@ -52,4 +54,3 @@ set my-const = int(6) ; should also error
 
 def ch = char('c')
 def str = string("hey")
-

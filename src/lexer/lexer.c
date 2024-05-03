@@ -11,7 +11,8 @@
 
 static int is_not_dquote(int c) { return c != '"'; }
 static int is_kebab_case(int c) {
-  return !isspace(c) && c != ',' && c != '(' && c != ')';
+  return !isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' &&
+         c != ']';
 }
 
 /**

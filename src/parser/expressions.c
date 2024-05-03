@@ -61,6 +61,16 @@ static binary_operator_t *parse_binary_operator(lexer_t *lexer) {
   return ret;
 }
 
+static expression_t *parse_cond_test(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("cond-test");
+
+  expression_t *test = parse_expression(lexer);
+
+  PARSER_LOG_NODE_FINISH("cond-test");
+
+  return test;
+}
+
 static list_t *parse_cond_body(lexer_t *lexer) {
   PARSER_LOG_NODE_START("cond-body");
 
@@ -87,7 +97,7 @@ static cond_t *parse_cond_if(lexer_t *lexer) {
     err_malloc_fail();
 
   SKIP_TOKEN(lexer, TOKEN_IF);
-  cond->test = parse_expression(lexer);
+  cond->test = parse_cond_test(lexer);
   SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
   cond->body = parse_cond_body(lexer);
 
@@ -104,7 +114,7 @@ static cond_t *parse_cond_elif(lexer_t *lexer) {
     err_malloc_fail();
 
   SKIP_TOKEN(lexer, TOKEN_ELIF);
-  cond->test = parse_expression(lexer);
+  cond->test = parse_cond_test(lexer);
   SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
   cond->body = parse_cond_body(lexer);
 
@@ -203,6 +213,8 @@ expression_t *parse_expression(lexer_t *lexer) {
   case TOKEN_MULT:
   case TOKEN_DIV:
   case TOKEN_NOT:
+  case TOKEN_TRUE:
+  case TOKEN_FALSE:
   case TOKEN_LPAREN:
   case TOKEN_LBRACE:
     expr->type = EXPR_NORMAL;

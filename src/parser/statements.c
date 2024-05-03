@@ -79,8 +79,11 @@ statement_t *parse_statement(lexer_t *lexer) {
     stmt->assignment = parse_assignment(lexer);
     break;
 
-  // Expressions can also be statements when used as implicit returns
-  // Literals
+  // I dont like this, its too exhaustive and needs to be updated all the
+  // time. Should find a better way of starting expression parsing
+
+  // Expressions can also be statements when used as
+  // implicit returns Literals
   case TOKEN_NAME:
   case TOKEN_CHAR_LITERAL:
   case TOKEN_STRING_LITERAL:
@@ -93,6 +96,9 @@ statement_t *parse_statement(lexer_t *lexer) {
   case TOKEN_MULT:
   case TOKEN_DIV:
   case TOKEN_NOT:
+  // Booleans
+  case TOKEN_TRUE:
+  case TOKEN_FALSE:
   // Inner expression wrapped in parens, e.g. (1 + 2)
   case TOKEN_LPAREN:
   // Lists [x, y, z]
