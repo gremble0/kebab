@@ -8,6 +8,9 @@
 #include "runtime/runtime.h"
 #include "runtime/statements.h"
 
+// TODO: take fn_constructor_t, primitive_constructor_t, etc. as param, BUT this
+// is hard since primitive_constructor_t doesnt store its type
+
 static rt_value_t *eval_constructor_body(constructor_t *constr,
                                          scope_t *scope) {
   list_t *constr_body = constr->primitive_constructor->stmts;
