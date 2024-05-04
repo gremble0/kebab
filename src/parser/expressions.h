@@ -21,6 +21,16 @@ typedef enum {
   BINARY_NO_OP, // Indiciates missing operator
 } binary_operator_t;
 
+// @see https://en.wikipedia.org/wiki/Order_of_operations
+static const size_t precedences[] = {
+    [BINARY_PLUS] = 4, [BINARY_MINUS] = 4,
+
+    [BINARY_MULT] = 3, [BINARY_DIV] = 3,
+
+    [BINARY_LT] = 6,   [BINARY_LE] = 6,    [BINARY_EQ] = 6,
+    [BINARY_NEQ] = 6,  [BINARY_GT] = 6,    [BINARY_GE] = 6,
+};
+
 typedef struct expression_t expression_t;
 
 typedef struct {

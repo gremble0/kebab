@@ -139,7 +139,7 @@ static cond_t *parse_cond_else(lexer_t *lexer) {
 }
 
 static expression_cond_t *parse_expression_cond(lexer_t *lexer) {
-  PARSER_LOG_NODE_START("expr-cond");
+  PARSER_LOG_NODE_START("expression-cond");
 
   expression_cond_t *excd = malloc(sizeof(*excd));
   if (excd == NULL)
@@ -157,13 +157,38 @@ static expression_cond_t *parse_expression_cond(lexer_t *lexer) {
   // parse 1 else (else is mandatory since expression must return something)
   list_push_back(excd->conds, parse_cond_else(lexer));
 
-  PARSER_LOG_NODE_FINISH("expr-cond");
+  PARSER_LOG_NODE_FINISH("expression-cond");
 
   return excd;
 }
 
+static void expression_normal_fix_precedence(expression_normal_t *exnr) {
+  char swapped = 0;
+
+  for (size_t i = 1; i < exnr->operators->cur_size; ++i) {
+    for (size_t j = i;
+         j > 0 &&
+         precedences[*(binary_operator_t *)list_get(exnr->operators, j - 1)] >
+             precedences[*(binary_operator_t *)list_get(exnr->operators, j)];
+         --j) {
+      // Swap factors
+      factor_t *fac = exnr->factors->entries[j];
+      exnr->factors->entries[j] = exnr->factors->entries[j - 1];
+      exnr->factors->entries[j - 1] = fac;
+
+      // Swap operators
+      binary_operator_t *bo = exnr->operators->entries[j];
+      exnr->operators->entries[j] = exnr->operators->entries[j - 1];
+      exnr->operators->entries[j - 1] = bo;
+    }
+  }
+
+  if (swapped)
+    expression_normal_fix_precedence(exnr);
+}
+
 static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
-  PARSER_LOG_NODE_START("expr-normal");
+  PARSER_LOG_NODE_START("expression-normal");
 
   expression_normal_t *exnr = malloc(sizeof(*exnr));
   if (exnr == NULL)
@@ -173,7 +198,7 @@ static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
   // TODO: don't always init operators
   exnr->operators = list_init(LIST_START_SIZE); // list<binary_operator_t *>
 
-  // Continue parsing until there are no more binary operators
+  // Continue parsing until there are no more binary operators.
   while (1) {
     list_push_back(exnr->factors, parse_factor(lexer));
 
@@ -186,13 +211,17 @@ static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
     list_push_back(exnr->operators, bo_p);
   }
 
-  PARSER_LOG_NODE_FINISH("expr-normal");
+  expression_normal_fix_precedence(exnr);
+
+  // Order the factors by binary operator precedence
+
+  PARSER_LOG_NODE_FINISH("expression-normal");
 
   return exnr;
 }
 
 expression_t *parse_expression(lexer_t *lexer) {
-  PARSER_LOG_NODE_START("expr");
+  PARSER_LOG_NODE_START("expression");
 
   expression_t *expr = malloc(sizeof(*expr));
   if (expr == NULL)
@@ -225,7 +254,7 @@ expression_t *parse_expression(lexer_t *lexer) {
     err_illegal_token(lexer);
   }
 
-  PARSER_LOG_NODE_FINISH("expr");
+  PARSER_LOG_NODE_FINISH("expression");
 
   return expr;
 }
