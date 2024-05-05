@@ -1,6 +1,7 @@
 #include "runtime/primaries.h"
 #include "nonstdlib/nerror.h"
 #include "parser/types.h"
+#include "runtime/atoms.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
 

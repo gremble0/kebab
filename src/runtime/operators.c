@@ -52,7 +52,26 @@ rt_value_t *eval_operator_unary_minus(rt_value_t *v) {
     ASSERT(0);
   }
 }
-rt_value_t *eval_operator_unary_not(rt_value_t *v);
+rt_value_t *eval_operator_unary_not(rt_value_t *v) {
+  switch (v->type) {
+  case TYPE_CHAR:
+    ASSERT(0);
+  case TYPE_STRING:
+    ASSERT(0);
+  case TYPE_INT:
+    ASSERT(0);
+  case TYPE_BOOL: {
+    rt_value_t *negated = malloc(sizeof(*negated));
+    negated->type = TYPE_BOOL;
+    negated->bool_value = !v->bool_value;
+    return negated;
+  }
+  case TYPE_LIST:
+    ASSERT(0);
+  case TYPE_FN:
+    ASSERT(0);
+  }
+}
 
 rt_value_t *eval_operator_binary_add(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
