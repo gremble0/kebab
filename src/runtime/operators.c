@@ -6,9 +6,55 @@
 #include "runtime/runtime.h"
 
 // TODO: operator overloading maybe? Also error handling for wrong types. This
-// is very barebones atm
+// is very barebones atm. Also memory management is not done here yet. Currently
+// values are being copied and re-mallocd
 
-rt_value_t *eval_operator_add(rt_value_t *lhs, rt_value_t *rhs) {
+// Memory management: I think we can make functions void and mutate params
+
+rt_value_t *eval_operator_unary_plus(rt_value_t *v) {
+  switch (v->type) {
+  case TYPE_CHAR:
+    ASSERT(0);
+  case TYPE_STRING:
+    ASSERT(0);
+  case TYPE_INT: {
+    rt_value_t *positive = malloc(sizeof(*positive));
+    positive->type = TYPE_INT;
+    positive->int_value = +v->int_value;
+    return positive;
+  }
+  case TYPE_BOOL:
+    ASSERT(0);
+  case TYPE_LIST:
+    ASSERT(0);
+  case TYPE_FN:
+    ASSERT(0);
+  }
+}
+
+rt_value_t *eval_operator_unary_minus(rt_value_t *v) {
+  switch (v->type) {
+  case TYPE_CHAR:
+    ASSERT(0);
+  case TYPE_STRING:
+    ASSERT(0);
+  case TYPE_INT: {
+    rt_value_t *positive = malloc(sizeof(*positive));
+    positive->type = TYPE_INT;
+    positive->int_value = -v->int_value;
+    return positive;
+  }
+  case TYPE_BOOL:
+    ASSERT(0);
+  case TYPE_LIST:
+    ASSERT(0);
+  case TYPE_FN:
+    ASSERT(0);
+  }
+}
+rt_value_t *eval_operator_unary_not(rt_value_t *v);
+
+rt_value_t *eval_operator_binary_add(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
   case TYPE_CHAR:
     ASSERT(0);
@@ -32,7 +78,7 @@ rt_value_t *eval_operator_add(rt_value_t *lhs, rt_value_t *rhs) {
   }
 }
 
-rt_value_t *eval_operator_minus(rt_value_t *lhs, rt_value_t *rhs) {
+rt_value_t *eval_operator_binary_minus(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
   case TYPE_CHAR:
     ASSERT(0);
@@ -56,7 +102,7 @@ rt_value_t *eval_operator_minus(rt_value_t *lhs, rt_value_t *rhs) {
   }
 }
 
-rt_value_t *eval_operator_mult(rt_value_t *lhs, rt_value_t *rhs) {
+rt_value_t *eval_operator_binary_mult(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
   case TYPE_CHAR:
     ASSERT(0);
@@ -80,7 +126,7 @@ rt_value_t *eval_operator_mult(rt_value_t *lhs, rt_value_t *rhs) {
   }
 }
 
-rt_value_t *eval_operator_div(rt_value_t *lhs, rt_value_t *rhs) {
+rt_value_t *eval_operator_binary_div(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
   case TYPE_CHAR:
     ASSERT(0);
@@ -104,7 +150,7 @@ rt_value_t *eval_operator_div(rt_value_t *lhs, rt_value_t *rhs) {
   }
 }
 
-rt_value_t *eval_operator_lt(rt_value_t *lhs, rt_value_t *rhs) {
+rt_value_t *eval_operator_binary_lt(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
   case TYPE_CHAR:
     ASSERT(0);
@@ -128,7 +174,7 @@ rt_value_t *eval_operator_lt(rt_value_t *lhs, rt_value_t *rhs) {
   }
 }
 
-rt_value_t *eval_operator_le(rt_value_t *lhs, rt_value_t *rhs) {
+rt_value_t *eval_operator_binary_le(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
   case TYPE_CHAR:
     ASSERT(0);
@@ -152,7 +198,7 @@ rt_value_t *eval_operator_le(rt_value_t *lhs, rt_value_t *rhs) {
   }
 }
 
-rt_value_t *eval_operator_eq(rt_value_t *lhs, rt_value_t *rhs) {
+rt_value_t *eval_operator_binary_eq(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
   case TYPE_CHAR:
     ASSERT(0);
@@ -176,7 +222,7 @@ rt_value_t *eval_operator_eq(rt_value_t *lhs, rt_value_t *rhs) {
   }
 }
 
-rt_value_t *eval_operator_neq(rt_value_t *lhs, rt_value_t *rhs) {
+rt_value_t *eval_operator_binary_neq(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
   case TYPE_CHAR:
     ASSERT(0);
@@ -200,7 +246,7 @@ rt_value_t *eval_operator_neq(rt_value_t *lhs, rt_value_t *rhs) {
   }
 }
 
-rt_value_t *eval_operator_gt(rt_value_t *lhs, rt_value_t *rhs) {
+rt_value_t *eval_operator_binary_gt(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
   case TYPE_CHAR:
     ASSERT(0);
@@ -224,7 +270,7 @@ rt_value_t *eval_operator_gt(rt_value_t *lhs, rt_value_t *rhs) {
   }
 }
 
-rt_value_t *eval_operator_ge(rt_value_t *lhs, rt_value_t *rhs) {
+rt_value_t *eval_operator_binary_ge(rt_value_t *lhs, rt_value_t *rhs) {
   switch (lhs->type) {
   case TYPE_CHAR:
     ASSERT(0);

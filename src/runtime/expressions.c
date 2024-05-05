@@ -23,43 +23,43 @@ static rt_value_t *eval_expression_normal(expression_normal_t *exnm,
 
     switch (*bo) {
     case BINARY_PLUS:
-      evaluated = eval_operator_add(evaluated, next_evaluated);
+      evaluated = eval_operator_binary_add(evaluated, next_evaluated);
       break;
 
     case BINARY_MINUS:
-      evaluated = eval_operator_minus(evaluated, next_evaluated);
+      evaluated = eval_operator_binary_minus(evaluated, next_evaluated);
       break;
 
     case BINARY_MULT:
-      evaluated = eval_operator_mult(evaluated, next_evaluated);
+      evaluated = eval_operator_binary_mult(evaluated, next_evaluated);
       break;
 
     case BINARY_DIV:
-      evaluated = eval_operator_div(evaluated, next_evaluated);
+      evaluated = eval_operator_binary_div(evaluated, next_evaluated);
       break;
 
     case BINARY_LT:
-      evaluated = eval_operator_lt(evaluated, next_evaluated);
+      evaluated = eval_operator_binary_lt(evaluated, next_evaluated);
       break;
 
     case BINARY_LE:
-      evaluated = eval_operator_le(evaluated, next_evaluated);
+      evaluated = eval_operator_binary_le(evaluated, next_evaluated);
       break;
 
     case BINARY_EQ:
-      evaluated = eval_operator_eq(evaluated, next_evaluated);
+      evaluated = eval_operator_binary_eq(evaluated, next_evaluated);
       break;
 
     case BINARY_NEQ:
-      evaluated = eval_operator_neq(evaluated, next_evaluated);
+      evaluated = eval_operator_binary_neq(evaluated, next_evaluated);
       break;
 
     case BINARY_GT:
-      evaluated = eval_operator_gt(evaluated, next_evaluated);
+      evaluated = eval_operator_binary_gt(evaluated, next_evaluated);
       break;
 
     case BINARY_GE:
-      evaluated = eval_operator_ge(evaluated, next_evaluated);
+      evaluated = eval_operator_binary_ge(evaluated, next_evaluated);
       break;
 
     case BINARY_NO_OP:
