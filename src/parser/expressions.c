@@ -163,6 +163,8 @@ static expression_cond_t *parse_expression_cond(lexer_t *lexer) {
 }
 
 static void expression_normal_fix_precedence(expression_normal_t *exnr) {
+  // A variant of insertionsort that sorts the factors in an expression by the
+  // precedence of the operators between them
   for (size_t i = 1; i < exnr->operators->cur_size; ++i) {
     for (size_t j = i;
          j > 0 &&
@@ -177,7 +179,7 @@ static void expression_normal_fix_precedence(expression_normal_t *exnr) {
       exnr->factors->entries[j + 1] = exnr->factors->entries[j];
       exnr->factors->entries[j] = fac2;
 
-      // Swap operators
+      // Bubble operator one step to the left
       binary_operator_t *bo = exnr->operators->entries[j];
       exnr->operators->entries[j] = exnr->operators->entries[j - 1];
       exnr->operators->entries[j - 1] = bo;
