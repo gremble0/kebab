@@ -4,8 +4,6 @@
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
 
-rt_value_t *eval_atom(atom_t *atom, scope_t *scope);
-
 // rt_value_t *eval_primary_arguments(
 
 rt_value_t *eval_primary(primary_t *prm, scope_t *scope) {
