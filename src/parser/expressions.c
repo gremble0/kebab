@@ -163,18 +163,19 @@ static expression_cond_t *parse_expression_cond(lexer_t *lexer) {
 }
 
 static void expression_normal_fix_precedence(expression_normal_t *exnr) {
-  char swapped = 0;
-
   for (size_t i = 1; i < exnr->operators->cur_size; ++i) {
     for (size_t j = i;
          j > 0 &&
          precedences[*(binary_operator_t *)list_get(exnr->operators, j - 1)] >
              precedences[*(binary_operator_t *)list_get(exnr->operators, j)];
          --j) {
-      // Swap factors
-      factor_t *fac = exnr->factors->entries[j];
+      // Bubble the two factors between the operator one step to the left
+      factor_t *fac1 = exnr->factors->entries[j];
+      factor_t *fac2 = exnr->factors->entries[j + 1];
       exnr->factors->entries[j] = exnr->factors->entries[j - 1];
-      exnr->factors->entries[j - 1] = fac;
+      exnr->factors->entries[j - 1] = fac1;
+      exnr->factors->entries[j + 1] = exnr->factors->entries[j];
+      exnr->factors->entries[j] = fac2;
 
       // Swap operators
       binary_operator_t *bo = exnr->operators->entries[j];
@@ -182,9 +183,6 @@ static void expression_normal_fix_precedence(expression_normal_t *exnr) {
       exnr->operators->entries[j - 1] = bo;
     }
   }
-
-  if (swapped)
-    expression_normal_fix_precedence(exnr);
 }
 
 static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
