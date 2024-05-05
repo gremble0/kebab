@@ -3,6 +3,7 @@
 #include "nonstdlib/nlist.h"
 #include "runtime/expressions.h"
 #include "runtime/factors.h"
+#include "runtime/operators.h"
 #include "runtime/runtime.h"
 
 static rt_value_t *eval_expression_cond(expression_cond_t *excd,
@@ -22,43 +23,43 @@ static rt_value_t *eval_expression_normal(expression_normal_t *exnm,
 
     switch (*bo) {
     case BINARY_PLUS:
-      evaluated = eval_add(evaluated, next_evaluated);
+      evaluated = eval_operator_add(evaluated, next_evaluated);
       break;
 
     case BINARY_MINUS:
-      evaluated = eval_minus(evaluated, next_evaluated);
+      evaluated = eval_operator_minus(evaluated, next_evaluated);
       break;
 
     case BINARY_MULT:
-      evaluated = eval_mult(evaluated, next_evaluated);
+      evaluated = eval_operator_mult(evaluated, next_evaluated);
       break;
 
     case BINARY_DIV:
-      evaluated = eval_div(evaluated, next_evaluated);
+      evaluated = eval_operator_div(evaluated, next_evaluated);
       break;
 
     case BINARY_LT:
-      evaluated = eval_lt(evaluated, next_evaluated);
+      evaluated = eval_operator_lt(evaluated, next_evaluated);
       break;
 
     case BINARY_LE:
-      evaluated = eval_le(evaluated, next_evaluated);
+      evaluated = eval_operator_le(evaluated, next_evaluated);
       break;
 
     case BINARY_EQ:
-      evaluated = eval_eq(evaluated, next_evaluated);
+      evaluated = eval_operator_eq(evaluated, next_evaluated);
       break;
 
     case BINARY_NEQ:
-      evaluated = eval_neq(evaluated, next_evaluated);
+      evaluated = eval_operator_neq(evaluated, next_evaluated);
       break;
 
     case BINARY_GT:
-      evaluated = eval_gt(evaluated, next_evaluated);
+      evaluated = eval_operator_gt(evaluated, next_evaluated);
       break;
 
     case BINARY_GE:
-      evaluated = eval_ge(evaluated, next_evaluated);
+      evaluated = eval_operator_ge(evaluated, next_evaluated);
       break;
 
     case BINARY_NO_OP:
