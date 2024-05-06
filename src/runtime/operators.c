@@ -133,7 +133,7 @@ rt_value_t *eval_operator_binary_mult(rt_value_t *lhs, rt_value_t *rhs) {
 
     rt_value_t *multiplied = malloc(sizeof(*multiplied));
     multiplied->type = TYPE_INT;
-    multiplied->int_value = lhs->int_value - rhs->int_value;
+    multiplied->int_value = lhs->int_value * rhs->int_value;
     return multiplied;
   }
   case TYPE_BOOL:

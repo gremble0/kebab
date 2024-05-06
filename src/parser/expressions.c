@@ -162,31 +162,6 @@ static expression_cond_t *parse_expression_cond(lexer_t *lexer) {
   return excd;
 }
 
-static void expression_normal_fix_precedence(expression_normal_t *exnr) {
-  // A variant of insertionsort that sorts the factors in an expression by the
-  // precedence of the operators between them
-  for (size_t i = 1; i < exnr->operators->cur_size; ++i) {
-    for (size_t j = i;
-         j > 0 &&
-         precedences[*(binary_operator_t *)list_get(exnr->operators, j - 1)] >
-             precedences[*(binary_operator_t *)list_get(exnr->operators, j)];
-         --j) {
-      // Bubble the two factors between the operator one step to the left
-      factor_t *fac1 = exnr->factors->entries[j];
-      factor_t *fac2 = exnr->factors->entries[j + 1];
-      exnr->factors->entries[j] = exnr->factors->entries[j - 1];
-      exnr->factors->entries[j - 1] = fac1;
-      exnr->factors->entries[j + 1] = exnr->factors->entries[j];
-      exnr->factors->entries[j] = fac2;
-
-      // Bubble operator one step to the left
-      binary_operator_t *bo = exnr->operators->entries[j];
-      exnr->operators->entries[j] = exnr->operators->entries[j - 1];
-      exnr->operators->entries[j - 1] = bo;
-    }
-  }
-}
-
 static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
   PARSER_LOG_NODE_START("expression-normal");
 
@@ -210,10 +185,6 @@ static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
     *bo_p = bo;
     list_push_back(exnr->operators, bo_p);
   }
-
-  expression_normal_fix_precedence(exnr);
-
-  // Order the factors by binary operator precedence
 
   PARSER_LOG_NODE_FINISH("expression-normal");
 

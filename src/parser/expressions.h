@@ -22,6 +22,7 @@ typedef enum {
 } binary_operator_t;
 
 // @see https://en.wikipedia.org/wiki/Order_of_operations
+// CURRENTLY UNUSED, maybe used in the future so I will keep it
 static const size_t precedences[] = {
     [BINARY_PLUS] = 4, [BINARY_MINUS] = 4,
 
