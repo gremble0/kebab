@@ -32,9 +32,11 @@ rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
 
   case ATOM_NAME:
     // Look up value in scope and return it
+    // NEXT
 
   case ATOM_INNER_EXPR:
     // Eval expression and return it
+    // NEXT
 
   case ATOM_LIST:
     v->list_value = atom->list_value;
