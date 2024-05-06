@@ -34,6 +34,7 @@ struct keb_type_t {
   };
 };
 
+// Make function? type_kind_to_string
 static const char *type_kind_map[] = {
     [TYPE_CHAR] = "char", [TYPE_STRING] = "string", [TYPE_INT] = "int",
     [TYPE_BOOL] = "bool", [TYPE_FN] = "fn",         [TYPE_LIST] = "list",

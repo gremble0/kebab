@@ -1,48 +1,56 @@
 #include <stdlib.h>
 
+#include "nonstdlib/nerror.h"
 #include "parser/atoms.h"
 #include "parser/types.h"
 #include "runtime/atoms.h"
+#include "runtime/expressions.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
 
 rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
-  rt_value_t *v = malloc(sizeof(*v));
-
   switch (atom->type) {
-  case ATOM_CHAR:
+  case ATOM_CHAR: {
+    rt_value_t *v = malloc(sizeof(*v));
     v->char_value = atom->char_value;
     v->type = TYPE_CHAR;
-    break;
+    return v;
+  }
 
-  case ATOM_STRING:
+  case ATOM_STRING: {
+    rt_value_t *v = malloc(sizeof(*v));
     v->string_value = atom->string_value;
     v->type = TYPE_STRING;
-    break;
+    return v;
+  }
 
-  case ATOM_INT:
+  case ATOM_INT: {
+    rt_value_t *v = malloc(sizeof(*v));
     v->int_value = atom->int_value;
     v->type = TYPE_INT;
-    break;
+    return v;
+  }
 
-  case ATOM_BOOL:
+  case ATOM_BOOL: {
+    rt_value_t *v = malloc(sizeof(*v));
     v->bool_value = atom->bool_value;
     v->type = TYPE_BOOL;
-    break;
+    return v;
+  }
 
   case ATOM_NAME:
     // Look up value in scope and return it
     // NEXT
+    ASSERT(0);
 
   case ATOM_INNER_EXPR:
-    // Eval expression and return it
-    // NEXT
+    return eval_expression(atom->inner_expr_value, scope);
 
-  case ATOM_LIST:
+  case ATOM_LIST: {
+    rt_value_t *v = malloc(sizeof(*v));
     v->list_value = atom->list_value;
     v->type = TYPE_LIST;
-    break;
+    return v;
   }
-
-  return v;
+  }
 }
