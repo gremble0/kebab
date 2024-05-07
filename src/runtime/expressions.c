@@ -16,7 +16,7 @@ static rt_value_t *eval_expression_normal(expression_normal_t *exnm,
   // Evaluate the first factor then apply all operations between the first
   // factor and the other factors
   rt_value_t *evaluated = eval_factor(list_get(exnm->factors, 0), scope);
-  for (size_t i = 0; i < exnm->operators->cur_size; ++i) {
+  for (size_t i = 0; i < exnm->operators->size; ++i) {
     binary_operator_t *bo = list_get(exnm->operators, i);
     rt_value_t *next_evaluated =
         eval_factor(list_get(exnm->factors, i + 1), scope);

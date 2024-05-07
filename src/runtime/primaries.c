@@ -17,7 +17,7 @@ rt_value_t *eval_func_call(list_t *arguments, fn_constructor_t *fn,
   // TODO: varargs?
   // Evaluate the parameters and put them into the local scope of the function
   // Also check their types and error if they're wrong
-  for (size_t i = 0; i < arguments->cur_size; ++i) {
+  for (size_t i = 0; i < arguments->size; ++i) {
     rt_value_t *arg = eval_expression(list_get(arguments, i), scope);
     fn_param_t *p = list_get(fn->params, i);
     // TODO: this is not always enough for composite types like lists and fns

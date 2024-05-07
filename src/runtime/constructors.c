@@ -12,15 +12,15 @@
 #include "runtime/statements.h"
 
 static rt_value_t *eval_constructor_body(list_t *body, scope_t *scope) {
-  ASSERT(body->cur_size > 0);
+  ASSERT(body->size > 0);
 
-  for (size_t i = 0; i < body->cur_size - 1; ++i)
+  for (size_t i = 0; i < body->size - 1; ++i)
     eval_statement(list_get(body, i), scope);
 
   // Last statement in constructor should be an expression (this has been
   // verified in the parser)
   // @see `parse_primitive_constructor`
-  statement_t *last = list_get(body, body->cur_size - 1);
+  statement_t *last = list_get(body, body->size - 1);
   ASSERT(last->type == STMT_EXPRESSION);
 
   return eval_expression(last->expr, scope);
@@ -52,7 +52,7 @@ static rt_value_t *eval_list_constructor(list_constructor_t *constr,
     err_type_error(type_kind_map[TYPE_LIST], type_kind_map[v->type]);
 
   // TODO: THIS IS NOT GOOD ENOUGH FOR COMPOSITE TYPES
-  for (size_t i = 0; i < v->list_value->cur_size; ++i) {
+  for (size_t i = 0; i < v->list_value->size; ++i) {
     rt_value_t *cur = list_get(v->list_value, i);
     if (cur->type != constr->type->type)
       err_list_type_error(type_kind_map[constr->type->type],
