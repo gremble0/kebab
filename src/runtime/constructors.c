@@ -11,7 +11,7 @@
 #include "runtime/runtime.h"
 #include "runtime/statements.h"
 
-static rt_value_t *eval_constructor_body(list_t *body, scope_t *scope) {
+rt_value_t *eval_constructor_body(list_t *body, scope_t *scope) {
   ASSERT(body->size > 0);
 
   for (size_t i = 0; i < body->size - 1; ++i)

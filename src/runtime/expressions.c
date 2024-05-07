@@ -1,6 +1,9 @@
 #include "parser/expressions.h"
 #include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
+#include "parser/types.h"
+#include "runtime/constructors.h"
+#include "runtime/error.h"
 #include "runtime/expressions.h"
 #include "runtime/factors.h"
 #include "runtime/operators.h"
@@ -8,7 +11,21 @@
 
 static rt_value_t *eval_expression_cond(expression_cond_t *excd,
                                         scope_t *scope) {
-  return NULL;
+  // - 1 because last cond is the else branch which doesnt have a test (NULL)
+  for (size_t i = 0; i < excd->conds->size - 1; ++i) {
+    cond_t *cond = list_get(excd->conds, i);
+    rt_value_t *tested = eval_expression(cond->test, scope);
+    // TODO: fill in this (probably new type of error)
+    if (tested->type != TYPE_BOOL)
+      err_type_error(type_kind_map[TYPE_BOOL], type_kind_map[tested->type]);
+
+    if (tested->bool_value)
+      return eval_constructor_body(cond->body, scope);
+  }
+
+  // Take else branch if none of the tests were true
+  cond_t *else_cond = list_get(excd->conds, excd->conds->size - 1);
+  return eval_constructor_body(else_cond->body, scope);
 }
 
 static rt_value_t *eval_expression_normal(expression_normal_t *exnm,

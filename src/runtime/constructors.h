@@ -3,3 +3,4 @@
 #include "runtime/scope.h"
 
 rt_value_t *eval_constructor(constructor_t *constr, scope_t *scope);
+rt_value_t *eval_constructor_body(list_t *body, scope_t *scope);

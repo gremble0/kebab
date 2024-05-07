@@ -36,7 +36,7 @@ typedef struct expression_t expression_t;
 
 typedef struct {
   expression_t *test;
-  list_t *body;
+  list_t *body; // list<statement_t *>
 } cond_t;
 
 typedef struct {
