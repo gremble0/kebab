@@ -1,9 +1,9 @@
 #include <stdlib.h>
 
-#include "nonstdlib/nerror.h"
 #include "parser/atoms.h"
 #include "parser/types.h"
 #include "runtime/atoms.h"
+#include "runtime/error.h"
 #include "runtime/expressions.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
@@ -42,7 +42,7 @@ rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
     // Look up value in scope and return it, errors if variable doesnt exist
     rt_value_t *v = scope_get(scope, atom->name_value);
     if (v == NULL)
-      ASSERT(0);
+      err_name_error(atom->name_value);
 
     return v;
   }

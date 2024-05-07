@@ -8,3 +8,10 @@ _Noreturn void err_type_error(const char *expected, const char *actual) {
           expected, actual);
   exit(1);
 }
+
+// TODO: list all defined bindings for a scope?
+_Noreturn void err_name_error(const char *name) {
+  fprintf(stderr, "name-error: name '%s' is not defined in the current scope\n",
+          name);
+  exit(1);
+}

@@ -173,7 +173,8 @@ static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
   // TODO: don't always init operators
   exnr->operators = list_init(LIST_START_SIZE); // list<binary_operator_t *>
 
-  // Continue parsing until there are no more binary operators.
+  // Continue parsing a factor followed by a binary operator until there are no
+  // more binary operators
   while (1) {
     list_push_back(exnr->factors, parse_factor(lexer));
 
