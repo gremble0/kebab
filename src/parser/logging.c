@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "parser/logging.h"
-#include "parser/utils.h"
+#include "utils/utils.h"
 
 void parser_log_start() {
   log_file = fopen("keb-parser.log", "w");

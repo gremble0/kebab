@@ -3,7 +3,7 @@
 
 #include "lexer/token.h"
 #include "parser/error.h"
-#include "parser/utils.h"
+#include "utils/utils.h"
 
 /**
  * @brief Prints the current position in the lexer. Should print something like:

@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "nonstdlib/nerror.h"
-#include "parser/utils.h"
+#include "utils/utils.h"
 
 /**
  * @brief Creates a malloc'd string consisting of the character `c` repeated `n`

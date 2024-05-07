@@ -3,9 +3,9 @@ NONSTDLIBINCLUDE := $(NONSTDLIBROOT)/include
 KEBABSRC := ..
 
 CC := clang
-CFLAGS := -Wall -Wextra -g -DDEBUG_LEXER
+CFLAGS := -Wall -Wextra -g -DDEBUG_PARSER
 
-OBJS := lexer.o token.o logging.o
+OBJS := utils.o
 
 all: clean $(OBJS)
 
