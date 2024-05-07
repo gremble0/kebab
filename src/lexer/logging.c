@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lexer/utils.h"
+#include "lexer/logging.h"
 
 /**
  * @brief Write a token into the log file

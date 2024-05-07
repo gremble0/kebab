@@ -5,8 +5,8 @@
 #include <string.h>
 
 #include "lexer/lexer.h"
+#include "lexer/logging.h"
 #include "lexer/token.h"
-#include "lexer/utils.h"
 #include "nonstdlib/nerror.h"
 
 static int is_not_dquote(int c) { return c != '"'; }

@@ -7,7 +7,7 @@ CC := clang
 CFLAGS := -Wall -Wextra -g -DDEBUG_LEXER
 LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
-OBJS := lexer.o token.o utils.o
+OBJS := lexer.o token.o logging.o
 
 all: clean $(OBJS)
 
