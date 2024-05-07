@@ -16,8 +16,25 @@ scope_t *scope_init(scope_t *outer) {
 
 // TODO: use string_t instead of char* to avoid strlen
 
+/**
+ * @brief Look up a name in a given scope. Looks in outer scopes and returns the
+ * value from the first scope that contains the name. Returns NULL if no outer
+ * scopes contain the name
+ *
+ * @param scope scope to look for value in
+ * @param name the name of the variable to look up
+ * @return a pointer to some rt_value_t or NULL
+ */
 rt_value_t *scope_get(scope_t *scope, const char *name) {
-  return ht_get(scope->bindings, name, strlen(name));
+  while (scope != NULL) {
+    rt_value_t *v = ht_get(scope->bindings, name, strlen(name));
+    if (v != NULL)
+      return v;
+
+    scope = scope->outer;
+  }
+
+  return NULL;
 }
 
 void scope_put(scope_t *scope, char *name, rt_value_t *v) {

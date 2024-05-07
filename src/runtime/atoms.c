@@ -38,10 +38,14 @@ rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
     return v;
   }
 
-  case ATOM_NAME:
-    // Look up value in scope and return it
-    // NEXT
-    ASSERT(0);
+  case ATOM_NAME: {
+    // Look up value in scope and return it, errors if variable doesnt exist
+    rt_value_t *v = scope_get(scope, atom->name_value);
+    if (v == NULL)
+      ASSERT(0);
+
+    return v;
+  }
 
   case ATOM_INNER_EXPR:
     return eval_expression(atom->inner_expr_value, scope);
