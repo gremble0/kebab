@@ -4,27 +4,13 @@
 #include "runtime/expressions.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
+#include <stdio.h>
 
 // Add symbol to scope
 // assign value to symbol
 void eval_definition(definition_t *def, scope_t *scope) {
-  rt_value_t *v;
-
-  switch (def->constructor->type) {
-  case TYPE_CHAR:
-  case TYPE_STRING:
-  case TYPE_INT:
-  case TYPE_BOOL:
-    v = eval_primitive_constructor(def->constructor, scope);
-    break;
-  case TYPE_FN:
-    v = eval_fn_constructor(def->constructor, scope);
-    break;
-  case TYPE_LIST:
-    v = eval_list_constructor(def->constructor, scope);
-    break;
-  }
-
+  rt_value_t *v = eval_constructor(def->constructor, scope);
+  printf("%ld\n", v->int_value);
   scope_put(scope, def->name, v);
 }
 
