@@ -5,7 +5,7 @@
 #include "parser/atoms.h"
 #include "parser/error.h"
 #include "parser/expressions.h"
-#include "parser/utils.h"
+#include "parser/logging.h"
 #include "string.h"
 
 static expression_t *parse_inner_expression(lexer_t *lexer) {

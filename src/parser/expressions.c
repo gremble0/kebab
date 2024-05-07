@@ -5,8 +5,8 @@
 #include "nonstdlib/nlist.h"
 #include "parser/expressions.h"
 #include "parser/factors.h"
+#include "parser/logging.h"
 #include "parser/statements.h"
-#include "parser/utils.h"
 
 static binary_operator_t parse_binary_operator(lexer_t *lexer) {
   switch (lexer->cur_token->kind) {

@@ -4,8 +4,8 @@
 #include "nonstdlib/nerror.h"
 #include "parser/constructors.h"
 #include "parser/expressions.h"
+#include "parser/logging.h"
 #include "parser/statements.h"
-#include "parser/utils.h"
 
 // TODO: don't require constructor here, allow definition of primitives like
 // `def a = 2` and infer type

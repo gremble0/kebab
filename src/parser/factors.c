@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "parser/factors.h"
-#include "parser/utils.h"
+#include "parser/logging.h"
 
 static unary_operator_t parse_unary_operator(lexer_t *lexer) {
   // TODO: some sort of error handling

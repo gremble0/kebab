@@ -2,9 +2,9 @@
 
 #include "lexer/lexer.h"
 #include "nonstdlib/nlist.h"
+#include "parser/logging.h"
 #include "parser/parser.h"
 #include "parser/statements.h"
-#include "parser/utils.h"
 
 ast_t *parse(lexer_t *lexer) {
   PARSER_LOG_START();

@@ -3,8 +3,8 @@
 #include "lexer/lexer.h"
 #include "nonstdlib/nlist.h"
 #include "parser/expressions.h"
+#include "parser/logging.h"
 #include "parser/primaries.h"
-#include "parser/utils.h"
 
 static list_t *parse_primary_arguments(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primary-arguments");

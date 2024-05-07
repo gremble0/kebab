@@ -2,9 +2,9 @@
 
 #include "nonstdlib/nlist.h"
 #include "parser/constructors.h"
+#include "parser/logging.h"
 #include "parser/statements.h"
 #include "parser/types.h"
-#include "parser/utils.h"
 #include "string.h"
 
 static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
