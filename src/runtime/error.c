@@ -3,8 +3,18 @@
 
 #include "runtime/error.h"
 
+// TODO: trace position need to take lexer as param? :(
+
 _Noreturn void err_type_error(const char *expected, const char *actual) {
   fprintf(stderr, "type-error: expected type '%s', but got type '%s'\n",
+          expected, actual);
+  exit(1);
+}
+
+_Noreturn void err_list_type_error(const char *expected, const char *actual) {
+  fprintf(stderr,
+          "list-type-error: lists must be homogenous. Declared type '%s' "
+          "actual type '%s'\n",
           expected, actual);
   exit(1);
 }

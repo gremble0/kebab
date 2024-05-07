@@ -31,7 +31,7 @@ rt_value_t *eval_func_call(list_t *arguments, fn_constructor_t *fn,
   }
 
   // Evaluate the body of the function
-  rt_value_t *v = eval_constructor(fn->body, local_scope);
+  rt_value_t *v = eval_constructor(fn->constr, local_scope);
 
   scope_free(local_scope);
 

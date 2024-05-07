@@ -14,7 +14,7 @@ typedef struct {
     int64_t int_value;
     uint8_t bool_value;
     fn_constructor_t *fn_value;
-    list_t *list_value; // list<runtime_value_t*>
+    list_t *list_value; // list<rt_value_t*>
   };
 } rt_value_t;
 

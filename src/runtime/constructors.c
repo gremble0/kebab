@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "nonstdlib/nerror.h"
@@ -10,21 +11,16 @@
 #include "runtime/runtime.h"
 #include "runtime/statements.h"
 
-// TODO: take fn_constructor_t, primitive_constructor_t, etc. as param, BUT this
-// is hard since primitive_constructor_t doesnt store its type
+static rt_value_t *eval_constructor_body(list_t *body, scope_t *scope) {
+  ASSERT(body->cur_size > 0);
 
-static rt_value_t *eval_constructor_body(primitive_constructor_t *constr,
-                                         scope_t *scope) {
-  list_t *constr_body = constr->stmts;
-  ASSERT(constr_body->cur_size > 0);
-
-  for (size_t i = 0; i < constr_body->cur_size - 1; ++i)
-    eval_statement(list_get(constr_body, i), scope);
+  for (size_t i = 0; i < body->cur_size - 1; ++i)
+    eval_statement(list_get(body, i), scope);
 
   // Last statement in constructor should be an expression (this has been
   // verified in the parser)
   // @see `parse_primitive_constructor`
-  statement_t *last = list_get(constr_body, constr_body->cur_size - 1);
+  statement_t *last = list_get(body, body->cur_size - 1);
   ASSERT(last->type == STMT_EXPRESSION);
 
   return eval_expression(last->expr, scope);
@@ -34,7 +30,7 @@ static rt_value_t *eval_primitive_constructor(primitive_constructor_t *constr,
                                               scope_t *scope) {
   scope_t *local_scope = scope_init(scope);
 
-  rt_value_t *v = eval_constructor_body(constr, local_scope);
+  rt_value_t *v = eval_constructor_body(constr->body, local_scope);
 
   scope_free(local_scope);
 
@@ -51,7 +47,17 @@ static rt_value_t *eval_fn_constructor(fn_constructor_t *constr) {
 
 static rt_value_t *eval_list_constructor(list_constructor_t *constr,
                                          scope_t *scope) {
-  rt_value_t *v = malloc(sizeof(*v));
+  rt_value_t *v = eval_constructor_body(constr->body, scope);
+  if (v->type != TYPE_LIST)
+    err_type_error(type_kind_map[TYPE_LIST], type_kind_map[v->type]);
+
+  // TODO: THIS IS NOT GOOD ENOUGH FOR COMPOSITE TYPES
+  for (size_t i = 0; i < v->list_value->cur_size; ++i) {
+    rt_value_t *cur = list_get(v->list_value, i);
+    if (cur->type != constr->type->type)
+      err_list_type_error(type_kind_map[constr->type->type],
+                          type_kind_map[cur->type]);
+  }
 
   return v;
 }

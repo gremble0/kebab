@@ -14,15 +14,15 @@ static primitive_constructor_t *parse_primitive_constructor(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   primitive_constructor_t *pc = malloc(sizeof(*pc));
-  pc->stmts = list_init(LIST_START_SIZE); // list<statement_t *>
+  pc->body = list_init(LIST_START_SIZE); // list<statement_t *>
 
   while (lexer->cur_token->kind != TOKEN_RPAREN)
-    list_push_back(pc->stmts, parse_statement(lexer));
+    list_push_back(pc->body, parse_statement(lexer));
 
   // Last statement in constructor should be an expression (the return type of
   // the constructor)
-  statement_t *last_stmt = list_get(pc->stmts, pc->stmts->cur_size - 1);
-  if (pc->stmts->cur_size == 0 || last_stmt->type != STMT_EXPRESSION)
+  statement_t *last_stmt = list_get(pc->body, pc->body->cur_size - 1);
+  if (pc->body->cur_size == 0 || last_stmt->type != STMT_EXPRESSION)
     err_missing_return(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
@@ -71,7 +71,7 @@ static fn_constructor_t *parse_fn_constructor(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
 
   // parse function body
-  fnc->body = parse_constructor(lexer);
+  fnc->constr = parse_constructor(lexer);
 
   // Close the opening paren of the fn constructor
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
@@ -87,19 +87,19 @@ static list_constructor_t *parse_list_constructor(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   list_constructor_t *lc = malloc(sizeof(*lc));
-  lc->stmts = list_init(LIST_START_SIZE);
+  lc->body = list_init(LIST_START_SIZE);
   lc->type = parse_type(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
   SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
 
   while (lexer->cur_token->kind != TOKEN_RPAREN)
-    list_push_back(lc->stmts, parse_statement(lexer));
+    list_push_back(lc->body, parse_statement(lexer));
 
   // Last statement in constructor should be an expression (the return type of
   // the constructor)
-  statement_t *last_stmt = list_get(lc->stmts, lc->stmts->cur_size - 1);
-  if (lc->stmts->cur_size == 0 || last_stmt->type != STMT_EXPRESSION)
+  statement_t *last_stmt = list_get(lc->body, lc->body->cur_size - 1);
+  if (lc->body->cur_size == 0 || last_stmt->type != STMT_EXPRESSION)
     err_missing_return(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
@@ -160,21 +160,21 @@ static void fn_param_free(fn_param_t *fnp) {
 }
 
 static void primitive_constructor_free(primitive_constructor_t *pc) {
-  list_map(pc->stmts, (list_map_func)statement_free);
-  list_free(pc->stmts);
+  list_map(pc->body, (list_map_func)statement_free);
+  list_free(pc->body);
   free(pc);
 }
 
 static void fn_constructor_free(fn_constructor_t *fnc) {
   list_map(fnc->params, (list_map_func)fn_param_free);
   list_free(fnc->params);
-  constructor_free(fnc->body);
+  constructor_free(fnc->constr);
   free(fnc);
 }
 
 static void list_constructor_free(list_constructor_t *lc) {
-  list_map(lc->stmts, (list_map_func)statement_free);
-  list_free(lc->stmts);
+  list_map(lc->body, (list_map_func)statement_free);
+  list_free(lc->body);
 
   type_free(lc->type);
   free(lc);

@@ -8,7 +8,7 @@ typedef struct constructor_t constructor_t;
 
 // Primitivies are types like char, int, string, bool, etc.
 typedef struct {
-  list_t *stmts; // list<statement_t *>
+  list_t *body; // list<statement_t *>
 } primitive_constructor_t;
 
 typedef struct {
@@ -18,12 +18,12 @@ typedef struct {
 
 typedef struct {
   list_t *params; // list<fn_param_t *>
-  constructor_t *body;
+  constructor_t *constr;
 } fn_constructor_t;
 
 typedef struct {
-  list_t *stmts; // list<statement_t *> where the last statement_t should be a
-                 // STMT_EXPRESSION
+  list_t *body; // list<statement_t *> where the last statement_t should be a
+                // STMT_EXPRESSION
   keb_type_t *type;
 } list_constructor_t;
 
