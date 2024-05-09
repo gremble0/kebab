@@ -12,6 +12,7 @@
 #include "runtime/statements.h"
 
 rt_value_t *eval_constructor_body(list_t *body, scope_t *scope) {
+  // Raise error here?
   ASSERT(body->size > 0);
 
   for (size_t i = 0; i < body->size - 1; ++i)
@@ -47,6 +48,7 @@ static rt_value_t *eval_fn_constructor(fn_constructor_t *constr) {
 
 static rt_value_t *eval_list_constructor(list_constructor_t *constr,
                                          scope_t *scope) {
+  // Body should return a list
   rt_value_t *v = eval_constructor_body(constr->body, scope);
   if (v->type != TYPE_LIST)
     err_type_error(type_kind_map[TYPE_LIST], type_kind_map[v->type]);

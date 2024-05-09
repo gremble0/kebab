@@ -1,6 +1,8 @@
 #include <stdlib.h>
 
+#include "nonstdlib/nlist.h"
 #include "parser/atoms.h"
+#include "parser/logging.h"
 #include "parser/types.h"
 #include "runtime/atoms.h"
 #include "runtime/error.h"
@@ -52,8 +54,13 @@ rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
 
   case ATOM_LIST: {
     rt_value_t *v = malloc(sizeof(*v));
-    v->list_value = atom->list_value;
+    v->list_value = list_init(LIST_START_SIZE);
     v->type = TYPE_LIST;
+
+    for (size_t i = 0; i < atom->list_value->size; ++i)
+      list_push_back(v->list_value,
+                     eval_expression(list_get(atom->list_value, i), scope));
+
     return v;
   }
   }

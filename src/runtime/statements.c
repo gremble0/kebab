@@ -10,7 +10,6 @@
 // assign value to symbol
 void eval_definition(definition_t *def, scope_t *scope) {
   rt_value_t *v = eval_constructor(def->constructor, scope);
-  printf("%ld\n", v->int_value);
   scope_put(scope, def->name, v);
 }
 
