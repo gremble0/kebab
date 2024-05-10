@@ -16,5 +16,5 @@ typedef struct {
   primary_t *primary;
 } factor_t;
 
-factor_t *parse_factor(lexer_t *lexer);
+factor_t *factor_parse(lexer_t *lexer);
 void factor_free(factor_t *fac);

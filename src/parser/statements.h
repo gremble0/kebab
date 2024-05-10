@@ -31,5 +31,5 @@ typedef struct {
   };
 } statement_t;
 
-statement_t *parse_statement(lexer_t *lexer);
+statement_t *statement_parse(lexer_t *lexer);
 void statement_free(statement_t *stmt);

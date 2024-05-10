@@ -40,5 +40,5 @@ static const char *type_kind_map[] = {
     [TYPE_BOOL] = "bool", [TYPE_FN] = "fn",         [TYPE_LIST] = "list",
 };
 
-keb_type_t *parse_type(lexer_t *lexer);
+keb_type_t *type_parse(lexer_t *lexer);
 void type_free(keb_type_t *kt);

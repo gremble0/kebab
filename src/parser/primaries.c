@@ -6,7 +6,7 @@
 #include "parser/logging.h"
 #include "parser/primaries.h"
 
-static list_t *parse_primary_arguments(lexer_t *lexer) {
+static list_t *primary_arguments_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primary-arguments");
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
@@ -27,7 +27,7 @@ static list_t *parse_primary_arguments(lexer_t *lexer) {
   return args;
 }
 
-primary_t *parse_primary(lexer_t *lexer) {
+primary_t *primary_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primary");
 
   primary_t *prm = malloc(sizeof(*prm));
@@ -36,7 +36,7 @@ primary_t *parse_primary(lexer_t *lexer) {
 
   prm->atom = parse_atom(lexer);
   if (lexer->cur_token->kind == TOKEN_LPAREN)
-    prm->arguments = parse_primary_arguments(lexer);
+    prm->arguments = primary_arguments_parse(lexer);
   else
     prm->arguments = NULL;
 
@@ -46,10 +46,10 @@ primary_t *parse_primary(lexer_t *lexer) {
 }
 
 void primary_free(primary_t *prm) {
-  atom_free(prm->atom);
+  free_atom(prm->atom);
 
   if (prm->arguments != NULL) {
-    list_map(prm->arguments, (list_map_func)expression_free);
+    list_map(prm->arguments, (list_map_func)free_expression);
     list_free(prm->arguments);
   }
 

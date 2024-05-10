@@ -10,5 +10,5 @@ typedef struct {
                      // for more syntax like []
 } primary_t;
 
-primary_t *parse_primary(lexer_t *lexer);
+primary_t *primary_parse(lexer_t *lexer);
 void primary_free(primary_t *prm);

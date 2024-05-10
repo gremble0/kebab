@@ -8,11 +8,11 @@
 #include "parser/logging.h"
 #include "string.h"
 
-static expression_t *parse_inner_expression(lexer_t *lexer) {
+static expression_t *inner_expression_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("inner-expr");
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
-  expression_t *expr = parse_expression(lexer);
+  expression_t *expr = expression_parse(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
   PARSER_LOG_NODE_FINISH("inner-expr");
@@ -20,14 +20,14 @@ static expression_t *parse_inner_expression(lexer_t *lexer) {
   return expr;
 }
 
-static list_t *parse_list(lexer_t *lexer) {
+static list_t *list_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("list");
   SKIP_TOKEN(lexer, TOKEN_LBRACE);
 
   list_t *list = list_init(LIST_START_SIZE);
 
   while (1) {
-    list_push_back(list, parse_expression(lexer));
+    list_push_back(list, expression_parse(lexer));
     if (lexer->cur_token->kind == TOKEN_RBRACE)
       break;
     else
@@ -40,7 +40,7 @@ static list_t *parse_list(lexer_t *lexer) {
   return list;
 }
 
-atom_t *parse_atom(lexer_t *lexer) {
+atom_t *atom_parse(lexer_t *lexer) {
   atom_t *atom = malloc(sizeof(*atom));
   if (atom == NULL)
     err_malloc_fail();
@@ -90,12 +90,12 @@ atom_t *parse_atom(lexer_t *lexer) {
 
   case TOKEN_LPAREN:
     atom->type = ATOM_INNER_EXPR;
-    atom->inner_expr_value = parse_inner_expression(lexer);
+    atom->inner_expr_value = inner_expression_parse(lexer);
     break;
 
   case TOKEN_LBRACE:
     atom->type = ATOM_LIST;
-    atom->list_value = parse_list(lexer);
+    atom->list_value = list_parse(lexer);
     break;
 
   default:

@@ -33,5 +33,5 @@ typedef struct {
   };
 } atom_t;
 
-atom_t *parse_atom(lexer_t *lexer);
+atom_t *atom_parse(lexer_t *lexer);
 void atom_free(atom_t *atom);

@@ -9,7 +9,7 @@
 
 // TODO: don't require constructor here, allow definition of primitives like
 // `def a = 2` and infer type
-static definition_t *parse_definition(lexer_t *lexer) {
+static definition_t *definition_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("definition");
   SKIP_TOKEN(lexer, TOKEN_DEF);
 
@@ -38,7 +38,7 @@ static definition_t *parse_definition(lexer_t *lexer) {
   return def;
 }
 
-static assignment_t *parse_assignment(lexer_t *lexer) {
+static assignment_t *assignment_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("assignment");
   SKIP_TOKEN(lexer, TOKEN_SET);
 
@@ -59,7 +59,7 @@ static assignment_t *parse_assignment(lexer_t *lexer) {
   return ass;
 }
 
-statement_t *parse_statement(lexer_t *lexer) {
+statement_t *statement_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("statement");
 
   statement_t *stmt = malloc(sizeof(*stmt));
@@ -69,12 +69,12 @@ statement_t *parse_statement(lexer_t *lexer) {
   switch (lexer->cur_token->kind) {
   case TOKEN_DEF:
     stmt->type = STMT_DEFINITION;
-    stmt->definition = parse_definition(lexer);
+    stmt->definition = definition_parse(lexer);
     break;
 
   case TOKEN_SET:
     stmt->type = STMT_ASSIGNMENT;
-    stmt->assignment = parse_assignment(lexer);
+    stmt->assignment = assignment_parse(lexer);
     break;
 
   // I dont like this, its too exhaustive and needs to be updated all the
@@ -115,14 +115,14 @@ statement_t *parse_statement(lexer_t *lexer) {
 }
 
 static void definition_free(definition_t *def) {
-  constructor_free(def->constructor);
+  free_constructor(def->constructor);
   free(def->name);
   free(def);
 }
 
 static void assignment_free(assignment_t *ass) {
   free(ass->name);
-  constructor_free(ass->constructor);
+  free_constructor(ass->constructor);
   free(ass);
 }
 
@@ -142,7 +142,7 @@ void statement_free(statement_t *stmt) {
     break;
 
   case STMT_EXPRESSION:
-    expression_free(stmt->expr);
+    free_expression(stmt->expr);
     break;
   }
 

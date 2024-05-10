@@ -8,7 +8,7 @@
 #include "parser/logging.h"
 #include "parser/statements.h"
 
-static binary_operator_t parse_binary_operator(lexer_t *lexer) {
+static binary_operator_t binary_operator_parse(lexer_t *lexer) {
   switch (lexer->cur_token->kind) {
   // Maths
   case TOKEN_PLUS:
@@ -59,23 +59,23 @@ static binary_operator_t parse_binary_operator(lexer_t *lexer) {
   }
 }
 
-static expression_t *parse_cond_test(lexer_t *lexer) {
+static expression_t *cond_test_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("cond-test");
 
-  expression_t *test = parse_expression(lexer);
+  expression_t *test = expression_parse(lexer);
 
   PARSER_LOG_NODE_FINISH("cond-test");
 
   return test;
 }
 
-static list_t *parse_cond_body(lexer_t *lexer) {
+static list_t *cond_body_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("cond-body");
 
   list_t *body = list_init(LIST_START_SIZE);
 
   while (1) {
-    statement_t *stmt = parse_statement(lexer);
+    statement_t *stmt = statement_parse(lexer);
     list_push_back(body, stmt);
 
     if (stmt->type == STMT_EXPRESSION)
@@ -87,7 +87,7 @@ static list_t *parse_cond_body(lexer_t *lexer) {
   return body;
 }
 
-static cond_t *parse_cond_if(lexer_t *lexer) {
+static cond_t *cond_if_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("cond-if");
 
   cond_t *cond = malloc(sizeof(*cond));
@@ -95,16 +95,16 @@ static cond_t *parse_cond_if(lexer_t *lexer) {
     err_malloc_fail();
 
   SKIP_TOKEN(lexer, TOKEN_IF);
-  cond->test = parse_cond_test(lexer);
+  cond->test = cond_test_parse(lexer);
   SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
-  cond->body = parse_cond_body(lexer);
+  cond->body = cond_body_parse(lexer);
 
   PARSER_LOG_NODE_FINISH("cond-if");
 
   return cond;
 }
 
-static cond_t *parse_cond_elif(lexer_t *lexer) {
+static cond_t *cond_elif_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("cond-elif");
 
   cond_t *cond = malloc(sizeof(*cond));
@@ -112,16 +112,16 @@ static cond_t *parse_cond_elif(lexer_t *lexer) {
     err_malloc_fail();
 
   SKIP_TOKEN(lexer, TOKEN_ELIF);
-  cond->test = parse_cond_test(lexer);
+  cond->test = cond_test_parse(lexer);
   SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
-  cond->body = parse_cond_body(lexer);
+  cond->body = cond_body_parse(lexer);
 
   PARSER_LOG_NODE_FINISH("cond-elif");
 
   return cond;
 }
 
-static cond_t *parse_cond_else(lexer_t *lexer) {
+static cond_t *cond_else_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("cond-else");
 
   cond_t *cond = malloc(sizeof(*cond));
@@ -131,14 +131,14 @@ static cond_t *parse_cond_else(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_ELSE);
   cond->test = NULL;
   SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
-  cond->body = parse_cond_body(lexer);
+  cond->body = cond_body_parse(lexer);
 
   PARSER_LOG_NODE_FINISH("cond-else");
 
   return cond;
 }
 
-static expression_cond_t *parse_expression_cond(lexer_t *lexer) {
+static expression_cond_t *expression_cond_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("expression-cond");
 
   expression_cond_t *excd = malloc(sizeof(*excd));
@@ -148,21 +148,21 @@ static expression_cond_t *parse_expression_cond(lexer_t *lexer) {
   excd->conds = list_init(LIST_START_SIZE);
 
   // parse 1 if
-  list_push_back(excd->conds, parse_cond_if(lexer));
+  list_push_back(excd->conds, cond_if_parse(lexer));
 
   // parse 0 or more elifs
   while (lexer->cur_token->kind == TOKEN_ELIF)
-    list_push_back(excd->conds, parse_cond_elif(lexer));
+    list_push_back(excd->conds, cond_elif_parse(lexer));
 
   // parse 1 else (else is mandatory since expression must return something)
-  list_push_back(excd->conds, parse_cond_else(lexer));
+  list_push_back(excd->conds, cond_else_parse(lexer));
 
   PARSER_LOG_NODE_FINISH("expression-cond");
 
   return excd;
 }
 
-static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
+static expression_normal_t *expression_normal_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("expression-normal");
 
   expression_normal_t *exnr = malloc(sizeof(*exnr));
@@ -176,9 +176,9 @@ static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
   // Continue parsing a factor followed by a binary operator until there are no
   // more binary operators
   while (1) {
-    list_push_back(exnr->factors, parse_factor(lexer));
+    list_push_back(exnr->factors, factor_parse(lexer));
 
-    binary_operator_t bo = parse_binary_operator(lexer);
+    binary_operator_t bo = binary_operator_parse(lexer);
     if (bo == BINARY_NO_OP)
       break;
 
@@ -192,7 +192,7 @@ static expression_normal_t *parse_expression_normal(lexer_t *lexer) {
   return exnr;
 }
 
-expression_t *parse_expression(lexer_t *lexer) {
+expression_t *expression_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("expression");
 
   expression_t *expr = malloc(sizeof(*expr));
@@ -202,7 +202,7 @@ expression_t *parse_expression(lexer_t *lexer) {
   switch (lexer->cur_token->kind) {
   case TOKEN_IF:
     expr->type = EXPR_COND;
-    expr->cond = parse_expression_cond(lexer);
+    expr->cond = expression_cond_parse(lexer);
     break;
 
   case TOKEN_NAME:
@@ -219,7 +219,7 @@ expression_t *parse_expression(lexer_t *lexer) {
   case TOKEN_LPAREN:
   case TOKEN_LBRACE:
     expr->type = EXPR_NORMAL;
-    expr->normal = parse_expression_normal(lexer);
+    expr->normal = expression_normal_parse(lexer);
     break;
 
   default:

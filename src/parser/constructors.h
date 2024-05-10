@@ -36,5 +36,5 @@ struct constructor_t {
   };
 };
 
-constructor_t *parse_constructor(lexer_t *lexer);
+constructor_t *constructor_parse(lexer_t *lexer);
 void constructor_free(constructor_t *constr);

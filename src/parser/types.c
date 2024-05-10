@@ -17,7 +17,7 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   PARSER_LOG_NODE_START("fn-params");
 
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    list_push_back(fnt->param_types, parse_type(lexer));
+    list_push_back(fnt->param_types, type_parse(lexer));
 
     if (lexer->cur_token->kind != TOKEN_RPAREN) {
       SKIP_TOKEN(lexer, TOKEN_COMMA);
@@ -29,7 +29,7 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_FAT_RARROW);
   PARSER_LOG_NODE_START("fn-return-type");
 
-  fnt->return_type = parse_type(lexer);
+  fnt->return_type = type_parse(lexer);
 
   PARSER_LOG_NODE_FINISH("fn-return_type");
   PARSER_LOG_NODE_FINISH("fn-type");
@@ -45,7 +45,7 @@ static keb_type_list_t *parse_type_list(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   keb_type_list_t *klt = malloc(sizeof(*klt));
-  klt->type = parse_type(lexer);
+  klt->type = type_parse(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
   PARSER_LOG_NODE_FINISH("list-type");
@@ -53,7 +53,7 @@ static keb_type_list_t *parse_type_list(lexer_t *lexer) {
   return klt;
 }
 
-keb_type_t *parse_type(lexer_t *lexer) {
+keb_type_t *type_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("type");
 
   keb_type_t *kt = malloc(sizeof(*kt));

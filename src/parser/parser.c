@@ -13,7 +13,7 @@ ast_t *parse(lexer_t *lexer) {
   ast->stmts = list_init(LIST_START_SIZE); // list<statement_t *>
 
   while (lexer->cur_token->kind != TOKEN_EOF)
-    list_push_back(ast->stmts, parse_statement(lexer));
+    list_push_back(ast->stmts, statement_parse(lexer));
 
   PARSER_LOG_FINISH();
 

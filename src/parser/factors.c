@@ -3,7 +3,7 @@
 #include "parser/factors.h"
 #include "parser/logging.h"
 
-static unary_operator_t parse_unary_operator(lexer_t *lexer) {
+static unary_operator_t unary_operator_parse(lexer_t *lexer) {
   // TODO: some sort of error handling
   switch (lexer->cur_token->kind) {
   case TOKEN_PLUS:
@@ -23,7 +23,7 @@ static unary_operator_t parse_unary_operator(lexer_t *lexer) {
   }
 }
 
-factor_t *parse_factor(lexer_t *lexer) {
+factor_t *factor_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("factor");
 
   factor_t *ft = malloc(sizeof(*ft));
@@ -31,10 +31,10 @@ factor_t *parse_factor(lexer_t *lexer) {
     err_malloc_fail();
 
   // Check for prefixes
-  ft->prefix = parse_unary_operator(lexer);
+  ft->prefix = unary_operator_parse(lexer);
 
   // Parse primary
-  ft->primary = parse_primary(lexer);
+  ft->primary = primary_parse(lexer);
 
   PARSER_LOG_NODE_FINISH("factor");
 
