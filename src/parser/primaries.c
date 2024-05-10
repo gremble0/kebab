@@ -15,7 +15,7 @@ static list_t *primary_arguments_parse(lexer_t *lexer) {
   // Here we could handle a small portion of wrong function calls (e.g. `1()`,
   // `""()`, etc), but we will leave them all to the runtime instead
   while (lexer->cur_token->kind != TOKEN_RPAREN) {
-    list_push_back(args, parse_expression(lexer));
+    list_push_back(args, expression_parse(lexer));
 
     if (lexer->cur_token->kind != TOKEN_RPAREN)
       SKIP_TOKEN(lexer, TOKEN_COMMA);
@@ -34,7 +34,7 @@ primary_t *primary_parse(lexer_t *lexer) {
   if (prm == NULL)
     err_malloc_fail();
 
-  prm->atom = parse_atom(lexer);
+  prm->atom = atom_parse(lexer);
   if (lexer->cur_token->kind == TOKEN_LPAREN)
     prm->arguments = primary_arguments_parse(lexer);
   else
@@ -46,10 +46,10 @@ primary_t *primary_parse(lexer_t *lexer) {
 }
 
 void primary_free(primary_t *prm) {
-  free_atom(prm->atom);
+  atom_free(prm->atom);
 
   if (prm->arguments != NULL) {
-    list_map(prm->arguments, (list_map_func)free_expression);
+    list_map(prm->arguments, (list_map_func)expression_free);
     list_free(prm->arguments);
   }
 

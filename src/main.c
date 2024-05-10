@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
   eval(ast);
 
   lexer_free(lexer);
-  free_ast(ast);
+  ast_free(ast);
 
   return 0;
 }

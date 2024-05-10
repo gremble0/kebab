@@ -31,7 +31,7 @@ static definition_t *definition_parse(lexer_t *lexer) {
 
   SKIP_TOKEN(lexer, TOKEN_EQUALS);
 
-  def->constructor = parse_constructor(lexer);
+  def->constructor = constructor_parse(lexer);
 
   PARSER_LOG_NODE_FINISH("definition");
 
@@ -52,7 +52,7 @@ static assignment_t *assignment_parse(lexer_t *lexer) {
 
   SKIP_TOKEN(lexer, TOKEN_EQUALS);
 
-  ass->constructor = parse_constructor(lexer);
+  ass->constructor = constructor_parse(lexer);
 
   PARSER_LOG_NODE_FINISH("assignment");
 
@@ -102,7 +102,7 @@ statement_t *statement_parse(lexer_t *lexer) {
   // Lists [x, y, z]
   case TOKEN_LBRACE:
     stmt->type = STMT_EXPRESSION;
-    stmt->expr = parse_expression(lexer);
+    stmt->expr = expression_parse(lexer);
     break;
 
   default:
@@ -115,14 +115,14 @@ statement_t *statement_parse(lexer_t *lexer) {
 }
 
 static void definition_free(definition_t *def) {
-  free_constructor(def->constructor);
+  constructor_free(def->constructor);
   free(def->name);
   free(def);
 }
 
 static void assignment_free(assignment_t *ass) {
+  constructor_free(ass->constructor);
   free(ass->name);
-  free_constructor(ass->constructor);
   free(ass);
 }
 
@@ -142,7 +142,7 @@ void statement_free(statement_t *stmt) {
     break;
 
   case STMT_EXPRESSION:
-    free_expression(stmt->expr);
+    expression_free(stmt->expr);
     break;
   }
 
