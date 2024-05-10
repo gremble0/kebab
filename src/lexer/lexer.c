@@ -30,7 +30,7 @@ static void lexer_load_next_line(lexer_t *lexer) {
   size_t _ = 0;
   lexer->line_len = getline(&lexer->line, &_, lexer->source_file->f);
   lexer->line_pos = 0;
-  lexer->prev_pos = 0;
+  lexer->prev_line_pos = 0;
   ++lexer->line_number;
 }
 
@@ -171,24 +171,24 @@ static char *lexer_read_word(lexer_t *lexer) {
  * @param file_path path to file to open lexer for
  * @return lexer at the start of the file at file_path
  */
-lexer_t *lexer_init(const char *file_path) {
+lexer_t *lexer_init(const char *path) {
   LEXER_LOG_START();
   lexer_t *lexer = malloc(sizeof(*lexer));
   if (lexer == NULL) {
     err_malloc_fail();
   }
 
-  FILE *f = fopen(file_path, "r");
+  FILE *f = fopen(path, "r");
   if (f == NULL) {
-    err_io_fail(file_path);
+    err_io_fail(path);
   }
   lexer->source_file = malloc(sizeof(*lexer->source_file));
   lexer->source_file->f = f;
-  lexer->source_file->f_name = file_path;
+  lexer->source_file->name = path;
 
   lexer->line = NULL;
   lexer->line_len = 0;
-  lexer->prev_pos = 0;
+  lexer->prev_line_pos = 0;
   lexer->line_pos = 0;
   lexer->line_number = 0;
   lexer->cur_token = NULL;
@@ -233,7 +233,7 @@ void lexer_advance(lexer_t *lexer) {
     return lexer_advance(lexer);
   }
 
-  lexer->prev_pos = lexer->line_pos; // For error handling
+  lexer->prev_line_pos = lexer->line_pos; // For error handling
 
   switch (lexer->line[lexer->line_pos]) {
   // Whitespace
