@@ -384,7 +384,6 @@ void lexer_free(lexer_t *lexer) {
   // If we try to free the lexer before we have reached the end of the file,
   // something has gone wrong
   ASSERT(lexer->cur_token->kind == TOKEN_EOF);
-
   token_free(lexer->cur_token);
   free(lexer->source_file);
   free(lexer);

@@ -17,7 +17,8 @@ char *token_to_string(const token_t *token) {
   case TOKEN_STRING_LITERAL: {
     char *res =
         malloc(sizeof("string-literal: \"\"") + token->string_literal->len + 1);
-    sprintf(res, "string-literal: \"%s\"", token->string_literal->s);
+    sprintf(res, "string-literal: \"%*s\"", (int)token->string_literal->len,
+            token->string_literal->s);
     return res;
   }
   case TOKEN_INTEGER_LITERAL: {
@@ -28,8 +29,8 @@ char *token_to_string(const token_t *token) {
     return res;
   }
   case TOKEN_NAME: {
-    char *res = malloc(sizeof("name: \"\"") + token->name->len);
-    sprintf(res, "name: \"%s\"", token->name->s);
+    char *res = malloc(sizeof("name: \"\"") + token->name->len + 1);
+    sprintf(res, "name: \"%*s\"", (int)token->name->len, token->name->s);
     return res;
   }
   default:
@@ -44,11 +45,11 @@ char *token_kind_to_string(token_kind_t kind) {
 void token_free(token_t *token) {
   switch (token->kind) {
   case TOKEN_NAME:
-    free(token->name);
+    string_free(token->name);
     free(token);
     break;
   case TOKEN_STRING_LITERAL:
-    free(token->string_literal);
+    string_free(token->string_literal);
     free(token);
     break;
   default:
@@ -64,9 +65,9 @@ void token_free(token_t *token) {
  */
 token_t *token_make_simple(token_kind_t token_kind) {
   token_t *token = malloc(sizeof(*token));
-  if (token == NULL) {
+  if (token == NULL)
     err_malloc_fail();
-  }
+
   token->kind = token_kind;
 
   return token;
@@ -74,20 +75,20 @@ token_t *token_make_simple(token_kind_t token_kind) {
 
 token_t *token_make_str_lit(char *str_lit) {
   token_t *str_lit_tok = malloc(sizeof(*str_lit_tok));
-  if (str_lit_tok == NULL) {
+  if (str_lit_tok == NULL)
     err_malloc_fail();
-  }
+
   str_lit_tok->kind = TOKEN_STRING_LITERAL;
-  str_lit_tok->string_literal = string_of(str_lit, strlen(str_lit));
+  str_lit_tok->string_literal = string_of(str_lit, strlen(str_lit) + 1);
 
   return str_lit_tok;
 }
 
 token_t *token_make_char_lit(char char_lit) {
   token_t *char_lit_tok = malloc(sizeof(*char_lit_tok));
-  if (char_lit_tok == NULL) {
+  if (char_lit_tok == NULL)
     err_malloc_fail();
-  }
+
   char_lit_tok->kind = TOKEN_CHAR_LITERAL;
   char_lit_tok->char_literal = char_lit;
 
@@ -96,9 +97,9 @@ token_t *token_make_char_lit(char char_lit) {
 
 token_t *token_make_int_lit(int64_t int_lit) {
   token_t *int_lit_tok = malloc(sizeof(*int_lit_tok));
-  if (int_lit_tok == NULL) {
+  if (int_lit_tok == NULL)
     err_malloc_fail();
-  }
+
   int_lit_tok->kind = TOKEN_INTEGER_LITERAL;
   int_lit_tok->integer_literal = int_lit;
 
@@ -107,11 +108,11 @@ token_t *token_make_int_lit(int64_t int_lit) {
 
 token_t *token_make_name(char *name) {
   token_t *name_tok = malloc(sizeof(*name_tok));
-  if (name_tok == NULL) {
+  if (name_tok == NULL)
     err_malloc_fail();
-  }
+
   name_tok->kind = TOKEN_NAME;
-  name_tok->name = string_of(name, strlen(name));
+  name_tok->name = string_of(name, strlen(name) + 1);
 
   return name_tok;
 }

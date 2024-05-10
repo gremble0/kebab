@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "nonstdlib/nerror.h"
+#include "nonstdlib/nstring.h"
 #include "parser/constructors.h"
 #include "parser/expressions.h"
 #include "parser/logging.h"
@@ -26,7 +27,7 @@ static definition_t *definition_parse(lexer_t *lexer) {
   }
 
   EXPECT_TOKEN(lexer, TOKEN_NAME);
-  def->name = strdup(lexer->cur_token->name->s);
+  def->name = string_copy(lexer->cur_token->name);
   lexer_advance(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_EQUALS);
@@ -47,7 +48,7 @@ static assignment_t *assignment_parse(lexer_t *lexer) {
     err_malloc_fail();
 
   EXPECT_TOKEN(lexer, TOKEN_NAME);
-  ass->name = strdup(lexer->cur_token->name->s);
+  ass->name = string_copy(lexer->cur_token->name);
   lexer_advance(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_EQUALS);
@@ -116,13 +117,13 @@ statement_t *statement_parse(lexer_t *lexer) {
 
 static void definition_free(definition_t *def) {
   constructor_free(def->constructor);
-  free(def->name);
+  string_free(def->name);
   free(def);
 }
 
 static void assignment_free(assignment_t *ass) {
   constructor_free(ass->constructor);
-  free(ass->name);
+  string_free(ass->name);
   free(ass);
 }
 

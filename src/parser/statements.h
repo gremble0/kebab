@@ -1,18 +1,19 @@
 #pragma once
 
+#include "nonstdlib/nstring.h"
 #include "parser/constructors.h"
 #include "parser/expressions.h"
 
 // Binds a symbol to an expression
 typedef struct {
-  char *name;
+  string_t *name;
   char is_mutable; // flag for seeing if this definition is mutable
   constructor_t *constructor;
 } definition_t;
 
 // Same as a definition, but is only allowed for mutable bindings
 typedef struct {
-  char *name;
+  string_t *name;
   constructor_t *constructor;
 } assignment_t;
 

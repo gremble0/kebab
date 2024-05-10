@@ -4,19 +4,18 @@
 #include "runtime/expressions.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
-#include <stdio.h>
 
 // Add symbol to scope
 // assign value to symbol
 void eval_definition(definition_t *def, scope_t *scope) {
   rt_value_t *v = eval_constructor(def->constructor, scope);
-  scope_put(scope, def->name, v);
+  scope_put(scope, def->name->s, v);
 }
 
 // Look up symbol in scope
 // assign value to symbol if symbol is mutable
 void eval_assignment(assignment_t *ass, scope_t *scope) {
-  rt_value_t *existing = scope_get(scope, ass->name);
+  rt_value_t *existing = scope_get(scope, ass->name->s);
 
   // Assigning to non existent symbol is an error
   if (existing == NULL)
