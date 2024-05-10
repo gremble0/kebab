@@ -5,6 +5,7 @@
 
 #include "lexer/token.h"
 #include "nonstdlib/nerror.h"
+#include "nonstdlib/nstring.h"
 
 char *token_to_string(const token_t *token) {
   switch (token->kind) {
@@ -14,9 +15,9 @@ char *token_to_string(const token_t *token) {
     return res;
   }
   case TOKEN_STRING_LITERAL: {
-    char *res = malloc(sizeof("string-literal: \"\"") +
-                       strlen(token->string_literal) + 1);
-    sprintf(res, "string-literal: \"%s\"", token->string_literal);
+    char *res =
+        malloc(sizeof("string-literal: \"\"") + token->string_literal->len + 1);
+    sprintf(res, "string-literal: \"%s\"", token->string_literal->s);
     return res;
   }
   case TOKEN_INTEGER_LITERAL: {
@@ -27,8 +28,8 @@ char *token_to_string(const token_t *token) {
     return res;
   }
   case TOKEN_NAME: {
-    char *res = malloc(sizeof("name: \"\"") + strlen(token->name) + 1);
-    sprintf(res, "name: \"%s\"", token->name);
+    char *res = malloc(sizeof("name: \"\"") + token->name->len);
+    sprintf(res, "name: \"%s\"", token->name->s);
     return res;
   }
   default:
@@ -77,7 +78,7 @@ token_t *token_make_str_lit(char *str_lit) {
     err_malloc_fail();
   }
   str_lit_tok->kind = TOKEN_STRING_LITERAL;
-  str_lit_tok->string_literal = str_lit;
+  str_lit_tok->string_literal = string_of(str_lit, strlen(str_lit));
 
   return str_lit_tok;
 }
@@ -110,7 +111,7 @@ token_t *token_make_name(char *name) {
     err_malloc_fail();
   }
   name_tok->kind = TOKEN_NAME;
-  name_tok->name = name;
+  name_tok->name = string_of(name, strlen(name));
 
   return name_tok;
 }

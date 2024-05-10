@@ -55,7 +55,7 @@ atom_t *atom_parse(lexer_t *lexer) {
 
   case TOKEN_STRING_LITERAL:
     atom->type = ATOM_STRING;
-    atom->string_value = strdup(lexer->cur_token->string_literal);
+    atom->string_value = strdup(lexer->cur_token->string_literal->s);
     lexer_advance(lexer);
     PARSER_LOG_NODE_SELF_CLOSING("string-literal=\"%s\"", atom->string_value);
     break;
@@ -69,7 +69,7 @@ atom_t *atom_parse(lexer_t *lexer) {
 
   case TOKEN_NAME:
     atom->type = ATOM_NAME;
-    atom->name_value = strdup(lexer->cur_token->name);
+    atom->name_value = strdup(lexer->cur_token->name->s);
     lexer_advance(lexer);
     PARSER_LOG_NODE_SELF_CLOSING("name=\"%s\"", atom->name_value);
     break;

@@ -37,7 +37,7 @@ static fn_param_t *fn_param_parse(lexer_t *lexer) {
   fn_param_t *param = malloc(sizeof(*param));
 
   EXPECT_TOKEN(lexer, TOKEN_NAME);
-  param->name = strdup(lexer->cur_token->name);
+  param->name = strdup(lexer->cur_token->name->s);
   lexer_advance(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_COLON);

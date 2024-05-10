@@ -1,5 +1,6 @@
 #pragma once
 
+#include "nonstdlib/nstring.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -151,8 +152,8 @@ static const char *token_kind_map[] = {
 typedef struct {
   token_kind_t kind;
   union {
-    char *name;
-    char *string_literal;
+    string_t *name;
+    string_t *string_literal;
     char char_literal;       // TODO: int for unicode or something? idk
     int64_t integer_literal; // Ints in kebab are 64 bits
     // Don't need to store bool_literal as the token_kind is sufficient
