@@ -8,6 +8,8 @@
 #include "lexer/logging.h"
 #include "lexer/token.h"
 #include "nonstdlib/nerror.h"
+#include "nonstdlib/nstring.h"
+#include "utils/utils.h"
 
 static int is_not_dquote(int c) { return c != '"'; }
 static int is_kebab_case(int c) {
@@ -141,7 +143,6 @@ static char lexer_read_char(lexer_t *lexer) {
   return c;
 }
 
-// TODO: widen condition to allow true KEBAB-CASE !!
 /**
  * @brief Reads characters until whitespace or newline. Also increments the
  * lexer's line position
@@ -149,16 +150,13 @@ static char lexer_read_char(lexer_t *lexer) {
  * @param lexer lexer to read word from
  * @return the string until the next whitespace or newline
  */
-static char *lexer_read_word(lexer_t *lexer) {
+static string_t *lexer_read_word(lexer_t *lexer) {
   size_t i = lexer_seek_while(lexer, is_kebab_case);
 
-  char *word = malloc(sizeof(char) * i + 1);
-  if (word == NULL) {
-    err_malloc_fail();
-  }
-
-  memcpy(word, &lexer->line[lexer->line_pos], i);
-  word[i] = '\0';
+  string_t *word = string_of(lexer->line + lexer->line_pos, i + 1);
+  // printf("%*s, %zu\n", (int)word->len, word->s, word->len);
+  // printf("%*s\n", 1, "abc");
+  string_append(word, &(string_t){.s = "", .len = sizeof("")});
   lexer->line_pos += i;
 
   return word;
@@ -352,22 +350,20 @@ void lexer_advance(lexer_t *lexer) {
 
   // Keywords and builtin types
   default: {
-    char *word = lexer_read_word(lexer);
+    string_t *word = lexer_read_word(lexer);
 
     // Check if its a reserved word
-    for (size_t i = 0;
-         i < sizeof(reserved_word_map) / sizeof(reserved_word_map[0]); ++i) {
-      // TODO: strncmp based on lexer->pos - lexer->prev_pos or something to not
-      // have to free
-      if (strcmp(reserved_word_map[i].word, word) == 0) {
-        free(word);
+    for (size_t i = 0; i < ARRAY_SIZE(reserved_word_map); ++i) {
+      if (string_compare(reserved_word_map[i].word, word) == 0) {
+        string_free(word);
         lexer->cur_token = token_make_simple(reserved_word_map[i].kind);
         return;
       }
     }
 
     // If its not its just some identifier/name
-    lexer->cur_token = token_make_name(word);
+    lexer->cur_token = token_make_name(word->s);
+    string_free(word);
     return;
   }
   }

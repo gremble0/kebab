@@ -64,32 +64,32 @@ typedef enum {
 } token_kind_t;
 
 typedef struct {
-  const char *word;
+  const string_t *word;
   token_kind_t kind;
 } reserved_word_map_t;
 
 static const reserved_word_map_t reserved_word_map[] = {
     // Keywords
-    {"def", TOKEN_DEF},
-    {"set", TOKEN_SET},
-    {"mut", TOKEN_MUT},
-    {"if", TOKEN_IF},
-    {"elif", TOKEN_ELIF},
-    {"else", TOKEN_ELSE},
+    {&(string_t){.s = "def", .len = sizeof("def")}, TOKEN_DEF},
+    {&(string_t){.s = "set", .len = sizeof("set")}, TOKEN_SET},
+    {&(string_t){.s = "mut", .len = sizeof("mut")}, TOKEN_MUT},
+    {&(string_t){.s = "if", .len = sizeof("if")}, TOKEN_IF},
+    {&(string_t){.s = "elif", .len = sizeof("elif")}, TOKEN_ELIF},
+    {&(string_t){.s = "else", .len = sizeof("else")}, TOKEN_ELSE},
 
-    {"nil", TOKEN_NIL},
+    {&(string_t){.s = "nil", .len = sizeof("nil")}, TOKEN_NIL},
 
     // Constructors
-    {"char", TOKEN_CHAR},
-    {"string", TOKEN_STRING},
-    {"int", TOKEN_INT},
-    {"bool", TOKEN_BOOL},
-    {"fn", TOKEN_FN},
-    {"list", TOKEN_LIST},
+    {&(string_t){.s = "char", .len = sizeof("char")}, TOKEN_CHAR},
+    {&(string_t){.s = "string", .len = sizeof("string")}, TOKEN_STRING},
+    {&(string_t){.s = "int", .len = sizeof("int")}, TOKEN_INT},
+    {&(string_t){.s = "bool", .len = sizeof("bool")}, TOKEN_BOOL},
+    {&(string_t){.s = "fn", .len = sizeof("fn")}, TOKEN_FN},
+    {&(string_t){.s = "list", .len = sizeof("list")}, TOKEN_LIST},
 
     // Booleans
-    {"true", TOKEN_TRUE},
-    {"false", TOKEN_FALSE},
+    {&(string_t){.s = "true", .len = sizeof("true")}, TOKEN_TRUE},
+    {&(string_t){.s = "false", .len = sizeof("false")}, TOKEN_FALSE},
 };
 
 static const char *token_kind_map[] = {

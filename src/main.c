@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 
   lexer_t *lexer = lexer_init(argv[1]);
   ast_t *ast = parse(lexer);
-  eval(ast);
+  // eval(ast);
 
   lexer_free(lexer);
   ast_free(ast);
