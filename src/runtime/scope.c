@@ -4,7 +4,7 @@
 #include "nonstdlib/nhashtable.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
-#include "runtime/utils.h"
+#include "utils/utils.h"
 
 scope_t *scope_init(scope_t *outer) {
   scope_t *scope = malloc(sizeof(*scope));

@@ -5,6 +5,7 @@
 #include "parser/logging.h"
 #include "parser/parser.h"
 #include "parser/statements.h"
+#include "utils/utils.h"
 
 ast_t *parse(lexer_t *lexer) {
   PARSER_LOG_START();

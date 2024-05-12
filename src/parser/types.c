@@ -2,6 +2,7 @@
 
 #include "parser/logging.h"
 #include "parser/types.h"
+#include "utils/utils.h"
 
 static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   // function types should look something like `fn(int, int) => int`

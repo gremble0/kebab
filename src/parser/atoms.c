@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
@@ -6,7 +7,7 @@
 #include "parser/error.h"
 #include "parser/expressions.h"
 #include "parser/logging.h"
-#include "string.h"
+#include "utils/utils.h"
 
 static expression_t *inner_expression_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("inner-expr");

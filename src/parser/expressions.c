@@ -7,6 +7,7 @@
 #include "parser/factors.h"
 #include "parser/logging.h"
 #include "parser/statements.h"
+#include "utils/utils.h"
 
 static binary_operator_t binary_operator_parse(lexer_t *lexer) {
   switch (lexer->cur_token->kind) {

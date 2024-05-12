@@ -2,13 +2,13 @@
 
 #include "nonstdlib/nlist.h"
 #include "parser/atoms.h"
-#include "parser/logging.h"
 #include "parser/types.h"
 #include "runtime/atoms.h"
 #include "runtime/error.h"
 #include "runtime/expressions.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
+#include "utils/utils.h"
 
 rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
   switch (atom->type) {

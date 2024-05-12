@@ -5,6 +5,7 @@
 #include "parser/expressions.h"
 #include "parser/logging.h"
 #include "parser/primaries.h"
+#include "utils/utils.h"
 
 static list_t *primary_arguments_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primary-arguments");
