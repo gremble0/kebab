@@ -40,17 +40,6 @@ static void lexer_load_next_line(lexer_t *lexer) {
 }
 
 /**
- * @brief Checks if the lexer is done lexing the current line
- *
- * @param lexer lexer to check
- * @return 1 if line is done 0 if not
- */
-static int lexer_line_is_done(const lexer_t *lexer) {
-  return lexer->line[lexer->line_pos] == '\n' ||
-         lexer->line[lexer->line_pos] == ';';
-}
-
-/**
  * @brief Seek forward in the current line in the lexer until a predicate fails.
  *
  * @param lexer lexer to check
@@ -219,16 +208,16 @@ void lexer_advance(lexer_t *lexer) {
     return;
   }
 
-  // Kebab does not care about newlines, so if we read a `;` (comment) or a
-  // newline, ignore it and go to the next line
-  if (lexer_line_is_done(lexer)) {
-    lexer_load_next_line(lexer);
-    return lexer_advance(lexer);
-  }
-
   lexer->prev_line_pos = lexer->line_pos; // For error handling
 
   switch (lexer->line[lexer->line_pos]) {
+  // Newline or semicolon means go to next line
+  // - Semicolon is comment start
+  // - Kebab does not care about newlines so these are also ignored
+  case '\n':
+    lexer_load_next_line(lexer);
+    return lexer_advance(lexer);
+  case ';':
   // Whitespace
   case '\t':
   case ' ':
