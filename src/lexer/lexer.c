@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,8 +22,7 @@ static int is_kebab_case(int c) {
 }
 
 /**
- * @brief Loads the LEXER_BUF_SIZE next bytes into the lexers buffer for reading
- * the source file, also resets buffer_pos
+ * @brief Dynamically loads the next line into the lexers buffer
  *
  * @param lexer lexer to load next chunk for
  */
@@ -129,11 +129,11 @@ static string_t *lexer_read_str(lexer_t *lexer) {
  * @param lexer lexer to read char from
  * @return the char between the two '\''-s
  */
-static char lexer_read_char(lexer_t *lexer) {
+static uint8_t lexer_read_char(lexer_t *lexer) {
   ASSERT(lexer->line[lexer->line_pos] == '\'');
   ASSERT(lexer->line[lexer->line_pos + 2] == '\'');
 
-  char c = lexer->line[lexer->line_pos + 1];
+  uint8_t c = lexer->line[lexer->line_pos + 1];
 
   lexer->line_pos += 3;
 

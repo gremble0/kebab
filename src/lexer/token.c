@@ -95,7 +95,7 @@ token_t *token_make_str_lit(string_t *str_lit) {
   return str_lit_tok;
 }
 
-token_t *token_make_char_lit(char char_lit) {
+token_t *token_make_char_lit(uint8_t char_lit) {
   token_t *char_lit_tok = malloc(sizeof(*char_lit_tok));
   if (char_lit_tok == NULL)
     err_malloc_fail();

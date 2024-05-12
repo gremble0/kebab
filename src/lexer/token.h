@@ -154,7 +154,7 @@ typedef struct {
   union {
     string_t *name;
     string_t *string_literal;
-    char char_literal;       // TODO: int for unicode or something? idk
+    uint8_t char_literal;    // TODO: int for unicode or something? idk
     int64_t integer_literal; // Ints in kebab are 64 bits
     // Don't need to store bool_literal as the token_kind is sufficient
   };
@@ -167,5 +167,5 @@ void token_free(token_t *token);
 token_t *token_make_simple(token_kind_t token_kind);
 token_t *token_make_name(string_t *name);
 token_t *token_make_str_lit(string_t *str_lit);
-token_t *token_make_char_lit(char char_lit);
+token_t *token_make_char_lit(uint8_t char_lit);
 token_t *token_make_int_lit(int64_t int_lit);
