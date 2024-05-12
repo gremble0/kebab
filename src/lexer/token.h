@@ -165,7 +165,7 @@ char *token_kind_to_string(token_kind_t kind);
 void token_free(token_t *token);
 
 token_t *token_make_simple(token_kind_t token_kind);
-token_t *token_make_str_lit(char *str_lit);
+token_t *token_make_name(string_t *name);
+token_t *token_make_str_lit(string_t *str_lit);
 token_t *token_make_char_lit(char char_lit);
 token_t *token_make_int_lit(int64_t int_lit);
-token_t *token_make_name(char *name);

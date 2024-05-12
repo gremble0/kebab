@@ -11,6 +11,9 @@
 #include "nonstdlib/nstring.h"
 #include "utils/utils.h"
 
+// TODO: Error if string or char doesnt have a closing quote.
+//       Handle unexpected newlines better?
+
 static int is_not_dquote(int c) { return c != '"'; }
 static int is_kebab_case(int c) {
   return !isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' &&
@@ -59,9 +62,8 @@ static int lexer_line_is_done(const lexer_t *lexer) {
 static size_t lexer_seek_while(const lexer_t *lexer, int pred(int)) {
   size_t i = 0;
   while (lexer->line_pos + i < (size_t)lexer->line_len &&
-         pred(lexer->line[lexer->line_pos + i])) {
+         pred(lexer->line[lexer->line_pos + i]))
     ++i;
-  }
 
   return i;
 }
@@ -75,9 +77,8 @@ static size_t lexer_seek_while(const lexer_t *lexer, int pred(int)) {
  * @return the character at the offset, 0 if offset is out of bounds
  */
 static char lexer_peek_char(const lexer_t *lexer, size_t offset) {
-  if (lexer->line_pos + offset >= (size_t)lexer->line_len) {
+  if (lexer->line_pos + offset >= (size_t)lexer->line_len)
     return 0;
-  }
 
   return lexer->line[lexer->line_pos + offset];
 }
@@ -107,22 +108,18 @@ static int64_t lexer_read_int(lexer_t *lexer) {
  * @param lexer lexer to read string from
  * @return the string between two '"'-s
  */
-static char *lexer_read_str(lexer_t *lexer) {
+static string_t *lexer_read_str(lexer_t *lexer) {
   ASSERT(lexer->line[lexer->line_pos] == '"');
   ++lexer->line_pos;
   size_t i = lexer_seek_while(lexer, is_not_dquote);
 
-  char *word = malloc(sizeof(char) * i + 1);
-  if (word == NULL) {
-    err_malloc_fail();
-  }
+  string_t *str = string_of(lexer->line + lexer->line_pos, i);
+  string_append_c(str, '\0');
+  lexer->line_pos += i;
+  ASSERT(lexer->line[lexer->line_pos] == '"');
+  ++lexer->line_pos;
 
-  memcpy(word, &lexer->line[lexer->line_pos], i);
-  word[i] = '\0';
-  ASSERT(lexer->line[lexer->line_pos + i] == '"');
-  lexer->line_pos += i + 1; // +1 to skip closing '"'
-
-  return word;
+  return str;
 }
 
 /**
@@ -153,10 +150,9 @@ static char lexer_read_char(lexer_t *lexer) {
 static string_t *lexer_read_word(lexer_t *lexer) {
   size_t i = lexer_seek_while(lexer, is_kebab_case);
 
-  string_t *word = string_of(lexer->line + lexer->line_pos, i + 1);
-  // printf("%*s, %zu\n", (int)word->len, word->s, word->len);
-  // printf("%*s\n", 1, "abc");
-  string_append(word, &(string_t){.s = "", .len = sizeof("")});
+  string_t *word = string_of(lexer->line + lexer->line_pos, i);
+  // Kinda unnecessary realloc to do `string_append_c` but meh
+  string_append_c(word, '\0');
   lexer->line_pos += i;
 
   return word;
@@ -172,14 +168,13 @@ static string_t *lexer_read_word(lexer_t *lexer) {
 lexer_t *lexer_init(const char *path) {
   LEXER_LOG_START();
   lexer_t *lexer = malloc(sizeof(*lexer));
-  if (lexer == NULL) {
+  if (lexer == NULL)
     err_malloc_fail();
-  }
 
   FILE *f = fopen(path, "r");
-  if (f == NULL) {
+  if (f == NULL)
     err_io_fail(path);
-  }
+
   lexer->source_file = malloc(sizeof(*lexer->source_file));
   lexer->source_file->f = f;
   lexer->source_file->name = path;
@@ -328,9 +323,11 @@ void lexer_advance(lexer_t *lexer) {
     return;
 
   // Literals
-  case '"':
-    lexer->cur_token = token_make_str_lit(lexer_read_str(lexer));
+  case '"': {
+    string_t *str = lexer_read_str(lexer);
+    lexer->cur_token = token_make_str_lit(str);
     return;
+  }
   case '\'':
     lexer->cur_token = token_make_char_lit(lexer_read_char(lexer));
     return;
@@ -362,8 +359,7 @@ void lexer_advance(lexer_t *lexer) {
     }
 
     // If its not its just some identifier/name
-    lexer->cur_token = token_make_name(word->s);
-    string_free(word);
+    lexer->cur_token = token_make_name(word);
     return;
   }
   }
