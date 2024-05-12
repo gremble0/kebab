@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 
-#include "nonstdlib/nerror.h"
 #include "parser/error.h"
 
 #ifdef DEBUG_PARSER
@@ -26,7 +25,8 @@
 #define EXPECT_TOKEN(lexer, expected)                                          \
   do {                                                                         \
     if (lexer->cur_token->kind != expected) {                                  \
-      err_wrong_token(lexer, token_kind_to_string(expected));                  \
+      err_wrong_token(lexer, token_kind_to_string(expected),                   \
+                      token_to_string(lexer->cur_token));                      \
     }                                                                          \
   } while (0)
 

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "lexer/lexer.h"
+#include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
 #include "parser/expressions.h"
 #include "parser/logging.h"

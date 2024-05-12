@@ -53,14 +53,15 @@ _Noreturn void err_illegal_statement(lexer_t *lexer, size_t stmt_start) {
 _Noreturn void err_illegal_token(lexer_t *lexer) {
   print_lexer_pos(lexer);
   fprintf(stderr, "illegal-token-error: '%s'\n",
-          token_to_string(lexer->cur_token));
+          token_to_string(lexer->cur_token)->s);
   exit(1);
 }
 
-_Noreturn void err_wrong_token(lexer_t *lexer, const char *expected) {
+_Noreturn void err_wrong_token(lexer_t *lexer, string_t *expected,
+                               string_t *actual) {
   print_lexer_pos(lexer);
-  fprintf(stderr, "wrong-token-error: expected '%s', got '%s'\n", expected,
-          token_to_string(lexer->cur_token));
+  fprintf(stderr, "wrong-token-error: expected '%.*s', got '%.*s'\n",
+          (int)expected->len, expected->s, (int)actual->len, actual->s);
 
   exit(1);
 }

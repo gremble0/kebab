@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "nonstdlib/nerror.h"
 #include "parser/factors.h"
 #include "parser/logging.h"
 

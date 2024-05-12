@@ -7,39 +7,42 @@
 #include "nonstdlib/nerror.h"
 #include "nonstdlib/nstring.h"
 
-char *token_to_string(const token_t *token) {
+string_t *token_to_string(const token_t *token) {
   switch (token->kind) {
   case TOKEN_CHAR_LITERAL: {
-    char *res = malloc(sizeof("char-literal: ' '") + 1);
+    size_t res_size = sizeof("char-literal: ' '");
+    char res[res_size];
     sprintf(res, "char-literal: '%c'", token->char_literal);
-    return res;
+    return string_of(res, res_size);
   }
   case TOKEN_STRING_LITERAL: {
-    char *res =
-        malloc(sizeof("string-literal: \"\"") + token->string_literal->len + 1);
-    sprintf(res, "string-literal: \"%*s\"", (int)token->string_literal->len,
+    size_t res_size =
+        sizeof("string-literal: \"\"") + token->string_literal->len;
+    char res[res_size];
+    sprintf(res, "string-literal: \"%.*s\"", (int)token->string_literal->len,
             token->string_literal->s);
-    return res;
+    return string_of(res, res_size);
   }
   case TOKEN_INTEGER_LITERAL: {
-    // Get length to malloc before actually writing to `res`
-    int len = snprintf(NULL, 0, "%ld", token->integer_literal);
-    char *res = malloc(sizeof("integer-literal: ") + len + 1);
+    size_t res_size = snprintf(NULL, 0, "%ld", token->integer_literal) +
+                      sizeof("integer-literal: ");
+    char res[res_size];
     sprintf(res, "integer-literal: %ld", token->integer_literal);
-    return res;
+    return string_of(res, res_size);
   }
   case TOKEN_NAME: {
-    char *res = malloc(sizeof("name: \"\"") + token->name->len + 1);
-    sprintf(res, "name: \"%*s\"", (int)token->name->len, token->name->s);
-    return res;
+    size_t res_size = sizeof("name: \"\"") + token->name->len;
+    char res[res_size];
+    sprintf(res, "name: \"%.*s\"", (int)token->name->len, token->name->s);
+    return string_of(res, res_size);
   }
   default:
     return token_kind_to_string(token->kind);
   }
 }
 
-char *token_kind_to_string(token_kind_t kind) {
-  return strdup(token_kind_map[kind]);
+string_t *token_kind_to_string(token_kind_t kind) {
+  return string_copy(token_kind_map[kind]);
 }
 
 void token_free(token_t *token) {
