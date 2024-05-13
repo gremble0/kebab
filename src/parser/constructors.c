@@ -1,7 +1,7 @@
 #include <stdlib.h>
-#include <string.h>
 
 #include "nonstdlib/nlist.h"
+#include "nonstdlib/nstring.h"
 #include "parser/constructors.h"
 #include "parser/logging.h"
 #include "parser/statements.h"
@@ -38,7 +38,7 @@ static fn_param_t *fn_param_parse(lexer_t *lexer) {
   fn_param_t *param = malloc(sizeof(*param));
 
   EXPECT_TOKEN(lexer, TOKEN_NAME);
-  param->name = strdup(lexer->cur_token->name->s);
+  param->name = string_copy(lexer->cur_token->name);
   lexer_advance(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_COLON);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nonstdlib/nlist.h"
+#include "nonstdlib/nstring.h"
 #include "parser/types.h"
 
 // Forward declaration because its used recusively
@@ -12,7 +13,7 @@ typedef struct {
 } primitive_constructor_t;
 
 typedef struct {
-  char *name;
+  string_t *name;
   keb_type_t *type;
 } fn_param_t;
 

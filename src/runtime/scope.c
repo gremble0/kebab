@@ -14,8 +14,6 @@ scope_t *scope_init(const scope_t *outer) {
   return scope;
 }
 
-// TODO: use string_t instead of char* to avoid strlen
-
 /**
  * @brief Look up a name in a given scope. Looks in outer scopes and returns the
  * value from the first scope that contains the name. Returns NULL if no outer
@@ -37,8 +35,8 @@ rt_value_t *scope_get(const scope_t *scope, const string_t *name) {
   return NULL;
 }
 
-void scope_put(scope_t *scope, char *name, rt_value_t *v) {
-  ht_put(scope->bindings, name, strlen(name), v);
+void scope_put(scope_t *scope, string_t *name, rt_value_t *v) {
+  ht_put(scope->bindings, name->s, name->len, v);
 }
 
 void scope_free(scope_t *scope) {
