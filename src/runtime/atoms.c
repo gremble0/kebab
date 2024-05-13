@@ -44,7 +44,7 @@ rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
     // Look up value in scope and return it, errors if variable doesnt exist
     rt_value_t *v = scope_get(scope, atom->name_value);
     if (v == NULL)
-      err_name_error(atom->name_value);
+      err_name_error(atom->name_value->s);
 
     return v;
   }

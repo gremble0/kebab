@@ -56,9 +56,11 @@ atom_t *atom_parse(lexer_t *lexer) {
 
   case TOKEN_STRING_LITERAL:
     atom->type = ATOM_STRING;
-    atom->string_value = strdup(lexer->cur_token->string_literal->s);
+    atom->string_value = string_copy(lexer->cur_token->string_literal);
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("string-literal=\"%s\"", atom->string_value);
+    PARSER_LOG_NODE_SELF_CLOSING("string-literal=\"%.*s\"",
+                                 (int)atom->string_value->len,
+                                 atom->string_value->s);
     break;
 
   case TOKEN_INTEGER_LITERAL:
@@ -70,9 +72,10 @@ atom_t *atom_parse(lexer_t *lexer) {
 
   case TOKEN_NAME:
     atom->type = ATOM_NAME;
-    atom->name_value = strdup(lexer->cur_token->name->s);
+    atom->name_value = string_copy(lexer->cur_token->name);
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("name=\"%s\"", atom->name_value);
+    PARSER_LOG_NODE_SELF_CLOSING("name=\"%.*s\"", (int)atom->name_value->len,
+                                 atom->name_value->s);
     break;
 
   case TOKEN_TRUE:
@@ -109,10 +112,10 @@ atom_t *atom_parse(lexer_t *lexer) {
 void atom_free(atom_t *atom) {
   switch (atom->type) {
   case ATOM_STRING:
-    free(atom->string_value);
+    string_free(atom->string_value);
     break;
   case ATOM_NAME:
-    free(atom->name_value);
+    string_free(atom->name_value);
     break;
   case ATOM_INNER_EXPR:
     expression_free(atom->inner_expr_value);

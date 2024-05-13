@@ -18,8 +18,8 @@ typedef enum {
 typedef struct {
   atom_type_t type;
   union {
-    char *name_value;
-    char *string_value;
+    string_t *name_value;
+    string_t *string_value;
     uint8_t char_value; // Maybe use more bits in the future for unicode
     int64_t int_value;
     uint8_t bool_value;

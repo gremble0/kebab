@@ -10,7 +10,7 @@ typedef struct {
   keb_type_kind_t type;
   union {
     uint8_t char_value; // Maybe use more bits in the future for unicode
-    char *string_value;
+    string_t *string_value;
     int64_t int_value;
     uint8_t bool_value;
     fn_constructor_t *fn_value;

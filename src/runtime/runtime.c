@@ -23,8 +23,8 @@ char *rt_value_to_string(rt_value_t *v) {
     return res;
   }
   case TYPE_STRING: {
-    char *res = malloc(sizeof("rt-string: \"\"") + strlen(v->string_value) + 1);
-    sprintf(res, "rt-string: \"%s\"", v->string_value);
+    char *res = malloc(sizeof("rt-string: \"\"") + v->string_value->len + 1);
+    sprintf(res, "rt-string: \"%s\"", v->string_value->s);
     return res;
   }
   case TYPE_INT: {

@@ -215,9 +215,9 @@ void lexer_advance(lexer_t *lexer) {
   // - Semicolon is comment start
   // - Kebab does not care about newlines so these are also ignored
   case '\n':
+  case ';':
     lexer_load_next_line(lexer);
     return lexer_advance(lexer);
-  case ';':
   // Whitespace
   case '\t':
   case ' ':

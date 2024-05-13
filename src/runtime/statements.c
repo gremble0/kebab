@@ -15,7 +15,7 @@ void eval_definition(definition_t *def, scope_t *scope) {
 // Look up symbol in scope
 // assign value to symbol if symbol is mutable
 void eval_assignment(assignment_t *ass, scope_t *scope) {
-  rt_value_t *existing = scope_get(scope, ass->name->s);
+  rt_value_t *existing = scope_get(scope, ass->name);
 
   // Assigning to non existent symbol is an error
   if (existing == NULL)

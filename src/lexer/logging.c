@@ -13,5 +13,12 @@ void lexer_log_token(const token_t *token) {
   string_free(token_string);
 }
 
+/**
+ * @brief Handle initializing lexer logging
+ */
 void lexer_log_start() { log_file = fopen("keb-lexer.log", "w"); }
+
+/**
+ * @brief Handle deinitializing lexer logging
+ */
 void lexer_log_finish() { fclose(log_file); }
