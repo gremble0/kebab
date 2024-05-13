@@ -200,14 +200,6 @@ void lexer_advance(lexer_t *lexer) {
     lexer->cur_token = NULL;
   }
 
-  // If line_len is negative reading the next line has failed indicating EOF
-  if (lexer->line_len < 0) {
-    LEXER_LOG_FINISH();
-    free(lexer->line);
-    lexer->cur_token = token_make_simple(TOKEN_EOF);
-    return;
-  }
-
   lexer->prev_line_pos = lexer->line_pos; // For error handling
 
   switch (lexer->line[lexer->line_pos]) {
@@ -217,6 +209,13 @@ void lexer_advance(lexer_t *lexer) {
   case '\n':
   case ';':
     lexer_load_next_line(lexer);
+    // If line_len is negative reading the next line has failed indicating EOF
+    if (lexer->line_len < 0) {
+      LEXER_LOG_FINISH();
+      free(lexer->line);
+      lexer->cur_token = token_make_simple(TOKEN_EOF);
+      return;
+    }
     return lexer_advance(lexer);
   // Whitespace
   case '\t':
