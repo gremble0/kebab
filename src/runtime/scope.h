@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nonstdlib/nhashtable.h"
+#include "nonstdlib/nstring.h"
 #include "runtime/runtime.h"
 
 typedef struct scope_t scope_t;
@@ -11,5 +12,5 @@ struct scope_t {
 
 scope_t *scope_init(const scope_t *outer);
 rt_value_t *scope_get(const scope_t *scope, const string_t *name);
-void scope_put(scope_t *scope, char *name, rt_value_t *v);
+void scope_put(scope_t *scope, string_t *name, rt_value_t *v);
 void scope_free(scope_t *scope);

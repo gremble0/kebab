@@ -9,7 +9,7 @@
 // assign value to symbol
 void eval_definition(definition_t *def, scope_t *scope) {
   rt_value_t *v = eval_constructor(def->constructor, scope);
-  scope_put(scope, def->name->s, v);
+  scope_put(scope, def->name, v);
 }
 
 // Look up symbol in scope
