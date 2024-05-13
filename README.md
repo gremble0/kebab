@@ -1,5 +1,5 @@
 # Kebab
-Kebab is a primarily functional programming language that I'm currently developing (just finished the parser so there is not yet any runtime). Here is how it looks:
+Kebab is a strongly typed primarily functional programming language that is currently under development. Here is how it looks:
 
 ```clj
 ; `;` for comments
@@ -26,7 +26,7 @@ def nested-example = int(def nested = int(5)
 ```
 
 ## Typing
-Kebab is a strongly typed language. You can define types for everything, including the types for parameters, return values, lists, etc. You can (and must) apply these types for every parameter and variable, through either specifying a variables constructor, or its type (more on constructors vs. type declarations later). Just to showcase some the language's advanced typing features here are some slightly absurd function definitions. 
+Kebab is a strongly typed language. You can define types for everything, including the types for parameters, return values, lists, etc. These types are enforced at runtime and there is no `any` type. You can (and must) apply these types for every parameter and variable, through either specifying a variables constructor, or its type (more on constructors vs. type declarations later). Just to showcase some the language's advanced typing features here are some slightly absurd function definitions. 
 
 ```clj
 ; A function that returns a function that takes an int as a parameter and
@@ -122,6 +122,38 @@ def mut my-var = int(4)
 set my-var = int(6) ; my-var is now 6
 
 ; This should error
-def my-const = int(4)
+def my-const = int(4) ; This is fine
 set my-const = int(6) ; Error here
+```
+
+## Conditionals
+You can control the flow of your program with if/elif/else expressions - yes these are expressions. An if/elif/else expression must return a value and therefore always needs to have an else branch. These are similar to `if` or `cond` in lisps. This is how you can use them in kebab.
+```clj
+; a = 1
+def a = int(
+  if false =>
+    0
+  elif 2 == 2 =>
+    -1
+  else =>
+    1
+)
+
+```
+
+You can also define variables local to a branch. For example:
+```clj
+; c = [6, 3]
+def c = list((int) =>
+  def q = int(1 + 2)
+  if 2 == 2 =>
+    def w = int(6)
+    [q, w]
+  elif 1 == 2 =>
+    ; `w` is not visible here
+    [q, 1]
+  else =>
+    ; `w` is not visible here either
+    [1, 2]
+)
 ```
