@@ -9,6 +9,7 @@
 #include "runtime/error.h"
 #include "runtime/expressions.h"
 #include "runtime/runtime.h"
+#include "runtime/scope.h"
 #include "runtime/statements.h"
 
 rt_value_t *eval_constructor_body(list_t *body, scope_t *scope) {
@@ -70,15 +71,25 @@ rt_value_t *eval_constructor(constructor_t *constr, scope_t *scope) {
   case TYPE_STRING:
   case TYPE_INT:
   case TYPE_BOOL: {
+    scope_t *local_scope = scope_init(scope);
     rt_value_t *v =
-        eval_primitive_constructor(constr->primitive_constructor, scope);
+        eval_primitive_constructor(constr->primitive_constructor, local_scope);
+
     if (constr->type != v->type)
       err_type_error(type_kind_map[constr->type], type_kind_map[v->type]);
+
+    scope_free(local_scope);
     return v;
   }
   case TYPE_FN:
     return eval_fn_constructor(constr->fn_constructor);
-  case TYPE_LIST:
-    return eval_list_constructor(constr->list_constructor, scope);
+  case TYPE_LIST: {
+    scope_t *local_scope = scope_init(scope);
+    rt_value_t *v =
+        eval_list_constructor(constr->list_constructor, local_scope);
+
+    scope_free(local_scope);
+    return v;
+  }
   }
 }
