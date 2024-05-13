@@ -19,4 +19,4 @@ typedef struct {
 } rt_value_t;
 
 void eval(ast_t *ast);
-char *rt_value_to_string(rt_value_t *v);
+string_t *rt_value_to_string(const rt_value_t *v);
