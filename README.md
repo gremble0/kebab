@@ -12,8 +12,8 @@ def this-is-fine
 def but-probably-better-like-this = int(2 + 3)
 
 ; Some basic constructors
-def l1 = list(int => 1, 2, 3)
-def l2 = list(string => "123", "gg", "hhh")
+def l1 = list((int) => 1, 2, 3)
+def l2 = list((string) => "123", "gg", "hhh")
 def add-one = fn((a : int) => int(a + 1)) ; function that takes an int and returns an int
 def b1 = bool(1 == -2) ; false
 def b2 = bool(1 ~= -2) ; true
@@ -39,7 +39,7 @@ def takes-fn = fn((param : list(fn(list(int)) => string)) => char('c'))
 
 ; A function that takes an int as a parameter and returns a function takes
 ; an int as a parameter that returns a list of ints
-def ret-fn-rets-list = fn((outer : int) => fn((inner : int) => list(int => 
+def ret-fn-rets-list = fn((outer : int) => fn((inner : int) => list((int) => 
   outer, inner
 )))
 
@@ -59,7 +59,7 @@ def takes-fn = fn((my-function : fn(int, string) => string) => int(
 
 ## Constructors
 ### Primitives
-Primitive constructors allows for any number of statements, including local `def` bindings and other functions with side effects, but will return the first expression in its body. Some primitive constructors are `char`, `bool`, `int` and `string`. You can use them like this:
+Primitive constructors allows for any number of statements, including local `def` bindings and other functions with side effects, but will return the last expression in its body (implicit return). Some primitive constructors are `char`, `bool`, `int` and `string`. You can use them like this:
 ```clj
 int(def a = 2
     a + 2)
@@ -70,20 +70,20 @@ string("hello-world")
 List constructors must be parametrized to hold a certain type. This could be any type, including functions or more lists! For example:
 ```clj
 ; Simple list of string
-list(string => ...)
+list((string) => ...)
 
 ; A list of other lists of strings
-list(list(string) => ...)
+list((list(string)) => ...)
 
 ; A list of functions that takes an int as a parameter and returns a string.
-list(fn(int) => string => ...)
+list((fn(int) => string) => ...)
 ```
 Following the parametrized type of the list should be a `=>` following a comma separated list of the contents of the list. Lists do not support nested statements (maybe they could).
 
 ### Functions
 Function constructors follow this pattern:
 ```
-fn((<list of parameters>) => <constructor>)
+fn((<parameters>) => <constructor>)
 ```
 Where the list of parameters is a comma separated list where each element should look like `<name> : <type>`. NOTE: The space before the `:` is very important here, as if you were to omit it, it would be included as a part of the name of the parameter which would cause a syntax error. The constructor in the functions body could be any other constructor.
 
@@ -98,7 +98,7 @@ def s = string("hello")
 ; list constructor, parametrized to be of type `string`. Here the list(...)
 ; is the constructor call, while the string inside the list constructor
 ; is a type declaration the list constructor uses to bind it to that type
-def b = list(string => "hello", "world")
+def b = list((string) => "hello", "world")
 ```
 
 The strongest combination of constructors and type declarations are seen in functions. Let's analyze this function:
@@ -127,33 +127,29 @@ set my-const = int(6) ; Error here
 ```
 
 ## Conditionals
-You can control the flow of your program with if/elif/else expressions - yes these are expressions. An if/elif/else expression must return a value and therefore always needs to have an else branch. These are similar to `if` or `cond` in lisps. This is how you can use them in kebab.
+You can control the flow of your program with if/elif/else expressions - yes these are expressions. An if/elif/else expression must return a value and therefore always needs to have an else branch. This is how you can use them in kebab.
 ```clj
 ; a = 1
 def a = int(
-  if false =>
-    0
-  elif 2 == 2 =>
-    -1
-  else =>
-    1
+  if false => 0
+  elif 2 == 2 => -1
+  else => 1
 )
 
 ```
 
 You can also define variables local to a branch. For example:
 ```clj
-; c = [6, 3]
+; c = [3, 6]
 def c = list((int) =>
   def q = int(1 + 2)
   if 2 == 2 =>
+    ; `w` is local to this if branch
     def w = int(6)
     [q, w]
   elif 1 == 2 =>
-    ; `w` is not visible here
     [q, 1]
   else =>
-    ; `w` is not visible here either
     [1, 2]
 )
 ```
