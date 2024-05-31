@@ -1,0 +1,16 @@
+def rec-fn = fn((i : int) => int(
+  def local-fn = fn((j : int) => int(
+    if j == 0 => 5
+    elif j == 1 => 10
+    else => 15
+  ))
+  if i <= 2 => local-fn(i)
+  else => rec-fn(i - 1)
+))
+
+def fib = fn((i : int) => int(
+  if i <= 2 => i
+  else => fib(i - 1) + fib(i - 2)
+))
+
+def a = int(fib(10))

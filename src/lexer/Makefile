@@ -3,7 +3,7 @@ NONSTDLIBINCLUDE := $(NONSTDLIBROOT)/include
 KEBABSRC := ..
 
 CC := clang
-CFLAGS := -Wall -Wextra -g -DDEBUG_LEXER
+CFLAGS := -Wall -Wextra -g -DDEBUG_LEXER -O3
 
 OBJS := lexer.o token.o logging.o
 

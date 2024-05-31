@@ -7,7 +7,7 @@ RUNTIMESRC := runtime
 UTILSSRC := utils
 
 CC := clang
-CFLAGS := -Wall -Wextra -g
+CFLAGS := -Wall -Wextra -g -O3
 LIBS := -L$(NONSTDLIBSRC) -lnonstdlib
 
 OBJS := $(LEXERSRC)/*.o $(PARSERSRC)/*.o $(RUNTIMESRC)/*.o $(UTILSSRC)/*.o
@@ -27,9 +27,13 @@ runtime:
 utils:
 	$(MAKE) -C $(UTILSSRC)
 
-nonstdlib:
+nonstdlib_debug:
 	$(MAKE) -C $(NONSTDLIBSRC) clean
 	$(MAKE) -C $(NONSTDLIBSRC) debug
+
+nonstdlib_release:
+	$(MAKE) -C $(NONSTDLIBSRC) clean
+	$(MAKE) -C $(NONSTDLIBSRC)
 
 clean:
 	$(MAKE) -C $(LEXERSRC) clean

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "nonstdlib/nhashtable.h"
 #include "nonstdlib/nlist.h"
 #include "nonstdlib/nstring.h"
 #include "parser/parser.h"
@@ -16,16 +15,18 @@ void eval(ast_t *ast) {
   for (size_t i = 0; i < ast->stmts->size; ++i)
     eval_statement(list_get(ast->stmts, i), global_scope);
 
-  for (size_t i = 0; i < global_scope->bindings->capacity; ++i) {
-    ht_entry_t *entry = global_scope->bindings->entries[i];
-    if (entry == NULL) {
-      printf("--empty--\n");
-      continue;
-    }
+  // for (size_t i = 0; i < global_scope->bindings->capacity; ++i) {
+  //   ht_entry_t *entry = global_scope->bindings->entries[i];
+  //   if (entry == NULL) {
+  //     printf("--empty--\n");
+  //     continue;
+  //   }
+  //
+  //   string_t *s = rt_value_to_string(entry->value);
+  //   printf("%s: %.*s\n", entry->key, (int)s->len, s->s);
+  // }
 
-    string_t *s = rt_value_to_string(entry->value);
-    printf("%s: %.*s\n", entry->key, (int)s->len, s->s);
-  }
+  scope_free(global_scope);
 }
 
 string_t *rt_value_to_string(const rt_value_t *v) {

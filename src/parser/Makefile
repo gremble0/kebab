@@ -3,7 +3,7 @@ NONSTDLIBINCLUDE := $(NONSTDLIBROOT)/include
 KEBABSRC := ..
 
 CC := clang
-CFLAGS := -Wall -Wextra -g -DDEBUG_PARSER
+CFLAGS := -Wall -Wextra -g -DDEBUG_PARSER -O3
 
 OBJS := atoms.o constructors.o expressions.o factors.o parser.o error.o primaries.o statements.o types.o logging.o
 
