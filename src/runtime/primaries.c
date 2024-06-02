@@ -9,6 +9,7 @@
 #include "runtime/expressions.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
+#include "runtime/types.h"
 
 rt_value_t *eval_func_call(list_t *arguments, fn_constructor_t *fn,
                            scope_t *scope) {
@@ -20,12 +21,9 @@ rt_value_t *eval_func_call(list_t *arguments, fn_constructor_t *fn,
   for (size_t i = 0; i < arguments->size; ++i) {
     rt_value_t *arg = eval_expression(list_get(arguments, i), scope);
     fn_param_t *p = list_get(fn->params, i);
-    // TODO: this is not always enough for composite types like lists and fns
-    // need to make types.c with functions for verifying types at runtime
-    // Ideally we could do arg->type == p->type because we dont duplicate type
-    // allocations. Make central type registry?
-    if (arg->type != p->type->type)
-      err_type_error(type_kind_map[arg->type], type_kind_map[p->type->type]);
+
+    // Verify type is correct
+    type_compare(arg->type, p->type);
 
     scope_put(local_scope, p->name, arg);
   }
@@ -43,7 +41,7 @@ rt_value_t *eval_primary(primary_t *prm, scope_t *scope) {
 
   if (prm->arguments != NULL) {
     // Type error - only functions are callable
-    if (v->type != TYPE_FN)
+    if (v->type->type != TYPE_FN)
       ASSERT(0);
 
     v = eval_func_call(prm->arguments, v->fn_value, scope);

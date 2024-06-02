@@ -5,7 +5,7 @@ KEBABSRC := ..
 CC := clang
 CFLAGS := -Wall -Wextra -g -O3
 
-OBJS := runtime.o statements.o expressions.o constructors.o scope.o error.o operators.o primaries.o atoms.o factors.o
+OBJS := runtime.o statements.o expressions.o constructors.o scope.o error.o operators.o primaries.o atoms.o factors.o types.o
 
 all: clean $(OBJS)
 

@@ -4,6 +4,8 @@
 #include "parser/parser.h"
 #include "runtime/runtime.h"
 
+// TODO: parse_... , eval_... consistent naming
+
 int main(int argc, char **argv) {
   if (argc < 2) {
     fprintf(stderr, "Usage: %s <file.keb> <args>\n", argv[0]);
@@ -14,8 +16,8 @@ int main(int argc, char **argv) {
   ast_t *ast = parse(lexer);
   eval(ast);
 
-  lexer_free(lexer);
-  ast_free(ast);
+  // lexer_free(lexer);
+  // ast_free(ast);
 
   return 0;
 }

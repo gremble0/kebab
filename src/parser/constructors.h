@@ -29,7 +29,7 @@ typedef struct {
 } list_constructor_t;
 
 struct constructor_t {
-  keb_type_kind_t type;
+  keb_type_t *type;
   union {
     primitive_constructor_t *primitive_constructor;
     fn_constructor_t *fn_constructor;

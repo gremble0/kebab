@@ -16,8 +16,9 @@ static rt_value_t *eval_expression_cond(expression_cond_t *excd,
     cond_t *cond = list_get(excd->conds, i);
     rt_value_t *tested = eval_expression(cond->test, scope);
     // TODO: fill in this (probably new type of error)
-    if (tested->type != TYPE_BOOL)
-      err_type_error(type_kind_map[TYPE_BOOL], type_kind_map[tested->type]);
+    if (tested->type != type_bool)
+      err_type_error(type_kind_map[TYPE_BOOL],
+                     type_kind_map[tested->type->type]);
 
     if (tested->bool_value)
       return eval_constructor_body(cond->body, scope);

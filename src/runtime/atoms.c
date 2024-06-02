@@ -15,28 +15,28 @@ rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
   case ATOM_CHAR: {
     rt_value_t *v = malloc(sizeof(*v));
     v->char_value = atom->char_value;
-    v->type = TYPE_CHAR;
+    v->type = type_char;
     return v;
   }
 
   case ATOM_STRING: {
     rt_value_t *v = malloc(sizeof(*v));
     v->string_value = atom->string_value;
-    v->type = TYPE_STRING;
+    v->type = type_string;
     return v;
   }
 
   case ATOM_INT: {
     rt_value_t *v = malloc(sizeof(*v));
     v->int_value = atom->int_value;
-    v->type = TYPE_INT;
+    v->type = type_int;
     return v;
   }
 
   case ATOM_BOOL: {
     rt_value_t *v = malloc(sizeof(*v));
     v->bool_value = atom->bool_value;
-    v->type = TYPE_BOOL;
+    v->type = type_bool;
     return v;
   }
 
@@ -55,7 +55,7 @@ rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
   case ATOM_LIST: {
     rt_value_t *v = malloc(sizeof(*v));
     v->list_value = list_init(LIST_START_SIZE);
-    v->type = TYPE_LIST;
+    v->type = type_unparametrized_list;
 
     for (size_t i = 0; i < atom->list_value->size; ++i)
       list_push_back(v->list_value,

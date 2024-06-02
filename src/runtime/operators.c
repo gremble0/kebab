@@ -2,6 +2,7 @@
 
 #include "nonstdlib/nerror.h"
 #include "parser/types.h"
+#include "runtime/error.h"
 #include "runtime/operators.h"
 #include "runtime/runtime.h"
 
@@ -12,14 +13,14 @@
 // Memory management: I think we can make functions void and mutate params
 
 rt_value_t *eval_operator_unary_plus(rt_value_t *v) {
-  switch (v->type) {
+  switch (v->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
     rt_value_t *positive = malloc(sizeof(*positive));
-    positive->type = TYPE_INT;
+    positive->type = type_int;
     positive->int_value = +v->int_value;
     return positive;
   }
@@ -33,14 +34,14 @@ rt_value_t *eval_operator_unary_plus(rt_value_t *v) {
 }
 
 rt_value_t *eval_operator_unary_minus(rt_value_t *v) {
-  switch (v->type) {
+  switch (v->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
     rt_value_t *positive = malloc(sizeof(*positive));
-    positive->type = TYPE_INT;
+    positive->type = type_int;
     positive->int_value = -v->int_value;
     return positive;
   }
@@ -53,7 +54,7 @@ rt_value_t *eval_operator_unary_minus(rt_value_t *v) {
   }
 }
 rt_value_t *eval_operator_unary_not(rt_value_t *v) {
-  switch (v->type) {
+  switch (v->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
@@ -62,7 +63,7 @@ rt_value_t *eval_operator_unary_not(rt_value_t *v) {
     ASSERT(0);
   case TYPE_BOOL: {
     rt_value_t *negated = malloc(sizeof(*negated));
-    negated->type = TYPE_BOOL;
+    negated->type = type_bool;
     negated->bool_value = !v->bool_value;
     return negated;
   }
@@ -74,17 +75,18 @@ rt_value_t *eval_operator_unary_not(rt_value_t *v) {
 }
 
 rt_value_t *eval_operator_binary_add(rt_value_t *lhs, rt_value_t *rhs) {
-  switch (lhs->type) {
+  switch (lhs->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
-    if (rhs->type != TYPE_INT)
-      ASSERT(0);
+    if (rhs->type != type_int)
+      // TODO: ->s shit, should also make type_to_string
+      err_type_error("TODO: type_to_string", "TODO: type_to_string");
 
     rt_value_t *added = malloc(sizeof(*added));
-    added->type = TYPE_INT;
+    added->type = type_int;
     added->int_value = lhs->int_value + rhs->int_value;
     return added;
   }
@@ -98,17 +100,17 @@ rt_value_t *eval_operator_binary_add(rt_value_t *lhs, rt_value_t *rhs) {
 }
 
 rt_value_t *eval_operator_binary_minus(rt_value_t *lhs, rt_value_t *rhs) {
-  switch (lhs->type) {
+  switch (lhs->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
-    if (rhs->type != TYPE_INT)
+    if (rhs->type != type_int)
       ASSERT(0);
 
     rt_value_t *subtracted = malloc(sizeof(*subtracted));
-    subtracted->type = TYPE_INT;
+    subtracted->type = type_int;
     subtracted->int_value = lhs->int_value - rhs->int_value;
     return subtracted;
   }
@@ -122,17 +124,17 @@ rt_value_t *eval_operator_binary_minus(rt_value_t *lhs, rt_value_t *rhs) {
 }
 
 rt_value_t *eval_operator_binary_mult(rt_value_t *lhs, rt_value_t *rhs) {
-  switch (lhs->type) {
+  switch (lhs->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
-    if (rhs->type != TYPE_INT)
+    if (rhs->type != type_int)
       ASSERT(0);
 
     rt_value_t *multiplied = malloc(sizeof(*multiplied));
-    multiplied->type = TYPE_INT;
+    multiplied->type = type_int;
     multiplied->int_value = lhs->int_value * rhs->int_value;
     return multiplied;
   }
@@ -146,17 +148,17 @@ rt_value_t *eval_operator_binary_mult(rt_value_t *lhs, rt_value_t *rhs) {
 }
 
 rt_value_t *eval_operator_binary_div(rt_value_t *lhs, rt_value_t *rhs) {
-  switch (lhs->type) {
+  switch (lhs->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
-    if (rhs->type != TYPE_INT)
+    if (rhs->type != type_int)
       ASSERT(0);
 
     rt_value_t *divided = malloc(sizeof(*divided));
-    divided->type = TYPE_INT;
+    divided->type = type_int;
     divided->int_value = lhs->int_value / rhs->int_value;
     return divided;
   }
@@ -170,17 +172,17 @@ rt_value_t *eval_operator_binary_div(rt_value_t *lhs, rt_value_t *rhs) {
 }
 
 rt_value_t *eval_operator_binary_lt(rt_value_t *lhs, rt_value_t *rhs) {
-  switch (lhs->type) {
+  switch (lhs->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
-    if (rhs->type != TYPE_INT)
+    if (rhs->type != type_int)
       ASSERT(0);
 
     rt_value_t *compared = malloc(sizeof(*compared));
-    compared->type = TYPE_BOOL;
+    compared->type = type_bool;
     compared->bool_value = lhs->int_value < rhs->int_value;
     return compared;
   }
@@ -194,17 +196,17 @@ rt_value_t *eval_operator_binary_lt(rt_value_t *lhs, rt_value_t *rhs) {
 }
 
 rt_value_t *eval_operator_binary_le(rt_value_t *lhs, rt_value_t *rhs) {
-  switch (lhs->type) {
+  switch (lhs->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
-    if (rhs->type != TYPE_INT)
+    if (rhs->type != type_int)
       ASSERT(0);
 
     rt_value_t *compared = malloc(sizeof(*compared));
-    compared->type = TYPE_BOOL;
+    compared->type = type_bool;
     compared->bool_value = lhs->int_value <= rhs->int_value;
     return compared;
   }
@@ -218,17 +220,17 @@ rt_value_t *eval_operator_binary_le(rt_value_t *lhs, rt_value_t *rhs) {
 }
 
 rt_value_t *eval_operator_binary_eq(rt_value_t *lhs, rt_value_t *rhs) {
-  switch (lhs->type) {
+  switch (lhs->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
-    if (rhs->type != TYPE_INT)
+    if (rhs->type != type_int)
       ASSERT(0);
 
     rt_value_t *compared = malloc(sizeof(*compared));
-    compared->type = TYPE_BOOL;
+    compared->type = type_bool;
     compared->bool_value = lhs->int_value == rhs->int_value;
     return compared;
   }
@@ -242,17 +244,17 @@ rt_value_t *eval_operator_binary_eq(rt_value_t *lhs, rt_value_t *rhs) {
 }
 
 rt_value_t *eval_operator_binary_neq(rt_value_t *lhs, rt_value_t *rhs) {
-  switch (lhs->type) {
+  switch (lhs->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
-    if (rhs->type != TYPE_INT)
+    if (rhs->type != type_int)
       ASSERT(0);
 
     rt_value_t *compared = malloc(sizeof(*compared));
-    compared->type = TYPE_BOOL;
+    compared->type = type_bool;
     compared->bool_value = lhs->int_value != rhs->int_value;
     return compared;
   }
@@ -266,17 +268,17 @@ rt_value_t *eval_operator_binary_neq(rt_value_t *lhs, rt_value_t *rhs) {
 }
 
 rt_value_t *eval_operator_binary_gt(rt_value_t *lhs, rt_value_t *rhs) {
-  switch (lhs->type) {
+  switch (lhs->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
-    if (rhs->type != TYPE_INT)
+    if (rhs->type != type_int)
       ASSERT(0);
 
     rt_value_t *compared = malloc(sizeof(*compared));
-    compared->type = TYPE_BOOL;
+    compared->type = type_bool;
     compared->bool_value = lhs->int_value > rhs->int_value;
     return compared;
   }
@@ -290,17 +292,17 @@ rt_value_t *eval_operator_binary_gt(rt_value_t *lhs, rt_value_t *rhs) {
 }
 
 rt_value_t *eval_operator_binary_ge(rt_value_t *lhs, rt_value_t *rhs) {
-  switch (lhs->type) {
+  switch (lhs->type->type) {
   case TYPE_CHAR:
     ASSERT(0);
   case TYPE_STRING:
     ASSERT(0);
   case TYPE_INT: {
-    if (rhs->type != TYPE_INT)
+    if (rhs->type != type_int)
       ASSERT(0);
 
     rt_value_t *compared = malloc(sizeof(*compared));
-    compared->type = TYPE_BOOL;
+    compared->type = type_bool;
     compared->bool_value = lhs->int_value >= rhs->int_value;
     return compared;
   }

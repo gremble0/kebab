@@ -116,33 +116,52 @@ constructor_t *constructor_parse(lexer_t *lexer) {
 
   switch (lexer->cur_token->kind) {
   case TOKEN_CHAR:
-    constr->type = TYPE_CHAR;
     constr->primitive_constructor = primitive_constructor_parse(lexer);
+    constr->type = type_char;
     break;
 
   case TOKEN_STRING:
-    constr->type = TYPE_STRING;
     constr->primitive_constructor = primitive_constructor_parse(lexer);
+    constr->type = type_string;
     break;
 
   case TOKEN_INT:
-    constr->type = TYPE_INT;
     constr->primitive_constructor = primitive_constructor_parse(lexer);
+    constr->type = type_int;
     break;
 
   case TOKEN_BOOL:
-    constr->type = TYPE_BOOL;
     constr->primitive_constructor = primitive_constructor_parse(lexer);
+    constr->type = type_bool;
     break;
 
   case TOKEN_FN:
-    constr->type = TYPE_FN;
     constr->fn_constructor = fn_constructor_parse(lexer);
+    constr->type = malloc(sizeof(*constr->type));
+    constr->type->fn = malloc(sizeof(*constr->type->fn));
+
+    constr->type->type = TYPE_FN;
+
+    // This is a little shit, could be done inside the fn_constructor_parse
+    // function
+    // list_t *param_types = constr->type->fn->param_types;
+    constr->type->fn->param_types = list_init(LIST_START_SIZE);
+    for (size_t i = 0; i < constr->fn_constructor->params->size; ++i) {
+      fn_param_t *param = list_get(constr->fn_constructor->params, i);
+      list_push_back(constr->type->fn->param_types, param->type);
+    }
+
+    // Return type of a function is the same as the type of the function
+    // constructors body
+    constr->type->fn->return_type = constr->fn_constructor->constr->type;
     break;
 
   case TOKEN_LIST:
-    constr->type = TYPE_LIST;
     constr->list_constructor = list_constructor_parse(lexer);
+    constr->type = malloc(sizeof(*constr->type));
+    constr->type->list = malloc(sizeof(*constr->type->list));
+
+    constr->type->list->type = constr->list_constructor->type;
     break;
 
   default:
@@ -182,7 +201,7 @@ static void list_constructor_free(list_constructor_t *lc) {
 }
 
 void constructor_free(constructor_t *constr) {
-  switch (constr->type) {
+  switch (constr->type->type) {
   case TYPE_CHAR:
   case TYPE_STRING:
   case TYPE_INT:

@@ -34,6 +34,14 @@ struct keb_type_t {
   };
 };
 
+// TODO: Should be const but gives warnings
+// extern to have the same address in all contexts (different files)
+extern keb_type_t *type_char;
+extern keb_type_t *type_string;
+extern keb_type_t *type_int;
+extern keb_type_t *type_bool;
+extern keb_type_t *type_unparametrized_list;
+
 // Make function? type_kind_to_string
 static const char *type_kind_map[] = {
     [TYPE_CHAR] = "char", [TYPE_STRING] = "string", [TYPE_INT] = "int",

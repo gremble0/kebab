@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "nonstdlib/nlist.h"
-#include "nonstdlib/nstring.h"
 #include "parser/parser.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
@@ -30,7 +29,7 @@ void eval(ast_t *ast) {
 }
 
 string_t *rt_value_to_string(const rt_value_t *v) {
-  switch (v->type) {
+  switch (v->type->type) {
   case TYPE_CHAR: {
     size_t res_len = sizeof("char: ' '");
     char res[res_len];

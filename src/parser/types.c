@@ -4,6 +4,12 @@
 #include "parser/types.h"
 #include "utils/utils.h"
 
+keb_type_t *type_char = &(keb_type_t){.type = TYPE_CHAR};
+keb_type_t *type_string = &(keb_type_t){.type = TYPE_STRING};
+keb_type_t *type_int = &(keb_type_t){.type = TYPE_INT};
+keb_type_t *type_bool = &(keb_type_t){.type = TYPE_BOOL};
+keb_type_t *type_unparametrized_list = &(keb_type_t){.type = TYPE_LIST};
+
 static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   // function types should look something like `fn(int, int) => int`
   // for example:
