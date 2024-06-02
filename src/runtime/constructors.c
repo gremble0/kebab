@@ -42,7 +42,6 @@ static rt_value_t *eval_list_constructor(list_constructor_t *constr,
   if (v->type->type != TYPE_LIST)
     err_type_error(type_kind_map[TYPE_LIST], type_kind_map[v->type->type]);
 
-  // TODO: THIS IS NOT GOOD ENOUGH FOR COMPOSITE TYPES
   for (size_t i = 0; i < v->list_value->size; ++i) {
     rt_value_t *cur = list_get(v->list_value, i);
     type_compare(cur->type, constr->type);
@@ -67,6 +66,7 @@ rt_value_t *eval_constructor(constructor_t *constr, scope_t *scope) {
     return v;
   }
   case TYPE_FN: {
+    // TODO: kinda breaking abstraction layer
     rt_value_t *v = malloc(sizeof(*v));
     v->fn_value = constr->fn_constructor;
     v->type = constr->type;
@@ -76,6 +76,9 @@ rt_value_t *eval_constructor(constructor_t *constr, scope_t *scope) {
     scope_t *local_scope = scope_init(scope);
     rt_value_t *v =
         eval_list_constructor(constr->list_constructor, local_scope);
+
+    // TODO: kinda breaking abstraction layer
+    v->type = constr->type;
 
     scope_free(local_scope);
     return v;

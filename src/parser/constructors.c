@@ -157,8 +157,10 @@ constructor_t *constructor_parse(lexer_t *lexer) {
     break;
 
   case TOKEN_LIST:
+    // TODO: this and fn is shit
     constr->list_constructor = list_constructor_parse(lexer);
     constr->type = malloc(sizeof(*constr->type));
+    constr->type->type = TYPE_LIST;
     constr->type->list = malloc(sizeof(*constr->type->list));
 
     constr->type->list->type = constr->list_constructor->type;
@@ -172,6 +174,8 @@ constructor_t *constructor_parse(lexer_t *lexer) {
 
   return constr;
 }
+
+// TODO: not sure if these are right anymore
 
 static void fn_param_free(fn_param_t *fnp) {
   free(fnp->name);
