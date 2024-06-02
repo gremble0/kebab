@@ -7,14 +7,14 @@
 
 // Add symbol to scope
 // assign value to symbol
-void eval_definition(definition_t *def, scope_t *scope) {
+static void eval_definition(definition_t *def, scope_t *scope) {
   rt_value_t *v = eval_constructor(def->constructor, scope);
   scope_put(scope, def->name, v);
 }
 
 // Look up symbol in scope
 // assign value to symbol if symbol is mutable
-void eval_assignment(assignment_t *ass, scope_t *scope) {
+static void eval_assignment(assignment_t *ass, scope_t *scope) {
   rt_value_t *existing = scope_get(scope, ass->name);
 
   // Assigning to non existent symbol is an error
