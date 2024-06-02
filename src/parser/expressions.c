@@ -206,6 +206,7 @@ expression_t *expression_parse(lexer_t *lexer) {
     expr->cond = expression_cond_parse(lexer);
     break;
 
+  // TODO: lambda expression/function expression for `fn` token
   case TOKEN_NAME:
   case TOKEN_CHAR_LITERAL:
   case TOKEN_STRING_LITERAL:

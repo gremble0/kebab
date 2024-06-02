@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lexer/token.h"
 #include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
 #include "parser/atoms.h"
@@ -29,10 +30,10 @@ static list_t *list_parse(lexer_t *lexer) {
 
   while (1) {
     list_push_back(list, expression_parse(lexer));
+    if (lexer->cur_token->kind == TOKEN_COMMA)
+      SKIP_TOKEN(lexer, TOKEN_COMMA);
     if (lexer->cur_token->kind == TOKEN_RBRACE)
       break;
-    else
-      SKIP_TOKEN(lexer, TOKEN_COMMA);
   }
 
   SKIP_TOKEN(lexer, TOKEN_RBRACE);
