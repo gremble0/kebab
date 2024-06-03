@@ -4,26 +4,26 @@
 #include "parser/constructors.h"
 #include "runtime/error.h"
 
-void type_compare(keb_type_t *kt1, keb_type_t *kt2) {
-  switch (kt1->type) {
+void type_compare(keb_type_t *expected, keb_type_t *actual) {
+  switch (expected->type) {
   case TYPE_CHAR:
   case TYPE_STRING:
   case TYPE_INT:
   case TYPE_BOOL:
-    if (kt1->type != kt2->type)
-      err_type_error(type_to_string(kt1)->s, type_to_string(kt2)->s);
+    if (expected->type != actual->type)
+      err_type_error(type_to_string(expected)->s, type_to_string(actual)->s);
     break;
 
   case TYPE_LIST:
-    type_compare(kt1->list->type, kt2->list->type);
+    type_compare(expected->list->type, actual->list->type);
     break;
 
   case TYPE_FN:
-    type_compare(kt1->fn->return_type, kt2->fn->return_type);
+    type_compare(expected->fn->return_type, actual->fn->return_type);
 
-    for (size_t i = 0; i < kt1->fn->param_types->size; ++i)
-      type_compare(list_get(kt1->fn->param_types, i),
-                   list_get(kt2->fn->param_types, i));
+    for (size_t i = 0; i < expected->fn->param_types->size; ++i)
+      type_compare(list_get(expected->fn->param_types, i),
+                   list_get(actual->fn->param_types, i));
     break;
   }
 }

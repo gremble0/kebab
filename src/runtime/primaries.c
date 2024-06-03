@@ -23,7 +23,7 @@ rt_value_t *eval_func_call(list_t *arguments, fn_constructor_t *fn,
     fn_param_t *p = list_get(fn->params, i);
 
     // Verify type is correct
-    type_compare(arg->type, p->type);
+    type_compare(p->type, arg->type);
 
     scope_put(local_scope, p->name, arg);
   }
