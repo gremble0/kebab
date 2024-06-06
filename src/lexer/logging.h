@@ -5,9 +5,9 @@
 #include "lexer/token.h"
 
 #ifdef DEBUG_LEXER
-#define LEXER_LOG_START() lexer_log_start();
-#define LEXER_LOG_FINISH() lexer_log_finish();
-#define LEXER_LOG_TOKEN(token) lexer_log_token(token);
+#define LEXER_LOG_START() lexer_log_start()
+#define LEXER_LOG_FINISH() lexer_log_finish()
+#define LEXER_LOG_TOKEN(token) lexer_log_token(token)
 #else
 #define LEXER_LOG_START()
 #define LEXER_LOG_FINISH()

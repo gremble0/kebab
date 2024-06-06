@@ -5,13 +5,16 @@
 #include "runtime/error.h"
 
 void type_compare(keb_type_t *expected, keb_type_t *actual) {
+  if (expected->type != actual->type)
+    err_type_error(type_to_string(expected)->s, type_to_string(actual)->s);
+
   switch (expected->type) {
   case TYPE_CHAR:
   case TYPE_STRING:
   case TYPE_INT:
   case TYPE_BOOL:
-    if (expected->type != actual->type)
-      err_type_error(type_to_string(expected)->s, type_to_string(actual)->s);
+    // if (expected->type != actual->type)
+    //   err_type_error(type_to_string(expected)->s, type_to_string(actual)->s);
     break;
 
   case TYPE_LIST:
