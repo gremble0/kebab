@@ -153,3 +153,43 @@ def c = list((int) =>
     [1, 2]
 )
 ```
+
+## TODO:
+- Edge cases like this:
+```
+❯ ./kebab ../examples/recursion.keb
+../examples/recursion.keb:11:0
+        ^
+wrong-token-error: expected ')', got '<eof>'
+```
+- Better error reporting for missing constructors - probably better to just infer type tho
+```
+❯ ./kebab ../examples/functions.keb
+../examples/functions.keb:15:14
+def curried = curried-add(2)
+              ^
+illegal-token-error: 'name: "curried-add"'
+```
+- Add error messages for unsupported operators, e.g. adding a function, calling a string, etc.
+```
+❯ ./kebab ../examples/functions.keb
+Running stacktrace:
+./kebab(+0x73f9) [0x5c91e55a33f9]
+./kebab(+0x7608) [0x5c91e55a3608]
+./kebab(+0x5f16) [0x5c91e55a1f16]
+./kebab(+0x51bd) [0x5c91e55a11bd]
+./kebab(+0x5003) [0x5c91e55a1003]
+./kebab(+0x4df1) [0x5c91e55a0df1]
+./kebab(+0x6277) [0x5c91e55a2277]
+./kebab(+0x5f63) [0x5c91e55a1f63]
+./kebab(+0x65df) [0x5c91e55a25df]
+/usr/lib/libc.so.6(+0x25c88) [0x7f71af95cc88]
+/usr/lib/libc.so.6(__libc_start_main+0x8c) [0x7f71af95cd4c]
+./kebab(+0x2205) [0x5c91e559e205]
+ERROR_ASSERTION_FAIL: primaries.c:45: 0
+```
+
+- Segfault on invalid type conversion? (not 100% sure on reason)
+```
+def result = int(curried-add(10))
+```

@@ -1,19 +1,19 @@
+; a is now evaluated to be `-1`
 def a = int(
-  if false =>
-    0
-  elif 2 == 2 =>
-    -1
-  else =>
-    1
+  if false => 0
+  elif 2 == 2 => -1
+  else => 1
 )
 
-def c = list((int) =>
+; l is not an int list of `[3, 1]`
+def l = list((int) =>
   def q = int(1 + 2)
   if 1 == 2 =>
-    def w = int(6) ; local to this if (not visible in elif or else)
+    def w = int(6) ; w is local to this if branch (not visible in elif or else)
     [q, w]
-  elif 2 == 2 =>
-    [q, 1]
-  else =>
-    [1, 2]
+  elif 2 == 2 => [q, 1]
+  else => [1, 2]
 )
+
+; type error - if expression does not return a string
+def illegal = string(if true => 1 else => 2)

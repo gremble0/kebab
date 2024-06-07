@@ -1,16 +1,19 @@
-def rec-fn = fn((i : int) => int(
-  def local-fn = fn((j : int) => int(
-    if j == 0 => 5
-    elif j == 1 => 10
-    else => 15
-  ))
-  if i <= 2 => local-fn(i)
-  else => rec-fn(i - 1)
+; some naive implementations of typically recursive problems
+
+; fibonacci
+def fib = fn((n : int) => int(
+  if n <= 2 => n
+  else => fib(n - 1) + fib(n - 2)
 ))
 
-def fib = fn((i : int) => int(
-  if i <= 2 => i
-  else => fib(i - 1) + fib(i - 2)
+; faculty function - `n!`
+def fac = fn((n : int) => int(
+  if n <= 1 => n
+  else => n * fac(n - 1)
 ))
 
-def a = int(fib(10))
+; exponent function - `x^n`
+def exp = fn((base : int, exponent : int) => int(
+  if exponent == 1 => base
+  else => base * exp(base, exponent - 1)
+))
