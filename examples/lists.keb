@@ -1,17 +1,32 @@
+; Some normal lists
 def int-list = list((int) => [1, 2, 3])
 def string-list = list((string) => ["abc", "a"])
 
-; This gives a type error since the list should be of type string, but has ints in it
+; This is a type error - list should consist of strings, but actually contains ints
 def wrong = list((string) => [1, 2])
 
 ; A list of nested int lists - nested lists can be of variable size
 def list-of-lists = list((list(int)) => [
-  [1, 2],
-  [3, 4, 5],
+  list((int) => [1, 2]),
+  list((int) => [3, 4, 5]),
 ])
 
-; list of two anonymous functions - not implemented yet
-;def l3 = list((fn(int) => string) => [
-;  fn(x : int) => 1,
-;  fn(y : int) => 2,
-;])
+; This is a type error - outer list specifies that inner lists should consist of
+; list of ints, while the inner lists actually consist of strings.
+def illegal-list-of-lists = list((list(int)) => [
+  list((string) => ["hello", "world"]),
+  list((string) => ["", "a"]),
+])
+
+; list of two anonymous functions
+def list-of-functions = list((fn(int) => int) => [
+  fn((x : int) => int(0)),
+  fn((y : int) => int(1)),
+])
+
+; This is a type error - the signatures of the functions inside the list do
+; not match the type declared in the constructor
+def list-of-illegal-functions = list((fn(int) => int) => [
+  fn((x : int) => string("kebab")),
+  fn((y : int) => string("lang")),
+])
