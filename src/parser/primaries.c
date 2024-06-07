@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "lexer/lexer.h"
+#include "lexer/token.h"
 #include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
 #include "parser/expressions.h"
@@ -29,6 +30,26 @@ static list_t *primary_arguments_parse(lexer_t *lexer) {
   return args;
 }
 
+static primary_suffix_t *primary_suffix_parse(lexer_t *lexer) {
+  if (lexer->cur_token->kind == TOKEN_LPAREN) {
+    // (...) -> arguments for function call
+    primary_suffix_t *psfx = malloc(sizeof(*psfx));
+    psfx->type = PRIMARY_ARGUMENT;
+    psfx->arguments = primary_arguments_parse(lexer);
+
+    return psfx;
+  } else if (lexer->cur_token->kind == TOKEN_LBRACE) {
+    // [...] -> bracketed expression for subscripting a list
+    primary_suffix_t *psfx = malloc(sizeof(*psfx));
+    psfx->type = PRIMARY_SUBSCRIPTION;
+    psfx->subscription = expression_parse(lexer);
+
+    return psfx;
+  } else {
+    return NULL;
+  }
+}
+
 primary_t *primary_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primary");
 
@@ -37,22 +58,44 @@ primary_t *primary_parse(lexer_t *lexer) {
     err_malloc_fail();
 
   prm->atom = atom_parse(lexer);
-  if (lexer->cur_token->kind == TOKEN_LPAREN)
-    prm->arguments = primary_arguments_parse(lexer);
-  else
-    prm->arguments = NULL;
+  if (lexer->cur_token->kind == TOKEN_LPAREN ||
+      lexer->cur_token->kind == TOKEN_LBRACE) {
+    prm->suffixes = list_init(LIST_START_SIZE);
+
+    // There could be multiple sequenced suffixes, e.g. my-function()[1][2]
+    while (lexer->cur_token->kind == TOKEN_LPAREN ||
+           lexer->cur_token->kind == TOKEN_LBRACE)
+      list_push_back(prm->suffixes, primary_suffix_parse(lexer));
+  } else {
+    prm->suffixes = NULL;
+  }
 
   PARSER_LOG_NODE_FINISH("primary");
 
   return prm;
 }
 
+static void primary_suffix_free(primary_suffix_t *psfx) {
+  switch (psfx->type) {
+  case PRIMARY_SUBSCRIPTION:
+    expression_free(psfx->subscription);
+    // free(psfx->subscription) ?
+    break;
+  case PRIMARY_ARGUMENT:
+    list_map(psfx->arguments, (list_map_func)expression_free);
+    list_free(psfx->arguments);
+    break;
+  }
+
+  free(psfx);
+}
+
 void primary_free(primary_t *prm) {
   atom_free(prm->atom);
 
-  if (prm->arguments != NULL) {
-    list_map(prm->arguments, (list_map_func)expression_free);
-    list_free(prm->arguments);
+  if (prm->suffixes != NULL) {
+    list_map(prm->suffixes, (list_map_func)primary_suffix_free);
+    list_free(prm->suffixes);
   }
 
   free(prm);

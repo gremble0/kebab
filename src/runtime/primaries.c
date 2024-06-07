@@ -2,6 +2,7 @@
 #include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
 #include "parser/constructors.h"
+#include "parser/primaries.h"
 #include "parser/types.h"
 #include "runtime/atoms.h"
 #include "runtime/constructors.h"
@@ -11,8 +12,10 @@
 #include "runtime/scope.h"
 #include "runtime/types.h"
 
-rt_value_t *eval_func_call(list_t *arguments, fn_constructor_t *fn,
-                           scope_t *scope) {
+// static rt_value_t *eval_primary_suffix(primary_suffix_t
+
+static rt_value_t *eval_func_call(list_t *arguments, fn_constructor_t *fn,
+                                  scope_t *scope) {
   scope_t *local_scope = scope_init(scope);
 
   // TODO: varargs?
@@ -39,7 +42,18 @@ rt_value_t *eval_func_call(list_t *arguments, fn_constructor_t *fn,
 rt_value_t *eval_primary(primary_t *prm, scope_t *scope) {
   rt_value_t *v = eval_atom(prm->atom, scope);
 
-  if (prm->arguments != NULL) {
+  if (prm->suffixes == NULL)
+    return v;
+
+  for (size_t i = 0; i < prm->suffixes->size; ++i) {
+    primary_suffix_t *psfx = list_get(prm->suffixes, i);
+    switch (psfx->type) {
+    case PRIMARY_SUBSCRIPTION:
+    case PRIMARY_ARGUMENT:
+      break;
+    }
+  }
+  if (prm->suffixes->) {
     // Type error - only functions are callable
     if (v->type->type != TYPE_FN)
       ASSERT(0);
