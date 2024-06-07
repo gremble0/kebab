@@ -1,8 +1,10 @@
 #include <stdlib.h>
 
 #include "lexer/lexer.h"
+#include "lexer/token.h"
 #include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
+#include "parser/constructors.h"
 #include "parser/expressions.h"
 #include "parser/factors.h"
 #include "parser/logging.h"
@@ -193,6 +195,20 @@ static expression_normal_t *expression_normal_parse(lexer_t *lexer) {
   return exnr;
 }
 
+static expression_constructor_t *expression_constructor_parse(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("expression-constructor");
+
+  expression_constructor_t *exco = malloc(sizeof(*exco));
+  if (exco == NULL)
+    err_malloc_fail();
+
+  exco->constr = constructor_parse(lexer);
+
+  PARSER_LOG_NODE_FINISH("expression-constructor");
+
+  return exco;
+}
+
 expression_t *expression_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("expression");
 
@@ -222,6 +238,15 @@ expression_t *expression_parse(lexer_t *lexer) {
   case TOKEN_LBRACE:
     expr->type = EXPR_NORMAL;
     expr->normal = expression_normal_parse(lexer);
+    break;
+
+  case TOKEN_CHAR:
+  case TOKEN_STRING:
+  case TOKEN_INT:
+  case TOKEN_LIST:
+  case TOKEN_FN:
+    expr->type = EXPR_CONSTRUCTOR;
+    expr->constr = expression_constructor_parse(lexer);
     break;
 
   default:
@@ -257,6 +282,11 @@ static void expression_normal_free(expression_normal_t *exnr) {
   free(exnr);
 }
 
+static void expression_constructor_free(expression_constructor_t *exco) {
+  constructor_free(exco->constr);
+  free(exco);
+}
+
 void expression_free(expression_t *expr) {
   switch (expr->type) {
   case EXPR_COND:
@@ -264,6 +294,9 @@ void expression_free(expression_t *expr) {
     break;
   case EXPR_NORMAL:
     expression_normal_free(expr->normal);
+    break;
+  case EXPR_CONSTRUCTOR:
+    expression_constructor_free(expr->constr);
     break;
   }
 

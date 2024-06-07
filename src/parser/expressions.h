@@ -2,6 +2,7 @@
 
 #include "lexer/lexer.h"
 #include "nonstdlib/nlist.h"
+#include "parser/constructors.h"
 
 typedef enum {
   // Maths
@@ -48,14 +49,20 @@ typedef struct {
   list_t *operators; // list<binary_operator_t *>
 } expression_normal_t;
 
+typedef struct {
+  constructor_t *constr;
+} expression_constructor_t;
+
 struct expression_t {
   enum {
     EXPR_COND,
     EXPR_NORMAL,
+    EXPR_CONSTRUCTOR,
   } type;
   union {
     expression_normal_t *normal;
     expression_cond_t *cond;
+    expression_constructor_t *constr;
   };
 };
 

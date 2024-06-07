@@ -37,10 +37,16 @@ static rt_value_t *eval_primitive_constructor(primitive_constructor_t *constr,
 
 static rt_value_t *eval_list_constructor(list_constructor_t *constr,
                                          scope_t *scope) {
-  // Body should return a list
+  // Should return some list, however we will overwrite the type with the one
+  // specified in the constructor
   rt_value_t *v = eval_constructor_body(constr->body, scope);
   if (v->type->type != TYPE_LIST)
     err_type_error(type_kind_map[TYPE_LIST], type_kind_map[v->type->type]);
+
+  v->type = malloc(sizeof(*v->type));
+  v->type->type = TYPE_LIST;
+  v->type->list = malloc(sizeof(*v->type->list));
+  v->type->list->type = constr->type;
 
   for (size_t i = 0; i < v->list_value->size; ++i) {
     rt_value_t *cur = list_get(v->list_value, i);

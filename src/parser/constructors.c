@@ -6,6 +6,7 @@
 #include "parser/logging.h"
 #include "parser/statements.h"
 #include "parser/types.h"
+#include "runtime/types.h"
 #include "utils/utils.h"
 
 static primitive_constructor_t *primitive_constructor_parse(lexer_t *lexer) {

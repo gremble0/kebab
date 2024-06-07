@@ -8,6 +8,7 @@
 #include "runtime/factors.h"
 #include "runtime/operators.h"
 #include "runtime/runtime.h"
+#include "runtime/scope.h"
 
 static rt_value_t *eval_expression_cond(expression_cond_t *excd,
                                         scope_t *scope) {
@@ -36,6 +37,7 @@ static rt_value_t *eval_expression_normal(expression_normal_t *exnm,
   rt_value_t *evaluated = eval_factor(list_get(exnm->factors, 0), scope);
   for (size_t i = 0; i < exnm->operators->size; ++i) {
     binary_operator_t *bo = list_get(exnm->operators, i);
+    // This should be freed after performing binary operator methinks
     rt_value_t *next_evaluated =
         eval_factor(list_get(exnm->factors, i + 1), scope);
 
@@ -89,11 +91,18 @@ static rt_value_t *eval_expression_normal(expression_normal_t *exnm,
   return evaluated;
 }
 
+rt_value_t *eval_expression_constructor(expression_constructor_t *exco,
+                                        scope_t *scope) {
+  return eval_constructor(exco->constr, scope);
+}
+
 rt_value_t *eval_expression(expression_t *expr, scope_t *scope) {
   switch (expr->type) {
   case EXPR_COND:
     return eval_expression_cond(expr->cond, scope);
   case EXPR_NORMAL:
     return eval_expression_normal(expr->normal, scope);
+  case EXPR_CONSTRUCTOR:
+    return eval_expression_constructor(expr->constr, scope);
   }
 }
