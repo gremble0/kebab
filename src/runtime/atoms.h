@@ -1,3 +1,5 @@
+#pragma once
+
 #include "parser/atoms.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"

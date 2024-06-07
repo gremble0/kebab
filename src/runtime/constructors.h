@@ -1,3 +1,5 @@
+#pragma once
+
 #include "parser/constructors.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"

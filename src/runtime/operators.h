@@ -1,3 +1,5 @@
+#pragma once
+
 #include "runtime/runtime.h"
 
 rt_value_t *operator_unary_plus_eval(rt_value_t *v);
