@@ -110,9 +110,6 @@ keb_type_t *type_parse(lexer_t *lexer) {
   return kt;
 }
 
-/**
- * @param kt type to be freed, should be type `keb_type_t`
- */
 void type_free(keb_type_t *kt) {
   switch (kt->type) {
   case TYPE_LIST:

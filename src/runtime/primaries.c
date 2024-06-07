@@ -23,7 +23,7 @@ static rt_value_t *eval_func_call(list_t *arguments, rt_func_t *fn,
   // Evaluate the parameters and put them into the local scope of the function
   // Also check their types and error if they're wrong
   for (size_t i = 0; i < arguments->size; ++i) {
-    rt_value_t *arg = eval_expression(list_get(arguments, i), scope);
+    rt_value_t *arg = eval_expression(list_get(arguments, i), local_scope);
     fn_param_t *p = list_get(fn->params, i);
 
     // Verify type is correct
