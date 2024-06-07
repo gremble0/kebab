@@ -10,7 +10,7 @@ keb_type_t *type_int = &(keb_type_t){.type = TYPE_INT};
 keb_type_t *type_bool = &(keb_type_t){.type = TYPE_BOOL};
 keb_type_t *type_unparametrized_list = &(keb_type_t){.type = TYPE_LIST};
 
-static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
+static keb_type_fn_t *type_fn_parse(lexer_t *lexer) {
   // function types should look something like `fn(int, int) => int`
   // for example:
   //     def fn-showcase = fn(some-param : fn(int, int) => int) => ...
@@ -44,7 +44,7 @@ static keb_type_fn_t *parse_type_fn(lexer_t *lexer) {
   return fnt;
 }
 
-static keb_type_list_t *parse_type_list(lexer_t *lexer) {
+static keb_type_list_t *type_list_parse(lexer_t *lexer) {
   // list types should look like `list(string)`, more advanced:
   // `list(fn(int, char) => string)`
   PARSER_LOG_NODE_START("list-type");
@@ -92,12 +92,12 @@ keb_type_t *type_parse(lexer_t *lexer) {
 
   case TOKEN_FN:
     kt->type = TYPE_FN;
-    kt->fn = parse_type_fn(lexer);
+    kt->fn = type_fn_parse(lexer);
     break;
 
   case TOKEN_LIST:
     kt->type = TYPE_LIST;
-    kt->list = parse_type_list(lexer);
+    kt->list = type_list_parse(lexer);
     break;
 
   // TODO: TOKEN_NAME for user defined types/structs?

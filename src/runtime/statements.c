@@ -7,14 +7,14 @@
 
 // Add symbol to scope
 // assign value to symbol
-static void eval_definition(definition_t *def, scope_t *scope) {
-  rt_value_t *v = eval_constructor(def->constructor, scope);
+static void definition_eval(definition_t *def, scope_t *scope) {
+  rt_value_t *v = constructor_eval(def->constructor, scope);
   scope_put(scope, def->name, v);
 }
 
 // Look up symbol in scope
 // assign value to symbol if symbol is mutable
-static void eval_assignment(assignment_t *ass, scope_t *scope) {
+static void assignment_eval(assignment_t *ass, scope_t *scope) {
   rt_value_t *existing = scope_get(scope, ass->name);
 
   // Assigning to non existent symbol is an error
@@ -25,16 +25,16 @@ static void eval_assignment(assignment_t *ass, scope_t *scope) {
 }
 
 // Entrypoint for evaluating a statement
-void eval_statement(statement_t *stmt, scope_t *scope) {
+void statement_eval(statement_t *stmt, scope_t *scope) {
   switch (stmt->type) {
   case STMT_DEFINITION:
-    eval_definition(stmt->definition, scope);
+    definition_eval(stmt->definition, scope);
     break;
   case STMT_ASSIGNMENT:
-    eval_assignment(stmt->assignment, scope);
+    assignment_eval(stmt->assignment, scope);
     break;
   case STMT_EXPRESSION:
-    eval_expression(stmt->expr, scope);
+    expression_eval(stmt->expr, scope);
     break;
   }
 }

@@ -5,19 +5,19 @@
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
 
-rt_value_t *eval_factor(factor_t *fac, scope_t *scope) {
-  rt_value_t *v = eval_primary(fac->primary, scope);
+rt_value_t *factor_eval(factor_t *fac, scope_t *scope) {
+  rt_value_t *v = primary_eval(fac->primary, scope);
 
   // TODO: THIS WILL RESULT IN MEMORY LEAK
   switch (fac->prefix) {
   case UNARY_PLUS:
-    v = eval_operator_unary_plus(v);
+    v = operator_unary_plus_eval(v);
     break;
   case UNARY_MINUS:
-    v = eval_operator_unary_minus(v);
+    v = operator_unary_minus_eval(v);
     break;
   case UNARY_NOT:
-    v = eval_operator_unary_not(v);
+    v = operator_unary_not_eval(v);
     break;
   case UNARY_NO_OP:
     break;

@@ -176,8 +176,6 @@ constructor_t *constructor_parse(lexer_t *lexer) {
   return constr;
 }
 
-// TODO: not sure if these are right anymore
-
 static void fn_param_free(fn_param_t *fnp) {
   string_free(fnp->name);
   type_free(fnp->type);

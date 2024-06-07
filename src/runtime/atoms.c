@@ -10,7 +10,7 @@
 #include "runtime/scope.h"
 #include "utils/utils.h"
 
-rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
+rt_value_t *atom_eval(atom_t *atom, scope_t *scope) {
   switch (atom->type) {
   case ATOM_CHAR: {
     rt_value_t *v = malloc(sizeof(*v));
@@ -50,7 +50,7 @@ rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
   }
 
   case ATOM_INNER_EXPR:
-    return eval_expression(atom->inner_expr_value, scope);
+    return expression_eval(atom->inner_expr_value, scope);
 
   case ATOM_LIST: {
     rt_value_t *v = malloc(sizeof(*v));
@@ -59,7 +59,7 @@ rt_value_t *eval_atom(atom_t *atom, scope_t *scope) {
 
     for (size_t i = 0; i < atom->list_value->size; ++i)
       list_push_back(v->list_value,
-                     eval_expression(list_get(atom->list_value, i), scope));
+                     expression_eval(list_get(atom->list_value, i), scope));
 
     return v;
   }

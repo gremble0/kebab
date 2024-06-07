@@ -2,4 +2,4 @@
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
 
-rt_value_t *eval_factor(factor_t *fac, scope_t *scope);
+rt_value_t *factor_eval(factor_t *fac, scope_t *scope);

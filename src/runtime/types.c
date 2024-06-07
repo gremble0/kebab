@@ -6,6 +6,8 @@
 
 // TODO: This should not be necessary if no duplicate types are produced, then
 // we could just do `==`
+// have global type_registry and function type_register(keb_type_t *type) that
+// checks if type_registry has type and adds if it doesnt -> no duplicate types
 void type_compare(keb_type_t *expected, keb_type_t *actual) {
   if (expected->type != actual->type)
     err_type_error(type_to_string(expected)->s, type_to_string(actual)->s);

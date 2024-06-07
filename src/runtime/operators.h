@@ -1,16 +1,16 @@
 #include "runtime/runtime.h"
 
-rt_value_t *eval_operator_unary_plus(rt_value_t *v);
-rt_value_t *eval_operator_unary_minus(rt_value_t *v);
-rt_value_t *eval_operator_unary_not(rt_value_t *v);
+rt_value_t *operator_unary_plus_eval(rt_value_t *v);
+rt_value_t *operator_unary_minus_eval(rt_value_t *v);
+rt_value_t *operator_unary_not_eval(rt_value_t *v);
 
-rt_value_t *eval_operator_binary_add(rt_value_t *lhs, rt_value_t *rhs);
-rt_value_t *eval_operator_binary_minus(rt_value_t *lhs, rt_value_t *rhs);
-rt_value_t *eval_operator_binary_mult(rt_value_t *lhs, rt_value_t *rhs);
-rt_value_t *eval_operator_binary_div(rt_value_t *lhs, rt_value_t *rhs);
-rt_value_t *eval_operator_binary_lt(rt_value_t *lhs, rt_value_t *rhs);
-rt_value_t *eval_operator_binary_le(rt_value_t *lhs, rt_value_t *rhs);
-rt_value_t *eval_operator_binary_eq(rt_value_t *lhs, rt_value_t *rhs);
-rt_value_t *eval_operator_binary_neq(rt_value_t *lhs, rt_value_t *rhs);
-rt_value_t *eval_operator_binary_gt(rt_value_t *lhs, rt_value_t *rhs);
-rt_value_t *eval_operator_binary_ge(rt_value_t *lhs, rt_value_t *rhs);
+rt_value_t *operator_binary_add_eval(rt_value_t *lhs, rt_value_t *rhs);
+rt_value_t *operator_binary_minus_eval(rt_value_t *lhs, rt_value_t *rhs);
+rt_value_t *operator_binary_mult_eval(rt_value_t *lhs, rt_value_t *rhs);
+rt_value_t *operator_binary_div_eval(rt_value_t *lhs, rt_value_t *rhs);
+rt_value_t *operator_binary_lt_eval(rt_value_t *lhs, rt_value_t *rhs);
+rt_value_t *operator_binary_le_eval(rt_value_t *lhs, rt_value_t *rhs);
+rt_value_t *operator_binary_eq_eval(rt_value_t *lhs, rt_value_t *rhs);
+rt_value_t *operator_binary_neq_eval(rt_value_t *lhs, rt_value_t *rhs);
+rt_value_t *operator_binary_gt_eval(rt_value_t *lhs, rt_value_t *rhs);
+rt_value_t *operator_binary_ge_eval(rt_value_t *lhs, rt_value_t *rhs);

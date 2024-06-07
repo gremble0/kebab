@@ -15,7 +15,8 @@
 #include "runtime/scope.h"
 #include "runtime/types.h"
 
-static rt_value_t *eval_func_call(list_t *arguments, rt_func_t *fn,
+// TODO: rename?
+static rt_value_t *func_call_eval(list_t *arguments, rt_func_t *fn,
                                   scope_t *scope) {
   scope_t *local_scope = scope_init(scope);
 
@@ -23,7 +24,7 @@ static rt_value_t *eval_func_call(list_t *arguments, rt_func_t *fn,
   // Evaluate the parameters and put them into the local scope of the function
   // Also check their types and error if they're wrong
   for (size_t i = 0; i < arguments->size; ++i) {
-    rt_value_t *arg = eval_expression(list_get(arguments, i), local_scope);
+    rt_value_t *arg = expression_eval(list_get(arguments, i), local_scope);
     fn_param_t *p = list_get(fn->params, i);
 
     // Verify type is correct
@@ -33,19 +34,19 @@ static rt_value_t *eval_func_call(list_t *arguments, rt_func_t *fn,
   }
 
   // Evaluate the body of the function
-  rt_value_t *v = eval_constructor(fn->constr, local_scope);
+  rt_value_t *v = constructor_eval(fn->constr, local_scope);
 
   scope_free(local_scope);
 
   return v;
 }
 
-static rt_value_t *eval_subscription(expression_t *subscription,
+static rt_value_t *subscription_eval(expression_t *subscription,
                                      rt_list_t *list, scope_t *scope) {
   // TODO: subscription could in the future also be for maps or other structures
   // so these assumptions may no longer be valid
 
-  rt_value_t *subscription_v = eval_expression(subscription, scope);
+  rt_value_t *subscription_v = expression_eval(subscription, scope);
   if (subscription_v->type != type_int)
     // TODO: make some error for this - can only index lists with ints
     ASSERT(0);
@@ -58,8 +59,8 @@ static rt_value_t *eval_subscription(expression_t *subscription,
   return list_get(list, subscription_v->int_value);
 }
 
-rt_value_t *eval_primary(primary_t *prm, scope_t *scope) {
-  rt_value_t *v = eval_atom(prm->atom, scope);
+rt_value_t *primary_eval(primary_t *prm, scope_t *scope) {
+  rt_value_t *v = atom_eval(prm->atom, scope);
 
   if (prm->suffixes == NULL)
     return v;
@@ -73,13 +74,13 @@ rt_value_t *eval_primary(primary_t *prm, scope_t *scope) {
       if (v->type->type != TYPE_LIST)
         ASSERT(0);
 
-      v = eval_subscription(psfx->subscription, v->list_value, scope);
+      v = subscription_eval(psfx->subscription, v->list_value, scope);
       break;
     case PRIMARY_ARGUMENT:
       if (v->type->type != TYPE_FN)
         ASSERT(0);
 
-      v = eval_func_call(psfx->arguments, v->fn_value, scope);
+      v = func_call_eval(psfx->arguments, v->fn_value, scope);
       break;
     }
   }
