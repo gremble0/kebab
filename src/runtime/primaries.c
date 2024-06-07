@@ -74,6 +74,7 @@ rt_value_t *eval_primary(primary_t *prm, scope_t *scope) {
         ASSERT(0);
 
       v = eval_subscription(psfx->subscription, v->list_value, scope);
+      break;
     case PRIMARY_ARGUMENT:
       if (v->type->type != TYPE_FN)
         ASSERT(0);

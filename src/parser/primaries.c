@@ -30,6 +30,18 @@ static list_t *primary_arguments_parse(lexer_t *lexer) {
   return args;
 }
 
+static expression_t *primary_subscription_parse(lexer_t *lexer) {
+  PARSER_LOG_NODE_START("primary-subscription");
+  SKIP_TOKEN(lexer, TOKEN_LBRACE);
+
+  expression_t *subscription = expression_parse(lexer);
+
+  SKIP_TOKEN(lexer, TOKEN_RBRACE);
+  PARSER_LOG_NODE_FINISH("primary-subscription");
+
+  return subscription;
+}
+
 static primary_suffix_t *primary_suffix_parse(lexer_t *lexer) {
   if (lexer->cur_token->kind == TOKEN_LPAREN) {
     // (...) -> arguments for function call
@@ -42,7 +54,7 @@ static primary_suffix_t *primary_suffix_parse(lexer_t *lexer) {
     // [...] -> bracketed expression for subscripting a list
     primary_suffix_t *psfx = malloc(sizeof(*psfx));
     psfx->type = PRIMARY_SUBSCRIPTION;
-    psfx->subscription = expression_parse(lexer);
+    psfx->subscription = primary_subscription_parse(lexer);
 
     return psfx;
   } else {

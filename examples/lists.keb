@@ -2,6 +2,10 @@
 def int-list = list((int) => [1, 2, 3])
 def string-list = list((string) => ["abc", "a"])
 
+; You can index lists with the subscription operator `[n]`, indexing is 0-based
+def first-in-int-list = int(int-list[2])
+; first-in-int-list = 1
+
 ; This is a type error - list should consist of strings, but actually contains ints
 def wrong = list((string) => [1, 2])
 
