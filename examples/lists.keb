@@ -14,6 +14,10 @@ def list-of-lists = list((list(int)) => [
   list((int) => [1, 2]),
   list((int) => [3, 4, 5]),
 ])
+; You can access the nested lists like this
+def first-nested-list = list((int) => list-of-lists[0])
+; And you can chain subscription operators to index into nested lists
+def last-in-second-nested = int(list-of-lists[1][2])
 
 ; This is a type error - outer list specifies that inner lists should consist of
 ; list of ints, while the inner lists actually consist of strings.
