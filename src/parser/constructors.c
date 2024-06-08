@@ -6,7 +6,6 @@
 #include "parser/logging.h"
 #include "parser/statements.h"
 #include "parser/types.h"
-#include "runtime/types.h"
 #include "utils/utils.h"
 
 static primitive_constructor_t *primitive_constructor_parse(lexer_t *lexer) {
@@ -141,7 +140,7 @@ constructor_t *constructor_parse(lexer_t *lexer) {
     constr->type = malloc(sizeof(*constr->type));
     constr->type->fn = malloc(sizeof(*constr->type->fn));
 
-    constr->type->type = TYPE_FN;
+    constr->type->kind = TYPE_FN;
 
     // This is a little shit, could be done inside the fn_constructor_parse
     // function
@@ -161,7 +160,7 @@ constructor_t *constructor_parse(lexer_t *lexer) {
     // TODO: this and fn is shit
     constr->list_constructor = list_constructor_parse(lexer);
     constr->type = malloc(sizeof(*constr->type));
-    constr->type->type = TYPE_LIST;
+    constr->type->kind = TYPE_LIST;
     constr->type->list = malloc(sizeof(*constr->type->list));
 
     constr->type->list->type = constr->list_constructor->type;
@@ -204,7 +203,7 @@ static void list_constructor_free(list_constructor_t *lc) {
 }
 
 void constructor_free(constructor_t *constr) {
-  switch (constr->type->type) {
+  switch (constr->type->kind) {
   case TYPE_CHAR:
   case TYPE_STRING:
   case TYPE_INT:

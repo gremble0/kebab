@@ -4,11 +4,11 @@
 #include "parser/types.h"
 #include "utils/utils.h"
 
-keb_type_t *type_char = &(keb_type_t){.type = TYPE_CHAR};
-keb_type_t *type_string = &(keb_type_t){.type = TYPE_STRING};
-keb_type_t *type_int = &(keb_type_t){.type = TYPE_INT};
-keb_type_t *type_bool = &(keb_type_t){.type = TYPE_BOOL};
-keb_type_t *type_unparametrized_list = &(keb_type_t){.type = TYPE_LIST};
+keb_type_t *type_char = &(keb_type_t){.kind = TYPE_CHAR};
+keb_type_t *type_string = &(keb_type_t){.kind = TYPE_STRING};
+keb_type_t *type_int = &(keb_type_t){.kind = TYPE_INT};
+keb_type_t *type_bool = &(keb_type_t){.kind = TYPE_BOOL};
+keb_type_t *type_unparametrized_list = &(keb_type_t){.kind = TYPE_LIST};
 
 static keb_type_fn_t *type_fn_parse(lexer_t *lexer) {
   // function types should look something like `fn(int, int) => int`
@@ -68,35 +68,35 @@ keb_type_t *type_parse(lexer_t *lexer) {
   switch (lexer->cur_token->kind) {
   case TOKEN_CHAR:
     PARSER_LOG_NODE_SELF_CLOSING("type-char");
-    kt->type = TYPE_CHAR;
+    kt->kind = TYPE_CHAR;
     lexer_advance(lexer);
     break;
 
   case TOKEN_STRING:
     PARSER_LOG_NODE_SELF_CLOSING("type-string");
-    kt->type = TYPE_STRING;
+    kt->kind = TYPE_STRING;
     lexer_advance(lexer);
     break;
 
   case TOKEN_INT:
     PARSER_LOG_NODE_SELF_CLOSING("type-int");
-    kt->type = TYPE_INT;
+    kt->kind = TYPE_INT;
     lexer_advance(lexer);
     break;
 
   case TOKEN_BOOL:
     PARSER_LOG_NODE_SELF_CLOSING("type-bool");
-    kt->type = TYPE_BOOL;
+    kt->kind = TYPE_BOOL;
     lexer_advance(lexer);
     break;
 
   case TOKEN_FN:
-    kt->type = TYPE_FN;
+    kt->kind = TYPE_FN;
     kt->fn = type_fn_parse(lexer);
     break;
 
   case TOKEN_LIST:
-    kt->type = TYPE_LIST;
+    kt->kind = TYPE_LIST;
     kt->list = type_list_parse(lexer);
     break;
 
@@ -111,7 +111,7 @@ keb_type_t *type_parse(lexer_t *lexer) {
 }
 
 void type_free(keb_type_t *kt) {
-  switch (kt->type) {
+  switch (kt->kind) {
   case TYPE_LIST:
     type_free(kt->list->type);
     free(kt->list);

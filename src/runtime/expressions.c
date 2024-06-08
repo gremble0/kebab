@@ -19,7 +19,7 @@ static rt_value_t *expression_cond_eval(expression_cond_t *excd,
     // TODO: fill in this (probably new type of error)
     if (tested->type != type_bool)
       err_type_error(type_kind_map[TYPE_BOOL],
-                     type_kind_map[tested->type->type]);
+                     type_kind_map[tested->type->kind]);
 
     if (tested->bool_value)
       return constructor_body_eval(cond->body, scope);

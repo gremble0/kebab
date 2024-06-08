@@ -71,13 +71,13 @@ rt_value_t *primary_eval(primary_t *prm, scope_t *scope) {
     // TODO: better error handling here
     switch (psfx->type) {
     case PRIMARY_SUBSCRIPTION:
-      if (v->type->type != TYPE_LIST)
+      if (v->type->kind != TYPE_LIST)
         ASSERT(0);
 
       v = subscription_eval(psfx->subscription, v->list_value, scope);
       break;
     case PRIMARY_ARGUMENT:
-      if (v->type->type != TYPE_FN)
+      if (v->type->kind != TYPE_FN)
         ASSERT(0);
 
       v = func_call_eval(psfx->arguments, v->fn_value, scope);

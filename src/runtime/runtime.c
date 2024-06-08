@@ -29,7 +29,7 @@ void eval(ast_t *ast) {
 }
 
 string_t *rt_value_to_string(const rt_value_t *v) {
-  switch (v->type->type) {
+  switch (v->type->kind) {
   case TYPE_CHAR: {
     size_t res_len = sizeof("char: ' '");
     char res[res_len];

@@ -9,10 +9,10 @@
 // have global type_registry and function type_register(keb_type_t *type) that
 // checks if type_registry has type and adds if it doesnt -> no duplicate types
 void type_compare(keb_type_t *expected, keb_type_t *actual) {
-  if (expected->type != actual->type)
+  if (expected->kind != actual->kind)
     err_type_error(type_to_string(expected)->s, type_to_string(actual)->s);
 
-  switch (expected->type) {
+  switch (expected->kind) {
   case TYPE_CHAR:
   case TYPE_STRING:
   case TYPE_INT:
@@ -36,7 +36,7 @@ void type_compare(keb_type_t *expected, keb_type_t *actual) {
 }
 
 string_t *type_to_string(keb_type_t *type) {
-  switch (type->type) {
+  switch (type->kind) {
   case TYPE_CHAR:
     return string_of_lit("char");
   case TYPE_STRING:

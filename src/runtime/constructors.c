@@ -40,11 +40,11 @@ static rt_value_t *list_constructor_eval(list_constructor_t *constr,
   // Should return some list, however we will overwrite the type with the one
   // specified in the constructor
   rt_value_t *v = constructor_body_eval(constr->body, scope);
-  if (v->type->type != TYPE_LIST)
-    err_type_error(type_kind_map[TYPE_LIST], type_kind_map[v->type->type]);
+  if (v->type->kind != TYPE_LIST)
+    err_type_error(type_kind_map[TYPE_LIST], type_kind_map[v->type->kind]);
 
   v->type = malloc(sizeof(*v->type));
-  v->type->type = TYPE_LIST;
+  v->type->kind = TYPE_LIST;
   v->type->list = malloc(sizeof(*v->type->list));
   v->type->list->type = constr->type;
 
@@ -57,7 +57,7 @@ static rt_value_t *list_constructor_eval(list_constructor_t *constr,
 }
 
 rt_value_t *constructor_eval(constructor_t *constr, scope_t *scope) {
-  switch (constr->type->type) {
+  switch (constr->type->kind) {
   case TYPE_CHAR:
   case TYPE_STRING:
   case TYPE_INT:
