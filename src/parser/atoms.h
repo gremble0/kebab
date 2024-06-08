@@ -5,18 +5,16 @@
 #include "lexer/lexer.h"
 #include "parser/expressions.h"
 
-typedef enum {
-  ATOM_CHAR,
-  ATOM_STRING,
-  ATOM_INT,
-  ATOM_BOOL,
-  ATOM_NAME,
-  ATOM_INNER_EXPR, // nested expression like (1 + 2)
-  ATOM_LIST,       // [x, y, z]
-} atom_type_t;
-
 typedef struct {
-  atom_type_t type;
+  enum {
+    ATOM_CHAR,
+    ATOM_STRING,
+    ATOM_INT,
+    ATOM_BOOL,
+    ATOM_NAME,
+    ATOM_INNER_EXPR, // nested expression like (1 + 2)
+    ATOM_LIST,       // [x, y, z]
+  } type;
   union {
     string_t *name_value;
     string_t *string_value;
