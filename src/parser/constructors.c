@@ -138,22 +138,19 @@ constructor_t *constructor_parse(lexer_t *lexer) {
   case TOKEN_FN:
     constr->fn_constructor = fn_constructor_parse(lexer);
     constr->type = malloc(sizeof(*constr->type));
-    constr->type->fn = malloc(sizeof(*constr->type->fn));
+    constr->type->fn_type = (keb_type_fn_t){
+        // Return type of a function is the same as the type of the function
+        // constructors body
+        .return_type = constr->fn_constructor->constr->type,
+        .param_types = list_init(LIST_START_SIZE),
+    };
 
     constr->type->kind = TYPE_FN;
 
-    // This is a little shit, could be done inside the fn_constructor_parse
-    // function
-    // list_t *param_types = constr->type->fn->param_types;
-    constr->type->fn->param_types = list_init(LIST_START_SIZE);
     for (size_t i = 0; i < constr->fn_constructor->params->size; ++i) {
       fn_param_t *param = list_get(constr->fn_constructor->params, i);
-      list_push_back(constr->type->fn->param_types, param->type);
+      list_push_back(constr->type->fn_type.param_types, param->type);
     }
-
-    // Return type of a function is the same as the type of the function
-    // constructors body
-    constr->type->fn->return_type = constr->fn_constructor->constr->type;
     break;
 
   case TOKEN_LIST:
@@ -161,9 +158,9 @@ constructor_t *constructor_parse(lexer_t *lexer) {
     constr->list_constructor = list_constructor_parse(lexer);
     constr->type = malloc(sizeof(*constr->type));
     constr->type->kind = TYPE_LIST;
-    constr->type->list = malloc(sizeof(*constr->type->list));
-
-    constr->type->list->type = constr->list_constructor->type;
+    constr->type->list_type = (keb_type_list_t){
+        .type = constr->list_constructor->type,
+    };
     break;
 
   default:

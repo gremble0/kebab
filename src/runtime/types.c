@@ -22,15 +22,15 @@ void type_compare(keb_type_t *expected, keb_type_t *actual) {
     break;
 
   case TYPE_LIST:
-    type_compare(expected->list->type, actual->list->type);
+    type_compare(expected->list_type.type, actual->list_type.type);
     break;
 
   case TYPE_FN:
-    type_compare(expected->fn->return_type, actual->fn->return_type);
+    type_compare(expected->fn_type.return_type, actual->fn_type.return_type);
 
-    for (size_t i = 0; i < expected->fn->param_types->size; ++i)
-      type_compare(list_get(expected->fn->param_types, i),
-                   list_get(actual->fn->param_types, i));
+    for (size_t i = 0; i < expected->fn_type.param_types->size; ++i)
+      type_compare(list_get(expected->fn_type.param_types, i),
+                   list_get(actual->fn_type.param_types, i));
     break;
   }
 }
@@ -48,20 +48,20 @@ string_t *type_to_string(keb_type_t *type) {
   case TYPE_LIST: {
     // Should look something like "list(string)"
     string_t *s = string_of_lit("list(");
-    string_append(s, type_to_string(type->list->type));
+    string_append(s, type_to_string(type->list_type.type));
     string_append_c(s, ')');
     return s;
   }
   case TYPE_FN: {
     // Should look something like "fn(int) => string"
     string_t *s = string_of_lit("fn(");
-    list_t *params = type->fn->param_types;
+    list_t *params = type->fn_type.param_types;
     for (size_t i = 0; i < params->size; ++i) {
       fn_param_t *param = list_get(params, i);
       string_append(s, type_to_string(param->type));
     }
     string_append_lit(s, ") =>");
-    string_append(s, type_to_string(type->fn->return_type));
+    string_append(s, type_to_string(type->fn_type.return_type));
 
     return s;
   }

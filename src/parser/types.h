@@ -29,9 +29,8 @@ typedef enum {
 struct keb_type_t {
   keb_type_kind_t kind;
   union {
-    keb_type_fn_t *fn;
-    keb_type_list_t *list; // TODO: doesnt need to be a pointer to a keb_type_t
-                           // (struct isnt necessary)
+    keb_type_fn_t fn_type;
+    keb_type_list_t list_type;
   };
 };
 

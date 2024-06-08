@@ -12,7 +12,6 @@
 #include "runtime/scope.h"
 #include "runtime/statements.h"
 #include "runtime/types.h"
-#include "utils/utils.h"
 
 rt_value_t *constructor_body_eval(list_t *body, scope_t *scope) {
   // Raise error here?
@@ -35,6 +34,7 @@ static rt_value_t *primitive_constructor_eval(primitive_constructor_t *constr,
   return constructor_body_eval(constr->body, scope);
 }
 
+// TODO: constructor_t instead as param?
 static rt_value_t *list_constructor_eval(list_constructor_t *constr,
                                          scope_t *scope) {
   // Should return some list, however we will overwrite the type with the one
@@ -45,8 +45,7 @@ static rt_value_t *list_constructor_eval(list_constructor_t *constr,
 
   v->type = malloc(sizeof(*v->type));
   v->type->kind = TYPE_LIST;
-  v->type->list = malloc(sizeof(*v->type->list));
-  v->type->list->type = constr->type;
+  v->type->list_type = (keb_type_list_t){.type = constr->type};
 
   for (size_t i = 0; i < v->list_value->size; ++i) {
     rt_value_t *cur = list_get(v->list_value, i);
