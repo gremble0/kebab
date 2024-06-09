@@ -7,9 +7,9 @@ def add = fn((a : int, b : int) => int(a + b))
 ; a function that returns a list of its parameters
 def list-of = fn((a : int, b : int) => list((int) => [a, b]))
 
-; a function that returns a function (curried addition)
+; a function that returns a function (curried addition in this case)
 def curried-add = fn((a : int) => fn((b : int) =>
   int(a + b)
 ))
 ; can be used like this:
-def result = int(curried-add(10)())
+def result = int(curried-add(10)(3))

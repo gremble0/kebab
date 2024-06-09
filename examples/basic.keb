@@ -1,0 +1,1 @@
+def my-string = string("Hello world")

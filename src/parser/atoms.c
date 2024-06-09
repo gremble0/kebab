@@ -8,6 +8,7 @@
 #include "parser/error.h"
 #include "parser/expressions.h"
 #include "parser/logging.h"
+#include "parser/parser.h"
 #include "utils/utils.h"
 
 static expression_t *inner_expression_parse(lexer_t *lexer) {
@@ -47,50 +48,66 @@ atom_t *atom_parse(lexer_t *lexer) {
   if (atom == NULL)
     err_malloc_fail();
 
+  span_t span = {
+      .start = {.line = lexer->line_number, .col = lexer->prev_line_pos},
+      .file = lexer->source_file,
+  };
+
   switch (lexer->cur_token->kind) {
   case TOKEN_CHAR_LITERAL:
     atom->type = ATOM_CHAR;
     atom->char_value = lexer->cur_token->char_literal;
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("char-literal='%c'", atom->char_value);
+    PARSER_LOG_NODE_SELF_CLOSING(
+        "char-literal='%c' span=[%zu, %zu] - [%zu, %zu]", atom->char_value,
+        span.start.line, span.start.col, lexer->line_number, lexer->line_pos);
     break;
 
   case TOKEN_STRING_LITERAL:
     atom->type = ATOM_STRING;
     atom->string_value = string_copy(lexer->cur_token->string_literal);
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("string-literal=\"%.*s\"",
-                                 (int)atom->string_value->len,
-                                 atom->string_value->s);
+    PARSER_LOG_NODE_SELF_CLOSING(
+        "string-literal=\"%.*s\" span=[%zu, %zu] - [%zu, %zu]",
+        (int)atom->string_value->len, atom->string_value->s, span.start.line,
+        span.start.col, lexer->line_number, lexer->line_pos);
     break;
 
   case TOKEN_INTEGER_LITERAL:
     atom->type = ATOM_INT;
     atom->int_value = lexer->cur_token->integer_literal;
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("integer-literal=%ld", atom->int_value);
+    PARSER_LOG_NODE_SELF_CLOSING(
+        "integer-literal=%ld span=[%zu, %zu] - [%zu, %zu]", atom->int_value,
+        span.start.line, span.start.col, lexer->line_number, lexer->line_pos);
     break;
 
   case TOKEN_NAME:
     atom->type = ATOM_NAME;
     atom->name_value = string_copy(lexer->cur_token->name);
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("name=\"%.*s\"", (int)atom->name_value->len,
-                                 atom->name_value->s);
+    PARSER_LOG_NODE_SELF_CLOSING(
+        "name=\"%.*s\" span=[%zu, %zu] - [%zu, %zu]",
+        (int)atom->name_value->len, atom->name_value->s, span.start.line,
+        span.start.col, lexer->line_number, lexer->line_pos);
     break;
 
   case TOKEN_TRUE:
     atom->type = ATOM_BOOL;
     atom->bool_value = 1;
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("true");
+    PARSER_LOG_NODE_SELF_CLOSING("true span=[%zu, %zu] - [%zu, %zu]",
+                                 span.start.line, span.start.col,
+                                 lexer->line_number, lexer->line_pos);
     break;
 
   case TOKEN_FALSE:
     atom->type = ATOM_BOOL;
     atom->bool_value = 0;
     lexer_advance(lexer);
-    PARSER_LOG_NODE_SELF_CLOSING("false");
+    PARSER_LOG_NODE_SELF_CLOSING("false span=[%zu, %zu] - [%zu, %zu]",
+                                 span.start.line, span.start.col,
+                                 lexer->line_number, lexer->line_pos);
     break;
 
   case TOKEN_LPAREN:
@@ -106,6 +123,9 @@ atom_t *atom_parse(lexer_t *lexer) {
   default:
     err_illegal_token(lexer);
   }
+
+  span.end = (position_t){.line = lexer->line_number, .col = lexer->line_pos};
+  atom->span = span;
 
   return atom;
 }
