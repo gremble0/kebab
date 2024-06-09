@@ -27,6 +27,7 @@ static int is_kebab_case(int c) {
  * @param lexer lexer to load next chunk for
  */
 static void lexer_load_next_line(lexer_t *lexer) {
+  // unnecesary if?
   if (lexer->line != NULL) {
     free(lexer->line);
     lexer->line = NULL;
