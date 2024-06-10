@@ -27,4 +27,4 @@ typedef struct {
 } span_t;
 
 string_t *repeat_char(char c, size_t n);
-char *get_line_from_file(FILE *f, size_t line_number);
+string_t *get_line_from_file(FILE *f, size_t line_number);

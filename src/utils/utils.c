@@ -34,7 +34,7 @@ string_t *repeat_char(char c, size_t n) {
  * with 0 returns NULL
  * @return A mallod'cd string of the given line from the file
  */
-char *get_line_from_file(FILE *f, size_t line_number) {
+string_t *get_line_from_file(FILE *f, size_t line_number) {
   if (f == NULL)
     return NULL;
 
@@ -48,8 +48,10 @@ char *get_line_from_file(FILE *f, size_t line_number) {
     ssize_t read = getline(&line, &len, f);
 
     // If we have reached our line or an unexpected EOF, return the current line
-    if (line_number-- <= 1 || read == -1)
-      return line;
+    if (line_number-- <= 1)
+      return string_of(line, read);
+    else if (read == -1)
+      return string_of_lit("");
 
     free(line);
     line = NULL;
