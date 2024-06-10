@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "nonstdlib/nstring.h"
 #include "parser/logging.h"
 #include "utils/utils.h"
 
@@ -21,16 +22,16 @@ void parser_log_finish() {
  * @param node_name name of node to close
  */
 void parser_log_node_start(const char *node_name, ...) {
-  char *indent = repeat_char(' ', ONE_INDENT_WIDTH * indent_depth);
+  string_t *indent = repeat_char(' ', ONE_INDENT_WIDTH * indent_depth);
 
   va_list args;
   va_start(args, node_name);
-  fprintf(log_file, "%s<", indent);
+  fprintf(log_file, "%.*s<", (int)indent->len, indent->s);
   vfprintf(log_file, node_name, args);
   fprintf(log_file, ">\n");
   va_end(args);
 
-  free(indent);
+  string_free(indent);
   ++indent_depth;
 }
 
@@ -41,16 +42,16 @@ void parser_log_node_start(const char *node_name, ...) {
  */
 void parser_log_node_finish(const char *node_name, ...) {
   --indent_depth;
-  char *indent = repeat_char(' ', ONE_INDENT_WIDTH * indent_depth);
+  string_t *indent = repeat_char(' ', ONE_INDENT_WIDTH * indent_depth);
 
   va_list args;
   va_start(args, node_name);
-  fprintf(log_file, "%s<", indent);
+  fprintf(log_file, "%.*s<", (int)indent->len, indent->s);
   vfprintf(log_file, node_name, args);
   fprintf(log_file, "/>\n");
   va_end(args);
 
-  free(indent);
+  string_free(indent);
 }
 
 /**
@@ -58,11 +59,11 @@ void parser_log_node_finish(const char *node_name, ...) {
  * `<node='c' />`
  */
 void parser_log_node_self_closing(const char *node_name, ...) {
-  char *indent = repeat_char(' ', ONE_INDENT_WIDTH * indent_depth);
+  string_t *indent = repeat_char(' ', ONE_INDENT_WIDTH * indent_depth);
 
   va_list args;
   va_start(args, node_name);
-  fprintf(log_file, "%s<", indent);
+  fprintf(log_file, "%.*s<", (int)indent->len, indent->s);
   vfprintf(log_file, node_name, args);
   fprintf(log_file, " />\n");
   va_end(args);

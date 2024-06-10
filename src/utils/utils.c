@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "nonstdlib/nerror.h"
+#include "nonstdlib/nstring.h"
 #include "utils/utils.h"
 
 /**
@@ -13,7 +14,7 @@
  * @param n The number of times to repeat `c`.
  * @return A malloc'd string of `c` repeated `n` times
  */
-char *repeat_char(char c, size_t n) {
+string_t *repeat_char(char c, size_t n) {
   char *str = malloc(n + 1);
   if (str == NULL)
     err_malloc_fail();
@@ -21,7 +22,7 @@ char *repeat_char(char c, size_t n) {
   memset(str, c, n);
   str[n] = '\0';
 
-  return str;
+  return string_of(str, n);
 }
 
 /**

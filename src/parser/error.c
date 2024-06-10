@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "lexer/token.h"
+#include "nonstdlib/nstring.h"
 #include "parser/error.h"
 #include "utils/utils.h"
 
@@ -17,35 +18,13 @@
  */
 static void print_lexer_pos(lexer_t *lexer) {
   // NOTE: lexer->line should always have a newline
+  string_t *indent = repeat_char(' ', lexer->prev_line_pos);
+
   fprintf(stderr, "%s:%zu:%zu\n", lexer->source_file.name, lexer->line_number,
           lexer->prev_line_pos);
-  fprintf(stderr, "%s%s^\n", lexer->line,
-          repeat_char(' ', lexer->prev_line_pos));
-}
+  fprintf(stderr, "%s%.*s^\n", lexer->line, (int)indent->len, indent->s);
 
-/**
- * @brief Prints a line from a start position to the current position in the
- * lexer. Should print something like:
- * ```
- * some_file.keb:1:21:
- * some-wrong-code int(2)
- *                 ^~~~~
- * ```
- *
- * @param start_pos where to start printing line from.
- * @param lexer lexer to print position of
- */
-static void print_lexer_pos_from(lexer_t *lexer, size_t start_pos) {
-  fprintf(stderr, "%s:%zu:%zu\n", lexer->source_file.name, lexer->line_number,
-          lexer->prev_line_pos);
-  fprintf(stderr, "%s%s^%s\n", lexer->line, repeat_char(' ', start_pos),
-          repeat_char('~', lexer->prev_line_pos - start_pos));
-}
-
-_Noreturn void err_illegal_statement(lexer_t *lexer, size_t stmt_start) {
-  print_lexer_pos_from(lexer, stmt_start);
-  fprintf(stderr, "illegal-statement-error\n");
-  exit(1);
+  string_free(indent);
 }
 
 // TODO: const char *context? statement, expression, etc.
