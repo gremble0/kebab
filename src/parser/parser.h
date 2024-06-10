@@ -16,7 +16,7 @@ typedef struct {
 typedef struct {
   position_t start;
   position_t end;
-  file_t *file;
+  file_t file;
 } span_t;
 
 ast_t *parse(lexer_t *lexer);

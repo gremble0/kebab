@@ -17,7 +17,7 @@
  */
 static void print_lexer_pos(lexer_t *lexer) {
   // NOTE: lexer->line should always have a newline
-  fprintf(stderr, "%s:%zu:%zu\n", lexer->source_file->name, lexer->line_number,
+  fprintf(stderr, "%s:%zu:%zu\n", lexer->source_file.name, lexer->line_number,
           lexer->prev_line_pos);
   fprintf(stderr, "%s%s^\n", lexer->line,
           repeat_char(' ', lexer->prev_line_pos));
@@ -36,7 +36,7 @@ static void print_lexer_pos(lexer_t *lexer) {
  * @param lexer lexer to print position of
  */
 static void print_lexer_pos_from(lexer_t *lexer, size_t start_pos) {
-  fprintf(stderr, "%s:%zu:%zu\n", lexer->source_file->name, lexer->line_number,
+  fprintf(stderr, "%s:%zu:%zu\n", lexer->source_file.name, lexer->line_number,
           lexer->prev_line_pos);
   fprintf(stderr, "%s%s^%s\n", lexer->line, repeat_char(' ', start_pos),
           repeat_char('~', lexer->prev_line_pos - start_pos));

@@ -7,5 +7,10 @@
 #define LIST_START_SIZE 8
 #define TABLE_START_SIZE 8
 
+typedef struct {
+  FILE *f;
+  const char *name; // used for error handling
+} file_t;
+
 char *repeat_char(char c, size_t n);
 char *get_line_from_file(FILE *f, size_t line_number);

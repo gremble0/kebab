@@ -18,13 +18,13 @@ _Noreturn void err_name_error(atom_t *name /*, scope_t *scope */) {
   span_t span = name->span;
 
   // "Coordinates" for where the error comes from
-  fprintf(stderr, "%s:%zu:%zu\n", span.file->name, span.start.line,
+  fprintf(stderr, "%s:%zu:%zu\n", span.file.name, span.start.line,
           span.start.col);
 
   // The line the error comes from
-  fprintf(stderr, "%s", get_line_from_file(span.file->f, span.start.line));
+  fprintf(stderr, "%s", get_line_from_file(span.file.f, span.start.line));
 
-  // A cursor pointing to where in the line the error is `^~~~`
+  // A cursor pointing to where in the line the error is: "^~~~~"
   fprintf(stderr, "%s^%s\n", repeat_char(' ', span.start.col - 1),
           repeat_char('~', span.end.col - span.start.col));
 
