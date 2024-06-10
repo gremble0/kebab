@@ -4,7 +4,6 @@
 
 #include "lexer/lexer.h"
 #include "parser/expressions.h"
-#include "parser/parser.h"
 
 typedef struct {
   enum {
@@ -30,7 +29,6 @@ typedef struct {
     // nil
     // map?
   };
-  span_t span;
 } atom_t;
 
 atom_t *atom_parse(lexer_t *lexer);
