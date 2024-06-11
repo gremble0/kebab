@@ -26,5 +26,10 @@ typedef struct {
   file_t file;
 } span_t;
 
+#define span_of(start_line, start_col, end_line, end_col, file)                \
+  (span_t) {                                                                   \
+    (position_t){start_line, start_col}, (position_t){end_line, end_col}, file \
+  }
+
 string_t *repeat_char(char c, size_t n);
 string_t *get_line_from_file(FILE *f, size_t line_number);

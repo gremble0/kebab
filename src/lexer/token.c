@@ -66,56 +66,61 @@ void token_free(token_t *token) {
  * @param token_kind what to make a token from
  * @return a malloc'd token with the appropriate token_kind
  */
-token_t *token_make_simple(token_kind_t token_kind) {
+token_t *token_make_simple(token_kind_t token_kind, span_t span) {
   token_t *token = malloc(sizeof(*token));
   if (token == NULL)
     err_malloc_fail();
 
   token->kind = token_kind;
+  token->span = span;
 
   return token;
 }
 
-token_t *token_make_name(string_t *name) {
-  token_t *name_tok = malloc(sizeof(*name_tok));
-  if (name_tok == NULL)
+token_t *token_make_name(string_t *name, span_t span) {
+  token_t *token = malloc(sizeof(*token));
+  if (token == NULL)
     err_malloc_fail();
 
-  name_tok->kind = TOKEN_NAME;
-  name_tok->name = name;
+  token->kind = TOKEN_NAME;
+  token->name = name;
+  token->span = span;
 
-  return name_tok;
+  return token;
 }
 
-token_t *token_make_str_lit(string_t *str_lit) {
-  token_t *str_lit_tok = malloc(sizeof(*str_lit_tok));
-  if (str_lit_tok == NULL)
+token_t *token_make_str_lit(string_t *str_lit, span_t span) {
+  token_t *token = malloc(sizeof(*token));
+  if (token == NULL)
     err_malloc_fail();
 
-  str_lit_tok->kind = TOKEN_STRING_LITERAL;
-  str_lit_tok->string_literal = str_lit;
+  token->kind = TOKEN_STRING_LITERAL;
+  token->string_literal = str_lit;
+  token->span = span;
 
-  return str_lit_tok;
+  return token;
 }
 
-token_t *token_make_char_lit(uint8_t char_lit) {
-  token_t *char_lit_tok = malloc(sizeof(*char_lit_tok));
-  if (char_lit_tok == NULL)
+token_t *token_make_char_lit(uint8_t char_lit, span_t span) {
+  token_t *token = malloc(sizeof(*token));
+  if (token == NULL)
     err_malloc_fail();
 
-  char_lit_tok->kind = TOKEN_CHAR_LITERAL;
-  char_lit_tok->char_literal = char_lit;
+  token->kind = TOKEN_CHAR_LITERAL;
+  token->char_literal = char_lit;
+  token->span = span;
 
-  return char_lit_tok;
+  return token;
 }
 
-token_t *token_make_int_lit(int64_t int_lit) {
-  token_t *int_lit_tok = malloc(sizeof(*int_lit_tok));
-  if (int_lit_tok == NULL)
+token_t *token_make_int_lit(int64_t int_lit, span_t span) {
+  token_t *token = malloc(sizeof(*token));
+  if (token == NULL)
     err_malloc_fail();
 
-  int_lit_tok->kind = TOKEN_INTEGER_LITERAL;
-  int_lit_tok->integer_literal = int_lit;
+  token->kind = TOKEN_INTEGER_LITERAL;
+  token->integer_literal = int_lit;
+  token->span = span;
 
-  return int_lit_tok;
+  return token;
 }

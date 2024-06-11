@@ -9,7 +9,9 @@
  */
 void lexer_log_token(const token_t *token) {
   string_t *token_string = token_to_string(token);
-  fprintf(log_file, "%*.s\n", (int)token_string->len, token_string->s);
+  fprintf(log_file, "%.*s [%zu, %zu] - [%zu, %zu]\n", (int)token_string->len,
+          token_string->s, token->span.start.line, token->span.start.col,
+          token->span.end.line, token->span.end.col);
   string_free(token_string);
 }
 
