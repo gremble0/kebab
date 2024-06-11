@@ -6,7 +6,7 @@
 #include "utils/utils.h"
 
 typedef struct {
-  file_t source_file;
+  file_t file;
   char *line;
   ssize_t line_len;
   size_t prev_line_pos; // start position of previous token (used for error

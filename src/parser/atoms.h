@@ -29,6 +29,7 @@ typedef struct {
     // nil
     // map?
   };
+  span_t span;
 } atom_t;
 
 atom_t *atom_parse(lexer_t *lexer);

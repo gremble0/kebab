@@ -234,7 +234,7 @@ expression_t *expression_parse(lexer_t *lexer) {
   case TOKEN_TRUE:
   case TOKEN_FALSE:
   case TOKEN_LPAREN:
-  case TOKEN_LBRACE:
+  case TOKEN_LBRACKET:
     expr->type = EXPR_NORMAL;
     expr->normal = expression_normal_parse(lexer);
     break;

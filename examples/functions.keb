@@ -1,5 +1,5 @@
 ; a function that always returns 2
-def basic = fn(() => int(2))
+def basic = fn(() => int(2000))
 
 ; a function that adds two numbers
 def add = fn((a : int, b : int) => int(a + b))

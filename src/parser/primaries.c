@@ -32,11 +32,11 @@ static list_t *primary_arguments_parse(lexer_t *lexer) {
 
 static expression_t *primary_subscription_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primary-subscription");
-  SKIP_TOKEN(lexer, TOKEN_LBRACE);
+  SKIP_TOKEN(lexer, TOKEN_LBRACKET);
 
   expression_t *subscription = expression_parse(lexer);
 
-  SKIP_TOKEN(lexer, TOKEN_RBRACE);
+  SKIP_TOKEN(lexer, TOKEN_RBRACKET);
   PARSER_LOG_NODE_FINISH("primary-subscription");
 
   return subscription;
@@ -50,7 +50,7 @@ static primary_suffix_t *primary_suffix_parse(lexer_t *lexer) {
     psfx->arguments = primary_arguments_parse(lexer);
 
     return psfx;
-  } else if (lexer->cur_token->kind == TOKEN_LBRACE) {
+  } else if (lexer->cur_token->kind == TOKEN_LBRACKET) {
     // [...] -> bracketed expression for subscripting a list
     primary_suffix_t *psfx = malloc(sizeof(*psfx));
     psfx->type = PRIMARY_SUBSCRIPTION;
@@ -70,13 +70,11 @@ primary_t *primary_parse(lexer_t *lexer) {
     err_malloc_fail();
 
   prm->atom = atom_parse(lexer);
-  if (lexer->cur_token->kind == TOKEN_LPAREN ||
-      lexer->cur_token->kind == TOKEN_LBRACE) {
+  if (lexer->cur_token->kind == TOKEN_LPAREN || lexer->cur_token->kind == TOKEN_LBRACKET) {
     prm->suffixes = list_init(LIST_START_SIZE);
 
     // There could be multiple sequenced suffixes, e.g. my-function()[1][2]
-    while (lexer->cur_token->kind == TOKEN_LPAREN ||
-           lexer->cur_token->kind == TOKEN_LBRACE)
+    while (lexer->cur_token->kind == TOKEN_LPAREN || lexer->cur_token->kind == TOKEN_LBRACKET)
       list_push_back(prm->suffixes, primary_suffix_parse(lexer));
   } else {
     prm->suffixes = NULL;

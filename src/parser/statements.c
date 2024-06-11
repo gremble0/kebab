@@ -101,7 +101,7 @@ statement_t *statement_parse(lexer_t *lexer) {
   // Inner expression wrapped in parens, e.g. (1 + 2)
   case TOKEN_LPAREN:
   // Lists [x, y, z]
-  case TOKEN_LBRACE:
+  case TOKEN_LBRACKET:
     stmt->type = STMT_EXPRESSION;
     stmt->expr = expression_parse(lexer);
     break;

@@ -82,9 +82,9 @@ string_t *token_kind_to_string(token_kind_t kind) {
     return string_copy(&token_string_lparen);
   case TOKEN_RPAREN:
     return string_copy(&token_string_rparen);
-  case TOKEN_LBRACE:
+  case TOKEN_LBRACKET:
     return string_copy(&token_string_lbrace);
-  case TOKEN_RBRACE:
+  case TOKEN_RBRACKET:
     return string_copy(&token_string_rbrace);
   case TOKEN_FAT_RARROW:
     return string_copy(&token_string_fat_rarrow);

@@ -33,7 +33,7 @@ static void lexer_load_next_line(lexer_t *lexer) {
   }
 
   size_t _ = 0;
-  lexer->line_len = getline(&lexer->line, &_, lexer->source_file.f);
+  lexer->line_len = getline(&lexer->line, &_, lexer->file.f);
   lexer->line_pos = 0;
   lexer->prev_line_pos = 0;
   ++lexer->line_number;
@@ -152,7 +152,7 @@ static string_t *lexer_read_word(lexer_t *lexer) {
  */
 static span_t lexer_make_span(lexer_t *lexer) {
   return span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number, lexer->line_pos,
-                 lexer->source_file);
+                 lexer->file);
 }
 
 /**
@@ -172,7 +172,7 @@ lexer_t *lexer_init(const char *path) {
   if (f == NULL)
     err_io_fail(path);
 
-  lexer->source_file = (file_t){
+  lexer->file = (file_t){
       .f = f,
       .name = path,
   };
@@ -267,11 +267,11 @@ void lexer_advance(lexer_t *lexer) {
     return;
   case '[':
     ++lexer->line_pos;
-    lexer->cur_token = token_make_simple(TOKEN_LBRACE, lexer_make_span(lexer));
+    lexer->cur_token = token_make_simple(TOKEN_LBRACKET, lexer_make_span(lexer));
     return;
   case ']':
     ++lexer->line_pos;
-    lexer->cur_token = token_make_simple(TOKEN_RBRACE, lexer_make_span(lexer));
+    lexer->cur_token = token_make_simple(TOKEN_RBRACKET, lexer_make_span(lexer));
     return;
 
   // Operators
@@ -395,7 +395,7 @@ void lexer_advance(lexer_t *lexer) {
  * @param lexer lexer to free
  */
 void lexer_free(lexer_t *lexer) {
-  fclose(lexer->source_file.f);
+  fclose(lexer->file.f);
 
   // If we try to free the lexer before we have reached the end of the file,
   // something has gone wrong

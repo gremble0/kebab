@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lexer/lexer.h"
 #include "lexer/token.h"
 #include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
@@ -24,7 +25,7 @@ static expression_t *inner_expression_parse(lexer_t *lexer) {
 
 static list_t *list_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("list");
-  SKIP_TOKEN(lexer, TOKEN_LBRACE);
+  SKIP_TOKEN(lexer, TOKEN_LBRACKET);
 
   list_t *list = list_init(LIST_START_SIZE);
 
@@ -32,11 +33,11 @@ static list_t *list_parse(lexer_t *lexer) {
     list_push_back(list, expression_parse(lexer));
     if (lexer->cur_token->kind == TOKEN_COMMA)
       SKIP_TOKEN(lexer, TOKEN_COMMA);
-    if (lexer->cur_token->kind == TOKEN_RBRACE)
+    if (lexer->cur_token->kind == TOKEN_RBRACKET)
       break;
   }
 
-  SKIP_TOKEN(lexer, TOKEN_RBRACE);
+  SKIP_TOKEN(lexer, TOKEN_RBRACKET);
   PARSER_LOG_NODE_FINISH("list");
 
   return list;
@@ -51,6 +52,7 @@ atom_t *atom_parse(lexer_t *lexer) {
   case TOKEN_CHAR_LITERAL:
     atom->type = ATOM_CHAR;
     atom->char_value = lexer->cur_token->char_literal;
+    atom->span = lexer->cur_token->span;
     lexer_advance(lexer);
     PARSER_LOG_NODE_SELF_CLOSING("char-literal='%c'", atom->char_value);
     break;
@@ -58,6 +60,7 @@ atom_t *atom_parse(lexer_t *lexer) {
   case TOKEN_STRING_LITERAL:
     atom->type = ATOM_STRING;
     atom->string_value = string_copy(lexer->cur_token->string_literal);
+    atom->span = lexer->cur_token->span;
     lexer_advance(lexer);
     PARSER_LOG_NODE_SELF_CLOSING("string-literal=\"%.*s\"", (int)atom->string_value->len,
                                  atom->string_value->s);
@@ -66,6 +69,7 @@ atom_t *atom_parse(lexer_t *lexer) {
   case TOKEN_INT_LITERAL:
     atom->type = ATOM_INT;
     atom->int_value = lexer->cur_token->integer_literal;
+    atom->span = lexer->cur_token->span;
     lexer_advance(lexer);
     PARSER_LOG_NODE_SELF_CLOSING("integer-literal=%ld", atom->int_value);
     break;
@@ -73,6 +77,7 @@ atom_t *atom_parse(lexer_t *lexer) {
   case TOKEN_NAME:
     atom->type = ATOM_NAME;
     atom->name_value = string_copy(lexer->cur_token->name);
+    atom->span = lexer->cur_token->span;
     lexer_advance(lexer);
     PARSER_LOG_NODE_SELF_CLOSING("name=\"%.*s\"", (int)atom->name_value->len, atom->name_value->s);
     break;
@@ -80,6 +85,7 @@ atom_t *atom_parse(lexer_t *lexer) {
   case TOKEN_TRUE:
     atom->type = ATOM_BOOL;
     atom->bool_value = 1;
+    atom->span = lexer->cur_token->span;
     lexer_advance(lexer);
     PARSER_LOG_NODE_SELF_CLOSING("boolean-literal=true");
     break;
@@ -87,18 +93,25 @@ atom_t *atom_parse(lexer_t *lexer) {
   case TOKEN_FALSE:
     atom->type = ATOM_BOOL;
     atom->bool_value = 0;
+    atom->span = lexer->cur_token->span;
     lexer_advance(lexer);
     PARSER_LOG_NODE_SELF_CLOSING("boolean-literal=false");
     break;
 
   case TOKEN_LPAREN:
     atom->type = ATOM_INNER_EXPR;
+    atom->span.file = lexer->file;
+    atom->span.start = (position_t){lexer->line_number, lexer->line_pos};
     atom->inner_expr_value = inner_expression_parse(lexer);
+    atom->span.end = (position_t){lexer->line_number, lexer->line_pos};
     break;
 
-  case TOKEN_LBRACE:
+  case TOKEN_LBRACKET:
     atom->type = ATOM_LIST;
+    atom->span.file = lexer->file;
+    atom->span.start = (position_t){lexer->line_number, lexer->line_pos};
     atom->list_value = list_parse(lexer);
+    atom->span.end = (position_t){lexer->line_number, lexer->line_pos};
     break;
 
   default:

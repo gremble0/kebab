@@ -20,8 +20,7 @@ static void print_lexer_pos(lexer_t *lexer) {
   // NOTE: lexer->line should always have a newline
   string_t *indent = repeat_char(' ', lexer->prev_line_pos);
 
-  fprintf(stderr, "%s:%zu:%zu\n", lexer->source_file.name, lexer->line_number,
-          lexer->prev_line_pos);
+  fprintf(stderr, "%s:%zu:%zu\n", lexer->file.name, lexer->line_number, lexer->prev_line_pos);
   fprintf(stderr, "%s%.*s^\n", lexer->line, (int)indent->len, indent->s);
 
   string_free(indent);
@@ -31,16 +30,14 @@ static void print_lexer_pos(lexer_t *lexer) {
 // TODO: also ideally none of these functions take the lexer as a param
 _Noreturn void err_illegal_token(lexer_t *lexer) {
   print_lexer_pos(lexer);
-  fprintf(stderr, "illegal-token-error: '%s'\n",
-          token_to_string(lexer->cur_token)->s);
+  fprintf(stderr, "illegal-token-error: '%s'\n", token_to_string(lexer->cur_token)->s);
   exit(1);
 }
 
-_Noreturn void err_wrong_token(lexer_t *lexer, string_t *expected,
-                               string_t *actual) {
+_Noreturn void err_wrong_token(lexer_t *lexer, string_t *expected, string_t *actual) {
   print_lexer_pos(lexer);
-  fprintf(stderr, "wrong-token-error: expected '%.*s', got '%.*s'\n",
-          (int)expected->len, expected->s, (int)actual->len, actual->s);
+  fprintf(stderr, "wrong-token-error: expected '%.*s', got '%.*s'\n", (int)expected->len,
+          expected->s, (int)actual->len, actual->s);
 
   exit(1);
 }
@@ -48,7 +45,6 @@ _Noreturn void err_wrong_token(lexer_t *lexer, string_t *expected,
 _Noreturn void err_missing_return(lexer_t *lexer) {
   print_lexer_pos(lexer);
   // TODO: trace the type of the primitive constructor here
-  fprintf(stderr,
-          "missing-return-error: constructors must end with an expression\n");
+  fprintf(stderr, "missing-return-error: constructors must end with an expression\n");
   exit(1);
 }
