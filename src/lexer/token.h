@@ -57,9 +57,9 @@ typedef enum {
   TOKEN_EOF, // <end of file>
 
   // Values
-  TOKEN_CHAR_LITERAL,    // c
-  TOKEN_STRING_LITERAL,  // string
-  TOKEN_INTEGER_LITERAL, // 123
+  TOKEN_CHAR_LITERAL,   // c
+  TOKEN_STRING_LITERAL, // string
+  TOKEN_INT_LITERAL,    // 123
   // TODO: TOKEN_FLOAT_LITERAL,
   TOKEN_NAME,
 } token_kind_t;

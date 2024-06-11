@@ -86,7 +86,7 @@ statement_t *statement_parse(lexer_t *lexer) {
   case TOKEN_NAME:
   case TOKEN_CHAR_LITERAL:
   case TOKEN_STRING_LITERAL:
-  case TOKEN_INTEGER_LITERAL:
+  case TOKEN_INT_LITERAL:
   // Cond expressions (if/elif/else)
   case TOKEN_IF:
   // Factor prefixes

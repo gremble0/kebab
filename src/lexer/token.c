@@ -10,29 +10,28 @@
 string_t *token_to_string(const token_t *token) {
   switch (token->kind) {
   case TOKEN_CHAR_LITERAL: {
-    size_t res_size = sizeof("char-literal: ' '");
+    size_t res_size = sizeof("<char-literal=' '>");
     char res[res_size];
     sprintf(res, "char-literal: '%c'", token->char_literal);
     return string_of(res, res_size);
   }
   case TOKEN_STRING_LITERAL: {
-    size_t res_size = sizeof("string-literal: \"\"") + token->string_literal->len;
+    size_t res_size = sizeof("<string-literal=\"\">") + token->string_literal->len;
     char res[res_size];
-    sprintf(res, "string-literal: \"%.*s\"", (int)token->string_literal->len,
+    sprintf(res, "<string-literal=\"%.*s\">", (int)token->string_literal->len,
             token->string_literal->s);
     return string_of(res, res_size);
   }
-  case TOKEN_INTEGER_LITERAL: {
-    size_t res_size =
-        snprintf(NULL, 0, "%ld", token->integer_literal) + sizeof("integer-literal: ");
+  case TOKEN_INT_LITERAL: {
+    size_t res_size = snprintf(NULL, 0, "%ld", token->integer_literal) + sizeof("<int-literal=");
     char res[res_size];
-    sprintf(res, "integer-literal: %ld", token->integer_literal);
+    sprintf(res, "<int-literal=%ld>", token->integer_literal);
     return string_of(res, res_size);
   }
   case TOKEN_NAME: {
-    size_t res_size = sizeof("name: \"\"") + token->name->len;
+    size_t res_size = sizeof("<name=\"\">") + token->name->len;
     char res[res_size];
-    sprintf(res, "name: \"%.*s\"", (int)token->name->len, token->name->s);
+    sprintf(res, "<name=\"%.*s\">", (int)token->name->len, token->name->s);
     return string_of(res, res_size);
   }
   default:
@@ -117,7 +116,7 @@ string_t *token_kind_to_string(token_kind_t kind) {
     return string_copy(&token_string_char_lit);
   case TOKEN_STRING_LITERAL:
     return string_copy(&token_string_string_lit);
-  case TOKEN_INTEGER_LITERAL:
+  case TOKEN_INT_LITERAL:
     return string_copy(&token_string_int_lit);
   case TOKEN_NAME:
     return string_copy(&token_string_name);
@@ -197,7 +196,7 @@ token_t *token_make_int_lit(int64_t int_lit, span_t span) {
   if (token == NULL)
     err_malloc_fail();
 
-  token->kind = TOKEN_INTEGER_LITERAL;
+  token->kind = TOKEN_INT_LITERAL;
   token->integer_literal = int_lit;
   token->span = span;
 

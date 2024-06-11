@@ -225,7 +225,7 @@ expression_t *expression_parse(lexer_t *lexer) {
   case TOKEN_NAME:
   case TOKEN_CHAR_LITERAL:
   case TOKEN_STRING_LITERAL:
-  case TOKEN_INTEGER_LITERAL:
+  case TOKEN_INT_LITERAL:
   case TOKEN_PLUS:
   case TOKEN_MINUS:
   case TOKEN_MULT:
