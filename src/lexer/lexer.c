@@ -17,8 +17,7 @@
 
 static int is_not_dquote(int c) { return c != '"'; }
 static int is_kebab_case(int c) {
-  return !isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' &&
-         c != ']';
+  return !isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']';
 }
 
 /**
@@ -51,8 +50,7 @@ static void lexer_load_next_line(lexer_t *lexer) {
  */
 static size_t lexer_seek_while(const lexer_t *lexer, int pred(int)) {
   size_t i = 0;
-  while (lexer->line_pos + i < (size_t)lexer->line_len &&
-         pred(lexer->line[lexer->line_pos + i]))
+  while (lexer->line_pos + i < (size_t)lexer->line_len && pred(lexer->line[lexer->line_pos + i]))
     ++i;
 
   return i;
@@ -229,159 +227,138 @@ void lexer_advance(lexer_t *lexer) {
   case ':':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_COLON,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_COLON, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                             lexer->line_pos, lexer->source_file));
     return;
   case '=': {
     switch (lexer_peek_char(lexer, 1)) {
     case '>':
       lexer->line_pos += 2;
       lexer->cur_token = token_make_simple(
-          TOKEN_FAT_RARROW,
-          span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                  lexer->line_pos, lexer->source_file));
+          TOKEN_FAT_RARROW, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                                    lexer->line_pos, lexer->source_file));
       return;
     case '=':
       lexer->line_pos += 2;
       lexer->cur_token = token_make_simple(
-          TOKEN_EQ,
-          span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                  lexer->line_pos, lexer->source_file));
+          TOKEN_EQ, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                            lexer->line_pos, lexer->source_file));
       return;
     default:
       ++lexer->line_pos;
       lexer->cur_token = token_make_simple(
-          TOKEN_EQUALS,
-          span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                  lexer->line_pos, lexer->source_file));
+          TOKEN_EQUALS, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                                lexer->line_pos, lexer->source_file));
       return;
     }
   }
   case ',':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_COMMA,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_COMMA, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                             lexer->line_pos, lexer->source_file));
     return;
   case '(':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_LPAREN,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_LPAREN, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                              lexer->line_pos, lexer->source_file));
     return;
   case ')':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_RPAREN,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_RPAREN, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                              lexer->line_pos, lexer->source_file));
     return;
   case '[':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_LBRACE,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_LBRACE, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                              lexer->line_pos, lexer->source_file));
     return;
   case ']':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_RBRACE,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_RBRACE, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                              lexer->line_pos, lexer->source_file));
     return;
 
   // Operators
   case '+':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_PLUS,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_PLUS, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                            lexer->line_pos, lexer->source_file));
     return;
   case '-':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_MINUS,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_MINUS, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                             lexer->line_pos, lexer->source_file));
     return;
   case '*':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_MULT,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_MULT, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                            lexer->line_pos, lexer->source_file));
     return;
   case '~':
     if (lexer_peek_char(lexer, 1) == '=') {
       lexer->line_pos += 2;
       lexer->cur_token = token_make_simple(
-          TOKEN_NEQ,
-          span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                  lexer->line_pos, lexer->source_file));
+          TOKEN_NEQ, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                             lexer->line_pos, lexer->source_file));
       return;
     }
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_NOT,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_NOT, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                           lexer->line_pos, lexer->source_file));
     return;
   case '<':
     if (lexer_peek_char(lexer, 1) == '=') {
       lexer->line_pos += 2;
       lexer->cur_token = token_make_simple(
-          TOKEN_LE,
-          span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                  lexer->line_pos, lexer->source_file));
+          TOKEN_LE, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                            lexer->line_pos, lexer->source_file));
       return;
     }
     ++lexer->line_pos;
-    lexer->cur_token = token_make_simple(
-        TOKEN_LT,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+    lexer->cur_token = token_make_simple(TOKEN_LT, span_of(lexer->line_number, lexer->prev_line_pos,
+                                                           lexer->line_number, lexer->line_pos,
+                                                           lexer->source_file));
     return;
   case '>':
     if (lexer_peek_char(lexer, 1) == '=') {
       lexer->line_pos += 2;
       lexer->cur_token = token_make_simple(
-          TOKEN_GE,
-          span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                  lexer->line_pos, lexer->source_file));
+          TOKEN_GE, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                            lexer->line_pos, lexer->source_file));
       return;
     }
     ++lexer->line_pos;
-    lexer->cur_token = token_make_simple(
-        TOKEN_GT,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+    lexer->cur_token = token_make_simple(TOKEN_GT, span_of(lexer->line_number, lexer->prev_line_pos,
+                                                           lexer->line_number, lexer->line_pos,
+                                                           lexer->source_file));
     return;
   case '/':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(
-        TOKEN_DIV,
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        TOKEN_DIV, span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                           lexer->line_pos, lexer->source_file));
     return;
 
   // Literals
   case '"':
     lexer->cur_token = token_make_str_lit(
-        lexer_read_str(lexer),
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        lexer_read_str(lexer), span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                                       lexer->line_pos, lexer->source_file));
     return;
 
   case '\'':
     lexer->cur_token = token_make_char_lit(
-        lexer_read_char(lexer),
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        lexer_read_char(lexer), span_of(lexer->line_number, lexer->prev_line_pos,
+                                        lexer->line_number, lexer->line_pos, lexer->source_file));
     return;
   // TODO: revisit what to do with numbers starting with 0
   case '0':
@@ -395,32 +372,55 @@ void lexer_advance(lexer_t *lexer) {
   case '8':
   case '9':
     lexer->cur_token = token_make_int_lit(
-        lexer_read_int(lexer),
-        span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
-                lexer->line_pos, lexer->source_file));
+        lexer_read_int(lexer), span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                                       lexer->line_pos, lexer->source_file));
     return;
 
   // Keywords and builtin types
   default: {
     string_t *word = lexer_read_word(lexer);
+    span_t span = span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number,
+                          lexer->line_pos, lexer->source_file);
 
-    // Check if its a reserved word
-    for (size_t i = 0; i < ARRAY_SIZE(reserved_word_map); ++i) {
-      if (string_compare(reserved_word_map[i].word, word) == 0) {
-        string_free(word);
-        lexer->cur_token = token_make_simple(
-            reserved_word_map[i].kind,
-            span_of(lexer->line_number, lexer->prev_line_pos,
-                    lexer->line_number, lexer->line_pos, lexer->source_file));
-        return;
-      }
-    }
+    // Check if the word is some reserved word
+    if (string_compare(word, &token_string_def) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_DEF, span);
+    else if (string_compare(word, &token_string_def) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_DEF, span);
+    else if (string_compare(word, &token_string_set) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_SET, span);
+    else if (string_compare(word, &token_string_mut) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_MUT, span);
+    else if (string_compare(word, &token_string_if) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_IF, span);
+    else if (string_compare(word, &token_string_elif) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_ELIF, span);
+    else if (string_compare(word, &token_string_else) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_ELSE, span);
+    else if (string_compare(word, &token_string_nil) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_NIL, span);
 
-    // If its not its just some identifier/name
-    lexer->cur_token = token_make_name(
-        word, span_of(lexer->line_number, lexer->prev_line_pos,
-                      lexer->line_number, lexer->line_pos, lexer->source_file));
-    return;
+    else if (string_compare(word, &token_string_char) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_CHAR, span);
+    else if (string_compare(word, &token_string_string) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_STRING, span);
+    else if (string_compare(word, &token_string_int) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_INT, span);
+    else if (string_compare(word, &token_string_bool) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_BOOL, span);
+    else if (string_compare(word, &token_string_fn) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_FN, span);
+    else if (string_compare(word, &token_string_list) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_LIST, span);
+
+    else if (string_compare(word, &token_string_true) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_TRUE, span);
+    else if (string_compare(word, &token_string_false) == 0)
+      lexer->cur_token = token_make_simple(TOKEN_FALSE, span);
+
+    else
+      // If its not some reserved word its just some identifier/name
+      lexer->cur_token = token_make_name(word, span);
   }
   }
 }

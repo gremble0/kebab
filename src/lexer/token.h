@@ -64,94 +64,56 @@ typedef enum {
   TOKEN_NAME,
 } token_kind_t;
 
-typedef struct {
-  const string_t *word;
-  token_kind_t kind;
-} reserved_word_map_t;
+#define _string_of(lit)                                                                            \
+  (string_t) { lit, sizeof(lit) }
 
-static const reserved_word_map_t reserved_word_map[] = {
-    // Keywords
-    {&(string_t){.s = "def", .len = sizeof("def")}, TOKEN_DEF},
-    {&(string_t){.s = "set", .len = sizeof("set")}, TOKEN_SET},
-    {&(string_t){.s = "mut", .len = sizeof("mut")}, TOKEN_MUT},
-    {&(string_t){.s = "if", .len = sizeof("if")}, TOKEN_IF},
-    {&(string_t){.s = "elif", .len = sizeof("elif")}, TOKEN_ELIF},
-    {&(string_t){.s = "else", .len = sizeof("else")}, TOKEN_ELSE},
-
-    {&(string_t){.s = "nil", .len = sizeof("nil")}, TOKEN_NIL},
-
-    // Constructors
-    {&(string_t){.s = "char", .len = sizeof("char")}, TOKEN_CHAR},
-    {&(string_t){.s = "string", .len = sizeof("string")}, TOKEN_STRING},
-    {&(string_t){.s = "int", .len = sizeof("int")}, TOKEN_INT},
-    {&(string_t){.s = "bool", .len = sizeof("bool")}, TOKEN_BOOL},
-    {&(string_t){.s = "fn", .len = sizeof("fn")}, TOKEN_FN},
-    {&(string_t){.s = "list", .len = sizeof("list")}, TOKEN_LIST},
-
-    // Booleans
-    {&(string_t){.s = "true", .len = sizeof("true")}, TOKEN_TRUE},
-    {&(string_t){.s = "false", .len = sizeof("false")}, TOKEN_FALSE},
-};
-
-static const string_t *token_kind_map[] = {
-    // Keywords
-    [TOKEN_DEF] = &(string_t){.s = "def", .len = sizeof("def")},
-    [TOKEN_SET] = &(string_t){.s = "set", .len = sizeof("set")},
-    [TOKEN_MUT] = &(string_t){.s = "mut", .len = sizeof("mut")},
-    [TOKEN_IF] = &(string_t){.s = "if", .len = sizeof("if")},
-    [TOKEN_ELIF] = &(string_t){.s = "elif", .len = sizeof("elif")},
-    [TOKEN_ELSE] = &(string_t){.s = "else", .len = sizeof("else")},
-    [TOKEN_NIL] = &(string_t){.s = "nil", .len = sizeof("nil")},
-
-    // Constructors
-    [TOKEN_CHAR] = &(string_t){.s = "char", .len = sizeof("char")},
-    [TOKEN_STRING] = &(string_t){.s = "string", .len = sizeof("string")},
-    [TOKEN_INT] = &(string_t){.s = "int", .len = sizeof("int")},
-    [TOKEN_BOOL] = &(string_t){.s = "bool", .len = sizeof("bool")},
-    [TOKEN_FN] = &(string_t){.s = "fn", .len = sizeof("fn")},
-    [TOKEN_LIST] = &(string_t){.s = "list", .len = sizeof("list")},
-
-    // Booleans
-    [TOKEN_TRUE] = &(string_t){.s = "true", .len = sizeof("true")},
-    [TOKEN_FALSE] = &(string_t){.s = "false", .len = sizeof("false")},
-
-    // Syntax
-    [TOKEN_COLON] = &(string_t){.s = ":", .len = sizeof(":")},
-    [TOKEN_EQUALS] = &(string_t){.s = "=", .len = sizeof("=")},
-    [TOKEN_COMMA] = &(string_t){.s = ",", .len = sizeof(",")},
-    [TOKEN_LPAREN] = &(string_t){.s = "(", .len = sizeof("(")},
-    [TOKEN_RPAREN] = &(string_t){.s = ")", .len = sizeof(")")},
-    [TOKEN_LBRACE] = &(string_t){.s = "[", .len = sizeof("[")},
-    [TOKEN_RBRACE] = &(string_t){.s = "]", .len = sizeof("]")},
-    [TOKEN_FAT_RARROW] = &(string_t){.s = "=>", .len = sizeof("=>")},
-
-    // Operators
-    [TOKEN_PLUS] = &(string_t){.s = "+", .len = sizeof("+")},
-    [TOKEN_MINUS] = &(string_t){.s = "-", .len = sizeof("-")},
-    [TOKEN_MULT] = &(string_t){.s = "*", .len = sizeof("*")},
-    [TOKEN_DIV] = &(string_t){.s = "/", .len = sizeof("/")},
-
-    // Comparisons
-    [TOKEN_NOT] = &(string_t){.s = "~", .len = sizeof("~")},
-    [TOKEN_LT] = &(string_t){.s = "<", .len = sizeof("<")},
-    [TOKEN_LE] = &(string_t){.s = "<=", .len = sizeof("<=")},
-    [TOKEN_EQ] = &(string_t){.s = "==", .len = sizeof("==")},
-    [TOKEN_NEQ] = &(string_t){.s = "~=", .len = sizeof("~=")},
-    [TOKEN_GT] = &(string_t){.s = ">", .len = sizeof(">")},
-    [TOKEN_GE] = &(string_t){.s = ">=", .len = sizeof(">=")},
-
-    // Special
-    [TOKEN_EOF] = &(string_t){.s = "<eof>", .len = sizeof("<eof>")},
-
-    // Values
-    [TOKEN_CHAR_LITERAL] =
-        &(string_t){.s = "<char-literal>", .len = sizeof("<char-literal>")},
-    [TOKEN_STRING_LITERAL] =
-        &(string_t){.s = "<string-literal>", .len = sizeof("<string-literal>")},
-    [TOKEN_INTEGER_LITERAL] = &(string_t){.s = "<integer-literal>",
-                                          .len = sizeof("<integer-literal>")},
-    [TOKEN_NAME] = &(string_t){.s = "<name>", .len = sizeof("<name>")},
-};
+// Keywords
+static const string_t token_string_def = _string_of("def");
+static const string_t token_string_set = _string_of("set");
+static const string_t token_string_mut = _string_of("mut");
+static const string_t token_string_if = _string_of("if");
+static const string_t token_string_elif = _string_of("elif");
+static const string_t token_string_else = _string_of("else");
+static const string_t token_string_nil = _string_of("nil");
+// Constructors
+static const string_t token_string_char = _string_of("char");
+static const string_t token_string_string = _string_of("string");
+static const string_t token_string_int = _string_of("int");
+static const string_t token_string_bool = _string_of("bool");
+static const string_t token_string_fn = _string_of("fn");
+static const string_t token_string_list = _string_of("list");
+// Booleans
+static const string_t token_string_true = _string_of("true");
+static const string_t token_string_false = _string_of("false");
+// Syntax
+static const string_t token_string_colon = _string_of(":");
+static const string_t token_string_equals = _string_of("=");
+static const string_t token_string_comma = _string_of(",");
+static const string_t token_string_lparen = _string_of("(");
+static const string_t token_string_rparen = _string_of(")");
+static const string_t token_string_lbrace = _string_of("[");
+static const string_t token_string_rbrace = _string_of("]");
+static const string_t token_string_fat_rarrow = _string_of("=>");
+// Operators
+static const string_t token_string_plus = _string_of("+");
+static const string_t token_string_minus = _string_of("-");
+static const string_t token_string_mult = _string_of("*");
+static const string_t token_string_div = _string_of("/");
+static const string_t token_string_not = _string_of("~");
+// Comparisons
+static const string_t token_string_lt = _string_of("<");
+static const string_t token_string_le = _string_of("<=");
+static const string_t token_string_eq = _string_of("==");
+static const string_t token_string_neq = _string_of("~=");
+static const string_t token_string_gt = _string_of(">");
+static const string_t token_string_ge = _string_of(">=");
+// Special
+static const string_t token_string_eof = _string_of("<eof>");
+// Values and literals (without any actual contents)
+static const string_t token_string_char_lit = _string_of("<char-lit>");
+static const string_t token_string_string_lit = _string_of("<string-lit>");
+static const string_t token_string_int_lit = _string_of("<int-lit>");
+static const string_t token_string_name = _string_of("<name>");
 
 typedef struct {
   token_kind_t kind;

@@ -16,16 +16,15 @@ string_t *token_to_string(const token_t *token) {
     return string_of(res, res_size);
   }
   case TOKEN_STRING_LITERAL: {
-    size_t res_size =
-        sizeof("string-literal: \"\"") + token->string_literal->len;
+    size_t res_size = sizeof("string-literal: \"\"") + token->string_literal->len;
     char res[res_size];
     sprintf(res, "string-literal: \"%.*s\"", (int)token->string_literal->len,
             token->string_literal->s);
     return string_of(res, res_size);
   }
   case TOKEN_INTEGER_LITERAL: {
-    size_t res_size = snprintf(NULL, 0, "%ld", token->integer_literal) +
-                      sizeof("integer-literal: ");
+    size_t res_size =
+        snprintf(NULL, 0, "%ld", token->integer_literal) + sizeof("integer-literal: ");
     char res[res_size];
     sprintf(res, "integer-literal: %ld", token->integer_literal);
     return string_of(res, res_size);
@@ -37,12 +36,92 @@ string_t *token_to_string(const token_t *token) {
     return string_of(res, res_size);
   }
   default:
+    // Other tokens are just constant strings that dont depend on the contents of the token
     return token_kind_to_string(token->kind);
   }
 }
 
 string_t *token_kind_to_string(token_kind_t kind) {
-  return string_copy(token_kind_map[kind]);
+  switch (kind) {
+  case TOKEN_DEF:
+    return string_copy(&token_string_def);
+  case TOKEN_SET:
+    return string_copy(&token_string_set);
+  case TOKEN_MUT:
+    return string_copy(&token_string_mut);
+  case TOKEN_NIL:
+    return string_copy(&token_string_nil);
+  case TOKEN_IF:
+    return string_copy(&token_string_if);
+  case TOKEN_ELIF:
+    return string_copy(&token_string_elif);
+  case TOKEN_ELSE:
+    return string_copy(&token_string_else);
+  case TOKEN_CHAR:
+    return string_copy(&token_string_char);
+  case TOKEN_STRING:
+    return string_copy(&token_string_string);
+  case TOKEN_INT:
+    return string_copy(&token_string_int);
+  case TOKEN_BOOL:
+    return string_copy(&token_string_bool);
+  case TOKEN_FN:
+    return string_copy(&token_string_fn);
+  case TOKEN_LIST:
+    return string_copy(&token_string_list);
+  case TOKEN_TRUE:
+    return string_copy(&token_string_true);
+  case TOKEN_FALSE:
+    return string_copy(&token_string_false);
+  case TOKEN_COLON:
+    return string_copy(&token_string_colon);
+  case TOKEN_EQUALS:
+    return string_copy(&token_string_equals);
+  case TOKEN_COMMA:
+    return string_copy(&token_string_comma);
+  case TOKEN_LPAREN:
+    return string_copy(&token_string_lparen);
+  case TOKEN_RPAREN:
+    return string_copy(&token_string_rparen);
+  case TOKEN_LBRACE:
+    return string_copy(&token_string_lbrace);
+  case TOKEN_RBRACE:
+    return string_copy(&token_string_rbrace);
+  case TOKEN_FAT_RARROW:
+    return string_copy(&token_string_fat_rarrow);
+  case TOKEN_PLUS:
+    return string_copy(&token_string_plus);
+  case TOKEN_MINUS:
+    return string_copy(&token_string_minus);
+  case TOKEN_MULT:
+    return string_copy(&token_string_mult);
+  case TOKEN_DIV:
+    return string_copy(&token_string_div);
+  case TOKEN_NOT:
+    return string_copy(&token_string_not);
+  case TOKEN_LT:
+    return string_copy(&token_string_lt);
+  case TOKEN_LE:
+    return string_copy(&token_string_le);
+  case TOKEN_EQ:
+    return string_copy(&token_string_eq);
+  case TOKEN_NEQ:
+    return string_copy(&token_string_neq);
+  case TOKEN_GT:
+    return string_copy(&token_string_gt);
+  case TOKEN_GE:
+    return string_copy(&token_string_ge);
+  case TOKEN_EOF:
+    return string_copy(&token_string_eof);
+  case TOKEN_CHAR_LITERAL:
+    return string_copy(&token_string_char_lit);
+  case TOKEN_STRING_LITERAL:
+    return string_copy(&token_string_string_lit);
+  case TOKEN_INTEGER_LITERAL:
+    return string_copy(&token_string_int_lit);
+  case TOKEN_NAME:
+    return string_copy(&token_string_name);
+  }
 }
 
 void token_free(token_t *token) {
