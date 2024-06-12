@@ -5,7 +5,7 @@
 #include "parser/logging.h"
 
 static unary_operator_t unary_operator_parse(lexer_t *lexer) {
-  // TODO: some sort of error handling
+  // TODO: some sort of error handling for invalid prefixes
   switch (lexer->cur_token->kind) {
   case TOKEN_PLUS:
     PARSER_LOG_NODE_SELF_CLOSING("factor-prefix='+'");
@@ -27,19 +27,24 @@ static unary_operator_t unary_operator_parse(lexer_t *lexer) {
 factor_t *factor_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("factor");
 
-  factor_t *ft = malloc(sizeof(*ft));
-  if (ft == NULL)
+  factor_t *fac = malloc(sizeof(*fac));
+  if (fac == NULL)
     err_malloc_fail();
 
+  fac->span.file = lexer->file;
+  fac->span.start = (position_t){lexer->line_number, lexer->line_pos};
+
   // Check for prefixes
-  ft->prefix = unary_operator_parse(lexer);
+  fac->prefix = unary_operator_parse(lexer);
 
   // Parse primary
-  ft->primary = primary_parse(lexer);
+  fac->primary = primary_parse(lexer);
+
+  fac->span.end = (position_t){lexer->line_number, lexer->line_pos};
 
   PARSER_LOG_NODE_FINISH("factor");
 
-  return ft;
+  return fac;
 }
 
 void factor_free(factor_t *fac) {

@@ -30,6 +30,7 @@ typedef struct {
     assignment_t *assignment;
     expression_t *expr;
   };
+  span_t span;
 } statement_t;
 
 statement_t *statement_parse(lexer_t *lexer);

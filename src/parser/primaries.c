@@ -69,7 +69,11 @@ primary_t *primary_parse(lexer_t *lexer) {
   if (prm == NULL)
     err_malloc_fail();
 
+  prm->span.file = lexer->file;
+  prm->span.start = (position_t){lexer->line_number, lexer->line_pos};
   prm->atom = atom_parse(lexer);
+  prm->span.end = (position_t){lexer->line_number, lexer->line_pos};
+
   if (lexer->cur_token->kind == TOKEN_LPAREN || lexer->cur_token->kind == TOKEN_LBRACKET) {
     prm->suffixes = list_init(LIST_START_SIZE);
 

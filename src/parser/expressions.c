@@ -216,6 +216,9 @@ expression_t *expression_parse(lexer_t *lexer) {
   if (expr == NULL)
     err_malloc_fail();
 
+  expr->span.file = lexer->file;
+  expr->span.start = (position_t){lexer->line_number, lexer->line_pos};
+
   switch (lexer->cur_token->kind) {
   case TOKEN_IF:
     expr->type = EXPR_COND;
@@ -251,6 +254,8 @@ expression_t *expression_parse(lexer_t *lexer) {
   default:
     err_illegal_token(lexer);
   }
+
+  expr->span.end = (position_t){lexer->line_number, lexer->line_pos};
 
   PARSER_LOG_NODE_FINISH("expression");
 

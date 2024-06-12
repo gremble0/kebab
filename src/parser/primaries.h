@@ -19,6 +19,7 @@ typedef struct {
 typedef struct {
   atom_t *atom;
   list_t *suffixes; // list<primary_suffix_t *>
+  span_t span;
 } primary_t;
 
 primary_t *primary_parse(lexer_t *lexer);

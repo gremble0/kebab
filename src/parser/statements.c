@@ -67,6 +67,9 @@ statement_t *statement_parse(lexer_t *lexer) {
   if (stmt == NULL)
     err_malloc_fail();
 
+  stmt->span.file = lexer->file;
+  stmt->span.start = (position_t){lexer->line_number, lexer->line_pos};
+
   switch (lexer->cur_token->kind) {
   case TOKEN_DEF:
     stmt->type = STMT_DEFINITION;
@@ -109,6 +112,8 @@ statement_t *statement_parse(lexer_t *lexer) {
   default:
     err_illegal_token(lexer);
   }
+
+  stmt->span.end = (position_t){lexer->line_number, lexer->line_pos};
 
   PARSER_LOG_NODE_FINISH("statement");
 

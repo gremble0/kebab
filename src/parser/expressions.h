@@ -64,6 +64,7 @@ struct expression_t {
     expression_cond_t *cond;
     expression_constructor_t *constr;
   };
+  span_t span;
 };
 
 expression_t *expression_parse(lexer_t *lexer);
