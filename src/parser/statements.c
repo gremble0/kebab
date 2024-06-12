@@ -101,9 +101,9 @@ statement_t *statement_parse(lexer_t *lexer) {
   // Booleans
   case TOKEN_TRUE:
   case TOKEN_FALSE:
-  // Inner expression wrapped in parens, e.g. (1 + 2)
+  // Inner expression wrapped in parens, e.g. `(1 + 2)`
   case TOKEN_LPAREN:
-  // Lists [x, y, z]
+  // Lists e.g. `[x, y, z]`
   case TOKEN_LBRACKET:
     stmt->type = STMT_EXPRESSION;
     stmt->expr = expression_parse(lexer);
