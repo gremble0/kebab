@@ -10,16 +10,13 @@
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
 
-static rt_value_t *expression_cond_eval(expression_cond_t *excd,
-                                        scope_t *scope) {
+static rt_value_t *expression_cond_eval(expression_cond_t *excd, scope_t *scope) {
   // - 1 because last cond is the else branch which doesnt have a test (NULL)
   for (size_t i = 0; i < excd->conds->size - 1; ++i) {
     cond_t *cond = list_get(excd->conds, i);
     rt_value_t *tested = expression_eval(cond->test, scope);
-    // TODO: fill in this (probably new type of error)
     if (tested->type != type_bool)
-      err_type_error(type_kind_map[TYPE_BOOL],
-                     type_kind_map[tested->type->kind]);
+      err_type_error(type_bool, tested->type);
 
     if (tested->bool_value)
       return constructor_body_eval(cond->body, scope);
@@ -30,16 +27,14 @@ static rt_value_t *expression_cond_eval(expression_cond_t *excd,
   return constructor_body_eval(else_cond->body, scope);
 }
 
-static rt_value_t *expression_normal_eval(expression_normal_t *exnm,
-                                          scope_t *scope) {
+static rt_value_t *expression_normal_eval(expression_normal_t *exnm, scope_t *scope) {
   // Evaluate the first factor then apply all operations between the first
   // factor and the other factors
   rt_value_t *evaluated = factor_eval(list_get(exnm->factors, 0), scope);
   for (size_t i = 0; i < exnm->operators->size; ++i) {
     binary_operator_t *bo = list_get(exnm->operators, i);
     // This should be freed after performing binary operator methinks
-    rt_value_t *next_evaluated =
-        factor_eval(list_get(exnm->factors, i + 1), scope);
+    rt_value_t *next_evaluated = factor_eval(list_get(exnm->factors, i + 1), scope);
 
     switch (*bo) {
     case BINARY_PLUS:
@@ -91,8 +86,7 @@ static rt_value_t *expression_normal_eval(expression_normal_t *exnm,
   return evaluated;
 }
 
-rt_value_t *expression_constructor_eval(expression_constructor_t *exco,
-                                        scope_t *scope) {
+rt_value_t *expression_constructor_eval(expression_constructor_t *exco, scope_t *scope) {
   return constructor_eval(exco->constr, scope);
 }
 

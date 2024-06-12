@@ -82,8 +82,7 @@ rt_value_t *operator_binary_add_eval(rt_value_t *lhs, rt_value_t *rhs) {
     ASSERT(0);
   case TYPE_INT: {
     if (rhs->type != type_int)
-      // TODO: ->s shit, should also make type_to_string
-      err_type_error("TODO: type_to_string", "TODO: type_to_string");
+      err_type_error(type_int, rhs->type);
 
     rt_value_t *added = malloc(sizeof(*added));
     added->type = type_int;

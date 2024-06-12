@@ -10,7 +10,7 @@
 // checks if type_registry has type and adds if it doesnt -> no duplicate types
 void type_compare(keb_type_t *expected, keb_type_t *actual) {
   if (expected->kind != actual->kind)
-    err_type_error(type_to_string(expected)->s, type_to_string(actual)->s);
+    err_type_error(expected, actual);
 
   switch (expected->kind) {
   case TYPE_CHAR:

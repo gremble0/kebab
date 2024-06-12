@@ -3,12 +3,26 @@
 
 #include "nonstdlib/nerror.h"
 #include "parser/atoms.h"
+#include "parser/types.h"
 #include "runtime/error.h"
+#include "runtime/types.h"
 #include "utils/utils.h"
 
-_Noreturn void err_type_error(const char *expected, const char *actual) {
+// A type error for parametrized types such as `list` and `fn` that are different at the top level
+_Noreturn void err_opaque_type_error(keb_type_kind_t expected, keb_type_kind_t actual) {
   // Error description
-  fprintf(stderr, "type-error: expected type '%s', but got type '%s'\n", expected, actual);
+  fprintf(stderr, "opaque-type-error: expected type should be some '%s', but is some '%s'\n",
+          type_kind_map[expected], type_kind_map[actual]);
+  exit(1);
+}
+
+_Noreturn void err_type_error(keb_type_t *expected, keb_type_t *actual) {
+  const string_t *expected_str = type_to_string(expected);
+  const string_t *actual_str = type_to_string(actual);
+  // Error description
+  fprintf(stderr, "type-error: expected type '%.*s', but got type '%.*s'\n", (int)expected_str->len,
+          expected_str->s, (int)actual_str->len, actual_str->s);
+
   exit(1);
 }
 
