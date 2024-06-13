@@ -1,7 +1,7 @@
 #pragma once
 
-#include "parser/atoms.h"
+#include "parser/types.h"
 
-_Noreturn void err_opaque_type_error(keb_type_kind_t expected, keb_type_kind_t actual);
-_Noreturn void err_type_error(keb_type_t *expected, keb_type_t *actual);
-_Noreturn void err_name_error(atom_t *name);
+_Noreturn void err_opaque_type_error(keb_type_kind_t expected, keb_type_kind_t actual, span_t span);
+_Noreturn void err_type_error(keb_type_t *expected, keb_type_t *actual, span_t span);
+_Noreturn void err_name_error(string_t *name, span_t span /*, scope_t *scope */);

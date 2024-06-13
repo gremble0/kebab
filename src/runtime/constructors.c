@@ -38,8 +38,12 @@ static rt_value_t *list_constructor_eval(list_constructor_t *constr, scope_t *sc
   // Should return some list, however we will overwrite the type with the one
   // specified in the constructor
   rt_value_t *v = constructor_body_eval(constr->body, scope);
-  if (v->type->kind != TYPE_LIST)
-    err_opaque_type_error(TYPE_LIST, v->type->kind);
+  if (v->type->kind != TYPE_LIST) {
+    // If there is a type error here we will refer to the last statement in the constructor body
+    // (the return statement) as the source of the error
+    statement_t *last_statement = list_get(constr->body, constr->body->size - 1);
+    err_opaque_type_error(TYPE_LIST, v->type->kind, last_statement->span);
+  }
 
   v->type = malloc(sizeof(*v->type));
   v->type->kind = TYPE_LIST;

@@ -10,13 +10,13 @@
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
 
-static rt_value_t *expression_cond_eval(expression_cond_t *excd, scope_t *scope) {
+static rt_value_t *expression_cond_eval(expression_cond_t *excd, scope_t *scope, span_t span) {
   // - 1 because last cond is the else branch which doesnt have a test (NULL)
   for (size_t i = 0; i < excd->conds->size - 1; ++i) {
     cond_t *cond = list_get(excd->conds, i);
     rt_value_t *tested = expression_eval(cond->test, scope);
     if (tested->type != type_bool)
-      err_type_error(type_bool, tested->type);
+      err_type_error(type_bool, tested->type, span);
 
     if (tested->bool_value)
       return constructor_body_eval(cond->body, scope);
@@ -93,7 +93,7 @@ rt_value_t *expression_constructor_eval(expression_constructor_t *exco, scope_t 
 rt_value_t *expression_eval(expression_t *expr, scope_t *scope) {
   switch (expr->type) {
   case EXPR_COND:
-    return expression_cond_eval(expr->cond, scope);
+    return expression_cond_eval(expr->cond, scope, expr->span);
   case EXPR_NORMAL:
     return expression_normal_eval(expr->normal, scope);
   case EXPR_CONSTRUCTOR:
