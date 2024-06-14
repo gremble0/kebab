@@ -34,24 +34,24 @@ static rt_value_t *primitive_constructor_eval(primitive_constructor_t *constr, s
 }
 
 // TODO: constructor_t instead as param?
-static rt_value_t *list_constructor_eval(list_constructor_t *constr, scope_t *scope, span_t span) {
+static rt_value_t *list_constructor_eval(list_constructor_t *lc, scope_t *scope) {
   // Should return some list, however we will overwrite the type with the one
   // specified in the constructor - this is kinda scuffed, but it works
-  rt_value_t *v = constructor_body_eval(constr->body, scope);
+  rt_value_t *v = constructor_body_eval(lc->body, scope);
   if (v->type->kind != TYPE_LIST) {
     // If there is a type error here we will refer to the last statement in the constructor body
     // (the return statement) as the source of the error
-    statement_t *last_statement = list_get(constr->body, constr->body->size - 1);
+    statement_t *last_statement = list_get(lc->body, lc->body->size - 1);
     err_opaque_type_error(TYPE_LIST, v->type->kind, last_statement->span);
   }
 
   v->type = malloc(sizeof(*v->type));
   v->type->kind = TYPE_LIST;
-  v->type->list_type = (keb_type_list_t){.type = constr->type};
+  v->type->list_type = (keb_type_list_t){.type = lc->type};
 
   for (size_t i = 0; i < v->list_value->size; ++i) {
     rt_value_t *cur = list_get(v->list_value, i);
-    type_compare(constr->type, cur->type, span); // TODO: add span to constructors
+    type_compare(lc->type, cur->type, lc->span);
   }
 
   return v;
@@ -66,7 +66,8 @@ rt_value_t *constructor_eval(constructor_t *constr, scope_t *scope) {
     scope_t *local_scope = scope_init(scope);
     rt_value_t *v = primitive_constructor_eval(constr->primitive_constructor, local_scope);
 
-    type_compare(constr->type, v->type, constr->span); // TODO: add span to constructors
+    // Ensure the constructor returned its declared type
+    type_compare(constr->type, v->type, constr->primitive_constructor->span);
 
     scope_free(local_scope);
     return v;
@@ -74,13 +75,16 @@ rt_value_t *constructor_eval(constructor_t *constr, scope_t *scope) {
   case TYPE_FN: {
     // TODO: kinda breaking abstraction layer
     rt_value_t *v = malloc(sizeof(*v));
+    if (v == NULL)
+      err_malloc_fail();
+
     v->fn_value = constr->fn_constructor;
     v->type = constr->type;
     return v;
   }
   case TYPE_LIST: {
     scope_t *local_scope = scope_init(scope);
-    rt_value_t *v = list_constructor_eval(constr->list_constructor, local_scope, constr->span);
+    rt_value_t *v = list_constructor_eval(constr->list_constructor, local_scope);
 
     // TODO: kinda breaking abstraction layer
     v->type = constr->type;

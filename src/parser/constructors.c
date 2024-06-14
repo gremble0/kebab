@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "lexer/token.h"
 #include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
 #include "nonstdlib/nstring.h"
@@ -63,6 +64,13 @@ static fn_constructor_t *fn_constructor_parse(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
+  if (fnc == NULL)
+    err_malloc_fail();
+
+  // Span does not include `list((` I think this is better?
+  fnc->span.file = lexer->file;
+  fnc->span.start = (position_t){lexer->line_number, lexer->line_pos};
+
   fnc->params = list_init(LIST_START_SIZE); // list<fn_param_t *>
 
   // parse params
@@ -74,6 +82,8 @@ static fn_constructor_t *fn_constructor_parse(lexer_t *lexer) {
 
   // parse function body
   fnc->constr = constructor_parse(lexer);
+
+  fnc->span.end = (position_t){lexer->line_number, lexer->line_pos};
 
   // Close the opening paren of the fn constructor
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
@@ -89,6 +99,13 @@ static list_constructor_t *list_constructor_parse(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   list_constructor_t *lc = malloc(sizeof(*lc));
+  if (lc == NULL)
+    err_malloc_fail();
+
+  // Span does not include `list((` I think this is better?
+  lc->span.file = lexer->file;
+  lc->span.start = (position_t){lexer->line_number, lexer->line_pos};
+
   lc->body = list_init(LIST_START_SIZE);
   lc->type = type_parse(lexer);
 
@@ -104,6 +121,8 @@ static list_constructor_t *list_constructor_parse(lexer_t *lexer) {
   if (lc->body->size == 0 || last_stmt->type != STMT_EXPRESSION)
     err_missing_return(lexer);
 
+  lc->span.end = (position_t){lexer->line_number, lexer->line_pos};
+
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
   PARSER_LOG_NODE_FINISH("list-constructor");
 
@@ -116,9 +135,6 @@ constructor_t *constructor_parse(lexer_t *lexer) {
   constructor_t *constr = malloc(sizeof(*constr));
   if (constr == NULL)
     err_malloc_fail();
-
-  constr->span.file = lexer->file;
-  constr->span.start = (position_t){lexer->line_number, lexer->line_pos};
 
   switch (lexer->cur_token->kind) {
   case TOKEN_CHAR:
@@ -165,6 +181,7 @@ constructor_t *constructor_parse(lexer_t *lexer) {
   case TOKEN_LIST:
     // TODO: this and fn is shit
     constr->list_constructor = list_constructor_parse(lexer);
+    printf("%s\n", token_to_string(lexer->cur_token)->s);
     constr->type = malloc(sizeof(*constr->type));
     if (constr->type == NULL)
       err_malloc_fail();
@@ -178,9 +195,6 @@ constructor_t *constructor_parse(lexer_t *lexer) {
   default:
     err_illegal_token(lexer);
   }
-
-  // TODO: this seems to be wrong
-  constr->span.end = (position_t){lexer->line_number, lexer->line_pos};
 
   PARSER_LOG_NODE_FINISH("constructor");
 
