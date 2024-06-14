@@ -59,17 +59,18 @@ static fn_param_t *fn_param_parse(lexer_t *lexer) {
 
 static fn_constructor_t *fn_constructor_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("fn-constructor");
-  SKIP_TOKEN(lexer, TOKEN_FN);
-  SKIP_TOKEN(lexer, TOKEN_LPAREN);
-  SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   fn_constructor_t *fnc = malloc(sizeof(*fnc));
   if (fnc == NULL)
     err_malloc_fail();
 
-  // Span does not include `list((` I think this is better?
+  // Span includes the initial `fn((` I think this is better
   fnc->span.file = lexer->file;
   fnc->span.start = (position_t){lexer->line_number, lexer->line_pos};
+
+  SKIP_TOKEN(lexer, TOKEN_FN);
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   fnc->params = list_init(LIST_START_SIZE); // list<fn_param_t *>
 
@@ -94,17 +95,18 @@ static fn_constructor_t *fn_constructor_parse(lexer_t *lexer) {
 
 static list_constructor_t *list_constructor_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("list-constructor");
-  SKIP_TOKEN(lexer, TOKEN_LIST);
-  SKIP_TOKEN(lexer, TOKEN_LPAREN);
-  SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   list_constructor_t *lc = malloc(sizeof(*lc));
   if (lc == NULL)
     err_malloc_fail();
 
-  // Span does not include `list((` I think this is better?
+  // Span includes the initial `list((` I think this is better?
   lc->span.file = lexer->file;
   lc->span.start = (position_t){lexer->line_number, lexer->line_pos};
+
+  SKIP_TOKEN(lexer, TOKEN_LIST);
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
+  SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   lc->body = list_init(LIST_START_SIZE);
   lc->type = type_parse(lexer);
@@ -181,7 +183,6 @@ constructor_t *constructor_parse(lexer_t *lexer) {
   case TOKEN_LIST:
     // TODO: this and fn is shit
     constr->list_constructor = list_constructor_parse(lexer);
-    printf("%s\n", token_to_string(lexer->cur_token)->s);
     constr->type = malloc(sizeof(*constr->type));
     if (constr->type == NULL)
       err_malloc_fail();
