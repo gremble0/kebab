@@ -2,25 +2,63 @@
 #include <stdlib.h>
 
 #include "nonstdlib/nerror.h"
+#include "nonstdlib/nstring.h"
 #include "parser/types.h"
 #include "runtime/error.h"
 #include "runtime/types.h"
 #include "utils/utils.h"
 
-static void err_print_span(span_t span) {
+// NOTE: the functions marked with _Noreturn will not free up any memory in use before exiting,
+// relying on the operating system to reclaim the memory for the user (which any self respecting OS
+// will do, so this should not be an issue)
+
+static void err_print_span_multiline(span_t span) {
+  // Coordinates for where the error comes from (A range of two coordinates in this case)
+  fprintf(stderr, "%s:%zu:%zu-%zu:%zu\n", span.file.name, span.start.line, span.start.col,
+          span.end.line, span.end.col);
+
+  // First line the error comes from
+  string_t *first_line = get_line_from_file(span.file.f, span.start.line);
+  fprintf(stderr, "%.*s", (int)first_line->len, first_line->s);
+
+  // ...
+  fprintf(stderr, "...\n");
+
+  // Last line the error comes from
+  string_t *last_line = get_line_from_file(span.file.f, span.end.line);
+  fprintf(stderr, "%.*s", (int)last_line->len, last_line->s);
+
+  string_free(first_line);
+  string_free(last_line);
+}
+
+static void err_print_span_oneline(span_t span) {
   // Coordinates for where the error comes from
   fprintf(stderr, "%s:%zu:%zu\n", span.file.name, span.start.line, span.start.col);
 
   // The line the error comes from
-  const string_t *line = get_line_from_file(span.file.f, span.start.line);
+  string_t *line = get_line_from_file(span.file.f, span.start.line);
   fprintf(stderr, "%.*s", (int)line->len, line->s);
 
   // The position on the line the error comes from
-  const string_t *indent = repeat_char(' ', span.start.col);
-  // - 1 because span is inclusive, we want exclusive here to not underline trailing spaces, parens
+  string_t *indent = repeat_char(' ', span.start.col);
   ASSERT(span.end.col - span.start.col - 1 >= 0);
-  const string_t *underline = repeat_char('~', span.end.col - span.start.col - 1);
+  string_t *underline = repeat_char('~', span.end.col - span.start.col - 1);
   fprintf(stderr, "%.*s^%.*s\n", (int)indent->len, indent->s, (int)underline->len, underline->s);
+
+  // It's not really necessary to free memory here since we this function should only be called from
+  // non returning functions, but since this function itself will return we free the memory just in
+  // case
+  string_free(line);
+  string_free(indent);
+  string_free(underline);
+}
+
+static void err_print_span(span_t span) {
+  if (span.end.line - span.start.line == 0)
+    err_print_span_oneline(span);
+  else
+    err_print_span_multiline(span);
 }
 
 /**
