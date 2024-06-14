@@ -35,6 +35,7 @@ struct constructor_t {
     fn_constructor_t *fn_constructor;
     list_constructor_t *list_constructor;
   };
+  span_t span;
 };
 
 constructor_t *constructor_parse(lexer_t *lexer);

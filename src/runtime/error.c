@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "nonstdlib/nerror.h"
 #include "parser/types.h"
 #include "runtime/error.h"
 #include "runtime/types.h"
@@ -17,6 +18,7 @@ static void err_print_span(span_t span) {
   // The position on the line the error comes from
   const string_t *indent = repeat_char(' ', span.start.col);
   // - 1 because span is inclusive, we want exclusive here to not underline trailing spaces, parens
+  ASSERT(span.end.col - span.start.col - 1 >= 0);
   const string_t *underline = repeat_char('~', span.end.col - span.start.col - 1);
   fprintf(stderr, "%.*s^%.*s\n", (int)indent->len, indent->s, (int)underline->len, underline->s);
 }

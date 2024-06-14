@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
 #include "nonstdlib/nstring.h"
 #include "parser/constructors.h"
@@ -113,6 +114,11 @@ constructor_t *constructor_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("constructor");
 
   constructor_t *constr = malloc(sizeof(*constr));
+  if (constr == NULL)
+    err_malloc_fail();
+
+  constr->span.file = lexer->file;
+  constr->span.start = (position_t){lexer->line_number, lexer->line_pos};
 
   switch (lexer->cur_token->kind) {
   case TOKEN_CHAR:
@@ -138,6 +144,9 @@ constructor_t *constructor_parse(lexer_t *lexer) {
   case TOKEN_FN:
     constr->fn_constructor = fn_constructor_parse(lexer);
     constr->type = malloc(sizeof(*constr->type));
+    if (constr->type == NULL)
+      err_malloc_fail();
+
     constr->type->fn_type = (keb_type_fn_t){
         // Return type of a function is the same as the type of the function
         // constructors body
@@ -157,6 +166,9 @@ constructor_t *constructor_parse(lexer_t *lexer) {
     // TODO: this and fn is shit
     constr->list_constructor = list_constructor_parse(lexer);
     constr->type = malloc(sizeof(*constr->type));
+    if (constr->type == NULL)
+      err_malloc_fail();
+
     constr->type->kind = TYPE_LIST;
     constr->type->list_type = (keb_type_list_t){
         .type = constr->list_constructor->type,
@@ -166,6 +178,9 @@ constructor_t *constructor_parse(lexer_t *lexer) {
   default:
     err_illegal_token(lexer);
   }
+
+  // TODO: this seems to be wrong
+  constr->span.end = (position_t){lexer->line_number, lexer->line_pos};
 
   PARSER_LOG_NODE_FINISH("constructor");
 

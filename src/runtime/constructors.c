@@ -34,9 +34,9 @@ static rt_value_t *primitive_constructor_eval(primitive_constructor_t *constr, s
 }
 
 // TODO: constructor_t instead as param?
-static rt_value_t *list_constructor_eval(list_constructor_t *constr, scope_t *scope) {
+static rt_value_t *list_constructor_eval(list_constructor_t *constr, scope_t *scope, span_t span) {
   // Should return some list, however we will overwrite the type with the one
-  // specified in the constructor
+  // specified in the constructor - this is kinda scuffed, but it works
   rt_value_t *v = constructor_body_eval(constr->body, scope);
   if (v->type->kind != TYPE_LIST) {
     // If there is a type error here we will refer to the last statement in the constructor body
@@ -51,7 +51,7 @@ static rt_value_t *list_constructor_eval(list_constructor_t *constr, scope_t *sc
 
   for (size_t i = 0; i < v->list_value->size; ++i) {
     rt_value_t *cur = list_get(v->list_value, i);
-    type_compare(constr->type, cur->type, (span_t){0}); // TODO: add span to constructors
+    type_compare(constr->type, cur->type, span); // TODO: add span to constructors
   }
 
   return v;
@@ -66,7 +66,7 @@ rt_value_t *constructor_eval(constructor_t *constr, scope_t *scope) {
     scope_t *local_scope = scope_init(scope);
     rt_value_t *v = primitive_constructor_eval(constr->primitive_constructor, local_scope);
 
-    type_compare(constr->type, v->type, (span_t){0}); // TODO: add span to constructors
+    type_compare(constr->type, v->type, constr->span); // TODO: add span to constructors
 
     scope_free(local_scope);
     return v;
@@ -80,7 +80,7 @@ rt_value_t *constructor_eval(constructor_t *constr, scope_t *scope) {
   }
   case TYPE_LIST: {
     scope_t *local_scope = scope_init(scope);
-    rt_value_t *v = list_constructor_eval(constr->list_constructor, local_scope);
+    rt_value_t *v = list_constructor_eval(constr->list_constructor, local_scope, constr->span);
 
     // TODO: kinda breaking abstraction layer
     v->type = constr->type;
