@@ -8,7 +8,6 @@
 #include "parser/types.h"
 #include "runtime/atoms.h"
 #include "runtime/constructors.h"
-#include "runtime/error.h"
 #include "runtime/expressions.h"
 #include "runtime/primaries.h"
 #include "runtime/runtime.h"
@@ -16,8 +15,7 @@
 #include "runtime/types.h"
 
 // TODO: rename?
-static rt_value_t *func_call_eval(list_t *arguments, rt_func_t *fn,
-                                  scope_t *scope) {
+static rt_value_t *func_call_eval(list_t *arguments, rt_func_t *fn, scope_t *scope, span_t span) {
   scope_t *local_scope = scope_init(scope);
 
   // TODO: varargs?
@@ -28,7 +26,7 @@ static rt_value_t *func_call_eval(list_t *arguments, rt_func_t *fn,
     fn_param_t *p = list_get(fn->params, i);
 
     // Verify type is correct
-    type_compare(p->type, arg->type);
+    type_compare(p->type, arg->type, span);
 
     scope_put(local_scope, p->name, arg);
   }
@@ -41,8 +39,7 @@ static rt_value_t *func_call_eval(list_t *arguments, rt_func_t *fn,
   return v;
 }
 
-static rt_value_t *subscription_eval(expression_t *subscription,
-                                     rt_list_t *list, scope_t *scope) {
+static rt_value_t *subscription_eval(expression_t *subscription, rt_list_t *list, scope_t *scope) {
   // TODO: subscription could in the future also be for maps or other structures
   // so these assumptions may no longer be valid
 
@@ -80,7 +77,7 @@ rt_value_t *primary_eval(primary_t *prm, scope_t *scope) {
       if (v->type->kind != TYPE_FN)
         ASSERT(0);
 
-      v = func_call_eval(psfx->arguments, v->fn_value, scope);
+      v = func_call_eval(psfx->arguments, v->fn_value, scope, prm->span);
       break;
     }
   }

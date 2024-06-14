@@ -8,9 +8,9 @@
 // we could just do `==`
 // have global type_registry and function type_register(keb_type_t *type) that
 // checks if type_registry has type and adds if it doesnt -> no duplicate types
-void type_compare(keb_type_t *expected, keb_type_t *actual) {
+void type_compare(keb_type_t *expected, keb_type_t *actual, span_t span) {
   if (expected->kind != actual->kind)
-    err_type_error(expected, actual);
+    err_type_error(expected, actual, span);
 
   switch (expected->kind) {
   case TYPE_CHAR:
@@ -22,15 +22,15 @@ void type_compare(keb_type_t *expected, keb_type_t *actual) {
     break;
 
   case TYPE_LIST:
-    type_compare(expected->list_type.type, actual->list_type.type);
+    type_compare(expected->list_type.type, actual->list_type.type, span);
     break;
 
   case TYPE_FN:
-    type_compare(expected->fn_type.return_type, actual->fn_type.return_type);
+    type_compare(expected->fn_type.return_type, actual->fn_type.return_type, span);
 
     for (size_t i = 0; i < expected->fn_type.param_types->size; ++i)
       type_compare(list_get(expected->fn_type.param_types, i),
-                   list_get(actual->fn_type.param_types, i));
+                   list_get(actual->fn_type.param_types, i), span);
     break;
   }
 }

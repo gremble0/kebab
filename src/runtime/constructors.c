@@ -51,7 +51,7 @@ static rt_value_t *list_constructor_eval(list_constructor_t *constr, scope_t *sc
 
   for (size_t i = 0; i < v->list_value->size; ++i) {
     rt_value_t *cur = list_get(v->list_value, i);
-    type_compare(constr->type, cur->type);
+    type_compare(constr->type, cur->type, (span_t){0}); // TODO: add span to constructors
   }
 
   return v;
@@ -66,7 +66,7 @@ rt_value_t *constructor_eval(constructor_t *constr, scope_t *scope) {
     scope_t *local_scope = scope_init(scope);
     rt_value_t *v = primitive_constructor_eval(constr->primitive_constructor, local_scope);
 
-    type_compare(constr->type, v->type);
+    type_compare(constr->type, v->type, (span_t){0}); // TODO: add span to constructors
 
     scope_free(local_scope);
     return v;

@@ -27,7 +27,7 @@ static rt_value_t *expression_cond_eval(expression_cond_t *excd, scope_t *scope,
   return constructor_body_eval(else_cond->body, scope);
 }
 
-static rt_value_t *expression_normal_eval(expression_normal_t *exnm, scope_t *scope) {
+static rt_value_t *expression_normal_eval(expression_normal_t *exnm, scope_t *scope, span_t span) {
   // Evaluate the first factor then apply all operations between the first
   // factor and the other factors
   rt_value_t *evaluated = factor_eval(list_get(exnm->factors, 0), scope);
@@ -38,43 +38,43 @@ static rt_value_t *expression_normal_eval(expression_normal_t *exnm, scope_t *sc
 
     switch (*bo) {
     case BINARY_PLUS:
-      evaluated = operator_binary_add_eval(evaluated, next_evaluated);
+      evaluated = operator_binary_add_eval(evaluated, next_evaluated, span);
       break;
 
     case BINARY_MINUS:
-      evaluated = operator_binary_minus_eval(evaluated, next_evaluated);
+      evaluated = operator_binary_minus_eval(evaluated, next_evaluated, span);
       break;
 
     case BINARY_MULT:
-      evaluated = operator_binary_mult_eval(evaluated, next_evaluated);
+      evaluated = operator_binary_mult_eval(evaluated, next_evaluated, span);
       break;
 
     case BINARY_DIV:
-      evaluated = operator_binary_div_eval(evaluated, next_evaluated);
+      evaluated = operator_binary_div_eval(evaluated, next_evaluated, span);
       break;
 
     case BINARY_LT:
-      evaluated = operator_binary_lt_eval(evaluated, next_evaluated);
+      evaluated = operator_binary_lt_eval(evaluated, next_evaluated, span);
       break;
 
     case BINARY_LE:
-      evaluated = operator_binary_le_eval(evaluated, next_evaluated);
+      evaluated = operator_binary_le_eval(evaluated, next_evaluated, span);
       break;
 
     case BINARY_EQ:
-      evaluated = operator_binary_eq_eval(evaluated, next_evaluated);
+      evaluated = operator_binary_eq_eval(evaluated, next_evaluated, span);
       break;
 
     case BINARY_NEQ:
-      evaluated = operator_binary_neq_eval(evaluated, next_evaluated);
+      evaluated = operator_binary_neq_eval(evaluated, next_evaluated, span);
       break;
 
     case BINARY_GT:
-      evaluated = operator_binary_gt_eval(evaluated, next_evaluated);
+      evaluated = operator_binary_gt_eval(evaluated, next_evaluated, span);
       break;
 
     case BINARY_GE:
-      evaluated = operator_binary_ge_eval(evaluated, next_evaluated);
+      evaluated = operator_binary_ge_eval(evaluated, next_evaluated, span);
       break;
 
     case BINARY_NO_OP:
@@ -95,7 +95,7 @@ rt_value_t *expression_eval(expression_t *expr, scope_t *scope) {
   case EXPR_COND:
     return expression_cond_eval(expr->cond, scope, expr->span);
   case EXPR_NORMAL:
-    return expression_normal_eval(expr->normal, scope);
+    return expression_normal_eval(expr->normal, scope, expr->span);
   case EXPR_CONSTRUCTOR:
     return expression_constructor_eval(expr->constr, scope);
   }
