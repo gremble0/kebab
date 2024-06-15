@@ -3,10 +3,12 @@
 #include <string.h>
 
 #include "nonstdlib/nlist.h"
+#include "nonstdlib/nstring.h"
 #include "parser/parser.h"
 #include "runtime/runtime.h"
 #include "runtime/scope.h"
 #include "runtime/statements.h"
+#include "runtime/types.h"
 
 void eval(ast_t *ast) {
   scope_t *global_scope = scope_init(NULL);
@@ -29,33 +31,53 @@ void eval(ast_t *ast) {
 }
 
 string_t *rt_value_to_string(const rt_value_t *v) {
+  string_t *s = type_to_string(v->type);
+
   switch (v->type->kind) {
-  case TYPE_CHAR: {
-    size_t res_len = sizeof("char: ' '");
-    char res[res_len];
-    sprintf(res, "char: '%c'", v->char_value);
-    return string_of(res, res_len);
-  }
-  case TYPE_STRING: {
-    size_t res_len = sizeof("string: \"\"") + v->string_value->len;
-    char res[res_len];
-    sprintf(res, "string: \"%s\"", v->string_value->s);
-    return string_of(res, res_len);
-  }
+  case TYPE_CHAR:
+    string_append_c(s, '(');
+    string_append_c(s, v->char_value);
+    string_append_c(s, ')');
+    break;
+
+  case TYPE_STRING:
+    string_append(s, v->string_value);
+    break;
+
   case TYPE_INT: {
-    size_t res_len = snprintf(NULL, 0, "%ld", v->int_value) + sizeof("int: ");
+    size_t res_len = snprintf(NULL, 0, "%ld", v->int_value);
     char res[res_len];
-    sprintf(res, "int: %ld", v->int_value);
-    return string_of(res, res_len);
+    sprintf(res, "%ld", v->int_value);
+    string_append_c(s, '(');
+    string_append(s, &(string_t){res, res_len});
+    string_append_c(s, ')');
+    break;
   }
+
   case TYPE_BOOL:
+    string_append_c(s, '(');
     if (v->bool_value)
-      return string_of("bool: true", sizeof("bool: true"));
+      string_append_lit(s, "true");
     else
-      return string_of("bool: false", sizeof("bool: false"));
+      string_append_lit(s, "false");
+    string_append_c(s, ')');
+    break;
+
   case TYPE_LIST:
-    return string_of("list", sizeof("list"));
+    string_append_lit(s, "([");
+    for (size_t i = 0; i < v->list_value->size - 1; ++i) {
+      string_append(s, rt_value_to_string(list_get(v->list_value, i)));
+      // All list elements except the last one are succeeded by ", "
+      if (i < v->list_value->size - 1)
+        string_append_lit(s, ", ");
+    }
+    string_append_lit(s, ")]");
+    break;
+
   case TYPE_FN:
-    return string_of("fn", sizeof("fn"));
+    // TODO:
+    break;
   }
+
+  return s;
 }

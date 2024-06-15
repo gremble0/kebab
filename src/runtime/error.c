@@ -68,7 +68,7 @@ static void err_print_scope_bindings(const scope_t *scope) {
   printf("Available bindings in scope:\n");
 
   while (scope != NULL) {
-    for (size_t i = 0; i < scope->bindings->size; ++i)
+    for (size_t i = 0; i < scope->bindings->capacity; ++i)
       if (scope->bindings->entries[i] != NULL) {
         ht_entry_t *binding = scope->bindings->entries[i];
         string_t *as_string = rt_value_to_string(binding->value);

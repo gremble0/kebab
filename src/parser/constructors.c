@@ -17,6 +17,9 @@ static primitive_constructor_t *primitive_constructor_parse(lexer_t *lexer) {
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
   primitive_constructor_t *pc = malloc(sizeof(*pc));
+  if (pc == NULL)
+    err_malloc_fail();
+
   pc->body = list_init(LIST_START_SIZE); // list<statement_t *>
 
   while (lexer->cur_token->kind != TOKEN_RPAREN)
@@ -38,6 +41,8 @@ static fn_param_t *fn_param_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("fn-param");
 
   fn_param_t *param = malloc(sizeof(*param));
+  if (param == NULL)
+    err_malloc_fail();
 
   EXPECT_TOKEN(lexer, TOKEN_NAME);
   param->name = string_copy(lexer->cur_token->name);
@@ -84,6 +89,7 @@ static fn_constructor_t *fn_constructor_parse(lexer_t *lexer) {
   // parse function body
   fnc->constr = constructor_parse(lexer);
 
+  // Span ends before the closing paren
   fnc->span.end = (position_t){lexer->line_number, lexer->line_pos};
 
   // Close the opening paren of the fn constructor
@@ -165,14 +171,13 @@ constructor_t *constructor_parse(lexer_t *lexer) {
     if (constr->type == NULL)
       err_malloc_fail();
 
+    constr->type->kind = TYPE_FN;
     constr->type->fn_type = (keb_type_fn_t){
         // Return type of a function is the same as the type of the function
         // constructors body
         .return_type = constr->fn_constructor->constr->type,
         .param_types = list_init(LIST_START_SIZE),
     };
-
-    constr->type->kind = TYPE_FN;
 
     for (size_t i = 0; i < constr->fn_constructor->params->size; ++i) {
       fn_param_t *param = list_get(constr->fn_constructor->params, i);
