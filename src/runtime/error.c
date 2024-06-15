@@ -2,9 +2,12 @@
 #include <stdlib.h>
 
 #include "nonstdlib/nerror.h"
+#include "nonstdlib/nhashtable.h"
 #include "nonstdlib/nstring.h"
 #include "parser/types.h"
 #include "runtime/error.h"
+#include "runtime/runtime.h"
+#include "runtime/scope.h"
 #include "runtime/types.h"
 #include "utils/utils.h"
 
@@ -22,7 +25,7 @@ static void err_print_span_multiline(span_t span) {
   fprintf(stderr, "%.*s", (int)first_line->len, first_line->s);
 
   // ...
-  fprintf(stderr, "...\n");
+  fprintf(stderr, "  ...\n");
 
   // Last line the error comes from
   string_t *last_line = get_line_from_file(span.file.f, span.end.line);
@@ -61,6 +64,22 @@ static void err_print_span(span_t span) {
     err_print_span_multiline(span);
 }
 
+static void err_print_scope_bindings(const scope_t *scope) {
+  printf("Available bindings in scope:\n");
+
+  while (scope != NULL) {
+    for (size_t i = 0; i < scope->bindings->size; ++i)
+      if (scope->bindings->entries[i] != NULL) {
+        ht_entry_t *binding = scope->bindings->entries[i];
+        string_t *as_string = rt_value_to_string(binding->value);
+        printf("  %s: %.*s\n", binding->key, (int)as_string->len, as_string->s);
+        string_free(as_string);
+      }
+
+    scope = scope->outer;
+  }
+}
+
 /**
  * @brief A type error for parametrized types such as `list` and `fn` that are different at the top
  * level
@@ -92,9 +111,9 @@ _Noreturn void err_type_error(keb_type_t *expected, keb_type_t *actual, span_t s
 /**
  * @brief An error where the name has no binding in the given scope
  */
-_Noreturn void err_name_error(string_t *name, span_t span /*, scope_t *scope */) {
-  // TODO: list all defined bindings for a scope? call rt_value_to_string for each value in scope
+_Noreturn void err_name_error(string_t *name, span_t span, scope_t *scope) {
   err_print_span(span);
+  err_print_scope_bindings(scope);
 
   fprintf(stderr, "name-error: name '%s' is not defined in the current scope\n", name->s);
 
