@@ -72,7 +72,8 @@ static void err_print_scope_bindings(const scope_t *scope) {
       if (scope->bindings->entries[i] != NULL) {
         ht_entry_t *binding = scope->bindings->entries[i];
         string_t *as_string = rt_value_to_string(binding->value);
-        printf("  %s: %.*s\n", binding->key, (int)as_string->len, as_string->s);
+        printf("  %.*s: %.*s\n", (int)binding->key->len, binding->key->s, (int)as_string->len,
+               as_string->s);
         string_free(as_string);
       }
 
