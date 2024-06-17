@@ -38,20 +38,20 @@ void type_compare(keb_type_t *expected, keb_type_t *actual, span_t span) {
 string_t *type_to_string(keb_type_t *type) {
   switch (type->kind) {
   case TYPE_CHAR:
-    return string_of_lit("char");
+    return string_dup(&string_of("char"));
 
   case TYPE_STRING:
-    return string_of_lit("string");
+    return string_dup(&string_of("string"));
 
   case TYPE_INT:
-    return string_of_lit("int");
+    return string_dup(&string_of("int"));
 
   case TYPE_BOOL:
-    return string_of_lit("bool");
+    return string_dup(&string_of("bool"));
 
   case TYPE_LIST: {
     // Should look something like "list(string)"
-    string_t *s = string_of_lit("list(");
+    string_t *s = string_dup(&string_of("list("));
     string_append(s, type_to_string(type->list_type.type));
     string_append_c(s, ')');
     return s;
@@ -59,16 +59,16 @@ string_t *type_to_string(keb_type_t *type) {
 
   case TYPE_FN: {
     // Should look something like "fn(int) => string"
-    string_t *s = string_of_lit("fn(");
+    string_t *s = string_dup(&string_of("fn("));
     list_t *param_types = type->fn_type.param_types;
 
     for (size_t i = 0; i < param_types->size; ++i) {
       string_append(s, type_to_string(list_get(param_types, i)));
       if (i < param_types->size - 1)
-        string_append_lit(s, ", ");
+        string_append(s, &string_of(", "));
     }
 
-    string_append_lit(s, ") => ");
+    string_append(s, &string_of(") => "));
     string_append(s, type_to_string(type->fn_type.return_type));
 
     return s;

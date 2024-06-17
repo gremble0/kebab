@@ -27,7 +27,7 @@ static definition_t *definition_parse(lexer_t *lexer) {
   }
 
   EXPECT_TOKEN(lexer, TOKEN_NAME);
-  def->name = string_copy(lexer->cur_token->name);
+  def->name = string_dup(lexer->cur_token->name);
   lexer_advance(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_EQUALS);
@@ -48,7 +48,7 @@ static assignment_t *assignment_parse(lexer_t *lexer) {
     err_malloc_fail();
 
   EXPECT_TOKEN(lexer, TOKEN_NAME);
-  ass->name = string_copy(lexer->cur_token->name);
+  ass->name = string_dup(lexer->cur_token->name);
   lexer_advance(lexer);
 
   SKIP_TOKEN(lexer, TOKEN_EQUALS);

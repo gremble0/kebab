@@ -24,7 +24,7 @@ void eval(ast_t *ast) {
     }
 
     string_t *s = rt_value_to_string(entry->value);
-    printf("%s: %.*s\n", entry->key, (int)s->len, s->s);
+    printf("%.*s: %.*s\n", (int)entry->key->len, entry->key->s, (int)s->len, s->s);
   }
 
   scope_free(global_scope);
@@ -57,21 +57,21 @@ string_t *rt_value_to_string(const rt_value_t *v) {
   case TYPE_BOOL:
     string_append_c(s, '(');
     if (v->bool_value)
-      string_append_lit(s, "true");
+      string_append(s, &string_of("true"));
     else
-      string_append_lit(s, "false");
+      string_append(s, &string_of("false"));
     string_append_c(s, ')');
     break;
 
   case TYPE_LIST:
-    string_append_lit(s, "([");
+    string_append(s, &string_of("(["));
     for (size_t i = 0; i < v->list_value->size - 1; ++i) {
       string_append(s, rt_value_to_string(list_get(v->list_value, i)));
       // All list elements except the last one are succeeded by ", "
       if (i < v->list_value->size - 1)
-        string_append_lit(s, ", ");
+        string_append(s, &string_of(", "));
     }
-    string_append_lit(s, ")]");
+    string_append(s, &string_of(")]"));
     break;
 
   case TYPE_FN:

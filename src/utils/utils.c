@@ -22,7 +22,7 @@ string_t *repeat_char(char c, size_t n) {
   memset(str, c, n);
   str[n] = '\0';
 
-  return string_of(str, n);
+  return string_dup(&(string_t){str, n});
 }
 
 /**
@@ -49,9 +49,9 @@ string_t *get_line_from_file(FILE *f, size_t line_number) {
 
     // If we have reached our line or an unexpected EOF, return the current line
     if (line_number-- <= 1)
-      return string_of(line, read);
+      return string_dup(&(string_t){line, read});
     else if (read == -1)
-      return string_of_lit("");
+      return string_dup(&string_of(""));
 
     free(line);
     line = NULL;

@@ -7,7 +7,7 @@
 
 typedef struct {
   file_t file;
-  char *line;
+  char *line; // TODO: string_t
   ssize_t line_len;
   size_t prev_line_pos; // start position of previous token (used for error
                         // handling)
