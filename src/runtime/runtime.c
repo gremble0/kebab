@@ -41,9 +41,9 @@ string_t *rt_value_to_string(const rt_value_t *v) {
     break;
 
   case TYPE_STRING:
-    string_append_c(s, '(');
+    string_append(s, &string_of("(\""));
     string_append(s, v->string_value);
-    string_append_c(s, ')');
+    string_append(s, &string_of("\")"));
     break;
 
   case TYPE_INT: {
@@ -69,9 +69,9 @@ string_t *rt_value_to_string(const rt_value_t *v) {
   case TYPE_LIST:
     string_append(s, &string_of("(["));
     for (size_t i = 0; i < v->list_value->size - 1; ++i) {
-      string_t *ith_to_string = rt_value_to_string(list_get(v->list_value, i));
-      string_append(s, ith_to_string);
-      string_free(ith_to_string);
+      string_t *cur_string = rt_value_to_string(list_get(v->list_value, i));
+      string_append(s, cur_string);
+      string_free(cur_string);
 
       // All list elements except the last one are succeeded by ", "
       if (i < v->list_value->size - 1)
@@ -81,7 +81,7 @@ string_t *rt_value_to_string(const rt_value_t *v) {
     break;
 
   case TYPE_FN:
-    // TODO:
+    // Don't need to do anything else, type_to_string is enough for functions
     break;
   }
 
