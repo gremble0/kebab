@@ -41,15 +41,18 @@ string_t *rt_value_to_string(const rt_value_t *v) {
     break;
 
   case TYPE_STRING:
+    string_append_c(s, '(');
     string_append(s, v->string_value);
+    string_append_c(s, ')');
     break;
 
   case TYPE_INT: {
-    size_t res_len = snprintf(NULL, 0, "%ld", v->int_value);
-    char res[res_len];
-    sprintf(res, "%ld", v->int_value);
+    size_t int_slen = snprintf(NULL, 0, "%ld", v->int_value);
+    char int_s[int_slen];
+    sprintf(int_s, "%ld", v->int_value);
+
     string_append_c(s, '(');
-    string_append(s, &(string_t){res, res_len});
+    string_append(s, &(string_t){int_s, int_slen});
     string_append_c(s, ')');
     break;
   }
@@ -66,7 +69,10 @@ string_t *rt_value_to_string(const rt_value_t *v) {
   case TYPE_LIST:
     string_append(s, &string_of("(["));
     for (size_t i = 0; i < v->list_value->size - 1; ++i) {
-      string_append(s, rt_value_to_string(list_get(v->list_value, i)));
+      string_t *ith_to_string = rt_value_to_string(list_get(v->list_value, i));
+      string_append(s, ith_to_string);
+      string_free(ith_to_string);
+
       // All list elements except the last one are succeeded by ", "
       if (i < v->list_value->size - 1)
         string_append(s, &string_of(", "));

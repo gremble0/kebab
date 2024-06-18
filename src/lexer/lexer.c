@@ -103,8 +103,8 @@ static string_t *lexer_read_str(lexer_t *lexer) {
   ++lexer->line_pos;
   size_t i = lexer_seek_while(lexer, is_not_dquote);
 
+  // string_dup adds nullbyte for us
   string_t *str = string_dup(&(string_t){lexer->line->s + lexer->line_pos, i});
-  string_append_c(str, '\0');
   lexer->line_pos += i;
   ASSERT(lexer->line->s[lexer->line_pos] == '"');
   ++lexer->line_pos;
@@ -140,9 +140,8 @@ static uint8_t lexer_read_char(lexer_t *lexer) {
 static string_t *lexer_read_word(lexer_t *lexer) {
   size_t i = lexer_seek_while(lexer, is_kebab_case);
 
+  // string_dup adds nullbyte for us
   string_t *word = string_dup(&(string_t){lexer->line->s + lexer->line_pos, i});
-  // Kinda unnecessary realloc to do `string_append_c` but meh
-  string_append_c(word, '\0');
   lexer->line_pos += i;
 
   return word;
