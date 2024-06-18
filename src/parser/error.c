@@ -21,7 +21,8 @@ static void print_lexer_pos(lexer_t *lexer) {
   string_t *indent = repeat_char(' ', lexer->prev_line_pos);
 
   fprintf(stderr, "%s:%zu:%zu\n", lexer->file.name, lexer->line_number, lexer->prev_line_pos);
-  fprintf(stderr, "%s%.*s^\n", lexer->line, (int)indent->len, indent->s);
+  fprintf(stderr, "%.*s%.*s^\n", (int)lexer->line->len, lexer->line->s, (int)indent->len,
+          indent->s);
 
   string_free(indent);
 }

@@ -26,14 +26,16 @@ static int is_kebab_case(int c) {
  * @param lexer lexer to load next chunk for
  */
 static void lexer_load_next_line(lexer_t *lexer) {
-  // unnecesary if?
-  if (lexer->line != NULL) {
-    free(lexer->line);
-    lexer->line = NULL;
-  }
+  // Clear previous line (line is initialized to "" in lexer_init, so no special case for this)
+  string_clear(lexer->line);
 
   size_t _ = 0;
-  lexer->line_len = getline(&lexer->line, &_, lexer->file.f);
+  char *line_buf = NULL;
+  ssize_t line_len = getline(&line_buf, &_, lexer->file.f);
+  if (line_len < 0)
+    return;
+
+  string_set(lexer->line, line_buf, line_len);
   lexer->line_pos = 0;
   lexer->prev_line_pos = 0;
   ++lexer->line_number;
@@ -50,7 +52,7 @@ static void lexer_load_next_line(lexer_t *lexer) {
  */
 static size_t lexer_seek_while(const lexer_t *lexer, int pred(int)) {
   size_t i = 0;
-  while (lexer->line_pos + i < (size_t)lexer->line_len && pred(lexer->line[lexer->line_pos + i]))
+  while (lexer->line_pos + i < lexer->line->len && pred(lexer->line->s[lexer->line_pos + i]))
     ++i;
 
   return i;
@@ -65,10 +67,10 @@ static size_t lexer_seek_while(const lexer_t *lexer, int pred(int)) {
  * @return the character at the offset, 0 if offset is out of bounds
  */
 static char lexer_peek_char(const lexer_t *lexer, size_t offset) {
-  if (lexer->line_pos + offset >= (size_t)lexer->line_len)
+  if (lexer->line_pos + offset >= lexer->line->len)
     return 0;
 
-  return lexer->line[lexer->line_pos + offset];
+  return lexer->line->s[lexer->line_pos + offset];
 }
 
 /**
@@ -79,11 +81,11 @@ static char lexer_peek_char(const lexer_t *lexer, size_t offset) {
  * @return the integer at the current line position
  */
 static int64_t lexer_read_int(lexer_t *lexer) {
-  ASSERT(isdigit(lexer->line[lexer->line_pos]));
+  ASSERT(isdigit(lexer->line->s[lexer->line_pos]));
 
   char *endptr;
-  int64_t ret = strtoimax(&lexer->line[lexer->line_pos], &endptr, 10);
-  size_t chars_read = endptr - &lexer->line[lexer->line_pos];
+  int64_t ret = strtoimax(&lexer->line->s[lexer->line_pos], &endptr, 10);
+  size_t chars_read = endptr - &lexer->line->s[lexer->line_pos];
   lexer->line_pos += chars_read;
 
   return ret;
@@ -97,14 +99,14 @@ static int64_t lexer_read_int(lexer_t *lexer) {
  * @return the string between two '"'-s
  */
 static string_t *lexer_read_str(lexer_t *lexer) {
-  ASSERT(lexer->line[lexer->line_pos] == '"');
+  ASSERT(lexer->line->s[lexer->line_pos] == '"');
   ++lexer->line_pos;
   size_t i = lexer_seek_while(lexer, is_not_dquote);
 
-  string_t *str = string_dup(&(string_t){lexer->line + lexer->line_pos, i});
+  string_t *str = string_dup(&(string_t){lexer->line->s + lexer->line_pos, i});
   string_append_c(str, '\0');
   lexer->line_pos += i;
-  ASSERT(lexer->line[lexer->line_pos] == '"');
+  ASSERT(lexer->line->s[lexer->line_pos] == '"');
   ++lexer->line_pos;
 
   return str;
@@ -118,10 +120,10 @@ static string_t *lexer_read_str(lexer_t *lexer) {
  * @return the char between the two '\''-s
  */
 static uint8_t lexer_read_char(lexer_t *lexer) {
-  ASSERT(lexer->line[lexer->line_pos] == '\'');
-  ASSERT(lexer->line[lexer->line_pos + 2] == '\'');
+  ASSERT(lexer->line->s[lexer->line_pos] == '\'');
+  ASSERT(lexer->line->s[lexer->line_pos + 2] == '\'');
 
-  uint8_t c = lexer->line[lexer->line_pos + 1];
+  uint8_t c = lexer->line->s[lexer->line_pos + 1];
 
   lexer->line_pos += 3;
 
@@ -138,7 +140,7 @@ static uint8_t lexer_read_char(lexer_t *lexer) {
 static string_t *lexer_read_word(lexer_t *lexer) {
   size_t i = lexer_seek_while(lexer, is_kebab_case);
 
-  string_t *word = string_dup(&(string_t){lexer->line + lexer->line_pos, i});
+  string_t *word = string_dup(&(string_t){lexer->line->s + lexer->line_pos, i});
   // Kinda unnecessary realloc to do `string_append_c` but meh
   string_append_c(word, '\0');
   lexer->line_pos += i;
@@ -172,13 +174,8 @@ lexer_t *lexer_init(const char *path) {
   if (f == NULL)
     err_io_fail(path);
 
-  lexer->file = (file_t){
-      .f = f,
-      .name = path,
-  };
-
-  lexer->line = NULL;
-  lexer->line_len = 0;
+  lexer->file = (file_t){f, path};
+  lexer->line = string_dup(&(string_t){NULL, 0});
   lexer->prev_line_pos = 0;
   lexer->line_pos = 0;
   lexer->line_number = 0;
@@ -211,7 +208,7 @@ void lexer_advance(lexer_t *lexer) {
 
   lexer->prev_line_pos = lexer->line_pos; // For error handling
 
-  switch (lexer->line[lexer->line_pos]) {
+  switch (lexer->line->s[lexer->line_pos]) {
   // Newline or semicolon means go to next line
   // - Semicolon is comment start
   // - Kebab does not care about newlines so these are also ignored
@@ -219,9 +216,9 @@ void lexer_advance(lexer_t *lexer) {
   case ';':
     lexer_load_next_line(lexer);
     // If line_len is negative reading the next line has failed indicating EOF
-    if (lexer->line_len < 0) {
+    if (lexer->line->s == NULL) {
       LEXER_LOG_FINISH();
-      free(lexer->line);
+      string_clear(lexer->line);
       lexer->cur_token = token_make_simple(TOKEN_EOF, (span_t){0});
       return;
     }
@@ -383,8 +380,10 @@ void lexer_advance(lexer_t *lexer) {
       lexer->cur_token = token_make_simple(TOKEN_FALSE, span);
 
     else
-      // If its not some reserved word its just some identifier/name
+      // If its not some reserved word its the name of some binding
       lexer->cur_token = token_make_name(word, span);
+
+    return;
   }
   }
 }
