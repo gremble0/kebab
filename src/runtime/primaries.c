@@ -8,6 +8,7 @@
 #include "parser/types.h"
 #include "runtime/atoms.h"
 #include "runtime/constructors.h"
+#include "runtime/error.h"
 #include "runtime/expressions.h"
 #include "runtime/primaries.h"
 #include "runtime/runtime.h"
@@ -39,19 +40,20 @@ static rt_value_t *func_call_eval(list_t *arguments, rt_func_t *fn, scope_t *sco
   return v;
 }
 
-static rt_value_t *subscription_eval(expression_t *subscription, rt_list_t *list, scope_t *scope) {
+static rt_value_t *subscription_eval(expression_t *subscription, rt_list_t *list, scope_t *scope,
+                                     span_t span) {
   // TODO: subscription could in the future also be for maps or other structures
   // so these assumptions may no longer be valid
 
   rt_value_t *subscription_v = expression_eval(subscription, scope);
   if (subscription_v->type != type_int)
     // TODO: make some error for this - can only index lists with ints
-    ASSERT(0);
+    err_type_error(type_int, subscription_v->type, span);
 
   if (subscription_v->int_value >= (int64_t)list->size)
     // TODO: this error is not enough when i implement proper tracing of line
     // numbers and stuff
-    err_index_out_of_bounds(subscription_v->int_value, list->size);
+    err_index_error(list->size, subscription_v->int_value, span);
 
   return list_get(list, subscription_v->int_value);
 }
@@ -65,17 +67,17 @@ rt_value_t *primary_eval(primary_t *prm, scope_t *scope) {
   for (size_t i = 0; i < prm->suffixes->size; ++i) {
     primary_suffix_t *psfx = list_get(prm->suffixes, i);
 
-    // TODO: better error handling here
     switch (psfx->type) {
     case PRIMARY_SUBSCRIPTION:
       if (v->type->kind != TYPE_LIST)
-        ASSERT(0);
+        err_opaque_type_error(TYPE_LIST, v->type->kind, prm->span);
 
-      v = subscription_eval(psfx->subscription, v->list_value, scope);
+      v = subscription_eval(psfx->subscription, v->list_value, scope, prm->span);
       break;
+
     case PRIMARY_ARGUMENT:
       if (v->type->kind != TYPE_FN)
-        ASSERT(0);
+        err_opaque_type_error(TYPE_FN, v->type->kind, prm->span);
 
       v = func_call_eval(psfx->arguments, v->fn_value, scope, prm->span);
       break;

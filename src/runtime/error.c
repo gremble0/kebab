@@ -120,3 +120,14 @@ _Noreturn void err_name_error(string_t *name, span_t span, scope_t *scope) {
 
   exit(1);
 }
+
+/**
+ * @brief An error for indexing out of bounds for a list
+ */
+_Noreturn void err_index_error(size_t size, size_t index, span_t span) {
+  err_print_span(span);
+
+  fprintf(stderr, "index-error: index %zu is out of bounds for list of size %zu\n", index, size);
+
+  exit(1);
+}
