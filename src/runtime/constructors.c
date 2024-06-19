@@ -29,12 +29,12 @@ rt_value_t *constructor_body_eval(list_t *body, scope_t *scope) {
   return expression_eval(last->expr, scope);
 }
 
-static rt_value_t *primitive_constructor_eval(primitive_constructor_t *constr, scope_t *scope) {
+static rt_value_t *constructor_primitive_eval(constructor_primitive_t *constr, scope_t *scope) {
   return constructor_body_eval(constr->body, scope);
 }
 
 // TODO: constructor_t instead as param?
-static rt_value_t *list_constructor_eval(list_constructor_t *lc, scope_t *scope) {
+static rt_value_t *constructor_list_eval(constructor_list_t *lc, scope_t *scope) {
   // Should return some list, however we will overwrite the type with the one
   // specified in the constructor - this is kinda scuffed, but it works
   rt_value_t *v = constructor_body_eval(lc->body, scope);
@@ -64,7 +64,7 @@ rt_value_t *constructor_eval(constructor_t *constr, scope_t *scope) {
   case TYPE_INT:
   case TYPE_BOOL: {
     scope_t *local_scope = scope_init(scope);
-    rt_value_t *v = primitive_constructor_eval(constr->primitive_constructor, local_scope);
+    rt_value_t *v = constructor_primitive_eval(constr->primitive_constructor, local_scope);
 
     // Ensure the constructor returned its declared type
     type_compare(constr->type, v->type, constr->primitive_constructor->span);
@@ -72,6 +72,7 @@ rt_value_t *constructor_eval(constructor_t *constr, scope_t *scope) {
     scope_free(local_scope);
     return v;
   }
+
   case TYPE_FN: {
     // TODO: kinda breaking abstraction layer
     rt_value_t *v = malloc(sizeof(*v));
@@ -82,9 +83,10 @@ rt_value_t *constructor_eval(constructor_t *constr, scope_t *scope) {
     v->type = constr->type;
     return v;
   }
+
   case TYPE_LIST: {
     scope_t *local_scope = scope_init(scope);
-    rt_value_t *v = list_constructor_eval(constr->list_constructor, local_scope);
+    rt_value_t *v = constructor_list_eval(constr->list_constructor, local_scope);
 
     // TODO: kinda breaking abstraction layer
     v->type = constr->type;

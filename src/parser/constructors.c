@@ -10,13 +10,13 @@
 #include "parser/types.h"
 #include "utils/utils.h"
 
-static primitive_constructor_t *primitive_constructor_parse(lexer_t *lexer) {
+static constructor_primitive_t *primitive_constructor_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("primitive-constructor");
   lexer_advance(lexer); // current token should be one of the primitive types
                         // such as int, char string etc
   SKIP_TOKEN(lexer, TOKEN_LPAREN);
 
-  primitive_constructor_t *pc = malloc(sizeof(*pc));
+  constructor_primitive_t *pc = malloc(sizeof(*pc));
   if (pc == NULL)
     err_malloc_fail();
 
@@ -62,10 +62,10 @@ static fn_param_t *fn_param_parse(lexer_t *lexer) {
   return param;
 }
 
-static fn_constructor_t *fn_constructor_parse(lexer_t *lexer) {
+static constructor_fn_t *fn_constructor_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("fn-constructor");
 
-  fn_constructor_t *fnc = malloc(sizeof(*fnc));
+  constructor_fn_t *fnc = malloc(sizeof(*fnc));
   if (fnc == NULL)
     err_malloc_fail();
 
@@ -99,10 +99,10 @@ static fn_constructor_t *fn_constructor_parse(lexer_t *lexer) {
   return fnc;
 }
 
-static list_constructor_t *list_constructor_parse(lexer_t *lexer) {
+static constructor_list_t *list_constructor_parse(lexer_t *lexer) {
   PARSER_LOG_NODE_START("list-constructor");
 
-  list_constructor_t *lc = malloc(sizeof(*lc));
+  constructor_list_t *lc = malloc(sizeof(*lc));
   if (lc == NULL)
     err_malloc_fail();
 
@@ -213,20 +213,20 @@ static void fn_param_free(fn_param_t *fnp) {
   free(fnp);
 }
 
-static void primitive_constructor_free(primitive_constructor_t *pc) {
+static void primitive_constructor_free(constructor_primitive_t *pc) {
   list_map(pc->body, (list_map_func)statement_free);
   list_free(pc->body);
   free(pc);
 }
 
-static void fn_constructor_free(fn_constructor_t *fnc) {
+static void fn_constructor_free(constructor_fn_t *fnc) {
   list_map(fnc->params, (list_map_func)fn_param_free);
   list_free(fnc->params);
   constructor_free(fnc->constr);
   free(fnc);
 }
 
-static void list_constructor_free(list_constructor_t *lc) {
+static void list_constructor_free(constructor_list_t *lc) {
   list_map(lc->body, (list_map_func)statement_free);
   list_free(lc->body);
 

@@ -7,7 +7,7 @@
 #include "parser/parser.h"
 #include "parser/types.h"
 
-typedef fn_constructor_t rt_func_t;
+typedef constructor_fn_t rt_func_t;
 typedef list_t rt_list_t;
 
 typedef struct {

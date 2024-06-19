@@ -11,7 +11,7 @@ typedef struct constructor_t constructor_t;
 typedef struct {
   list_t *body; // list<statement_t *>
   span_t span;
-} primitive_constructor_t;
+} constructor_primitive_t;
 
 typedef struct {
   string_t *name;
@@ -22,21 +22,21 @@ typedef struct {
   list_t *params; // list<fn_param_t *>
   constructor_t *constr;
   span_t span;
-} fn_constructor_t;
+} constructor_fn_t;
 
 typedef struct {
   list_t *body; // list<statement_t *> where the last statement_t should be a
                 // STMT_EXPRESSION
   keb_type_t *type;
   span_t span;
-} list_constructor_t;
+} constructor_list_t;
 
 struct constructor_t {
   keb_type_t *type;
   union {
-    primitive_constructor_t *primitive_constructor;
-    fn_constructor_t *fn_constructor;
-    list_constructor_t *list_constructor;
+    constructor_primitive_t *primitive_constructor;
+    constructor_fn_t *fn_constructor;
+    constructor_list_t *list_constructor;
   };
 };
 
