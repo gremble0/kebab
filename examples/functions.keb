@@ -7,9 +7,13 @@ def add = fn((a : int, b : int) => int(a + b))
 ; a function that returns a list of its parameters
 def list-of = fn((a : int, b : int) => list((int) => [a, b]))
 
-; a function that returns a function (curried addition in this case)
-def curried-add = fn((a : int) => fn((b : int) =>
-  int(a + b)
-))
+; a function that returns a function that adds two numbers (pretty useless, but just as an example)
+def sum-generator = fn(() => fn((a : int, b : int) => int(a + b)))
 ; can be used like this:
-def result = int(curried-add(10)(3))
+def sum = fn((a : int, b : int) => int(sum-generator()(a, b)))
+def summed = int(sum(2, 3))
+
+; a function that returns a function (curried addition in this case)
+def curried-add = fn((a : int) => fn((b : int) => int(a + b)))
+; can be used like this:
+def curried-added = int(curried-add(3)(5))

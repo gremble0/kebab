@@ -14,7 +14,7 @@
 #include "runtime/scope.h"
 #include "runtime/types.h"
 
-static rt_value_t *primary_arguments_eval(list_t *arguments, rt_func_t *fn, scope_t *scope,
+static rt_value_t *primary_func_call_eval(list_t *arguments, rt_func_t *fn, scope_t *scope,
                                           span_t span) {
   scope_t *local_scope = scope_init(scope);
 
@@ -78,7 +78,7 @@ rt_value_t *primary_eval(primary_t *prm, scope_t *scope) {
       if (v->type->kind != TYPE_FN)
         err_opaque_type_error(TYPE_FN, v->type->kind, prm->span);
 
-      v = primary_arguments_eval(psfx->arguments, v->fn_value, scope, prm->span);
+      v = primary_func_call_eval(psfx->arguments, v->fn_value, scope, prm->span);
       break;
     }
   }
