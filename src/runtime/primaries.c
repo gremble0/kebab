@@ -14,7 +14,7 @@
 #include "runtime/scope.h"
 #include "runtime/types.h"
 
-static rt_value_t *primary_func_call_eval(list_t *arguments, rt_func_t *fn, scope_t *scope,
+static rt_value_t *primary_func_call_eval(list_t *arguments, rt_fn_t *fn, scope_t *scope,
                                           span_t span) {
   scope_t *local_scope = scope_init(scope);
 

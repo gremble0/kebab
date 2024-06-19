@@ -116,7 +116,17 @@ _Noreturn void err_name_error(string_t *name, span_t span, scope_t *scope) {
   err_print_span(span);
   err_print_scope_bindings(scope);
 
-  fprintf(stderr, "name-error: name '%s' is not defined in the current scope\n", name->s);
+  fprintf(stderr, "name-error: name '%.*s' is not defined in the current scope\n", (int)name->len,
+          name->s);
+
+  exit(1);
+}
+
+_Noreturn void err_set_constant(string_t *name, span_t span) {
+  err_print_span(span);
+
+  fprintf(stderr, "set-constant-error: variable '%.*s' is a constant and cannot be mutated\n",
+          (int)name->len, name->s);
 
   exit(1);
 }
