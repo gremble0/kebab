@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "nonstdlib/nerror.h"
 #include "nonstdlib/nlist.h"
 #include "parser/atoms.h"
 #include "parser/types.h"
@@ -14,6 +15,9 @@ rt_value_t *atom_eval(atom_t *atom, scope_t *scope) {
   switch (atom->type) {
   case ATOM_CHAR: {
     rt_value_t *v = malloc(sizeof(*v));
+    if (v == NULL)
+      err_malloc_fail();
+
     v->char_value = atom->char_value;
     v->type = type_char;
     return v;
@@ -21,6 +25,9 @@ rt_value_t *atom_eval(atom_t *atom, scope_t *scope) {
 
   case ATOM_STRING: {
     rt_value_t *v = malloc(sizeof(*v));
+    if (v == NULL)
+      err_malloc_fail();
+
     v->string_value = atom->string_value;
     v->type = type_string;
     return v;
@@ -28,6 +35,9 @@ rt_value_t *atom_eval(atom_t *atom, scope_t *scope) {
 
   case ATOM_INT: {
     rt_value_t *v = malloc(sizeof(*v));
+    if (v == NULL)
+      err_malloc_fail();
+
     v->int_value = atom->int_value;
     v->type = type_int;
     return v;
@@ -35,6 +45,9 @@ rt_value_t *atom_eval(atom_t *atom, scope_t *scope) {
 
   case ATOM_BOOL: {
     rt_value_t *v = malloc(sizeof(*v));
+    if (v == NULL)
+      err_malloc_fail();
+
     v->bool_value = atom->bool_value;
     v->type = type_bool;
     return v;
@@ -54,6 +67,9 @@ rt_value_t *atom_eval(atom_t *atom, scope_t *scope) {
 
   case ATOM_LIST: {
     rt_value_t *v = malloc(sizeof(*v));
+    if (v == NULL)
+      err_malloc_fail();
+
     v->list_value = list_init(LIST_START_SIZE);
     v->type = type_unparametrized_list;
 
