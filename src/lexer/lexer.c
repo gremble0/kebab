@@ -214,7 +214,7 @@ void lexer_advance(lexer_t *lexer) {
   case '\n':
   case ';':
     lexer_load_next_line(lexer);
-    // If line_len is negative reading the next line has failed indicating EOF
+    // If line->s is NULL we have failed reading the next line indicating the end of the file
     if (lexer->line->s == NULL) {
       LEXER_LOG_FINISH();
       string_clear(lexer->line);

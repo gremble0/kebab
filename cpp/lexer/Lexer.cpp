@@ -19,19 +19,19 @@ char Lexer::peek(size_t offset) {
 }
 
 void Lexer::advance(void) {
-  if (stream.eof()) {
-    this->cur_token = Token(TokenKind::TOKEN_EOF);
-    return;
-  }
-
-  if (this->line_pos >= this->line.length())
-    this->next_line();
-
   switch (this->line[this->line_pos]) {
-  // Comment start means move on to next line
-  case '\n':
+  // Nullbyte means end of the string effectively indicating a newline
+  case '\0':
+  // Comment start means we ignore the rest of the line
   case ';':
     this->next_line();
+
+    if (stream.eof()) {
+      this->cur_token = Token(TokenKind::TOKEN_EOF);
+      break;
+    }
+
+    this->advance();
     break;
 
   // Whitespace is simply ignored
@@ -86,9 +86,9 @@ void Lexer::advance(void) {
 
   default:
     this->cur_token = Token(TokenKind::TOKEN_ILLEGAL);
+    ++this->line_pos;
     break;
   }
 
-  ++this->line_pos;
   std::cout << cur_token->to_string() << std::endl;
 }
