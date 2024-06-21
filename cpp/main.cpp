@@ -1,5 +1,6 @@
-#include "lexer/Lexer.hpp"
 #include <iostream>
+
+#include "lexer/Lexer.hpp"
 
 int main(int argc, char **argv) {
   if (argc < 2) {

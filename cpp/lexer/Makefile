@@ -1,14 +1,12 @@
-CC := clang
+CC := clang++
 CFLAGS := -Wall -Wextra -g
 
 OBJS := Lexer.o Token.o
 
-all: $(OBJS)
+all: clean $(OBJS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -C $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f *.o
-
-.PHONY
