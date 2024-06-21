@@ -26,11 +26,11 @@ static void assignment_eval(assignment_t *ass, scope_t *scope, span_t span) {
     err_set_constant(ass->name, span);
 
   // TODO: will leak memory (previous value is lost)
+  // rt_value_free(existing) ?
   rt_value_t *new = constructor_eval(ass->constructor, scope);
 
   type_compare(existing->type, new->type, span);
   *existing = *new;
-  // rt_value_free(existing) ?
 }
 
 // Entrypoint for evaluating a statement

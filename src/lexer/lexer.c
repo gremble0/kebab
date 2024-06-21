@@ -36,8 +36,8 @@ static void lexer_load_next_line(lexer_t *lexer) {
     return;
 
   string_set(lexer->line, line_buf, line_len);
+  lexer->prev_line_pos = lexer->line_pos;
   lexer->line_pos = 0;
-  lexer->prev_line_pos = 0;
   ++lexer->line_number;
 }
 

@@ -1,1 +1,2 @@
 def my-string = string("Hello world")
+print(my-string)
