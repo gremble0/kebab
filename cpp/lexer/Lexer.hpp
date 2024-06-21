@@ -15,7 +15,8 @@ private:
   size_t line_number;
   size_t line_pos;
 
-  void next_line();
+  void next_line(void);
+  char peek(size_t offset);
 
 public:
   std::optional<Token> cur_token;
@@ -25,8 +26,9 @@ public:
       std::cerr << "Could not open file " + path << std::endl;
       std::exit(1);
     }
+
     // load the first line
     std::getline(this->stream, this->line);
   }
-  void advance();
+  void advance(void);
 };
