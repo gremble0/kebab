@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdint>
 #include <string>
+#include <variant>
 
 enum class TokenKind {
   // Keywords
@@ -57,22 +58,16 @@ enum class TokenKind {
 class Token {
 private:
   TokenKind kind;
-
-  union {
-    uint8_t c;     // some char value
-    int64_t i;     // some int value
-    float_t f;     // some float value
-    std::string s; // either name or string value (depending on this->kind)
-  };
+  std::variant<uint8_t, int64_t, float_t, std::string> value;
 
 public:
   Token(TokenKind kind) : kind(kind) {}
-  Token(TokenKind kind, std::string str) : kind(kind), s(str) {
+  Token(TokenKind kind, std::string str) : kind(kind), value(str) {
     // This constructor should only be called when kind is one of these
     assert(kind == TokenKind::TOKEN_NAME || kind == TokenKind::TOKEN_STRING_LITERAL);
   }
-  Token(int64_t i) : kind(TokenKind::TOKEN_INT_LITERAL), i(i) {}
-  Token(float_t f) : kind(TokenKind::TOKEN_FLOAT_LITERAL), f(f) {}
+  Token(int64_t i) : kind(TokenKind::TOKEN_INT_LITERAL), value(i) {}
+  Token(float_t f) : kind(TokenKind::TOKEN_FLOAT_LITERAL), value(f) {}
   ~Token();
 
   std::string to_string() const;

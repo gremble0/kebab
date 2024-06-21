@@ -1,4 +1,5 @@
 #include "Token.hpp"
+#include <cstdint>
 #include <string>
 
 std::string Token::to_string() const {
@@ -72,15 +73,15 @@ std::string Token::to_string() const {
 
     // Values
   case TokenKind::TOKEN_INT_LITERAL:
-    return std::to_string(this->i);
+    return std::to_string(std::get<int64_t>(this->value));
   case TokenKind::TOKEN_FLOAT_LITERAL:
-    return std::to_string(this->f);
+    return std::to_string(std::get<float_t>(this->value));
   case TokenKind::TOKEN_CHAR_LITERAL:
-    return std::to_string(this->c);
+    return std::to_string(std::get<uint8_t>(this->value));
   case TokenKind::TOKEN_STRING_LITERAL:
-    return '"' + this->s + '"';
+    return '"' + std::get<std::string>(this->value) + '"';
   case TokenKind::TOKEN_NAME:
-    return this->s;
+    return std::get<std::string>(this->value);
 
     // Special
   case TokenKind::TOKEN_EOF:
@@ -90,7 +91,7 @@ std::string Token::to_string() const {
   return "Unknown token";
 }
 
-// Token::~Token() {
-//   if (this->kind == TokenKind::TOKEN_STRING_LITERAL || this->kind == TokenKind::TOKEN_NAME)
-//     ~;
-// }
+Token::~Token() {
+  if (this->kind == TokenKind::TOKEN_STRING_LITERAL || this->kind == TokenKind::TOKEN_NAME)
+    std::get<std::string>(this->value).~basic_string();
+}
