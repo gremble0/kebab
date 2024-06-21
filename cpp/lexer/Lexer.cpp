@@ -1,5 +1,3 @@
-#include <iostream>
-#include <ostream>
 #include <string>
 
 #include "Lexer.hpp"
@@ -89,6 +87,4 @@ void Lexer::advance(void) {
     ++this->line_pos;
     break;
   }
-
-  std::cout << cur_token->to_string() << std::endl;
 }

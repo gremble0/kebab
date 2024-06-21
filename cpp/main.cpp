@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ostream>
 
 #include "lexer/Lexer.hpp"
 
@@ -13,6 +14,7 @@ int main(int argc, char **argv) {
 
   while (lexer.cur_token->kind != TokenKind::TOKEN_EOF) {
     lexer.advance();
+    std::cout << lexer.cur_token->to_string() << std::endl;
   }
 
   return 0;

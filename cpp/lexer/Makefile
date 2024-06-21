@@ -3,7 +3,7 @@ CFLAGS := -Wall -Wextra -g
 
 OBJS := Lexer.o Token.o
 
-all: clean $(OBJS)
+all: $(OBJS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
