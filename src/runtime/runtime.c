@@ -14,9 +14,6 @@
 void eval(ast_t *ast) {
   scope_t *global_scope = scope_init(NULL);
 
-  // Load builtin globals
-  load_globals(global_scope);
-
   for (size_t i = 0; i < ast->stmts->size; ++i)
     statement_eval(list_get(ast->stmts, i), global_scope);
 
