@@ -16,7 +16,11 @@ private:
   size_t line_pos;
 
   void next_line(void);
-  char peek(size_t offset);
+  char peek(int offset);
+
+  Token read_number(void);
+  Token read_char(void);
+  Token read_string(void);
 
 public:
   std::optional<Token> cur_token;
