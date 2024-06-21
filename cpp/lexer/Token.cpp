@@ -86,6 +86,8 @@ std::string Token::to_string() const {
     // Special
   case TokenKind::TOKEN_EOF:
     return "<end of file>";
+  case TokenKind::TOKEN_ILLEGAL:
+    return "<illegal token>";
   }
 
   return "Unknown token";

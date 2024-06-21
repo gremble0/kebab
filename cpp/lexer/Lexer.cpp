@@ -23,6 +23,9 @@ void Lexer::advance() {
   case '=':
     this->cur_token = Token(TokenKind::TOKEN_EQUALS);
     break;
+  default:
+    this->cur_token = Token(TokenKind::TOKEN_ILLEGAL);
+    break;
   }
 
   ++this->line_pos;

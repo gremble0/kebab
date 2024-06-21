@@ -52,7 +52,8 @@ enum class TokenKind {
   TOKEN_NAME,           // name
 
   // Special
-  TOKEN_EOF, // <end of file>
+  TOKEN_EOF,     // <end of file>
+  TOKEN_ILLEGAL, // Illegal token, e.g. # @ % $, etc.
 };
 
 class Token {
