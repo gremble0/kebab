@@ -56,11 +56,10 @@ enum class TokenKind {
 };
 
 class Token {
-private:
+public:
   TokenKind kind;
   std::variant<uint8_t, int64_t, float_t, std::string> value;
 
-public:
   Token(TokenKind kind) : kind(kind) {}
   Token(TokenKind kind, std::string str) : kind(kind), value(str) {
     // This constructor should only be called when kind is one of these

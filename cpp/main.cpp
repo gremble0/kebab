@@ -11,5 +11,9 @@ int main(int argc, char **argv) {
   std::string path(argv[1]);
   Lexer lexer(path);
 
+  while (lexer.cur_token->kind != TokenKind::TOKEN_EOF) {
+    lexer.advance();
+  }
+
   return 0;
 }
