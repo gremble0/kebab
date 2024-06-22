@@ -7,7 +7,7 @@
 #include <string>
 #include <variant>
 
-enum class TokenKind {
+enum TokenKind {
   // Keywords
   TOKEN_DEF,  // def
   TOKEN_SET,  // set
@@ -65,7 +65,7 @@ public:
   std::variant<uint8_t, int64_t, float_t, std::string> value;
 
   Token(TokenKind kind) : kind(kind) {}
-  Token(TokenKind kind, std::string str) : kind(kind), value(str) {
+  Token(TokenKind kind, std::string word) : kind(kind), value(word) {
     // This constructor should only be called when kind is one of these
     assert(kind == TokenKind::TOKEN_NAME || kind == TokenKind::TOKEN_STRING_LITERAL);
   }
@@ -75,5 +75,10 @@ public:
 
   std::string to_string() const;
 };
+
+// class Token {
+// public:
+//   virtual std::string to_string() const = 0;
+// };
 
 #endif

@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Lexer.hpp"
+#include "Token.hpp"
 
 // TODO: replace asserts with some better error handling
 
@@ -44,7 +45,7 @@ std::optional<Token> Lexer::read_number(void) {
       ++this->line_pos;
     } else if (peeked == '.') {
       ++this->line_pos;
-      if (has_seen_point)
+      if (has_seen_point) // Numbers should only have 0 or 1 decimals
         return std::nullopt;
 
       has_seen_point = true;
