@@ -106,8 +106,8 @@ std::optional<Token> Lexer::read_word(void) {
     return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']';
   };
 
-  // There should be at least one char in the name
-  if (!is_kebab_case(this->peek(0)))
+  // The first letter in the word should be a letter a-z
+  if (!std::isalpha(this->peek(0)))
     return std::nullopt;
 
   size_t start_pos = this->line_pos;
@@ -117,6 +117,7 @@ std::optional<Token> Lexer::read_word(void) {
 
   std::string word = this->line.substr(start_pos, end_pos - start_pos);
 
+  // Check if its some reserved word
   if (word.compare("def") == 0)
     return Token(TokenKind::TOKEN_DEF);
   else if (word.compare("set") == 0)
@@ -131,12 +132,11 @@ std::optional<Token> Lexer::read_word(void) {
     return Token(TokenKind::TOKEN_ELSE);
   else if (word.compare("fn") == 0)
     return Token(TokenKind::TOKEN_FN);
-
   else if (word.compare("true") == 0)
     return Token(TokenKind::TOKEN_TRUE);
   else if (word.compare("false") == 0)
     return Token(TokenKind::TOKEN_FALSE);
-
+  // If it's not a reserved word its's some name/identifier/variable
   else
     return Token(TokenKind::TOKEN_NAME, word);
 }
@@ -146,8 +146,8 @@ void Lexer::advance(void) {
 
   switch (peeked) {
   // Nullbyte means end of the string effectively indicating a newline
-  case '\0':
   // Comment start means we ignore the rest of the line
+  case '\0':
   case ';':
     this->next_line();
 
