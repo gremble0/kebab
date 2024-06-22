@@ -1,3 +1,6 @@
+#ifndef TOKEN_HPP
+#define TOKEN_HPP
+
 #include <cassert>
 #include <cmath>
 #include <cstdint>
@@ -73,3 +76,5 @@ public:
 
   std::string to_string() const;
 };
+
+#endif
