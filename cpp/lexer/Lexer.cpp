@@ -1,32 +1,36 @@
-#include <cassert>
 #include <cctype>
 #include <cstdint>
+#include <cstdio>
 #include <iostream>
-#include <optional>
 #include <string>
 
 #include "Lexer.hpp"
 #include "Token.hpp"
 
-// TODO: replace asserts with some better error handling
-
-Lexer::Lexer(std::string path) : path(path), stream(path), line_number(1), line_pos(0) {
-  if (!stream.is_open()) {
-    std::cerr << "Could not open file " + path << std::endl;
-    std::exit(1);
-  }
+Lexer::Lexer(std::string path)
+    : path(path), stream(path), line_number(1), line_pos(0), cur_token() {
+  if (!stream.is_open())
+    this->error("could not open file " + path);
 
   std::getline(this->stream, this->line);
 }
 
-void Lexer::next_line(void) {
+[[noreturn]] void Lexer::error(std::string message) const {
+  std::string where = this->path + ':' + std::to_string(this->line_number) + ':' +
+                      std::to_string(this->line_pos) + '\n';
+  std::cerr << where + "lexer-error: " + message << std::endl;
+
+  exit(1);
+}
+
+void Lexer::next_line() {
   std::getline(this->stream, this->line);
   ++this->line_number;
   this->line_pos = 0;
 }
 
-char Lexer::peek(int offset) {
-  // If out of bounds return nullbyte
+char Lexer::peek(int offset) const {
+  // Check if out of bounds
   if (this->line_pos + offset >= this->line.length() || this->line_pos + offset < 0)
     return '\0';
 
@@ -34,9 +38,9 @@ char Lexer::peek(int offset) {
 }
 
 // Returned token is either an integer literal or a float literal
-std::optional<Token> Lexer::read_number(void) {
+Token Lexer::read_number() {
   size_t start_pos = this->line_pos;
-  bool has_seen_point = false; // whether we have seen a '.' - should only happen once
+  bool has_seen_point = false;
 
   while (true) {
     char peeked = this->peek(0);
@@ -45,8 +49,8 @@ std::optional<Token> Lexer::read_number(void) {
       ++this->line_pos;
     } else if (peeked == '.') {
       ++this->line_pos;
-      if (has_seen_point) // Numbers should only have 0 or 1 decimals
-        return std::nullopt;
+      if (has_seen_point)
+        this->error("malformed float literal");
 
       has_seen_point = true;
     } else {
@@ -60,56 +64,50 @@ std::optional<Token> Lexer::read_number(void) {
     return Token(static_cast<int64_t>(std::stoi(&this->line[start_pos])));
 }
 
-std::optional<Token> Lexer::read_char(void) {
+Token Lexer::read_char() {
   // Verify there are enough chars in the line, an opening quote and a closing quote
   if (this->line_pos + 3 >= this->line.length() || this->peek(0) != '\'' || this->peek(2) != '\'')
-    return std::nullopt;
+    this->error("malformed char literal");
 
   Token c(this->peek(1));
   this->line_pos += 3; // 1 for opening quote, 1 for char inside quotes, 1 for closing quote
   return c;
 }
 
-std::optional<Token> Lexer::read_string(void) {
+Token Lexer::read_string() {
   // Verify there are enough chars in the line for at least an opening and closing quote and that
   // the current char is an opening quote
   if (this->line_pos + 2 >= this->line.length() || this->peek(0) != '"')
-    return std::nullopt;
+    this->error("malformed string literal");
 
   size_t start_pos = ++this->line_pos; // Skip opening quote (start_pos is after this quote)
 
   while (true) {
     char peeked = this->peek(0);
 
-    // Verify we have not unexpectedly reached the end of the line
     if (peeked == '\0')
-      return std::nullopt;
-    // Skip the next char if its escaped
+      this->error("multiline strings are not supported");
     else if (peeked == '\\')
       ++this->line_pos;
     else if (peeked == '"')
       break;
 
-    ++this->line_pos; // Skip current char
+    ++this->line_pos;
   }
-
-  // Verify there is a closing quote
-  if (this->peek(0) != '"')
-    return std::nullopt;
 
   size_t end_pos = this->line_pos++; // Skip closing quote (end_pos is before this quote)
 
   return Token(TokenKind::TOKEN_STRING_LITERAL, this->line.substr(start_pos, end_pos - start_pos));
 }
 
-std::optional<Token> Lexer::read_word(void) {
+Token Lexer::read_word() {
   auto is_kebab_case = [](char c) {
     return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']';
   };
 
   // The first letter in the word should be a letter a-z
   if (!std::isalpha(this->peek(0)))
-    return std::nullopt;
+    this->error("words should start with a letter");
 
   size_t start_pos = this->line_pos;
   while (is_kebab_case(this->peek(0)))
@@ -118,7 +116,6 @@ std::optional<Token> Lexer::read_word(void) {
 
   std::string word = this->line.substr(start_pos, end_pos - start_pos);
 
-  // Check if its some reserved word
   if (word.compare("def") == 0)
     return Token(TokenKind::TOKEN_DEF);
   else if (word.compare("set") == 0)
@@ -137,12 +134,11 @@ std::optional<Token> Lexer::read_word(void) {
     return Token(TokenKind::TOKEN_TRUE);
   else if (word.compare("false") == 0)
     return Token(TokenKind::TOKEN_FALSE);
-  // If it's not a reserved word its's some name/identifier/variable
   else
     return Token(TokenKind::TOKEN_NAME, word);
 }
 
-void Lexer::advance(void) {
+void Lexer::advance() {
   char peeked = this->peek(0);
 
   switch (peeked) {

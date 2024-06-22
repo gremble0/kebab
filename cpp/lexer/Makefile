@@ -1,5 +1,5 @@
 CC := clang++
-CFLAGS := -Wall -Wextra -g
+CFLAGS := -Wall -Wextra -g -std=c++17
 
 OBJS := Lexer.o Token.o
 

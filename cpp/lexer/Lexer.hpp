@@ -4,7 +4,6 @@
 #include <cstddef>
 #include <cstdlib>
 #include <fstream>
-#include <optional>
 #include <string>
 
 #include "Token.hpp"
@@ -17,19 +16,20 @@ private:
   size_t line_number;
   size_t line_pos;
 
-  void next_line(void);
-  char peek(int offset);
+  void next_line();
+  char peek(int offset) const;
+  [[noreturn]] void error(std::string message) const;
 
-  std::optional<Token> read_number(void);
-  std::optional<Token> read_char(void);
-  std::optional<Token> read_string(void);
-  std::optional<Token> read_word(void);
+  Token read_number();
+  Token read_char();
+  Token read_string();
+  Token read_word();
 
 public:
-  std::optional<Token> cur_token;
+  Token cur_token;
 
   Lexer(std::string path);
-  void advance(void);
+  void advance();
 };
 
 #endif
