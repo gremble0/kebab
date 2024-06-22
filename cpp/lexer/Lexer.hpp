@@ -21,6 +21,7 @@ private:
   Token read_number(void);
   Token read_char(void);
   Token read_string(void);
+  Token read_name(void);
 
 public:
   std::optional<Token> cur_token;

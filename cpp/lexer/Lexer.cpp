@@ -85,8 +85,25 @@ Token Lexer::read_string(void) {
   return Token(TokenKind::TOKEN_STRING_LITERAL, this->line.substr(start_pos, end_pos - start_pos));
 }
 
+Token Lexer::read_name(void) {
+  auto is_kebab_case = [](char c) {
+    return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']';
+  };
+
+  size_t start_pos = this->line_pos;
+
+  while (is_kebab_case(this->peek(0)))
+    ++this->line_pos;
+
+  size_t end_pos = this->line_pos;
+
+  return Token(TokenKind::TOKEN_NAME, this->line.substr(start_pos, end_pos - start_pos));
+}
+
 void Lexer::advance(void) {
-  switch (this->peek(0)) {
+  char peeked = this->peek(0);
+
+  switch (peeked) {
   // Nullbyte means end of the string effectively indicating a newline
   case '\0':
   // Comment start means we ignore the rest of the line
@@ -208,22 +225,15 @@ void Lexer::advance(void) {
     this->cur_token = Lexer::read_char();
     break;
 
-  case '0':
-  case '1':
-  case '2':
-  case '3':
-  case '4':
-  case '5':
-  case '6':
-  case '7':
-  case '8':
-  case '9':
-    this->cur_token = Lexer::read_number();
-    break;
-
   default:
-    this->cur_token = Token(TokenKind::TOKEN_ILLEGAL);
-    ++this->line_pos;
+    if (std::isalpha(peeked)) {
+      this->cur_token = Lexer::read_name();
+    } else if (std::isalnum(peeked)) {
+      this->cur_token = Lexer::read_number();
+    } else {
+      this->cur_token = Token(TokenKind::TOKEN_ILLEGAL);
+      ++this->line_pos;
+    }
     break;
   }
 }
