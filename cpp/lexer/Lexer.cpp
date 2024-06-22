@@ -1,5 +1,9 @@
-#include "Lexer.hpp"
 #include <cassert>
+#include <cctype>
+#include <cstdint>
+#include <string>
+
+#include "Lexer.hpp"
 
 // TODO: replace asserts with some better error handling
 
@@ -11,7 +15,7 @@ void Lexer::next_line(void) {
 
 char Lexer::peek(int offset) {
   // If out of bounds return nullbyte
-  if (offset >= this->line.length())
+  if (this->line_pos + offset >= this->line.length() || this->line_pos + offset < 0)
     return '\0';
 
   return this->line[this->line_pos + offset];
@@ -19,8 +23,31 @@ char Lexer::peek(int offset) {
 
 // Returned token is either an integer literal or a float literal
 Token Lexer::read_number(void) {
-  ++this->line_pos;
-  return Token(static_cast<int64_t>(0));
+  size_t start_pos = this->line_pos;
+  bool has_seen_point = false; // whether we have seen a '.' - should only happen once
+
+  while (true) {
+    char peeked = this->peek(0);
+
+    if (std::isalnum(peeked)) {
+      ++this->line_pos;
+      continue;
+    } else if (peeked == '.') {
+      ++this->line_pos;
+      if (has_seen_point)
+        assert(false); // This is an error - a number should not have two '.'s
+
+      has_seen_point = true;
+      continue;
+    } else {
+      break;
+    }
+  }
+
+  if (has_seen_point)
+    return Token(std::stof(&this->line[start_pos]));
+  else
+    return Token(static_cast<int64_t>(std::stoi(&this->line[start_pos])));
 }
 
 Token Lexer::read_char(void) {
