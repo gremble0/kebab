@@ -18,7 +18,7 @@ std::string Token::to_string() const {
     return "elif";
   case TokenKind::TOKEN_ELSE:
     return "else";
-  case TokenKind::TOKEEN_FN:
+  case TokenKind::TOKEN_FN:
     return "fn";
 
     // Booleans
@@ -91,9 +91,4 @@ std::string Token::to_string() const {
   }
 
   return "Unknown token";
-}
-
-Token::~Token() {
-  if (this->kind == TokenKind::TOKEN_STRING_LITERAL || this->kind == TokenKind::TOKEN_NAME)
-    std::get<std::string>(this->value).~basic_string();
 }

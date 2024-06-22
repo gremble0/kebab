@@ -23,7 +23,7 @@ private:
   std::optional<Token> read_number(void);
   std::optional<Token> read_char(void);
   std::optional<Token> read_string(void);
-  std::optional<Token> read_name(void);
+  std::optional<Token> read_word(void);
 
 public:
   std::optional<Token> cur_token;

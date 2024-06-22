@@ -101,7 +101,7 @@ std::optional<Token> Lexer::read_string(void) {
   return Token(TokenKind::TOKEN_STRING_LITERAL, this->line.substr(start_pos, end_pos - start_pos));
 }
 
-std::optional<Token> Lexer::read_name(void) {
+std::optional<Token> Lexer::read_word(void) {
   auto is_kebab_case = [](char c) {
     return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']';
   };
@@ -115,7 +115,30 @@ std::optional<Token> Lexer::read_name(void) {
     ++this->line_pos;
   size_t end_pos = this->line_pos;
 
-  return Token(TokenKind::TOKEN_NAME, this->line.substr(start_pos, end_pos - start_pos));
+  std::string word = this->line.substr(start_pos, end_pos - start_pos);
+
+  if (word.compare("def") == 0)
+    return Token(TokenKind::TOKEN_DEF);
+  else if (word.compare("set") == 0)
+    return Token(TokenKind::TOKEN_SET);
+  else if (word.compare("mut") == 0)
+    return Token(TokenKind::TOKEN_MUT);
+  else if (word.compare("if") == 0)
+    return Token(TokenKind::TOKEN_IF);
+  else if (word.compare("elif") == 0)
+    return Token(TokenKind::TOKEN_ELIF);
+  else if (word.compare("else") == 0)
+    return Token(TokenKind::TOKEN_ELSE);
+  else if (word.compare("fn") == 0)
+    return Token(TokenKind::TOKEN_FN);
+
+  else if (word.compare("true") == 0)
+    return Token(TokenKind::TOKEN_TRUE);
+  else if (word.compare("false") == 0)
+    return Token(TokenKind::TOKEN_FALSE);
+
+  else
+    return Token(TokenKind::TOKEN_NAME, word);
 }
 
 void Lexer::advance(void) {
@@ -245,7 +268,7 @@ void Lexer::advance(void) {
 
   default:
     if (std::isalpha(peeked)) {
-      this->cur_token = Lexer::read_name();
+      this->cur_token = Lexer::read_word();
     } else if (std::isalnum(peeked)) {
       this->cur_token = Lexer::read_number();
     } else {

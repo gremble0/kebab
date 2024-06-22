@@ -16,7 +16,7 @@ enum class TokenKind {
   TOKEN_IF,   // if
   TOKEN_ELIF, // elif
   TOKEN_ELSE, // else
-  TOKEEN_FN,  // fn
+  TOKEN_FN,   // fn
 
   // Booleans
   TOKEN_TRUE,  // true
@@ -72,7 +72,6 @@ public:
   Token(int64_t i) : kind(TokenKind::TOKEN_INT_LITERAL), value(i) {}
   Token(float_t f) : kind(TokenKind::TOKEN_FLOAT_LITERAL), value(f) {}
   Token(char c) : kind(TokenKind::TOKEN_CHAR_LITERAL), value(c) {}
-  ~Token();
 
   std::string to_string() const;
 };
