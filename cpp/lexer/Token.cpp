@@ -3,7 +3,7 @@
 
 #include "Token.hpp"
 
-Token::Token(const std::string &word) {
+Token::Token(std::string word) {
   assert(word.find(' ') == std::string::npos);
 
   if (word.compare("def") == 0)
@@ -26,7 +26,7 @@ Token::Token(const std::string &word) {
     this->kind = FALSE;
   else {
     this->kind = NAME;
-    this->value = std::move(word);
+    this->value = word;
   }
 }
 

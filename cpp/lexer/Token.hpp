@@ -66,17 +66,9 @@ public:
 
   Token() : kind(Kind::ILLEGAL) {}
   Token(Kind kind) : kind(kind) {}
-  Token(const std::string &word);
-  Token(Kind kind, const std::string &string) : kind(kind), value(string) {
-    assert(kind == Kind::NAME || kind == Kind::STRING_LITERAL);
-  }
-
-  // Token(Kind kind, std::variant<uint8_t, int64_t, float_t, std::string> value)
-  //     : kind(kind), value(value) {}
-
-  Token(int64_t i) : kind(Kind::INT_LITERAL), value(i) {}
-  Token(float_t f) : kind(Kind::FLOAT_LITERAL), value(f) {}
-  Token(char c) : kind(Kind::CHAR_LITERAL), value(c) {}
+  Token(Kind kind, std::variant<uint8_t, int64_t, float_t, std::string> value)
+      : kind(kind), value(value) {}
+  Token(std::string word);
 
   std::string to_string() const;
 };

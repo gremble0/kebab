@@ -64,9 +64,9 @@ Token Lexer::read_number() {
   }
 
   if (has_seen_point)
-    return Token(std::stof(&this->line[start_pos]));
+    return Token(Token::Kind::FLOAT_LITERAL, std::stof(&this->line[start_pos]));
   else
-    return Token(static_cast<int64_t>(std::stoi(&this->line[start_pos])));
+    return Token(Token::Kind::INT_LITERAL, static_cast<int64_t>(std::stoi(&this->line[start_pos])));
 }
 
 Token Lexer::read_char() {
@@ -76,7 +76,7 @@ Token Lexer::read_char() {
   if (cant_read_char || missing_opening_quote || missing_closing_quote)
     this->error("malformed char literal");
 
-  Token c(this->peek(1));
+  Token c(Token::Kind::CHAR_LITERAL, this->peek(1));
   this->line_pos += 3;
   return c;
 }
