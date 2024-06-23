@@ -19,7 +19,7 @@ Lexer::Lexer(std::string path)
   std::string where = this->path + ':' + std::to_string(this->line_number) + ':' +
                       std::to_string(this->line_pos) + '\n';
   std::string line = this->line + '\n';
-  std::string line_cursor = std::string(this->line_pos - 1, ' ') + "^\n";
+  std::string line_cursor = std::string(this->line_pos, ' ') + "^\n";
   std::string full_message = "lexer-error: " + message + '\n';
 
   std::cerr << where + line + line_cursor + full_message;
@@ -315,14 +315,13 @@ void Lexer::advance() {
 
   // Either a keyword, a name, a number or an illegal token
   default:
-    if (std::isalpha(peeked)) {
+    if (std::isalpha(peeked))
       this->cur_token = Lexer::read_word();
-    } else if (std::isalnum(peeked)) {
+    else if (std::isalnum(peeked))
       this->cur_token = Lexer::read_number();
-    } else {
-      this->cur_token = Token(Token::Kind::ILLEGAL);
-      ++this->line_pos;
-    }
+    else
+      this->error(std::string("illegal token '") + peeked + "'");
+
     break;
   }
 }
