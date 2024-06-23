@@ -8,17 +8,21 @@
 #include "Token.hpp"
 
 Lexer::Lexer(std::string path)
-    : path(path), stream(path), line_number(1), line_pos(0), cur_token() {
+    : path(path), stream(path), line_number(0), line_pos(0), cur_token() {
   if (!stream.is_open())
     this->error("could not open file " + path);
 
-  std::getline(this->stream, this->line);
+  this->next_line();
 }
 
 [[noreturn]] void Lexer::error(std::string message) const {
   std::string where = this->path + ':' + std::to_string(this->line_number) + ':' +
                       std::to_string(this->line_pos) + '\n';
-  std::cerr << where + "lexer-error: " + message << std::endl;
+  std::string line = this->line + '\n';
+  std::string line_cursor = std::string(this->line_pos - 1, ' ') + "^\n";
+  std::string full_message = "lexer-error: " + message + '\n';
+
+  std::cerr << where + line + line_cursor + full_message;
 
   exit(1);
 }
@@ -30,8 +34,9 @@ void Lexer::next_line() {
 }
 
 char Lexer::peek(int offset) const {
-  // Check if out of bounds
-  if (this->line_pos + offset >= this->line.length() || this->line_pos + offset < 0)
+  bool too_big = this->line_pos + offset >= this->line.length();
+  bool too_small = this->line_pos + offset < 0;
+  if (too_big || too_small)
     return '\0';
 
   return this->line[this->line_pos + offset];
@@ -65,19 +70,21 @@ Token Lexer::read_number() {
 }
 
 Token Lexer::read_char() {
-  // Verify there are enough chars in the line, an opening quote and a closing quote
-  if (this->line_pos + 3 >= this->line.length() || this->peek(0) != '\'' || this->peek(2) != '\'')
+  bool cant_read_char = this->line_pos + 3 >= this->line.length();
+  bool missing_opening_quote = this->peek(0) != '\'';
+  bool missing_closing_quote = this->peek(2) != '\'';
+  if (cant_read_char || missing_opening_quote || missing_closing_quote)
     this->error("malformed char literal");
 
   Token c(this->peek(1));
-  this->line_pos += 3; // 1 for opening quote, 1 for char inside quotes, 1 for closing quote
+  this->line_pos += 3;
   return c;
 }
 
 Token Lexer::read_string() {
-  // Verify there are enough chars in the line for at least an opening and closing quote and that
-  // the current char is an opening quote
-  if (this->line_pos + 2 >= this->line.length() || this->peek(0) != '"')
+  bool cant_read_char = this->line_pos + 2 >= this->line.length();
+  bool missing_opening_quote = this->peek(0) != '"';
+  if (cant_read_char || missing_opening_quote)
     this->error("malformed string literal");
 
   size_t start_pos = ++this->line_pos; // Skip opening quote (start_pos is after this quote)
@@ -86,7 +93,7 @@ Token Lexer::read_string() {
     char peeked = this->peek(0);
 
     if (peeked == '\0')
-      this->error("multiline strings are not supported");
+      this->error("unterminated string literal");
     else if (peeked == '\\')
       ++this->line_pos;
     else if (peeked == '"')
@@ -105,7 +112,6 @@ Token Lexer::read_word() {
     return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']';
   };
 
-  // The first letter in the word should be a letter a-z
   if (!std::isalpha(this->peek(0)))
     this->error("words should start with a letter");
 
@@ -248,7 +254,6 @@ void Lexer::advance() {
     this->handle_newline();
     break;
 
-  // Whitespace is simply ignored
   case '\t':
   case ' ':
     this->handle_whitespace();
@@ -259,7 +264,6 @@ void Lexer::advance() {
     this->handle_colon();
     break;
   case '=':
-    // Token depends on the next character in the line
     this->handle_equals();
     break;
   case ',':
@@ -289,7 +293,7 @@ void Lexer::advance() {
     this->handle_mult();
     break;
   case '~':
-    this->handle_not(); // tilde?
+    this->handle_not();
     break;
   case '<':
     this->handle_lt();
@@ -298,18 +302,18 @@ void Lexer::advance() {
     this->handle_gt();
     break;
   case '/':
-    this->handle_div(); // slash?
+    this->handle_div();
     break;
 
   // Literals
   case '"':
     this->cur_token = Lexer::read_string();
     break;
-
   case '\'':
     this->cur_token = Lexer::read_char();
     break;
 
+  // Either a keyword, a name, a number or an illegal token
   default:
     if (std::isalpha(peeked)) {
       this->cur_token = Lexer::read_word();

@@ -3,6 +3,33 @@
 
 #include "Token.hpp"
 
+Token::Token(const std::string &word) {
+  assert(word.find(' ') == std::string::npos);
+
+  if (word.compare("def") == 0)
+    this->kind = DEF;
+  else if (word.compare("set") == 0)
+    this->kind = SET;
+  else if (word.compare("mut") == 0)
+    this->kind = MUT;
+  else if (word.compare("if") == 0)
+    this->kind = IF;
+  else if (word.compare("elif") == 0)
+    this->kind = ELIF;
+  else if (word.compare("else") == 0)
+    this->kind = ELSE;
+  else if (word.compare("fn") == 0)
+    this->kind = FN;
+  else if (word.compare("true") == 0)
+    this->kind = TRUE;
+  else if (word.compare("false") == 0)
+    this->kind = FALSE;
+  else {
+    this->kind = NAME;
+    this->value = std::move(word);
+  }
+}
+
 std::string Token::to_string() const {
   switch (this->kind) {
   case Token::Kind::DEF:

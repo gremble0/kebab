@@ -1,0 +1,16 @@
+def a = int( ; comment
+  3 ; comment
+  + 3 ; comment
+)
+
+;
+;
+;
+;
+;
+;
+def b = int(2) ; all after this should be commented out ;; asd ;; def b = int(2)
+;
+;
+def c = ;
+int(55)
