@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <fstream>
+#include <memory>
 #include <string>
 
 #include "Token.hpp"
@@ -20,13 +21,13 @@ private:
   char peek(int offset) const;
   [[noreturn]] void error(std::string message) const;
 
-  Token read_number();
-  Token read_char();
-  Token read_string();
-  Token read_word();
+  std::unique_ptr<Token> read_number();
+  std::unique_ptr<Token> read_char(); // TokenCharLiteral?
+  std::unique_ptr<Token> read_string();
+  std::unique_ptr<Token> read_word();
 
 public:
-  Token cur_token;
+  std::unique_ptr<Token> cur_token;
 
   Lexer(std::string path);
   void advance();

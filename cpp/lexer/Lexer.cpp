@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <iostream>
+#include <memory>
 #include <string>
 
 #include "Lexer.hpp"
@@ -38,7 +39,7 @@ char Lexer::peek(int offset) const {
 }
 
 // Returned token is either an integer literal or a float literal
-Token Lexer::read_number() {
+std::unique_ptr<Token> Lexer::read_number() {
   size_t start_pos = this->line_pos;
   bool has_seen_point = false;
 
@@ -59,22 +60,23 @@ Token Lexer::read_number() {
   }
 
   if (has_seen_point)
-    return Token(std::stof(&this->line[start_pos]));
+    return std::make_unique<TokenFloatLiteral>(std::stof(&this->line[start_pos]));
   else
-    return Token(static_cast<int64_t>(std::stoi(&this->line[start_pos])));
+    return std::make_unique<TokenIntLiteral>(
+        static_cast<int64_t>(std::stoi(&this->line[start_pos])));
 }
 
-Token Lexer::read_char() {
+std::unique_ptr<Token> Lexer::read_char() {
   // Verify there are enough chars in the line, an opening quote and a closing quote
   if (this->line_pos + 3 >= this->line.length() || this->peek(0) != '\'' || this->peek(2) != '\'')
     this->error("malformed char literal");
 
-  Token c(this->peek(1));
+  auto c = std::make_unique<TokenFloatLiteral>(this->peek(1));
   this->line_pos += 3; // 1 for opening quote, 1 for char inside quotes, 1 for closing quote
   return c;
 }
 
-Token Lexer::read_string() {
+std::unique_ptr<Token> Lexer::read_string() {
   // Verify there are enough chars in the line for at least an opening and closing quote and that
   // the current char is an opening quote
   if (this->line_pos + 2 >= this->line.length() || this->peek(0) != '"')
@@ -97,10 +99,10 @@ Token Lexer::read_string() {
 
   size_t end_pos = this->line_pos++; // Skip closing quote (end_pos is before this quote)
 
-  return Token(TokenKind::TOKEN_STRING_LITERAL, this->line.substr(start_pos, end_pos - start_pos));
+  return std::make_unique<TokenStringLiteral>(this->line.substr(start_pos, end_pos - start_pos));
 }
 
-Token Lexer::read_word() {
+std::unique_ptr<Token> Lexer::read_word() {
   auto is_kebab_case = [](char c) {
     return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']';
   };
@@ -117,25 +119,25 @@ Token Lexer::read_word() {
   std::string word = this->line.substr(start_pos, end_pos - start_pos);
 
   if (word.compare("def") == 0)
-    return Token(TokenKind::TOKEN_DEF);
+    return std::make_unique<TokenSimple>(TokenKind::TOKEN_DEF);
   else if (word.compare("set") == 0)
-    return Token(TokenKind::TOKEN_SET);
+    return std::make_unique<TokenSimple>(TokenKind::TOKEN_SET);
   else if (word.compare("mut") == 0)
-    return Token(TokenKind::TOKEN_MUT);
+    return std::make_unique<TokenSimple>(TokenKind::TOKEN_MUT);
   else if (word.compare("if") == 0)
-    return Token(TokenKind::TOKEN_IF);
+    return std::make_unique<TokenSimple>(TokenKind::TOKEN_IF);
   else if (word.compare("elif") == 0)
-    return Token(TokenKind::TOKEN_ELIF);
+    return std::make_unique<TokenSimple>(TokenKind::TOKEN_ELIF);
   else if (word.compare("else") == 0)
-    return Token(TokenKind::TOKEN_ELSE);
+    return std::make_unique<TokenSimple>(TokenKind::TOKEN_ELSE);
   else if (word.compare("fn") == 0)
-    return Token(TokenKind::TOKEN_FN);
+    return std::make_unique<TokenSimple>(TokenKind::TOKEN_FN);
   else if (word.compare("true") == 0)
-    return Token(TokenKind::TOKEN_TRUE);
+    return std::make_unique<TokenSimple>(TokenKind::TOKEN_TRUE);
   else if (word.compare("false") == 0)
-    return Token(TokenKind::TOKEN_FALSE);
+    return std::make_unique<TokenSimple>(TokenKind::TOKEN_FALSE);
   else
-    return Token(TokenKind::TOKEN_NAME, word);
+    return std::make_unique<TokenName>(word);
 }
 
 void Lexer::advance() {
