@@ -72,50 +72,7 @@ private:
 public:
   TokenSimple(TokenKind kind) : kind_(kind) {}
   TokenKind kind() const override { return this->kind_; }
-  std::string to_string() const override {
-    switch (this->kind_) {
-    case TOKEN_DEF:
-    case TOKEN_SET:
-    case TOKEN_MUT:
-    case TOKEN_NIL:
-    case TOKEN_IF:
-    case TOKEN_ELIF:
-    case TOKEN_ELSE:
-    case TOKEN_FN:
-    case TOKEN_TRUE:
-    case TOKEN_FALSE:
-    case TOKEN_COLON:
-    case TOKEN_EQUALS:
-    case TOKEN_COMMA:
-    case TOKEN_LPAREN:
-    case TOKEN_RPAREN:
-    case TOKEN_LBRACKET:
-    case TOKEN_RBRACKET:
-    case TOKEN_FAT_RARROW:
-    case TOKEN_PLUS:
-    case TOKEN_MINUS:
-    case TOKEN_MULT:
-    case TOKEN_DIV:
-    case TOKEN_NOT:
-    case TOKEN_LT:
-    case TOKEN_LE:
-    case TOKEN_EQ:
-    case TOKEN_NEQ:
-    case TOKEN_GT:
-    case TOKEN_GE:
-    case TOKEN_EOF:
-    case TOKEN_ILLEGAL:
-      return "lol";
-
-    case TOKEN_INT_LITERAL:
-    case TOKEN_FLOAT_LITERAL:
-    case TOKEN_CHAR_LITERAL:
-    case TOKEN_STRING_LITERAL:
-    case TOKEN_NAME:
-      assert(false);
-      break;
-    }
-  }
+  std::string to_string() const override;
 };
 
 class TokenIntLiteral : public Token {

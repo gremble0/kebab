@@ -13,7 +13,7 @@ Lexer::Lexer(std::string path)
   if (!stream.is_open())
     this->error("could not open file " + path);
 
-  std::getline(this->stream, this->line);
+  this->advance();
 }
 
 [[noreturn]] void Lexer::error(std::string message) const {
