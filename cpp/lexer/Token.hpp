@@ -65,14 +65,87 @@ public:
   virtual std::string to_string() const = 0;
 };
 
-class TokenSymbol : public Token {};
-
-class TokenName : public Token {
+class TokenSimple : public Token {
 private:
-  std::string name;
+  TokenKind kind_;
 
 public:
-  TokenName(std::string name) : name(name){};
+  TokenSimple(TokenKind kind) : kind_(kind) {}
+  TokenKind kind() const override { return this->kind_; }
+  std::string to_string() const override {
+    switch (this->kind_) {
+    case TOKEN_DEF:
+    case TOKEN_SET:
+    case TOKEN_MUT:
+    case TOKEN_NIL:
+    case TOKEN_IF:
+    case TOKEN_ELIF:
+    case TOKEN_ELSE:
+    case TOKEN_FN:
+    case TOKEN_TRUE:
+    case TOKEN_FALSE:
+    case TOKEN_COLON:
+    case TOKEN_EQUALS:
+    case TOKEN_COMMA:
+    case TOKEN_LPAREN:
+    case TOKEN_RPAREN:
+    case TOKEN_LBRACKET:
+    case TOKEN_RBRACKET:
+    case TOKEN_FAT_RARROW:
+    case TOKEN_PLUS:
+    case TOKEN_MINUS:
+    case TOKEN_MULT:
+    case TOKEN_DIV:
+    case TOKEN_NOT:
+    case TOKEN_LT:
+    case TOKEN_LE:
+    case TOKEN_EQ:
+    case TOKEN_NEQ:
+    case TOKEN_GT:
+    case TOKEN_GE:
+    case TOKEN_EOF:
+    case TOKEN_ILLEGAL:
+      return "lol";
+
+    case TOKEN_INT_LITERAL:
+    case TOKEN_FLOAT_LITERAL:
+    case TOKEN_CHAR_LITERAL:
+    case TOKEN_STRING_LITERAL:
+    case TOKEN_NAME:
+      assert(false);
+      break;
+    }
+  }
+};
+
+class TokenIntLiteral : public Token {
+private:
+  int64_t literal;
+
+public:
+  TokenIntLiteral(int64_t literal) : literal(literal) {}
+  TokenKind kind() const override { return TokenKind::TOKEN_INT_LITERAL; }
+  std::string to_string() const override { return std::to_string(this->literal); }
+};
+
+class TokenFloatLiteral : public Token {
+private:
+  float_t literal;
+
+public:
+  TokenFloatLiteral(float_t literal) : literal(literal) {}
+  TokenKind kind() const override { return TokenKind::TOKEN_FLOAT_LITERAL; }
+  std::string to_string() const override { return std::to_string(this->literal); }
+};
+
+class TokenCharLiteral : public Token {
+private:
+  char literal;
+
+public:
+  TokenCharLiteral(char literal) : literal(literal) {}
+  TokenKind kind() const override { return TokenKind::TOKEN_CHAR_LITERAL; }
+  std::string to_string() const override { return std::to_string(this->literal); }
 };
 
 class TokenStringLiteral : public Token {
@@ -80,7 +153,19 @@ private:
   std::string literal;
 
 public:
-  TokenStringLiteral(std::string string) : literal(string){};
+  TokenStringLiteral(std::string literal) : literal(literal) {}
+  TokenKind kind() const override { return TokenKind::TOKEN_STRING_LITERAL; }
+  std::string to_string() const override { return this->literal; }
+};
+
+class TokenName : public Token {
+private:
+  std::string name;
+
+public:
+  TokenName(std::string name) : name(name) {}
+  TokenKind kind() const override { return TokenKind::TOKEN_NAME; }
+  std::string to_string() const override { return this->name; }
 };
 
 #endif
