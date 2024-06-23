@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
   std::string path(argv[1]);
   Lexer lexer(path);
 
-  while (lexer.cur_token.kind != TokenKind::TOKEN_EOF) {
+  while (lexer.cur_token.kind != Token::Kind::END_OF_FILE) {
     lexer.advance();
     std::cout << lexer.cur_token.to_string() << std::endl;
   }

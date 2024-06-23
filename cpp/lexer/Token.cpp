@@ -5,89 +5,89 @@
 
 std::string Token::to_string() const {
   switch (this->kind) {
-  case TokenKind::TOKEN_DEF:
+  case Token::Kind::DEF:
     return "def";
-  case TokenKind::TOKEN_SET:
+  case Token::Kind::SET:
     return "set";
-  case TokenKind::TOKEN_MUT:
+  case Token::Kind::MUT:
     return "mut";
-  case TokenKind::TOKEN_NIL:
+  case Token::Kind::NIL:
     return "nil";
-  case TokenKind::TOKEN_IF:
+  case Token::Kind::IF:
     return "if";
-  case TokenKind::TOKEN_ELIF:
+  case Token::Kind::ELIF:
     return "elif";
-  case TokenKind::TOKEN_ELSE:
+  case Token::Kind::ELSE:
     return "else";
-  case TokenKind::TOKEN_FN:
+  case Token::Kind::FN:
     return "fn";
 
     // Booleans
-  case TokenKind::TOKEN_TRUE:
+  case Token::Kind::TRUE:
     return "true";
-  case TokenKind::TOKEN_FALSE:
+  case Token::Kind::FALSE:
     return "false";
 
     // Syntax
-  case TokenKind::TOKEN_COLON:
+  case Token::Kind::COLON:
     return ":";
-  case TokenKind::TOKEN_EQUALS:
+  case Token::Kind::EQUALS:
     return "=";
-  case TokenKind::TOKEN_COMMA:
+  case Token::Kind::COMMA:
     return ",";
-  case TokenKind::TOKEN_LPAREN:
+  case Token::Kind::LPAREN:
     return "(";
-  case TokenKind::TOKEN_RPAREN:
+  case Token::Kind::RPAREN:
     return ")";
-  case TokenKind::TOKEN_LBRACKET:
+  case Token::Kind::LBRACKET:
     return "[";
-  case TokenKind::TOKEN_RBRACKET:
+  case Token::Kind::RBRACKET:
     return "]";
-  case TokenKind::TOKEN_FAT_RARROW:
+  case Token::Kind::FAT_RARROW:
     return "=>";
 
     // Operators
-  case TokenKind::TOKEN_PLUS:
+  case Token::Kind::PLUS:
     return "+";
-  case TokenKind::TOKEN_MINUS:
+  case Token::Kind::MINUS:
     return "-";
-  case TokenKind::TOKEN_MULT:
+  case Token::Kind::MULT:
     return "*";
-  case TokenKind::TOKEN_DIV:
+  case Token::Kind::DIV:
     return "/";
-  case TokenKind::TOKEN_NOT:
+  case Token::Kind::NOT:
     return "~";
 
     // Comparisons
-  case TokenKind::TOKEN_LT:
+  case Token::Kind::LT:
     return "<";
-  case TokenKind::TOKEN_LE:
+  case Token::Kind::LE:
     return "<=";
-  case TokenKind::TOKEN_EQ:
+  case Token::Kind::EQ:
     return "==";
-  case TokenKind::TOKEN_NEQ:
+  case Token::Kind::NEQ:
     return "~=";
-  case TokenKind::TOKEN_GT:
+  case Token::Kind::GT:
     return ">";
-  case TokenKind::TOKEN_GE:
+  case Token::Kind::GE:
     return ">=";
 
     // Values
-  case TokenKind::TOKEN_INT_LITERAL:
+  case Token::Kind::INT_LITERAL:
     return std::to_string(std::get<int64_t>(this->value));
-  case TokenKind::TOKEN_FLOAT_LITERAL:
+  case Token::Kind::FLOAT_LITERAL:
     return std::to_string(std::get<float_t>(this->value));
-  case TokenKind::TOKEN_CHAR_LITERAL:
+  case Token::Kind::CHAR_LITERAL:
     return std::to_string(std::get<uint8_t>(this->value));
-  case TokenKind::TOKEN_STRING_LITERAL:
+  case Token::Kind::STRING_LITERAL:
     return '"' + std::get<std::string>(this->value) + '"';
-  case TokenKind::TOKEN_NAME:
+  case Token::Kind::NAME:
     return std::get<std::string>(this->value);
 
     // Special
-  case TokenKind::TOKEN_EOF:
+  case Token::Kind::END_OF_FILE:
     return "<end of file>";
-  case TokenKind::TOKEN_ILLEGAL:
+  case Token::Kind::ILLEGAL:
     return "<illegal token>";
   }
 
