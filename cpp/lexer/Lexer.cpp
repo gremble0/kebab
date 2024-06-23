@@ -151,7 +151,7 @@ void Lexer::advance() {
     this->next_line();
 
     if (stream.eof()) {
-      this->cur_token = Token(TokenKind::TOKEN_EOF);
+      this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_EOF);
       break;
     }
 
@@ -168,92 +168,92 @@ void Lexer::advance() {
   // Syntax
   case ':':
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_COLON);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_COLON);
     break;
   case '=':
     // Token depends on the next character in the line
     switch (this->peek(1)) {
     case '>':
       this->line_pos += 2;
-      this->cur_token = Token(TokenKind::TOKEN_FAT_RARROW);
+      this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_FAT_RARROW);
       break;
     case '=':
       this->line_pos += 2;
-      this->cur_token = Token(TokenKind::TOKEN_EQ);
+      this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_EQ);
       break;
     default:
       ++this->line_pos;
-      this->cur_token = Token(TokenKind::TOKEN_EQUALS);
+      this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_EQUALS);
       break;
     }
     break;
   case ',':
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_COMMA);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_COMMA);
     break;
   case '(':
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_LPAREN);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_LPAREN);
     break;
   case ')':
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_RPAREN);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_RPAREN);
     break;
   case '[':
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_LBRACKET);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_LBRACKET);
     break;
   case ']':
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_RBRACKET);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_RBRACKET);
     break;
 
   // Operators
   case '+':
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_PLUS);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_PLUS);
     break;
   case '-':
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_MINUS);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_MINUS);
     break;
   case '*':
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_MULT);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_MULT);
     break;
   case '~':
     if (this->peek(1) == '=') {
       this->line_pos += 2;
-      this->cur_token = Token(TokenKind::TOKEN_NEQ);
+      this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_NEQ);
       break;
     }
 
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_NOT);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_NOT);
     break;
   case '<':
     if (this->peek(1) == '=') {
       this->line_pos += 2;
-      this->cur_token = Token(TokenKind::TOKEN_LE);
+      this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_LE);
       break;
     }
 
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_LT);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_LT);
     break;
   case '>':
     if (this->peek(1) == '=') {
       this->line_pos += 2;
-      this->cur_token = Token(TokenKind::TOKEN_GE);
+      this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_GE);
       break;
     }
 
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_GT);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_GT);
     break;
   case '/':
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_DIV);
+    this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_DIV);
     break;
 
   // Literals
@@ -271,7 +271,7 @@ void Lexer::advance() {
     } else if (std::isalnum(peeked)) {
       this->cur_token = Lexer::read_number();
     } else {
-      this->cur_token = Token(TokenKind::TOKEN_ILLEGAL);
+      this->cur_token = std::make_unique<TokenSimple>(TokenKind::TOKEN_ILLEGAL);
       ++this->line_pos;
     }
     break;
