@@ -31,92 +31,130 @@ Token::Token(Span span, std::string word) : span(span) {
 }
 
 std::string Token::to_string() const {
+  std::string out;
+
   switch (this->kind) {
   case Token::Kind::DEF:
-    return "def";
+    out = "<def>";
+    break;
   case Token::Kind::SET:
-    return "set";
+    out = "<set>";
+    break;
   case Token::Kind::MUT:
-    return "mut";
+    out = "<mut>";
+    break;
   case Token::Kind::NIL:
-    return "nil";
+    out = "<nil>";
+    break;
   case Token::Kind::IF:
-    return "if";
+    out = "<if>";
+    break;
   case Token::Kind::ELIF:
-    return "elif";
+    out = "<elif>";
+    break;
   case Token::Kind::ELSE:
-    return "else";
+    out = "<else>";
+    break;
   case Token::Kind::FN:
-    return "fn";
+    out = "<fn>";
+    break;
 
     // Booleans
   case Token::Kind::TRUE:
-    return "true";
+    out = "<true>";
+    break;
   case Token::Kind::FALSE:
-    return "false";
+    out = "<false>";
+    break;
 
     // Syntax
   case Token::Kind::COLON:
-    return ":";
+    out = "<colon>";
+    break;
   case Token::Kind::EQUALS:
-    return "=";
+    out = "<equals>";
+    break;
   case Token::Kind::COMMA:
-    return ",";
+    out = "<comma>";
+    break;
   case Token::Kind::LPAREN:
-    return "(";
+    out = "<lparen>";
+    break;
   case Token::Kind::RPAREN:
-    return ")";
+    out = "<rparen>";
+    break;
   case Token::Kind::LBRACKET:
-    return "[";
+    out = "<lbracket>";
+    break;
   case Token::Kind::RBRACKET:
-    return "]";
+    out = "<rbracket>";
+    break;
   case Token::Kind::FAT_RARROW:
-    return "=>";
+    out = "<fat-rarrow>";
+    break;
 
     // Operators
   case Token::Kind::PLUS:
-    return "+";
+    out = "<plus>";
+    break;
   case Token::Kind::MINUS:
-    return "-";
+    out = "<minus>";
+    break;
   case Token::Kind::MULT:
-    return "*";
+    out = "<mult>";
+    break;
   case Token::Kind::DIV:
-    return "/";
+    out = "<div>";
+    break;
   case Token::Kind::NOT:
-    return "~";
+    out = "<not>";
+    break;
 
     // Comparisons
   case Token::Kind::LT:
-    return "<";
+    out = "<lt>";
+    break;
   case Token::Kind::LE:
-    return "<=";
+    out = "<le>";
+    break;
   case Token::Kind::EQ:
-    return "==";
+    out = "<eq>";
+    break;
   case Token::Kind::NEQ:
-    return "~=";
+    out = "<neq>";
+    break;
   case Token::Kind::GT:
-    return ">";
+    out = "<gt>";
+    break;
   case Token::Kind::GE:
-    return ">=";
+    out = "<ge>";
+    break;
 
     // Values
   case Token::Kind::INT_LITERAL:
-    return std::to_string(std::get<int64_t>(this->value));
+    out = "<int-literal=" + std::to_string(std::get<int64_t>(this->value)) + '>';
+    break;
   case Token::Kind::FLOAT_LITERAL:
-    return std::to_string(std::get<float_t>(this->value));
+    out = "<float-literal=" + std::to_string(std::get<float_t>(this->value)) + '>';
+    break;
   case Token::Kind::CHAR_LITERAL:
-    return std::to_string(std::get<uint8_t>(this->value));
+    out = "<char-literal='" + std::to_string(std::get<uint8_t>(this->value)) + "'>";
+    break;
   case Token::Kind::STRING_LITERAL:
-    return '"' + std::get<std::string>(this->value) + '"';
+    out = "<string-literal=\"" + std::get<std::string>(this->value) + "\">";
+    break;
   case Token::Kind::NAME:
-    return std::get<std::string>(this->value);
+    out = "<name=\"" + std::get<std::string>(this->value) + "\">";
+    break;
 
     // Special
   case Token::Kind::END_OF_FILE:
-    return "<end of file>";
+    out = "<end of file>";
+    break;
   case Token::Kind::ILLEGAL:
-    return "<illegal token>";
+    out = "<illegal token>";
+    break;
   }
 
-  return "Unknown token";
+  return out + ' ' + this->span.to_string();
 }
