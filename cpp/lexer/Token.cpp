@@ -3,7 +3,7 @@
 
 #include "Token.hpp"
 
-Token::Token(std::string word) {
+Token::Token(Span span, std::string word) : span(span) {
   assert(word.find(' ') == std::string::npos);
 
   if (word.compare("def") == 0)

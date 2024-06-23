@@ -7,6 +7,16 @@
 #include <string>
 #include <variant>
 
+struct Position {
+  size_t line, col;
+  Position(size_t line, size_t col) : line(line), col(col) {}
+};
+
+struct Span {
+  Position start, end;
+  Span(Position start, Position end) : start(start), end(end) {}
+};
+
 class Token {
 public:
   enum Kind {
@@ -62,13 +72,15 @@ public:
   };
 
   Kind kind;
+  Span span;
   std::variant<uint8_t, int64_t, float_t, std::string> value;
 
-  Token() : kind(Kind::ILLEGAL) {}
-  Token(Kind kind) : kind(kind) {}
-  Token(Kind kind, std::variant<uint8_t, int64_t, float_t, std::string> value)
-      : kind(kind), value(value) {}
-  Token(std::string word);
+  // make default constructors?
+  Token() : kind(Kind::ILLEGAL), span(Position(0, 0), Position(0, 0)) {}
+  Token(Kind kind, Span span) : kind(kind), span(span) {}
+  Token(Kind kind, Span span, std::variant<uint8_t, int64_t, float_t, std::string> value)
+      : kind(kind), span(span), value(value) {}
+  Token(Span span, std::string word);
 
   std::string to_string() const;
 };

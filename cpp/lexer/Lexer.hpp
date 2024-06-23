@@ -17,6 +17,7 @@ private:
   size_t line_pos;
 
   void next_line();
+  Position position() const;
   char peek(int offset) const;
   [[noreturn]] void error(std::string message) const;
 
@@ -25,6 +26,7 @@ private:
   Token read_string();
   Token read_word();
 
+  void handle_one_char_kind(Token::Kind kind);
   void handle_newline();
   void handle_whitespace();
   void handle_colon();
