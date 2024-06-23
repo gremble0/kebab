@@ -25,6 +25,23 @@ private:
   Token read_string();
   Token read_word();
 
+  void handle_newline();
+  void handle_whitespace();
+  void handle_colon();
+  void handle_equals();
+  void handle_comma();
+  void handle_lparen();
+  void handle_rparen();
+  void handle_lbracket();
+  void handle_rbracket();
+  void handle_plus();
+  void handle_minus();
+  void handle_mult();
+  void handle_not();
+  void handle_lt();
+  void handle_gt();
+  void handle_div();
+
 public:
   Token cur_token;
 

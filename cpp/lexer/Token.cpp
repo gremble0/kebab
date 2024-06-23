@@ -1,6 +1,7 @@
-#include "Token.hpp"
 #include <cstdint>
 #include <string>
+
+#include "Token.hpp"
 
 std::string Token::to_string() const {
   switch (this->kind) {

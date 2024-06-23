@@ -138,6 +138,124 @@ Token Lexer::read_word() {
     return Token(TokenKind::TOKEN_NAME, word);
 }
 
+void Lexer::handle_newline() {
+  char peeked = this->peek(0);
+  assert(peeked == '\0' || peeked == ';');
+
+  this->next_line();
+
+  if (stream.eof()) {
+    this->cur_token = Token(TokenKind::TOKEN_EOF);
+    return;
+  }
+
+  this->advance();
+}
+
+void Lexer::handle_whitespace() {
+  ++this->line_pos;
+  this->advance();
+}
+
+void Lexer::handle_colon() {
+  ++this->line_pos;
+  this->cur_token = Token(TokenKind::TOKEN_COLON);
+}
+
+void Lexer::handle_equals() {
+  assert(this->peek(0) == '=');
+
+  switch (this->peek(1)) {
+  case '>':
+    this->line_pos += 2;
+    this->cur_token = Token(TokenKind::TOKEN_FAT_RARROW);
+    break;
+  case '=':
+    this->line_pos += 2;
+    this->cur_token = Token(TokenKind::TOKEN_EQ);
+    break;
+  default:
+    ++this->line_pos;
+    this->cur_token = Token(TokenKind::TOKEN_EQUALS);
+    break;
+  }
+}
+
+void Lexer::handle_comma() {
+  ++this->line_pos;
+  this->cur_token = Token(TokenKind::TOKEN_COMMA);
+}
+
+void Lexer::handle_lparen() {
+  ++this->line_pos;
+  this->cur_token = Token(TokenKind::TOKEN_LPAREN);
+}
+
+void Lexer::handle_rparen() {
+  ++this->line_pos;
+  this->cur_token = Token(TokenKind::TOKEN_RPAREN);
+}
+
+void Lexer::handle_lbracket() {
+  ++this->line_pos;
+  this->cur_token = Token(TokenKind::TOKEN_LBRACKET);
+}
+
+void Lexer::handle_rbracket() {
+  ++this->line_pos;
+  this->cur_token = Token(TokenKind::TOKEN_RBRACKET);
+}
+
+void Lexer::handle_plus() {
+  ++this->line_pos;
+  this->cur_token = Token(TokenKind::TOKEN_PLUS);
+}
+
+void Lexer::handle_minus() {
+  ++this->line_pos;
+  this->cur_token = Token(TokenKind::TOKEN_MINUS);
+}
+
+void Lexer::handle_mult() {
+  ++this->line_pos;
+  this->cur_token = Token(TokenKind::TOKEN_MULT);
+}
+
+void Lexer::handle_not() {
+  if (this->peek(1) == '=') {
+    this->line_pos += 2;
+    this->cur_token = Token(TokenKind::TOKEN_NEQ);
+  } else {
+    ++this->line_pos;
+    this->cur_token = Token(TokenKind::TOKEN_NOT);
+  }
+}
+
+void Lexer::handle_lt() {
+  if (this->peek(1) == '=') {
+    this->line_pos += 2;
+    this->cur_token = Token(TokenKind::TOKEN_LE);
+  } else {
+    ++this->line_pos;
+    this->cur_token = Token(TokenKind::TOKEN_LT);
+  }
+}
+
+void Lexer::handle_gt() {
+  if (this->peek(1) == '=') {
+    this->line_pos += 2;
+    this->cur_token = Token(TokenKind::TOKEN_GE);
+  } else {
+    ++this->line_pos;
+    this->cur_token = Token(TokenKind::TOKEN_GT);
+  }
+}
+
+void Lexer::handle_div() {
+  ++this->line_pos;
+  this->cur_token = Token(TokenKind::TOKEN_DIV);
+}
+
 void Lexer::advance() {
   char peeked = this->peek(0);
 
@@ -146,112 +264,60 @@ void Lexer::advance() {
   // Comment start means we ignore the rest of the line
   case '\0':
   case ';':
-    this->next_line();
-
-    if (stream.eof()) {
-      this->cur_token = Token(TokenKind::TOKEN_EOF);
-      break;
-    }
-
-    this->advance();
+    this->handle_newline();
     break;
 
   // Whitespace is simply ignored
   case '\t':
   case ' ':
-    ++this->line_pos;
-    this->advance();
+    this->handle_whitespace();
     break;
 
   // Syntax
   case ':':
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_COLON);
+    this->handle_colon();
     break;
   case '=':
     // Token depends on the next character in the line
-    switch (this->peek(1)) {
-    case '>':
-      this->line_pos += 2;
-      this->cur_token = Token(TokenKind::TOKEN_FAT_RARROW);
-      break;
-    case '=':
-      this->line_pos += 2;
-      this->cur_token = Token(TokenKind::TOKEN_EQ);
-      break;
-    default:
-      ++this->line_pos;
-      this->cur_token = Token(TokenKind::TOKEN_EQUALS);
-      break;
-    }
+    this->handle_equals();
     break;
   case ',':
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_COMMA);
+    this->handle_comma();
     break;
   case '(':
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_LPAREN);
+    this->handle_lparen();
     break;
   case ')':
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_RPAREN);
+    this->handle_rparen();
     break;
   case '[':
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_LBRACKET);
+    this->handle_lbracket();
     break;
   case ']':
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_RBRACKET);
+    this->handle_rbracket();
     break;
 
   // Operators
   case '+':
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_PLUS);
+    this->handle_plus();
     break;
   case '-':
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_MINUS);
+    this->handle_minus();
     break;
   case '*':
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_MULT);
+    this->handle_mult();
     break;
   case '~':
-    if (this->peek(1) == '=') {
-      this->line_pos += 2;
-      this->cur_token = Token(TokenKind::TOKEN_NEQ);
-      break;
-    }
-
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_NOT);
+    this->handle_not(); // tilde?
     break;
   case '<':
-    if (this->peek(1) == '=') {
-      this->line_pos += 2;
-      this->cur_token = Token(TokenKind::TOKEN_LE);
-      break;
-    }
-
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_LT);
+    this->handle_lt();
     break;
   case '>':
-    if (this->peek(1) == '=') {
-      this->line_pos += 2;
-      this->cur_token = Token(TokenKind::TOKEN_GE);
-      break;
-    }
-
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_GT);
+    this->handle_gt();
     break;
   case '/':
-    ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_DIV);
+    this->handle_div(); // slash?
     break;
 
   // Literals

@@ -77,9 +77,4 @@ public:
   std::string to_string() const;
 };
 
-// class Token {
-// public:
-//   virtual std::string to_string() const = 0;
-// };
-
 #endif
