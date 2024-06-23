@@ -1,3 +1,6 @@
 [submodule "lib/nonstdlib"]
 	path = lib/nonstdlib
 	url = https://github.com/gremble0/nonstdlib
+[submodule "lib/googletest"]
+	path = lib/googletest
+	url = https://github.com/google/googletest
