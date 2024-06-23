@@ -67,7 +67,7 @@ std::string Token::to_string() const {
     out = "<false>";
     break;
 
-    // Syntax
+  // Syntax
   case Token::Kind::COLON:
     out = "<colon>";
     break;
@@ -93,7 +93,7 @@ std::string Token::to_string() const {
     out = "<fat-rarrow>";
     break;
 
-    // Operators
+  // Operators
   case Token::Kind::PLUS:
     out = "<plus>";
     break;
@@ -110,7 +110,7 @@ std::string Token::to_string() const {
     out = "<not>";
     break;
 
-    // Comparisons
+  // Comparisons
   case Token::Kind::LT:
     out = "<lt>";
     break;
@@ -130,7 +130,7 @@ std::string Token::to_string() const {
     out = "<ge>";
     break;
 
-    // Values
+  // Values
   case Token::Kind::INT_LITERAL:
     out = "<int-literal=" + std::to_string(std::get<int64_t>(this->value)) + '>';
     break;
@@ -147,7 +147,7 @@ std::string Token::to_string() const {
     out = "<name=\"" + std::get<std::string>(this->value) + "\">";
     break;
 
-    // Special
+  // Special
   case Token::Kind::END_OF_FILE:
     out = "<end of file>";
     break;

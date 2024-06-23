@@ -65,14 +65,12 @@ Token Lexer::read_number() {
     }
   }
 
-  Position end = this->position();
-  Span span(start, end);
+  Span span(start, this->position());
 
   if (has_seen_point)
     return Token(Token::Kind::FLOAT_LITERAL, span, std::stof(&this->line[start.col]));
   else
-    return Token(Token::Kind::INT_LITERAL, span,
-                 static_cast<int64_t>(std::stoi(&this->line[start.col]))); // unnecessary cast?
+    return Token(Token::Kind::INT_LITERAL, span, std::stoi(&this->line[start.col]));
 }
 
 Token Lexer::read_char() {
@@ -87,8 +85,7 @@ Token Lexer::read_char() {
   char c = this->peek(1);
   this->line_pos += 3;
 
-  Position end = this->position();
-  Span span(start, end);
+  Span span(start, this->position());
 
   return Token(Token::Kind::CHAR_LITERAL, span, c);
 }
@@ -129,7 +126,7 @@ Token Lexer::read_word() {
   };
 
   if (!std::isalpha(this->peek(0)))
-    this->error("words should start with a letter");
+    this->error("token should start with a letter");
 
   Position start = this->position();
   while (is_kebab_case(this->peek(0)))
@@ -159,9 +156,7 @@ void Lexer::handle_newline() {
 void Lexer::handle_one_char_kind(Token::Kind kind) {
   Position start = this->position();
   ++this->line_pos;
-  Position end = this->position();
-  Span span(start, end);
-  this->cur_token = Token(kind, span);
+  this->cur_token = Token(kind, Span(start, this->position()));
 }
 
 void Lexer::handle_whitespace() {
@@ -190,9 +185,7 @@ void Lexer::handle_equals() {
     break;
   }
 
-  Position end = this->position();
-  Span span(start, end);
-  this->cur_token = Token(kind, span);
+  this->cur_token = Token(kind, Span(start, this->position()));
 }
 
 void Lexer::handle_comma() { this->handle_one_char_kind(Token::Kind::COMMA); }
@@ -223,9 +216,7 @@ void Lexer::handle_not() {
     kind = Token::Kind::NOT;
   }
 
-  Position end = this->position();
-  Span span(start, end);
-  this->cur_token = Token(kind, span);
+  this->cur_token = Token(kind, Span(start, this->position()));
 }
 
 void Lexer::handle_lt() {
@@ -240,9 +231,7 @@ void Lexer::handle_lt() {
     kind = Token::Kind::LT;
   }
 
-  Position end = this->position();
-  Span span(start, end);
-  this->cur_token = Token(kind, span);
+  this->cur_token = Token(kind, Span(start, this->position()));
 }
 
 void Lexer::handle_gt() {
@@ -257,9 +246,7 @@ void Lexer::handle_gt() {
     kind = Token::Kind::GT;
   }
 
-  Position end = this->position();
-  Span span(start, end);
-  this->cur_token = Token(kind, span);
+  this->cur_token = Token(kind, Span(start, this->position()));
 }
 
 void Lexer::handle_div() { this->handle_one_char_kind(Token::Kind::DIV); }
