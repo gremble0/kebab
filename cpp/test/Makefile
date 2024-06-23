@@ -1,17 +1,17 @@
 CC := clang++
 CFLAGS := -Wall -Wextra -g -std=c++17
 
-LIBS := -L../../lib/googletest/build/lib -lgtest
-INCLUDES := ../../lib/googletest/googletest/include/
+LIBS := -L../../lib/googletest/build/lib -lgtest -lgtest_main
+INCLUDES := -I../../lib/googletest/googletest/include/ -I..
 
-OBJS := main.o
+OBJS := main.o LexerTest.o
 
 all: $(OBJS)
-	$(CC) $(CFLAGS) -I$(INCLUDES) main.cpp -o test $(LIBS)
+	$(CC) $(CFLAGS) $(OBJS) -o run_tests $(LIBS)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -I$(INCLUDES) -c $< -o $@
+%.o: %.cpp
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -f *.o
-	rm test
+	rm -f run_tests

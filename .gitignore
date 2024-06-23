@@ -7,3 +7,4 @@ test_all
 compile_commands.json
 .cache/
 vgcore*
+run_tests
