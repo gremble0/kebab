@@ -20,6 +20,8 @@ private:
   char peek(int offset) const;
   [[noreturn]] void error(std::string message) const;
 
+  TokenKind word_kind(std::string word);
+
   Token read_number();
   Token read_char();
   Token read_string();

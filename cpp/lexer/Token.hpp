@@ -65,8 +65,32 @@ public:
   std::variant<uint8_t, int64_t, float_t, std::string> value;
 
   Token() : kind(TokenKind::TOKEN_ILLEGAL) {}
+  Token(const std::string &word) {
+    if (word.compare("def") == 0)
+      this->kind = TOKEN_DEF;
+    else if (word.compare("set") == 0)
+      this->kind = TOKEN_SET;
+    else if (word.compare("mut") == 0)
+      this->kind = TOKEN_MUT;
+    else if (word.compare("if") == 0)
+      this->kind = TOKEN_IF;
+    else if (word.compare("elif") == 0)
+      this->kind = TOKEN_ELIF;
+    else if (word.compare("else") == 0)
+      this->kind = TOKEN_ELSE;
+    else if (word.compare("fn") == 0)
+      this->kind = TOKEN_FN;
+    else if (word.compare("true") == 0)
+      this->kind = TOKEN_TRUE;
+    else if (word.compare("false") == 0)
+      this->kind = TOKEN_FALSE;
+    else {
+      this->kind = TOKEN_NAME;
+      this->value = std::move(word);
+    }
+  };
   Token(TokenKind kind) : kind(kind) {}
-  Token(TokenKind kind, std::string word) : kind(kind), value(word) {
+  Token(TokenKind kind, const std::string &string) : kind(kind), value(string) {
     // This constructor should only be called when kind is one of these
     assert(kind == TokenKind::TOKEN_NAME || kind == TokenKind::TOKEN_STRING_LITERAL);
   }
@@ -74,6 +98,7 @@ public:
   Token(float_t f) : kind(TokenKind::TOKEN_FLOAT_LITERAL), value(f) {}
   Token(char c) : kind(TokenKind::TOKEN_CHAR_LITERAL), value(c) {}
 
+  // static Token from_string(const std::string &string);
   std::string to_string() const;
 };
 
