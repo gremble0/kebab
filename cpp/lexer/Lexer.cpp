@@ -97,7 +97,7 @@ Token Lexer::read_string() {
 
   size_t end_pos = this->line_pos++; // Skip closing quote (end_pos is before this quote)
 
-  return Token(TokenKind::TOKEN_STRING_LITERAL, this->line.substr(start_pos, end_pos - start_pos));
+  return Token(Token::Kind::STRING_LITERAL, this->line.substr(start_pos, end_pos - start_pos));
 }
 
 Token Lexer::read_word() {
@@ -126,7 +126,7 @@ void Lexer::handle_newline() {
   this->next_line();
 
   if (stream.eof()) {
-    this->cur_token = Token(TokenKind::TOKEN_EOF);
+    this->cur_token = Token(Token::Kind::END_OF_FILE);
     return;
   }
 
@@ -140,7 +140,7 @@ void Lexer::handle_whitespace() {
 
 void Lexer::handle_colon() {
   ++this->line_pos;
-  this->cur_token = Token(TokenKind::TOKEN_COLON);
+  this->cur_token = Token(Token::Kind::COLON);
 }
 
 void Lexer::handle_equals() {
@@ -149,92 +149,92 @@ void Lexer::handle_equals() {
   switch (this->peek(1)) {
   case '>':
     this->line_pos += 2;
-    this->cur_token = Token(TokenKind::TOKEN_FAT_RARROW);
+    this->cur_token = Token(Token::Kind::FAT_RARROW);
     break;
   case '=':
     this->line_pos += 2;
-    this->cur_token = Token(TokenKind::TOKEN_EQ);
+    this->cur_token = Token(Token::Kind::EQ);
     break;
   default:
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_EQUALS);
+    this->cur_token = Token(Token::Kind::EQUALS);
     break;
   }
 }
 
 void Lexer::handle_comma() {
   ++this->line_pos;
-  this->cur_token = Token(TokenKind::TOKEN_COMMA);
+  this->cur_token = Token(Token::Kind::COMMA);
 }
 
 void Lexer::handle_lparen() {
   ++this->line_pos;
-  this->cur_token = Token(TokenKind::TOKEN_LPAREN);
+  this->cur_token = Token(Token::Kind::LPAREN);
 }
 
 void Lexer::handle_rparen() {
   ++this->line_pos;
-  this->cur_token = Token(TokenKind::TOKEN_RPAREN);
+  this->cur_token = Token(Token::Kind::RPAREN);
 }
 
 void Lexer::handle_lbracket() {
   ++this->line_pos;
-  this->cur_token = Token(TokenKind::TOKEN_LBRACKET);
+  this->cur_token = Token(Token::Kind::LBRACKET);
 }
 
 void Lexer::handle_rbracket() {
   ++this->line_pos;
-  this->cur_token = Token(TokenKind::TOKEN_RBRACKET);
+  this->cur_token = Token(Token::Kind::RBRACKET);
 }
 
 void Lexer::handle_plus() {
   ++this->line_pos;
-  this->cur_token = Token(TokenKind::TOKEN_PLUS);
+  this->cur_token = Token(Token::Kind::PLUS);
 }
 
 void Lexer::handle_minus() {
   ++this->line_pos;
-  this->cur_token = Token(TokenKind::TOKEN_MINUS);
+  this->cur_token = Token(Token::Kind::MINUS);
 }
 
 void Lexer::handle_mult() {
   ++this->line_pos;
-  this->cur_token = Token(TokenKind::TOKEN_MULT);
+  this->cur_token = Token(Token::Kind::MULT);
 }
 
 void Lexer::handle_not() {
   if (this->peek(1) == '=') {
     this->line_pos += 2;
-    this->cur_token = Token(TokenKind::TOKEN_NEQ);
+    this->cur_token = Token(Token::Kind::NEQ);
   } else {
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_NOT);
+    this->cur_token = Token(Token::Kind::NOT);
   }
 }
 
 void Lexer::handle_lt() {
   if (this->peek(1) == '=') {
     this->line_pos += 2;
-    this->cur_token = Token(TokenKind::TOKEN_LE);
+    this->cur_token = Token(Token::Kind::LE);
   } else {
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_LT);
+    this->cur_token = Token(Token::Kind::LT);
   }
 }
 
 void Lexer::handle_gt() {
   if (this->peek(1) == '=') {
     this->line_pos += 2;
-    this->cur_token = Token(TokenKind::TOKEN_GE);
+    this->cur_token = Token(Token::Kind::GE);
   } else {
     ++this->line_pos;
-    this->cur_token = Token(TokenKind::TOKEN_GT);
+    this->cur_token = Token(Token::Kind::GT);
   }
 }
 
 void Lexer::handle_div() {
   ++this->line_pos;
-  this->cur_token = Token(TokenKind::TOKEN_DIV);
+  this->cur_token = Token(Token::Kind::DIV);
 }
 
 void Lexer::advance() {
@@ -316,7 +316,7 @@ void Lexer::advance() {
     } else if (std::isalnum(peeked)) {
       this->cur_token = Lexer::read_number();
     } else {
-      this->cur_token = Token(TokenKind::TOKEN_ILLEGAL);
+      this->cur_token = Token(Token::Kind::ILLEGAL);
       ++this->line_pos;
     }
     break;
