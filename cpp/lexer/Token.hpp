@@ -5,7 +5,6 @@
 #include <cmath>
 #include <cstdint>
 #include <string>
-#include <variant>
 
 enum TokenKind {
   // Keywords
@@ -61,25 +60,27 @@ enum TokenKind {
 
 class Token {
 public:
-  TokenKind kind;
-  std::variant<uint8_t, int64_t, float_t, std::string> value;
-
-  Token() : kind(TokenKind::TOKEN_ILLEGAL) {}
-  Token(TokenKind kind) : kind(kind) {}
-  Token(TokenKind kind, std::string word) : kind(kind), value(word) {
-    // This constructor should only be called when kind is one of these
-    assert(kind == TokenKind::TOKEN_NAME || kind == TokenKind::TOKEN_STRING_LITERAL);
-  }
-  Token(int64_t i) : kind(TokenKind::TOKEN_INT_LITERAL), value(i) {}
-  Token(float_t f) : kind(TokenKind::TOKEN_FLOAT_LITERAL), value(f) {}
-  Token(char c) : kind(TokenKind::TOKEN_CHAR_LITERAL), value(c) {}
-
-  std::string to_string() const;
+  virtual ~Token() = default;
+  virtual TokenKind kind() const = 0;
+  virtual std::string to_string() const = 0;
 };
 
-// class Token {
-// public:
-//   virtual std::string to_string() const = 0;
-// };
+class TokenSymbol : public Token {};
+
+class TokenName : public Token {
+private:
+  std::string name;
+
+public:
+  TokenName(std::string name) : name(name){};
+};
+
+class TokenStringLiteral : public Token {
+private:
+  std::string literal;
+
+public:
+  TokenStringLiteral(std::string string) : literal(string){};
+};
 
 #endif
