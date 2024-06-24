@@ -4,10 +4,11 @@ CFLAGS := -Wall -Wextra -g -std=c++17
 LIBS := -L../../lib/googletest/build/lib -lgtest -lgtest_main
 INCLUDES := -I../../lib/googletest/googletest/include/ -I..
 
-OBJS := main.o LexerTest.o
+LEXEROBJS := ../lexer/*.o
+OBJS := main.o LexerTest.o Files.o $(LEXEROBJS)
 
 all: $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o run_tests $(LIBS)
+	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) -o run_tests $(LIBS)
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
