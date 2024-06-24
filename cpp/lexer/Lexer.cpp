@@ -1,4 +1,5 @@
 #include <cctype>
+#include <cstdint>
 #include <cstdio>
 #include <iostream>
 #include <string>
@@ -34,7 +35,7 @@ void Lexer::next_line() {
 
 Position Lexer::position() const { return Position(this->line_number, this->line_pos); }
 
-char Lexer::peek(int offset) const {
+uint8_t Lexer::peek(int offset) const {
   bool too_big = this->line_pos + offset >= this->line.length();
   bool too_small = this->line_pos + offset < 0;
   if (too_big || too_small)
@@ -81,7 +82,7 @@ Token Lexer::read_char() {
 
   Position start = this->position();
 
-  char c = this->peek(1);
+  uint8_t c = this->peek(1);
   this->line_pos += 3;
 
   Span span(start, this->position());
@@ -99,7 +100,7 @@ Token Lexer::read_string() {
   ++this->line_pos; // skip opening quote
 
   while (true) {
-    char peeked = this->peek(0);
+    uint8_t peeked = this->peek(0);
 
     if (peeked == '\0')
       this->error("unterminated string literal");
@@ -120,7 +121,7 @@ Token Lexer::read_string() {
 }
 
 Token Lexer::read_word() {
-  auto is_kebab_case = [](char c) {
+  auto is_kebab_case = [](uint8_t c) {
     return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']';
   };
 
@@ -139,7 +140,7 @@ Token Lexer::read_word() {
 }
 
 void Lexer::handle_newline() {
-  char peeked = this->peek(0);
+  uint8_t peeked = this->peek(0);
   assert(peeked == '\0' || peeked == ';');
 
   this->next_line();

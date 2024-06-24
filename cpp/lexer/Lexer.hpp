@@ -2,6 +2,7 @@
 #define LEXER_HPP
 
 #include <cstddef>
+#include <cstdint>
 #include <cstdlib>
 #include <fstream>
 #include <string>
@@ -18,7 +19,7 @@ private:
 
   void next_line();
   Position position() const;
-  char peek(int offset) const;
+  uint8_t peek(int offset) const;
   [[noreturn]] void error(std::string message) const;
 
   Token read_number();
