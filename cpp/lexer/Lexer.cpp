@@ -67,10 +67,14 @@ Token Lexer::read_number() {
 
   Span span(start, this->position());
 
-  if (has_seen_point)
-    return Token(Token::Kind::FLOAT_LITERAL, span, std::stof(&this->line[start.col]));
-  else
-    return Token(Token::Kind::INT_LITERAL, span, std::stoi(&this->line[start.col]));
+  try {
+    if (has_seen_point)
+      return Token(Token::Kind::FLOAT_LITERAL, span, std::stof(&this->line[start.col]));
+    else
+      return Token(Token::Kind::INT_LITERAL, span, std::stoi(&this->line[start.col]));
+  } catch (std::out_of_range) {
+    this->error("number out of range");
+  }
 }
 
 Token Lexer::read_char() {

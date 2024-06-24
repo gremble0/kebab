@@ -4,14 +4,10 @@
 #include "Files.hpp"
 #include "gtest/gtest.h"
 
-void test_file(const std::string &basename) {
+static void lex_file_with_logs(const std::string &basename) {
   std::string source_path = "lexer-source/" + basename + ".keb";
   std::string log_path = "lexer-logs/" + basename + ".log";
   std::string expected_path = "lexer-expected/" + basename + ".log";
-
-  std::cout << source_path << "\n";
-  std::cout << log_path << "\n";
-  std::cout << expected_path << "\n";
 
   ASSERT_NO_FATAL_FAILURE({ Lexer l(source_path); });
 
@@ -41,20 +37,20 @@ TEST(LexerTest, InitializesCorrectly) {
 
 TEST(LexerTest, LexesCommentsKeb) {
   const std::string basename = "comments";
-  test_file(basename);
+  lex_file_with_logs(basename);
 }
 
 TEST(LexerTest, LexesComparisonsKeb) {
   const std::string basename = "comparisons";
-  test_file(basename);
+  lex_file_with_logs(basename);
 }
 
 TEST(LexerTest, LexesConstructorsKeb) {
   const std::string basename = "constructors";
-  test_file(basename);
+  lex_file_with_logs(basename);
 }
 
 TEST(LexerTest, LexesOperatorsKeb) {
   const std::string basename = "operators";
-  test_file(basename);
+  ASSERT_DEATH({ lex_file_with_logs(basename); }, "number out of range");
 }
