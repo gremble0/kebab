@@ -2,10 +2,11 @@
 #define STATEMENT_HPP
 
 #include "Parser.hpp"
-#include "lexer/Lexer.hpp"
+#include <memory>
 
-class Statement : AstNode {
-  static Statement parse(Lexer lexer);
+class Statement : public AstNode {
+public:
+  static std::unique_ptr<Statement> parse(Lexer &lexer);
 };
 
 #endif

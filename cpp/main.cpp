@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <ostream>
 
 #include "compiler/Compiler.hpp"
@@ -19,10 +20,10 @@ int main(int argc, char **argv) {
     std::cout << lexer.cur_token.to_string() << std::endl;
   }
 
-  AstNode root = Parser::parse(lexer);
+  std::unique_ptr<AstNode> root = Parser::parse(lexer);
 
   Compiler compiler;
-  compiler.compile(root);
+  compiler.compile(root.get());
 
   return 0;
 }

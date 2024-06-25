@@ -3,7 +3,7 @@ CFLAGS := -Wall -Wextra -g -std=c++17
 
 INCLUDES := -I..
 
-OBJS := Parser.o
+OBJS := Parser.o Statement.o
 
 all: $(OBJS)
 

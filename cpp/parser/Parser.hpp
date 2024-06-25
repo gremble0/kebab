@@ -1,15 +1,20 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
+#include <memory>
+
 #include "lexer/Lexer.hpp"
 
 class AstNode {
-  // virtual AstNode parse(Lexer lexer) = 0;
+public:
+  virtual ~AstNode() = default;
+
+  static std::unique_ptr<AstNode> parse(Lexer &lexer);
 };
 
 namespace Parser {
 
-AstNode parse(Lexer lexer);
+std::unique_ptr<AstNode> parse(Lexer &lexer);
 
 }
 
