@@ -8,7 +8,6 @@
 
 class Compiler {
 private:
-  // TODO: why pointers?
   llvm::LLVMContext context;
   llvm::Module module;
   llvm::IRBuilder<> builder;

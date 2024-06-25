@@ -12,8 +12,9 @@ def this-is-fine
 def but-probably-better-like-this = int(2 + 3)
 
 ; Some basic constructors
-def l1 = list((int) => 1, 2, 3)
-def l2 = list((string) => "123", "gg", "hhh")
+def i = int(69 + 420)
+def l1 = list((int) => [1, 2, 3])
+def l2 = list((string) => ["123", "gg", "hhh"])
 def add-one = fn((a : int) => int(a + 1)) ; function that takes an int and returns an int
 def b1 = bool(1 == -2) ; false
 def b2 = bool(1 ~= -2) ; true
