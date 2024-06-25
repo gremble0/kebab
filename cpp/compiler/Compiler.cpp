@@ -9,4 +9,4 @@ void Compiler::save_module(const std::string &path) {
   this->module->print(fd, nullptr);
 }
 
-void Compiler::compile(AstNode root) {}
+void Compiler::compile(AstNode root) { this->save_module("./out.ll"); }

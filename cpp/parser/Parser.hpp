@@ -1,3 +1,6 @@
+#ifndef PARSER_HPP
+#define PARSER_HPP
+
 #include "lexer/Lexer.hpp"
 
 class AstNode {
@@ -9,3 +12,5 @@ namespace Parser {
 AstNode parse(Lexer lexer);
 
 }
+
+#endif

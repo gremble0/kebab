@@ -1,3 +1,5 @@
+#ifndef COMPILER_HPP
+#define COMPILER_HPP
 #include <memory>
 
 #include "parser/Parser.hpp"
@@ -22,3 +24,5 @@ public:
 
   void compile(AstNode root);
 };
+
+#endif
