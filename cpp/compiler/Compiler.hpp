@@ -12,6 +12,8 @@ private:
   std::unique_ptr<llvm::Module> module;
   std::unique_ptr<llvm::IRBuilder<>> builder;
 
+  void save_module(const std::string &path);
+
 public:
   Compiler()
       : context(std::make_unique<llvm::LLVMContext>()),

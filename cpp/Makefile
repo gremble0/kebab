@@ -5,10 +5,15 @@ LEXERSRC := ./lexer
 PARSERSRC := ./parser
 COMPILERSRC := ./compiler
 
+LLVM_DIR := ../lib/llvm-project
+LLVM_CONFIG := $(LLVM_DIR)/build/bin/llvm-config
+LLVM_CXXFLAGS := $(shell $(LLVM_CONFIG) --cxxflags)
+LLVM_LDFLAGS := $(shell $(LLVM_CONFIG) --ldflags --system-libs --libs core)
+
 OBJS := $(LEXERSRC)/*.o $(PARSERSRC)/*.o $(COMPILERSRC)/*.o
 
 all: lexer parser compiler
-	$(CC) $(CFLAGS) $(OBJS) main.cpp -o kebab
+	$(CC) $(CFLAGS) $(LLVM_CXXFLAGS) $(OBJS) main.cpp -o kebab $(LLVM_LDFLAGS)
 
 clean:
 	$(MAKE) -C $(LEXERSRC) clean
