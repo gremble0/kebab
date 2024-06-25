@@ -16,6 +16,12 @@ private:
 
   void save_module(const std::string &path);
 
+  void load_printf();
+  void load_globals();
+
+  void start_main();
+  void stop_main();
+
 public:
   Compiler()
       : context(std::make_unique<llvm::LLVMContext>()),
