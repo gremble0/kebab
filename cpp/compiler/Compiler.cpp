@@ -1,3 +1,4 @@
+#include <memory>
 #include <system_error>
 
 #include "Compiler.hpp"
@@ -9,4 +10,4 @@ void Compiler::save_module(const std::string &path) {
   this->module->print(fd, nullptr);
 }
 
-void Compiler::compile(AstNode root) { this->save_module("./out.ll"); }
+void Compiler::compile(AstNode *root) { this->save_module("./out.ll"); }

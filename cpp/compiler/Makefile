@@ -9,11 +9,10 @@ INCLUDES := -I..
 
 OBJS := Compiler.o
 
-# Targets
 all: $(OBJS)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) $(INCLUDES) $(LLVM_CXXFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(LLVM_CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -f *.o

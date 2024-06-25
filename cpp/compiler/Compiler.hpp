@@ -22,7 +22,7 @@ public:
         module(std::make_unique<llvm::Module>("kebab", *context)),
         builder(std::make_unique<llvm::IRBuilder<>>(*context)) {}
 
-  void compile(AstNode root);
+  void compile(AstNode *root);
 };
 
 #endif
