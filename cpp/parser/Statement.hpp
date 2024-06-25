@@ -18,6 +18,10 @@ public:
 
 class DefinitionStatement : public Statement {
 public:
+  bool is_mutable;
+  std::string name;
+  Constructor *constructor;
+
   static DefinitionStatement *parse(Lexer &lexer);
 };
 
