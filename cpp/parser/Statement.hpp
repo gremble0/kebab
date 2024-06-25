@@ -2,11 +2,33 @@
 #define STATEMENT_HPP
 
 #include "Parser.hpp"
-#include <memory>
 
 class Statement : public AstNode {
 public:
-  static std::unique_ptr<Statement> parse(Lexer &lexer);
+  enum Type {
+    DEFINITION,
+    ASSIGNMENT,
+    EXPRESSION,
+  };
+
+  Type type;
+
+  static Statement *parse(Lexer &lexer);
+};
+
+class DefinitionStatement : public Statement {
+public:
+  static DefinitionStatement *parse(Lexer &lexer);
+};
+
+class AssignmentStatement : public Statement {
+public:
+  static AssignmentStatement *parse(Lexer &lexer);
+};
+
+class ExpressionStatement : public Statement {
+public:
+  static ExpressionStatement *parse(Lexer &lexer);
 };
 
 #endif

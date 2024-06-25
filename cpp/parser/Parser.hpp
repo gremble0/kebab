@@ -1,7 +1,7 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-#include <memory>
+#include <iostream>
 
 #include "lexer/Lexer.hpp"
 
@@ -9,12 +9,18 @@ class AstNode {
 public:
   virtual ~AstNode() = default;
 
-  static std::unique_ptr<AstNode> parse(Lexer &lexer);
+  static AstNode *parse(Lexer &lexer);
+
+  [[noreturn]] static void error(const std::string &message) {
+    std::cerr << "parser-error: " + message + '\n';
+
+    exit(1);
+  }
 };
 
 namespace Parser {
 
-std::unique_ptr<AstNode> parse(Lexer &lexer);
+AstNode *parse(Lexer &lexer);
 
 }
 

@@ -1,8 +1,4 @@
 #include "Parser.hpp"
-#include "parser/Statement.hpp"
-#include <memory>
+#include "parser/RootNode.hpp"
 
-std::unique_ptr<AstNode> Parser::parse(Lexer &lexer) {
-  // asd
-  return Statement::parse(lexer);
-}
+AstNode *Parser::parse(Lexer &lexer) { return RootNode::parse(lexer); }
