@@ -1,6 +1,5 @@
 #ifndef COMPILER_HPP
 #define COMPILER_HPP
-#include <memory>
 
 #include "parser/Parser.hpp"
 #include "llvm/IR/IRBuilder.h"
@@ -10,9 +9,9 @@
 class Compiler {
 private:
   // TODO: why pointers?
-  std::unique_ptr<llvm::LLVMContext> context;
-  std::unique_ptr<llvm::Module> module;
-  std::unique_ptr<llvm::IRBuilder<>> builder;
+  llvm::LLVMContext context;
+  llvm::Module module;
+  llvm::IRBuilder<> builder;
 
   void save_module(const std::string &path);
 
@@ -24,9 +23,8 @@ private:
 
 public:
   Compiler()
-      : context(std::make_unique<llvm::LLVMContext>()),
-        module(std::make_unique<llvm::Module>("kebab", *context)),
-        builder(std::make_unique<llvm::IRBuilder<>>(*context)) {}
+      : context(llvm::LLVMContext()), module(llvm::Module("kebab", context)),
+        builder(llvm::IRBuilder<>(context)) {}
 
   void compile(AstNode *root);
 };

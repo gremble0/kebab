@@ -5,8 +5,8 @@ source_filename = "kebab"
 
 declare i32 @printf(ptr, ...)
 
-define i32 @main() {
+define i32 @main(i32 %0, ptr %1) {
 entry:
-  %0 = call i32 (ptr, ...) @printf(ptr @0)
+  %2 = call i32 (ptr, ...) @printf(ptr @0)
   ret i32 0
 }
