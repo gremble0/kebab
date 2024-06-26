@@ -1,8 +1,9 @@
 #ifndef EXPRESSION_HPP
 #define EXPRESSION_HPP
 
-#include <cstdint>
+#include <vector>
 
+#include "AndTest.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
@@ -12,13 +13,6 @@ class ConstructorExpression;
 
 class Expression : public AstNode {
 public:
-  enum class Type : uint8_t {
-    COND,
-    NORMAL,
-    FUNCTION,
-  };
-  Type type;
-
   static Expression *parse(Lexer &lexer);
 };
 
@@ -29,6 +23,8 @@ public:
 
 class NormalExpression : public Expression {
 public:
+  std::vector<AndTest *> andTests;
+
   static NormalExpression *parse(Lexer &lexer);
 };
 

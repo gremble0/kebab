@@ -2,14 +2,15 @@
 #ifndef KEBAB_ATOM_HPP
 #define KEBAB_ATOM_HPP
 
-#include "parser/Expression.hpp"
-#include "parser/Parser.hpp"
 #include <cstdint>
 #include <string>
 #include <variant>
 #include <vector>
 
-class Atom : AstNode {
+#include "parser/Expression.hpp"
+#include "parser/Parser.hpp"
+
+class Atom : public AstNode {
 public:
   enum Type {
     CHAR,
@@ -22,7 +23,7 @@ public:
   };
   Type type;
 
-  std::variant<uint8_t, std::string, int64_t, bool, Expression, std::vector<Expression *>> value;
+  std::variant<uint8_t, std::string, int64_t, bool, Expression *, std::vector<Expression *>> value;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Atom.hpp"
+#include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
 class PrimarySuffix : AstNode {
@@ -24,6 +25,8 @@ class Primary : AstNode {
 public:
   Atom atom;
   std::vector<PrimarySuffix *> suffixes;
+
+  static Primary *parse(Lexer &lexer);
 };
 
 #endif

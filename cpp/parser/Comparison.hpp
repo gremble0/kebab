@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "Term.hpp"
 #include "parser/Parser.hpp"
 
 class ComparisonOperator {
@@ -27,6 +28,8 @@ class Comparison : AstNode {
 public:
   std::vector<ComparisonOperator *> operators;
   std::vector<Term *> terms;
+
+  static Comparison *parse(Lexer &lexer);
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Primary.hpp"
+#include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
 // TODO: Operator interface - is_operator(kind)
@@ -40,6 +41,8 @@ public:
   std::vector<FactorPrefix *> prefixes;
   std::vector<Primary *> primaries;
   std::vector<FactorOperator *> operators;
+
+  static Factor *parse(Lexer &lexer);
 };
 
 #endif

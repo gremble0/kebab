@@ -3,7 +3,7 @@ CFLAGS := -Wall -Wextra -g -std=c++17
 
 INCLUDES := -I..
 
-OBJS := Statement.o RootNode.o
+OBJS := Statement.o RootNode.o Expression.o
 
 all: $(OBJS)
 
