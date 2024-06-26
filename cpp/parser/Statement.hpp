@@ -4,12 +4,12 @@
 #include <variant>
 
 #include "Parser.hpp"
-#include "parser/Constructor.hpp"
 #include "parser/Expression.hpp"
 
 class AssignmentStatement;
 class DefinitionStatement;
 class ExpressionStatement;
+class Constructor; // Cant include Constructor.hpp because of recursive includes
 
 class Statement : public AstNode {
 public:

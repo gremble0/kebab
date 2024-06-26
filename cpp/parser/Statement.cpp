@@ -1,4 +1,5 @@
 #include "Statement.hpp"
+#include "Constructor.hpp"
 #include "lexer/Token.hpp"
 #include "parser/Parser.hpp"
 

@@ -1,8 +1,11 @@
 #ifndef CONSTRUCTOR_HPP
 #define CONSTRUCTOR_HPP
 
-#include "parser/Parser.hpp"
 #include <variant>
+#include <vector>
+
+#include "parser/Parser.hpp"
+#include "parser/Statement.hpp"
 
 class ListConstructor;
 class FunctionConstructor;
@@ -34,6 +37,8 @@ public:
 
 class PrimitiveConstructor : public Constructor {
 public:
+  std::vector<Statement *> body;
+
   static PrimitiveConstructor *parse(Lexer &lexer);
 };
 
