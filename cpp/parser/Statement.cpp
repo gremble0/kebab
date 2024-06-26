@@ -51,11 +51,11 @@ Statement *Statement::parse(Lexer &lexer) {
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::DEF:
-    statement = DefinitionStatement::parse(lexer);
+    statement->value = DefinitionStatement::parse(lexer);
     break;
 
   case Token::Kind::SET:
-    statement = AssignmentStatement::parse(lexer);
+    statement->value = AssignmentStatement::parse(lexer);
     break;
 
   case Token::Kind::NAME:
@@ -77,7 +77,7 @@ Statement *Statement::parse(Lexer &lexer) {
   case Token::Kind::LPAREN:
     // Lists e.g. `[x, y, z]`
   case Token::Kind::LBRACKET:
-    statement = ExpressionStatement::parse(lexer);
+    statement->value = ExpressionStatement::parse(lexer);
     break;
 
   default:

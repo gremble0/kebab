@@ -1,7 +1,15 @@
 #ifndef STATEMENT_HPP
 #define STATEMENT_HPP
 
+#include <variant>
+
 #include "Parser.hpp"
+#include "parser/Constructor.hpp"
+#include "parser/Expression.hpp"
+
+class AssignmentStatement;
+class DefinitionStatement;
+class ExpressionStatement;
 
 class Statement : public AstNode {
 public:
@@ -12,6 +20,7 @@ public:
   };
 
   Type type;
+  std::variant<DefinitionStatement *, AssignmentStatement *, ExpressionStatement *> value;
 
   static Statement *parse(Lexer &lexer);
 };
@@ -27,11 +36,16 @@ public:
 
 class AssignmentStatement : public Statement {
 public:
+  std::string name;
+  Constructor *constructor;
+
   static AssignmentStatement *parse(Lexer &lexer);
 };
 
 class ExpressionStatement : public Statement {
 public:
+  Expression *expression;
+
   static ExpressionStatement *parse(Lexer &lexer);
 };
 
