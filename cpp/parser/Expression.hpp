@@ -1,5 +1,5 @@
-#ifndef EXPRESSION_HPP
-#define EXPRESSION_HPP
+#ifndef KEBAB_EXPRESSION_HPP
+#define KEBAB_EXPRESSION_HPP
 
 #include <vector>
 

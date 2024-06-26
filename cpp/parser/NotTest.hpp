@@ -1,5 +1,5 @@
-#ifndef KEBAB_NOTTEST_HPP
-#define KEBAB_NOTTEST_HPP
+#ifndef KEBAB_KEBAB_NOTTEST_HPP
+#define KEBAB_KEBAB_NOTTEST_HPP
 
 #include "Comparison.hpp"
 #include "lexer/Lexer.hpp"

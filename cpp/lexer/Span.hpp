@@ -1,5 +1,5 @@
-#ifndef SPAN_HPP
-#define SPAN_HPP
+#ifndef KEBAB_SPAN_HPP
+#define KEBAB_SPAN_HPP
 
 #include <cstddef>
 #include <string>

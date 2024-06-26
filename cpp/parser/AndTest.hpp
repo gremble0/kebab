@@ -1,5 +1,5 @@
-#ifndef KEBAB_ANDTEST_HPP
-#define KEBAB_ANDTEST_HPP
+#ifndef KEBAB_KEBAB_ANDTEST_HPP
+#define KEBAB_KEBAB_ANDTEST_HPP
 
 #include <vector>
 

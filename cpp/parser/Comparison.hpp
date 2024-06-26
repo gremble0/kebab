@@ -1,5 +1,5 @@
-#ifndef COMPARISON_HPP
-#define COMPARISON_HPP
+#ifndef KEBAB_COMPARISON_HPP
+#define KEBAB_COMPARISON_HPP
 
 #include <vector>
 

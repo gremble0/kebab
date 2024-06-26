@@ -1,5 +1,5 @@
-#ifndef LEXER_HPP
-#define LEXER_HPP
+#ifndef KEBAB_LEXER_HPP
+#define KEBAB_LEXER_HPP
 
 #include <cstddef>
 #include <cstdint>

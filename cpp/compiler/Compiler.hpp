@@ -1,5 +1,5 @@
-#ifndef COMPILER_HPP
-#define COMPILER_HPP
+#ifndef KEBAB_COMPILER_HPP
+#define KEBAB_COMPILER_HPP
 
 #include "parser/Parser.hpp"
 #include "llvm/IR/IRBuilder.h"

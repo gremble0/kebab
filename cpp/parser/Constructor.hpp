@@ -1,5 +1,5 @@
-#ifndef CONSTRUCTOR_HPP
-#define CONSTRUCTOR_HPP
+#ifndef KEBAB_CONSTRUCTOR_HPP
+#define KEBAB_CONSTRUCTOR_HPP
 
 #include <variant>
 #include <vector>

@@ -1,5 +1,5 @@
-#ifndef STATEMENT_HPP
-#define STATEMENT_HPP
+#ifndef KEBAB_STATEMENT_HPP
+#define KEBAB_STATEMENT_HPP
 
 #include "Parser.hpp"
 #include "parser/Expression.hpp"

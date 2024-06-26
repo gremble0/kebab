@@ -1,5 +1,5 @@
-#ifndef PRIMARY_HPP
-#define PRIMARY_HPP
+#ifndef KEBAB_PRIMARY_HPP
+#define KEBAB_PRIMARY_HPP
 
 #include <vector>
 

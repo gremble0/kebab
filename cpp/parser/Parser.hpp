@@ -1,5 +1,5 @@
-#ifndef PARSER_HPP
-#define PARSER_HPP
+#ifndef KEBAB_PARSER_HPP
+#define KEBAB_PARSER_HPP
 
 #include <iostream>
 

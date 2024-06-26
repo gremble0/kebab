@@ -1,5 +1,5 @@
-#ifndef TERM_HPP
-#define TERM_HPP
+#ifndef KEBAB_TERM_HPP
+#define KEBAB_TERM_HPP
 
 #include <vector>
 

@@ -1,5 +1,5 @@
-#ifndef TOKEN_HPP
-#define TOKEN_HPP
+#ifndef KEBAB_TOKEN_HPP
+#define KEBAB_TOKEN_HPP
 
 #include <cassert>
 #include <cmath>

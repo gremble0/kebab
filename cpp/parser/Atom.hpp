@@ -1,4 +1,3 @@
-// TODO: KEBAB_ before #ifndef everywhere
 #ifndef KEBAB_ATOM_HPP
 #define KEBAB_ATOM_HPP
 

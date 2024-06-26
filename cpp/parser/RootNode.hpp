@@ -1,5 +1,5 @@
-#ifndef ROOTNODE_HPP
-#define ROOTNODE_HPP
+#ifndef KEBAB_ROOTNODE_HPP
+#define KEBAB_ROOTNODE_HPP
 
 #include <vector>
 

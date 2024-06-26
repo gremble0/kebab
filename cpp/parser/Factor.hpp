@@ -1,5 +1,5 @@
-#ifndef FACTOR_HPP
-#define FACTOR_HPP
+#ifndef KEBAB_FACTOR_HPP
+#define KEBAB_FACTOR_HPP
 
 #include <vector>
 
