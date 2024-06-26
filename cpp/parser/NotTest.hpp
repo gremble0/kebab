@@ -1,8 +1,6 @@
 #ifndef KEBAB_NOTTEST_HPP
 #define KEBAB_NOTTEST_HPP
 
-#include <vector>
-
 #include "Comparison.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"

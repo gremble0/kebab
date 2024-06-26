@@ -4,26 +4,58 @@
 
 #include <cstdint>
 #include <string>
-#include <variant>
 #include <vector>
 
-#include "parser/Expression.hpp"
+#include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
+
+class Expression;
 
 class Atom : public AstNode {
 public:
-  enum Type {
-    CHAR,
-    STRING,
-    INT,
-    BOOL,
-    NAME,
-    INNER_EXPR, // nested expression like (1 + 2)
-    LIST,       // [x, y, z]
-  };
-  Type type;
+  static Atom *parse(Lexer &lexer);
+};
 
-  std::variant<uint8_t, std::string, int64_t, bool, Expression *, std::vector<Expression *>> value;
+class CharAtom : public Atom {
+public:
+  uint8_t c;
+
+  static CharAtom *parse(Lexer &lexer);
+};
+
+class StringAtom : public Atom {
+public:
+  std::string s;
+
+  static StringAtom *parse(Lexer &lexer);
+};
+
+class BoolAtom : public Atom {
+public:
+  bool b;
+
+  static BoolAtom *parse(Lexer &lexer);
+};
+
+class NameAtom : public Atom {
+public:
+  std::string name;
+
+  static NameAtom *parse(Lexer &lexer);
+};
+
+class InnerExpressionAtom : public Atom {
+public:
+  Expression *expression;
+
+  static InnerExpressionAtom *parse(Lexer &lexer);
+};
+
+class ListAtom : public Atom {
+public:
+  std::vector<Expression *> list;
+
+  static ListAtom *parse(Lexer &lexer);
 };
 
 #endif

@@ -13,11 +13,17 @@ int main(int argc, char **argv) {
 
   std::string path(argv[1]);
   Lexer lexer(path);
+  lexer.advance();
 
-  RootNode *root = RootNode::parse(lexer);
+  while (lexer.cur_token.kind != Token::END_OF_FILE) {
+    std::cout << lexer.cur_token.to_string() << std::endl;
+    lexer.advance();
+  }
 
-  Compiler compiler;
-  compiler.compile(root);
+  // RootNode *root = RootNode::parse(lexer);
+  //
+  // Compiler compiler;
+  // compiler.compile(root);
 
   return 0;
 }
