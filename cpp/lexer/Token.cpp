@@ -24,6 +24,10 @@ Token::Token(Span span, std::string word) : span(span) {
     this->kind = TRUE;
   else if (word.compare("false") == 0)
     this->kind = FALSE;
+  else if (word.compare("and") == 0)
+    this->kind = AND;
+  else if (word.compare("or") == 0)
+    this->kind = OR;
   else {
     this->kind = NAME;
     this->value = word;
@@ -65,6 +69,13 @@ std::string Token::to_string() const {
     break;
   case Token::Kind::FALSE:
     out = "<false>";
+    break;
+
+  case Token::Kind::AND:
+    out = "<and>";
+    break;
+  case Token::Kind::OR:
+    out = "<or>";
     break;
 
   // Syntax

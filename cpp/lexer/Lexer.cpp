@@ -8,7 +8,8 @@
 #include "Token.hpp"
 
 Lexer::Lexer(std::string path)
-    : path(path), stream(path), line_number(0), line_pos(0), cur_token() {
+    : path(path), stream(path), line_number(0), line_pos(0),
+      cur_token(Token::Kind::ILLEGAL, Span(Position(0, 0), Position(0, 0))) {
   if (!stream.is_open())
     this->error("could not open file " + path);
 

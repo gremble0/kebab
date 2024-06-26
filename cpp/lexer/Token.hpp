@@ -26,6 +26,10 @@ public:
     TRUE,  // true
     FALSE, // false
 
+    // Boolean operators
+    AND, // and
+    OR,  // or
+
     // Syntax
     COLON,      // :
     EQUALS,     // =
@@ -68,7 +72,6 @@ public:
   std::variant<uint8_t, int64_t, float_t, std::string> value;
 
   // make default constructors?
-  Token() : kind(Kind::ILLEGAL), span(Position(0, 0), Position(0, 0)) {}
   Token(Kind kind, Span span) : kind(kind), span(span) {}
   Token(Kind kind, Span span, std::variant<uint8_t, int64_t, float_t, std::string> value)
       : kind(kind), span(span), value(value) {}
