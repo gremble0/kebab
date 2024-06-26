@@ -1,8 +1,6 @@
 #ifndef STATEMENT_HPP
 #define STATEMENT_HPP
 
-#include <variant>
-
 #include "Parser.hpp"
 #include "parser/Expression.hpp"
 
@@ -18,9 +16,7 @@ public:
     ASSIGNMENT,
     EXPRESSION,
   };
-
   Type type;
-  std::variant<DefinitionStatement *, AssignmentStatement *, ExpressionStatement *> value;
 
   static Statement *parse(Lexer &lexer);
 };

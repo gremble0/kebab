@@ -40,7 +40,8 @@ AssignmentStatement *AssignmentStatement::parse(Lexer &lexer) {
 ExpressionStatement *ExpressionStatement::parse(Lexer &lexer) {
   log_node_start("expression-statement");
 
-  // TODO:
+  ExpressionStatement *expression = new ExpressionStatement();
+  expression->expression = Expression::parse(lexer);
 
   log_node_end("expression-statement");
   return new ExpressionStatement();
@@ -52,11 +53,11 @@ Statement *Statement::parse(Lexer &lexer) {
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::DEF:
-    statement->value = DefinitionStatement::parse(lexer);
+    statement = DefinitionStatement::parse(lexer);
     break;
 
   case Token::Kind::SET:
-    statement->value = AssignmentStatement::parse(lexer);
+    statement = AssignmentStatement::parse(lexer);
     break;
 
   case Token::Kind::NAME:
@@ -78,7 +79,7 @@ Statement *Statement::parse(Lexer &lexer) {
   case Token::Kind::LPAREN:
     // Lists e.g. `[x, y, z]`
   case Token::Kind::LBRACKET:
-    statement->value = ExpressionStatement::parse(lexer);
+    statement = ExpressionStatement::parse(lexer);
     break;
 
   default:
