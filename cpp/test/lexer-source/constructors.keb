@@ -17,3 +17,7 @@ def lst = list(int => 1, 2, 3)
 def c = fn((num1 : int, nums : list(int)) =>
   int(num1 + 2)
 )
+
+def f1 = float(10.21)
+def f2 = float(0.0)
+def f3 = float(0.00002)

@@ -4,10 +4,10 @@ def a = int( ; comment
 )
 
 ;
+;;;
+; ;
 ;
-;
-;
-;
+; ; def a = int(2) ;
 ;
 def b = int(2) ; all after this should be commented out ;; asd ;; def b = int(2)
 ;

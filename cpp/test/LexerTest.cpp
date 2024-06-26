@@ -52,5 +52,15 @@ TEST(LexerTest, LexesConstructorsKeb) {
 
 TEST(LexerTest, LexesOperatorsKeb) {
   const std::string basename = "operators";
+  lex_file_with_logs(basename);
+}
+
+TEST(LexerTest, HandlesEmptyFile) {
+  const std::string basename = "empty";
+  lex_file_with_logs(basename);
+}
+
+TEST(LexerTest, ErrorsWhenOutOfRange) {
+  const std::string basename = "out-of-range";
   ASSERT_DEATH({ lex_file_with_logs(basename); }, "number out of range");
 }
