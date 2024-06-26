@@ -1,8 +1,9 @@
 #ifndef COMPARISON_HPP
 #define COMPARISON_HPP
 
-#include "parser/Parser.hpp"
 #include <vector>
+
+#include "parser/Parser.hpp"
 
 class ComparisonOperator {
 public:
@@ -15,6 +16,7 @@ public:
     case Token::GT:
     case Token::GE:
       return true;
+
     default:
       return false;
     }
@@ -23,7 +25,7 @@ public:
 
 class Comparison : AstNode {
 public:
-  std::vector<ComparisonOperator> operators;
+  std::vector<ComparisonOperator *> operators;
   std::vector<Term *> terms;
 };
 
