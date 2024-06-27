@@ -2,6 +2,7 @@
 
 #include "Primary.hpp"
 #include "lexer/Token.hpp"
+#include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
 
 PrimarySubscription *PrimarySubscription::parse(Lexer &lexer) {
@@ -60,6 +61,11 @@ PrimarySuffix *PrimarySuffix::parse(Lexer &lexer) {
 Primary *Primary::parse(Lexer &lexer) {
   start_parsing("primary");
   Primary *primary = new Primary();
+
+  primary->atom = Atom::parse(lexer);
+  while (PrimarySuffix::is_primary_suffix_opener(lexer.cur_token.kind))
+    primary->suffixes.push_back(PrimarySuffix::parse(lexer));
+
   end_parsing("primary");
   return primary;
 }

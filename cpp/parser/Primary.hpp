@@ -39,7 +39,7 @@ public:
 
 class Primary : public AstNode {
 public:
-  Atom atom;
+  Atom *atom;
   std::vector<PrimarySuffix *> suffixes;
 
   static Primary *parse(Lexer &lexer);
