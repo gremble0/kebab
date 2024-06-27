@@ -5,7 +5,7 @@
 
 DefinitionStatement *DefinitionStatement::parse(Lexer &lexer) {
   log_node_start("definition-statement");
-  skip_token(lexer, Token::Kind::DEF);
+  skip(lexer, Token::Kind::DEF);
 
   DefinitionStatement *def = new DefinitionStatement();
 
@@ -16,16 +16,16 @@ DefinitionStatement *DefinitionStatement::parse(Lexer &lexer) {
     def->is_mutable = false;
   }
 
-  expect_token(lexer, Token::Kind::NAME);
+  expect(lexer, Token::Kind::NAME);
   def->name = std::get<std::string>(lexer.cur_token.value);
   lexer.advance();
 
-  skip_token(lexer, Token::Kind::EQUALS);
+  skip(lexer, Token::Kind::EQUALS);
 
   def->constructor = Constructor::parse(lexer);
 
   log_node_end("definition-statement");
-  return new DefinitionStatement();
+  return def;
 }
 
 AssignmentStatement *AssignmentStatement::parse(Lexer &lexer) {
@@ -64,20 +64,20 @@ Statement *Statement::parse(Lexer &lexer) {
   case Token::Kind::CHAR_LITERAL:
   case Token::Kind::STRING_LITERAL:
   case Token::Kind::INT_LITERAL:
-    // Cond expressions (if/elif/else)
+  // Cond expressions (if/elif/else)
   case Token::Kind::IF:
-    // Factor prefixes
+  // Factor prefixes
   case Token::Kind::PLUS:
   case Token::Kind::MINUS:
   case Token::Kind::MULT:
   case Token::Kind::DIV:
   case Token::Kind::NOT:
-    // Booleans
+  // Booleans
   case Token::Kind::TRUE:
   case Token::Kind::FALSE:
-    // Inner expression wrapped in parens, e.g. `(1 + 2)`
+  // Inner expression wrapped in parens, e.g. `(1 + 2)`
   case Token::Kind::LPAREN:
-    // Lists e.g. `[x, y, z]`
+  // Lists e.g. `[x, y, z]`
   case Token::Kind::LBRACKET:
     statement = ExpressionStatement::parse(lexer);
     break;
@@ -85,8 +85,6 @@ Statement *Statement::parse(Lexer &lexer) {
   default:
     AstNode::error("illegal syntax");
   }
-
-  lexer.advance();
 
   log_node_end("statement");
   return statement;

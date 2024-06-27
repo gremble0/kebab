@@ -23,7 +23,7 @@ public:
 
 class NormalExpression : public Expression {
 public:
-  std::vector<AndTest *> andTests;
+  std::vector<AndTest *> and_tests;
 
   static NormalExpression *parse(Lexer &lexer);
 };

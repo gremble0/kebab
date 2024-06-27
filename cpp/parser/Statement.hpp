@@ -11,13 +11,6 @@ class Constructor; // Cant include Constructor.hpp because of recursive includes
 
 class Statement : public AstNode {
 public:
-  enum Type {
-    DEFINITION,
-    ASSIGNMENT,
-    EXPRESSION,
-  };
-  Type type;
-
   static Statement *parse(Lexer &lexer);
 };
 

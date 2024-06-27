@@ -1,4 +1,5 @@
 #include "Expression.hpp"
+#include "parser/AndTest.hpp"
 
 Expression *Expression::parse(Lexer &lexer) {
   log_node_start("expression");
@@ -48,11 +49,18 @@ CondExpression *CondExpression::parse(Lexer &lexer) {
 
 NormalExpression *NormalExpression::parse(Lexer &lexer) {
   log_node_start("normal-expression");
-
   NormalExpression *expression = new NormalExpression();
 
+  // Keep parsing and tests until we have no longer ignored an `or` token
+  bool ignored_or;
+  do {
+    expression->and_tests.push_back(AndTest::parse(lexer));
+
+    ignored_or = ignore(lexer, Token::Kind::OR);
+  } while (!ignored_or);
+
   log_node_end("normal-expression");
-  return nullptr;
+  return expression;
 }
 
 FunctionExpression *FunctionExpression::parse(Lexer &lexer) {
