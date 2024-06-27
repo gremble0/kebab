@@ -10,6 +10,11 @@
 // TODO: Operator interface - is_operator(kind)
 class FactorOperator : AstNode /*, Operator */ {
 public:
+  enum Type {
+    MULT,
+    DIV,
+  } type;
+
   static constexpr bool is_factor_operator(Token::Kind kind) {
     switch (kind) {
     case Token::DIV:
@@ -20,10 +25,17 @@ public:
       return false;
     }
   }
+
+  static FactorOperator *parse(Lexer &lexer);
 };
 
 class FactorPrefix : AstNode {
 public:
+  enum Type {
+    PLUS,
+    MINUS,
+  } type;
+
   static constexpr bool is_factor_prefix(Token::Kind kind) {
     switch (kind) {
     case Token::PLUS:
@@ -34,6 +46,8 @@ public:
       return false;
     }
   }
+
+  static FactorPrefix *parse(Lexer &lexer);
 };
 
 class Factor : AstNode {
