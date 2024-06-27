@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Factor.hpp"
+#include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
 class TermOperator {
@@ -24,6 +25,8 @@ class Term : AstNode {
 public:
   std::vector<Factor *> factors;
   std::vector<TermOperator *> operators;
+
+  static Term *parse(Lexer &lexer);
 };
 
 #endif

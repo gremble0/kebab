@@ -4,10 +4,22 @@
 #include <vector>
 
 #include "Term.hpp"
+#include "lexer/Lexer.hpp"
+#include "lexer/Token.hpp"
 #include "parser/Parser.hpp"
 
-class ComparisonOperator {
+class ComparisonOperator : AstNode {
 public:
+  enum Type {
+    LT,  // <
+    LE,  // <=
+    EQ,  // ==
+    NEQ, // ~=
+    GT,  // >
+    GE,  // >=
+  };
+  Type type;
+
   static constexpr bool is_comparison_operator(Token::Kind kind) {
     switch (kind) {
     case Token::LT:
@@ -22,6 +34,7 @@ public:
       return false;
     }
   }
+  static ComparisonOperator *parse(Lexer &lexer);
 };
 
 class Comparison : AstNode {
