@@ -180,10 +180,12 @@ void Lexer::handle_equals() {
     this->line_pos += 2;
     kind = Token::Kind::FAT_RARROW;
     break;
+
   case '=':
     this->line_pos += 2;
     kind = Token::Kind::EQ;
     break;
+
   default:
     ++this->line_pos;
     kind = Token::Kind::EQUALS;

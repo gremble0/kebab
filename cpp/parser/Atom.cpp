@@ -93,19 +93,24 @@ Atom *Atom::parse(Lexer &lexer) {
   case Token::Kind::CHAR_LITERAL:
     atom = CharAtom::parse(lexer);
     break;
+
   case Token::Kind::STRING_LITERAL:
     atom = StringAtom::parse(lexer);
     break;
+
   case Token::Kind::TRUE:
   case Token::Kind::FALSE:
     atom = BoolAtom::parse(lexer);
     break;
+
   case Token::Kind::NAME:
     atom = NameAtom::parse(lexer);
     break;
+
   case Token::Kind::LPAREN:
     atom = InnerExpressionAtom::parse(lexer);
     break;
+
   case Token::Kind::LBRACKET:
     atom = ListAtom::parse(lexer);
     break;
