@@ -7,7 +7,7 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
-class PrimarySuffix : AstNode {
+class PrimarySuffix : public AstNode {
 public:
   static constexpr bool is_primary_suffix_opener(Token::Kind kind) {
     switch (kind) {
@@ -19,9 +19,25 @@ public:
       return false;
     }
   }
+
+  static PrimarySuffix *parse(Lexer &lexer);
 };
 
-class Primary : AstNode {
+class PrimarySubscription : public PrimarySuffix {
+public:
+  Expression *subscription;
+
+  static PrimarySubscription *parse(Lexer &lexer);
+};
+
+class PrimaryArguments : public PrimarySuffix {
+public:
+  std::vector<Expression *> arguments;
+
+  static PrimaryArguments *parse(Lexer &lexer);
+};
+
+class Primary : public AstNode {
 public:
   Atom atom;
   std::vector<PrimarySuffix *> suffixes;
