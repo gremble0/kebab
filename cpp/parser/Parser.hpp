@@ -29,8 +29,8 @@ protected:
     return false;
   }
 
-  static void log_node_start(const std::string &node_name) { std::cout << '<' + node_name + ">\n"; }
-  static void log_node_end(const std::string &node_name) { std::cout << '<' + node_name + "/>\n"; }
+  static void start_parsing(const std::string &node_name) { std::cout << '<' + node_name + ">\n"; }
+  static void end_parsing(const std::string &node_name) { std::cout << '<' + node_name + "/>\n"; }
 
 public:
   virtual ~AstNode() = default;

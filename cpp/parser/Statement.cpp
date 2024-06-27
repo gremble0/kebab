@@ -4,7 +4,7 @@
 #include "parser/Parser.hpp"
 
 DefinitionStatement *DefinitionStatement::parse(Lexer &lexer) {
-  log_node_start("definition-statement");
+  start_parsing("definition-statement");
   skip(lexer, Token::Kind::DEF);
 
   DefinitionStatement *def = new DefinitionStatement();
@@ -24,31 +24,31 @@ DefinitionStatement *DefinitionStatement::parse(Lexer &lexer) {
 
   def->constructor = Constructor::parse(lexer);
 
-  log_node_end("definition-statement");
+  end_parsing("definition-statement");
   return def;
 }
 
 AssignmentStatement *AssignmentStatement::parse(Lexer &lexer) {
-  log_node_start("assignment-statement");
+  start_parsing("assignment-statement");
 
   // TODO:
 
-  log_node_end("assignment-statement");
+  end_parsing("assignment-statement");
   return new AssignmentStatement();
 }
 
 ExpressionStatement *ExpressionStatement::parse(Lexer &lexer) {
-  log_node_start("expression-statement");
+  start_parsing("expression-statement");
 
   ExpressionStatement *expression = new ExpressionStatement();
   expression->expression = Expression::parse(lexer);
 
-  log_node_end("expression-statement");
+  end_parsing("expression-statement");
   return new ExpressionStatement();
 }
 
 Statement *Statement::parse(Lexer &lexer) {
-  log_node_start("statement");
+  start_parsing("statement");
   Statement *statement;
 
   switch (lexer.cur_token.kind) {
@@ -86,6 +86,6 @@ Statement *Statement::parse(Lexer &lexer) {
     AstNode::error("illegal syntax");
   }
 
-  log_node_end("statement");
+  end_parsing("statement");
   return statement;
 }

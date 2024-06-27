@@ -3,7 +3,7 @@
 #include "parser/NotTest.hpp"
 
 AndTest *AndTest::parse(Lexer &lexer) {
-  log_node_start("and-test");
+  start_parsing("and-test");
   AndTest *and_test = new AndTest();
 
   // Keep parsing and tests until we have no longer ignored an `and` token
@@ -14,6 +14,6 @@ AndTest *AndTest::parse(Lexer &lexer) {
     ignored_and = ignore(lexer, Token::Kind::AND);
   } while (!ignored_and);
 
-  log_node_end("and-test");
+  end_parsing("and-test");
   return and_test;
 }

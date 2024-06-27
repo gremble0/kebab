@@ -2,7 +2,7 @@
 #include "parser/AndTest.hpp"
 
 Expression *Expression::parse(Lexer &lexer) {
-  log_node_start("expression");
+  start_parsing("expression");
   Expression *expression;
 
   switch (lexer.cur_token.kind) {
@@ -34,21 +34,21 @@ Expression *Expression::parse(Lexer &lexer) {
     error("illegal syntax");
   }
 
-  log_node_end("expression");
+  end_parsing("expression");
   return expression;
 }
 
 CondExpression *CondExpression::parse(Lexer &lexer) {
-  log_node_start("cond-expression");
+  start_parsing("cond-expression");
 
   // TODO:
 
-  log_node_end("cond-expression");
+  end_parsing("cond-expression");
   return nullptr;
 }
 
 NormalExpression *NormalExpression::parse(Lexer &lexer) {
-  log_node_start("normal-expression");
+  start_parsing("normal-expression");
   NormalExpression *expression = new NormalExpression();
 
   // Keep parsing and tests until we have no longer ignored an `or` token
@@ -59,15 +59,15 @@ NormalExpression *NormalExpression::parse(Lexer &lexer) {
     ignored_or = ignore(lexer, Token::Kind::OR);
   } while (!ignored_or);
 
-  log_node_end("normal-expression");
+  end_parsing("normal-expression");
   return expression;
 }
 
 FunctionExpression *FunctionExpression::parse(Lexer &lexer) {
-  log_node_start("function-expression");
+  start_parsing("function-expression");
 
   // TODO:
 
-  log_node_end("function-expression");
+  end_parsing("function-expression");
   return nullptr;
 }
