@@ -17,8 +17,7 @@ public:
     NEQ, // ~=
     GT,  // >
     GE,  // >=
-  };
-  Type type;
+  } type;
 
   static constexpr bool is_comparison_operator(Token::Kind kind) {
     switch (kind) {

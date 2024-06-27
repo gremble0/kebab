@@ -1,7 +1,8 @@
+#include <cassert>
+
 #include "Comparison.hpp"
 #include "Term.hpp"
 #include "lexer/Lexer.hpp"
-#include <cassert>
 
 ComparisonOperator *ComparisonOperator::parse(Lexer &lexer) {
   start_parsing("comparison-operator");
@@ -47,6 +48,7 @@ Comparison *Comparison::parse(Lexer &lexer) {
 
   while (true) {
     comparison->terms.push_back(Term::parse(lexer));
+
     if (ComparisonOperator::is_comparison_operator(lexer.cur_token.kind))
       comparison->operators.push_back(ComparisonOperator::parse(lexer));
     else

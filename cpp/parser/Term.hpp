@@ -7,8 +7,14 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
-class TermOperator {
+// this is a prefix?? dont remember will look into and maybe rename
+class TermOperator : AstNode {
 public:
+  enum Type {
+    PLUS,
+    MINUS,
+  } type;
+
   static constexpr bool is_term_operator(Token::Kind kind) {
     switch (kind) {
     case Token::PLUS:
@@ -19,6 +25,8 @@ public:
       return false;
     }
   }
+
+  static TermOperator *parse(Lexer &lexer);
 };
 
 class Term : AstNode {
