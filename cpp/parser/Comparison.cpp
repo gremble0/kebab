@@ -38,6 +38,8 @@ ComparisonOperator *ComparisonOperator::parse(Lexer &lexer) {
     assert(false);
   }
 
+  lexer.advance();
+
   end_parsing("comparison-operator");
   return operator_;
 }

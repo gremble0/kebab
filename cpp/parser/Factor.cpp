@@ -21,6 +21,8 @@ FactorPrefix *FactorPrefix::parse(Lexer &lexer) {
     assert(false);
   }
 
+  lexer.advance();
+
   end_parsing("factor-prefix");
   return prefix;
 }
@@ -64,6 +66,8 @@ FactorOperator *FactorOperator::parse(Lexer &lexer) {
     // Unreachable
     assert(false);
   }
+
+  lexer.advance();
 
   end_parsing("factor-operator");
   return operator_;
