@@ -55,12 +55,13 @@ NormalExpression *NormalExpression::parse(Lexer &lexer) {
   NormalExpression *expression = new NormalExpression();
 
   // Keep parsing and tests until we have no longer ignored an `or` token
-  bool ignored_or;
-  do {
+  while (true) {
     expression->and_tests.push_back(AndTest::parse(lexer));
 
-    ignored_or = ignore(lexer, Token::Kind::OR);
-  } while (!ignored_or);
+    bool ignored_or = ignore(lexer, Token::Kind::OR);
+    if (!ignored_or)
+      break;
+  }
 
   end_parsing("normal-expression");
   return expression;

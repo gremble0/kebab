@@ -20,7 +20,7 @@ FactorPrefix *FactorPrefix::parse(Lexer &lexer) {
     break;
 
   default:
-    assert(false && "Unreachable");
+    error(std::string("reached unreachable branch with token: ") + lexer.cur_token.to_string());
   }
 
   lexer.advance();
@@ -65,7 +65,7 @@ FactorOperator *FactorOperator::parse(Lexer &lexer) {
     break;
 
   default:
-    assert(false && "Unreachable");
+    error(std::string("reached unreachable branch with token: ") + lexer.cur_token.to_string());
   }
 
   lexer.advance();
