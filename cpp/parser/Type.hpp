@@ -25,6 +25,10 @@ public:
 };
 
 class FunctionType : public Type {
+private:
+  void parse_parameter_types(Lexer &lexer);
+  void parse_return_type(Lexer &lexer);
+
 public:
   std::vector<Type *> parameter_types;
   Type *return_type;
