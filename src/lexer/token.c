@@ -12,28 +12,32 @@ string_t *token_to_string(const token_t *token) {
   case TOKEN_CHAR_LITERAL: {
     size_t res_size = sizeof("<char-literal=' '>");
     char res[res_size];
-    sprintf(res, "char-literal: '%c'", token->char_literal);
+    snprintf(res, res_size, "char-literal: '%c'", token->char_literal);
     return string_dup(&(string_t){res, res_size});
   }
+
   case TOKEN_STRING_LITERAL: {
     size_t res_size = sizeof("<string-literal=\"\">") + token->string_literal->len;
     char res[res_size];
-    sprintf(res, "<string-literal=\"%.*s\">", (int)token->string_literal->len,
-            token->string_literal->s);
+    snprintf(res, res_size, "<string-literal=\"%.*s\">", (int)token->string_literal->len,
+             token->string_literal->s);
     return string_dup(&(string_t){res, res_size});
   }
+
   case TOKEN_INT_LITERAL: {
     size_t res_size = snprintf(NULL, 0, "%ld", token->integer_literal) + sizeof("<int-literal=");
     char res[res_size];
-    sprintf(res, "<int-literal=%ld>", token->integer_literal);
+    snprintf(res, res_size, "<int-literal=%ld>", token->integer_literal);
     return string_dup(&(string_t){res, res_size});
   }
+
   case TOKEN_NAME: {
     size_t res_size = sizeof("<name=\"\">") + token->name->len;
     char res[res_size];
-    sprintf(res, "<name=\"%.*s\">", (int)token->name->len, token->name->s);
+    snprintf(res, res_size, "<name=\"%.*s\">", (int)token->name->len, token->name->s);
     return string_dup(&(string_t){res, res_size});
   }
+
   default:
     // Other tokens are just constant strings that dont depend on the contents of the token
     return token_kind_to_string(token->kind);
