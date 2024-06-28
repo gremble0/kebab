@@ -65,12 +65,46 @@ ListConstructor *ListConstructor::parse(Lexer &lexer) {
   return constructor;
 }
 
+FunctionParameter *FunctionParameter::parse(Lexer &lexer) {
+  start_parsing("function-parameter");
+  FunctionParameter *parameter = new FunctionParameter();
+
+  expect(lexer, Token::Kind::NAME);
+  parameter->name = std::get<std::string>(lexer.cur_token.value);
+  lexer.advance();
+
+  skip(lexer, Token::Kind::COLON);
+
+  parameter->type = Type::parse(lexer);
+
+  end_parsing("function-parameter");
+  return parameter;
+}
+
 void FunctionConstructor::parse_type(Lexer &lexer) {
   skip(lexer, Token::Kind::FN);
   skip(lexer, Token::Kind::LPAREN);
+
+  while (true) {
+    FunctionParameter *parameter = FunctionParameter::parse(lexer);
+    this->type->parameter_types.push_back(parameter->type);
+    this->parameters.push_back(parameter);
+
+    if (lexer.cur_token.kind == Token::Kind::RPAREN)
+      break;
+    else
+      skip(lexer, Token::Kind::COMMA);
+  }
+
+  skip(lexer, Token::Kind::RPAREN);
 }
 
-void FunctionConstructor::parse_body(Lexer &lexer) {}
+void FunctionConstructor::parse_body(Lexer &lexer) {
+  skip(lexer, Token::Kind::FAT_RARROW);
+  while (lexer.cur_token.kind != Token::Kind::RPAREN)
+    this->body.push_back(Statement::parse(lexer));
+  skip(lexer, Token::Kind::RPAREN);
+}
 
 FunctionConstructor *FunctionConstructor::parse(Lexer &lexer) {
   start_parsing("function-constructor");

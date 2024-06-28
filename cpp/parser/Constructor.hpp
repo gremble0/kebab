@@ -35,7 +35,13 @@ public:
   static ListConstructor *parse(Lexer &lexer);
 };
 
-class FunctionParameter {};
+class FunctionParameter : public AstNode {
+public:
+  std::string name;
+  Type *type;
+
+  static FunctionParameter *parse(Lexer &lexer);
+};
 
 class FunctionConstructor : public Constructor {
 private:
