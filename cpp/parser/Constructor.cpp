@@ -79,6 +79,9 @@ void FunctionConstructor::parse_type(Lexer &lexer) {
   skip(lexer, Token::Kind::LPAREN);
   skip(lexer, Token::Kind::LPAREN);
 
+  // TODO: do this in some constructor?
+  this->type = new FunctionType();
+
   while (lexer.cur_token.kind != Token::Kind::RPAREN) {
     FunctionParameter *parameter = FunctionParameter::parse(lexer);
     this->type->parameter_types.push_back(parameter->type);

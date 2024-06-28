@@ -61,10 +61,11 @@ Statement *Statement::parse(Lexer &lexer) {
     statement = AssignmentStatement::parse(lexer);
     break;
 
-  case Token::Kind::NAME:
+  case Token::Kind::INT_LITERAL:
+  case Token::Kind::FLOAT_LITERAL:
   case Token::Kind::CHAR_LITERAL:
   case Token::Kind::STRING_LITERAL:
-  case Token::Kind::INT_LITERAL:
+  case Token::Kind::NAME:
   // Cond expressions (if/elif/else)
   case Token::Kind::IF:
   // Factor prefixes

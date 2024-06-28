@@ -13,10 +13,11 @@ Expression *Expression::parse(Lexer &lexer) {
     expression = CondExpression::parse(lexer);
     break;
 
-  case Token::Kind::NAME:
+  case Token::Kind::INT_LITERAL:
+  case Token::Kind::FLOAT_LITERAL:
   case Token::Kind::CHAR_LITERAL:
   case Token::Kind::STRING_LITERAL:
-  case Token::Kind::INT_LITERAL:
+  case Token::Kind::NAME:
   case Token::Kind::PLUS:
   case Token::Kind::MINUS:
   case Token::Kind::MULT:

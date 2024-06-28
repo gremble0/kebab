@@ -18,6 +18,20 @@ public:
   static Atom *parse(Lexer &lexer);
 };
 
+class IntAtom : public Atom {
+public:
+  int64_t i;
+
+  static IntAtom *parse(Lexer &lexer);
+};
+
+class FloatAtom : public Atom {
+public:
+  float_t f;
+
+  static FloatAtom *parse(Lexer &lexer);
+};
+
 class CharAtom : public Atom {
 public:
   uint8_t c;

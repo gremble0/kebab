@@ -1,10 +1,28 @@
-#include <cassert>
-
 #include "Atom.hpp"
 #include "Expression.hpp"
 
 namespace Kebab {
 namespace Parser {
+
+IntAtom *IntAtom::parse(Lexer &lexer) {
+  start_parsing("int-atom");
+  IntAtom *atom = new IntAtom();
+
+  atom->i = skip_int(lexer);
+
+  end_parsing("int-atom");
+  return atom;
+}
+
+FloatAtom *FloatAtom::parse(Lexer &lexer) {
+  start_parsing("float-atom");
+  FloatAtom *atom = new FloatAtom();
+
+  atom->f = skip_float(lexer);
+
+  end_parsing("float-atom");
+  return atom;
+}
 
 CharAtom *CharAtom::parse(Lexer &lexer) {
   start_parsing("char-atom");
@@ -86,6 +104,14 @@ Atom *Atom::parse(Lexer &lexer) {
   Atom *atom;
 
   switch (lexer.cur_token.kind) {
+  case Token::Kind::INT_LITERAL:
+    atom = IntAtom::parse(lexer);
+    break;
+
+  case Token::Kind::FLOAT_LITERAL:
+    atom = FloatAtom::parse(lexer);
+    break;
+
   case Token::Kind::CHAR_LITERAL:
     atom = CharAtom::parse(lexer);
     break;
