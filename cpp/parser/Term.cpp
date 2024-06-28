@@ -20,8 +20,7 @@ TermOperator *TermOperator::parse(Lexer &lexer) {
     break;
 
   default:
-    // Unreachable
-    assert(false);
+    assert(false && "Unreachable");
   }
 
   end_parsing("term-operator");

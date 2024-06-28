@@ -20,8 +20,7 @@ FactorPrefix *FactorPrefix::parse(Lexer &lexer) {
     break;
 
   default:
-    // Unreachable
-    assert(false);
+    assert(false && "Unreachable");
   }
 
   lexer.advance();
@@ -66,8 +65,7 @@ FactorOperator *FactorOperator::parse(Lexer &lexer) {
     break;
 
   default:
-    // Unreachable
-    assert(false);
+    assert(false && "Unreachable");
   }
 
   lexer.advance();

@@ -119,8 +119,7 @@ Atom *Atom::parse(Lexer &lexer) {
     break;
 
   default:
-    // Unreachable
-    assert(false);
+    assert(false && "Unreachable");
   }
 
   end_parsing("atom");

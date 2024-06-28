@@ -2,6 +2,7 @@
 #include <ostream>
 
 #include "lexer/Lexer.hpp"
+#include "parser/Parser.hpp"
 
 using namespace Kebab;
 
@@ -13,12 +14,8 @@ int main(int argc, char **argv) {
 
   std::string path(argv[1]);
   Lexer lexer(path);
-  lexer.advance();
 
-  while (lexer.cur_token.kind != Token::END_OF_FILE) {
-    std::cout << lexer.cur_token.to_string() << std::endl;
-    lexer.advance();
-  }
+  Parser::parse(lexer);
 
   return 0;
 }

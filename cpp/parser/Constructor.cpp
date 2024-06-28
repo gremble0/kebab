@@ -8,11 +8,6 @@
 namespace Kebab {
 namespace Parser {
 
-// void Constructor::parse_body(Lexer &lexer) {
-//   while (lexer.cur_token.kind != Token::Kind::RPAREN)
-//     this->body.push_back(Statement::parse(lexer));
-// }
-
 Constructor *Constructor::parse(Lexer &lexer) {
   start_parsing("constructor");
   Constructor *constructor;

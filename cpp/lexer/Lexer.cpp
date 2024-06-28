@@ -16,6 +16,7 @@ Lexer::Lexer(std::string path)
     this->error("could not open file " + path);
 
   this->next_line();
+  this->advance();
 }
 
 [[noreturn]] void Lexer::error(std::string message) const {

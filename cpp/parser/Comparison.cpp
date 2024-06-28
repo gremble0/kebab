@@ -37,8 +37,7 @@ ComparisonOperator *ComparisonOperator::parse(Lexer &lexer) {
     break;
 
   default:
-    // Unreachable
-    assert(false);
+    assert(false && "Unreachable");
   }
 
   lexer.advance();
