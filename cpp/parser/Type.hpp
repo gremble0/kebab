@@ -11,7 +11,7 @@ namespace Parser {
 
 class Type : public AstNode {
 protected:
-  Type();
+  Type() = default;
 
 public:
   static Type *parse(Lexer &lexer);

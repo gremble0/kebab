@@ -13,7 +13,7 @@ namespace Parser {
 
 class Constructor : public AstNode {
 protected:
-  Constructor();
+  Constructor() = default;
 
   virtual void parse_type(Lexer &lexer) = 0;
   virtual void parse_body(Lexer &lexer) = 0;
