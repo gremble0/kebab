@@ -1,6 +1,7 @@
 #include "Constructor.hpp"
 #include "lexer/Lexer.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 ListConstructor *ListConstructor::parse(Lexer &lexer) {
@@ -17,4 +18,6 @@ PrimitiveConstructor *PrimitiveConstructor::parse(Lexer &lexer) {
   // TODO:
   return nullptr;
 }
+
 } // namespace Parser
+} // namespace Kebab

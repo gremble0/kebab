@@ -2,6 +2,7 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Comparison.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 NotTest *NotTest::parse(Lexer &lexer) {
@@ -20,4 +21,6 @@ NotTest *NotTest::parse(Lexer &lexer) {
   end_parsing("not-test");
   return not_test;
 }
+
 } // namespace Parser
+} // namespace Kebab

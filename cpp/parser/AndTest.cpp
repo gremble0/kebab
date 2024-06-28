@@ -2,6 +2,7 @@
 #include "lexer/Lexer.hpp"
 #include "parser/NotTest.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 AndTest *AndTest::parse(Lexer &lexer) {
@@ -19,4 +20,6 @@ AndTest *AndTest::parse(Lexer &lexer) {
   end_parsing("and-test");
   return and_test;
 }
+
 } // namespace Parser
+} // namespace Kebab

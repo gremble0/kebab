@@ -1,6 +1,7 @@
 #include "RootNode.hpp"
 #include "Statement.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 RootNode *RootNode::parse(Lexer &lexer) {
@@ -11,4 +12,6 @@ RootNode *RootNode::parse(Lexer &lexer) {
 
   return root_node;
 }
+
 } // namespace Parser
+} // namespace Kebab

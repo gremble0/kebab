@@ -7,6 +7,7 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 // this is a prefix?? dont remember will look into and maybe rename
@@ -40,5 +41,6 @@ public:
 };
 
 } // namespace Parser
+} // namespace Kebab
 
 #endif

@@ -3,6 +3,8 @@
 
 #include "Token.hpp"
 
+namespace Kebab {
+
 Token::Token(Span span, std::string word) : span(span) {
   assert(word.find(' ') == std::string::npos);
 
@@ -169,3 +171,5 @@ std::string Token::to_string() const {
 
   return out + ' ' + this->span.to_string();
 }
+
+} // namespace Kebab

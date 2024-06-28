@@ -7,6 +7,7 @@
 #include "parser/Parser.hpp"
 #include "parser/Statement.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 class ListConstructor;
@@ -45,5 +46,6 @@ public:
 };
 
 } // namespace Parser
+} // namespace Kebab
 
 #endif

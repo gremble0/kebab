@@ -7,6 +7,8 @@
 #include "Lexer.hpp"
 #include "Token.hpp"
 
+namespace Kebab {
+
 Lexer::Lexer(std::string path)
     : path(path), stream(path), line_number(0), line_pos(0),
       cur_token(Token::Kind::ILLEGAL, Span(Position(0, 0), Position(0, 0))) {
@@ -340,3 +342,5 @@ void Lexer::advance() {
     break;
   }
 }
+
+} // namespace Kebab

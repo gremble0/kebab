@@ -8,6 +8,7 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 class Expression;
@@ -60,5 +61,6 @@ public:
 };
 
 } // namespace Parser
+} // namespace Kebab
 
 #endif

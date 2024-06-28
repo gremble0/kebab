@@ -8,6 +8,7 @@
 #include "lexer/Token.hpp"
 #include "parser/Parser.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 class ComparisonOperator : AstNode {
@@ -47,5 +48,6 @@ public:
 };
 
 } // namespace Parser
+} // namespace Kebab
 
 #endif

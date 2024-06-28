@@ -5,6 +5,7 @@
 
 #include "lexer/Lexer.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 class AstNode {
@@ -50,5 +51,6 @@ public:
 AstNode *parse(Lexer &lexer);
 
 } // namespace Parser
+} // namespace Kebab
 
 #endif

@@ -9,6 +9,8 @@
 
 #include "Span.hpp"
 
+namespace Kebab {
+
 class Token {
 public:
   enum Kind {
@@ -79,5 +81,7 @@ public:
 
   std::string to_string() const;
 };
+
+} // namespace Kebab
 
 #endif

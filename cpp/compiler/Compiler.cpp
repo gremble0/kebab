@@ -7,6 +7,8 @@
 #include "llvm/IR/Type.h"
 #include "llvm/Support/raw_ostream.h"
 
+namespace Kebab {
+
 void Compiler::save_module(const std::string &path) {
   std::error_code error_code;
   llvm::raw_fd_stream fd(path, error_code);
@@ -57,3 +59,5 @@ void Compiler::compile(Parser::AstNode *root) {
   this->stop_main();
   this->save_module("./out.ll");
 }
+
+} // namespace Kebab

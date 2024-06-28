@@ -1,6 +1,7 @@
 #include "Expression.hpp"
 #include "parser/AndTest.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 Expression *Expression::parse(Lexer &lexer) {
@@ -73,4 +74,6 @@ FunctionExpression *FunctionExpression::parse(Lexer &lexer) {
   end_parsing("function-expression");
   return nullptr;
 }
+
 } // namespace Parser
+} // namespace Kebab

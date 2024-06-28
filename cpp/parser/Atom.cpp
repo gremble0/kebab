@@ -4,6 +4,7 @@
 #include "Atom.hpp"
 #include "Expression.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 CharAtom *CharAtom::parse(Lexer &lexer) {
@@ -125,4 +126,6 @@ Atom *Atom::parse(Lexer &lexer) {
   end_parsing("atom");
   return atom;
 }
+
 } // namespace Parser
+} // namespace Kebab

@@ -4,6 +4,7 @@
 #include "Parser.hpp"
 #include "parser/Expression.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 class AssignmentStatement;
@@ -41,5 +42,6 @@ public:
 };
 
 } // namespace Parser
+} // namespace Kebab
 
 #endif

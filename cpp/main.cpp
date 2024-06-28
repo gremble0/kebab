@@ -3,6 +3,8 @@
 
 #include "lexer/Lexer.hpp"
 
+namespace Kebab {
+
 int main(int argc, char **argv) {
   if (argc < 2) {
     std::cerr << "Usage: " << argv[0] << " <file.keb> <args>" << std::endl;
@@ -20,3 +22,5 @@ int main(int argc, char **argv) {
 
   return 0;
 }
+
+} // namespace Kebab

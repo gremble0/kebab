@@ -3,6 +3,7 @@
 #include "Factor.hpp"
 #include "parser/Primary.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 FactorPrefix *FactorPrefix::parse(Lexer &lexer) {
@@ -74,4 +75,6 @@ FactorOperator *FactorOperator::parse(Lexer &lexer) {
   end_parsing("factor-operator");
   return operator_;
 }
+
 } // namespace Parser
+} // namespace Kebab

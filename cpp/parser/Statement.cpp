@@ -3,6 +3,7 @@
 #include "Parser.hpp"
 #include "lexer/Token.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 DefinitionStatement *DefinitionStatement::parse(Lexer &lexer) {
@@ -91,4 +92,6 @@ Statement *Statement::parse(Lexer &lexer) {
   end_parsing("statement");
   return statement;
 }
+
 } // namespace Parser
+} // namespace Kebab

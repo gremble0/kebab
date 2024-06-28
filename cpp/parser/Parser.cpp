@@ -2,6 +2,7 @@
 #include "RootNode.hpp"
 #include "Statement.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 AstNode *parse(Lexer &lexer) {
@@ -12,4 +13,6 @@ AstNode *parse(Lexer &lexer) {
 
   return root_node;
 }
+
 } // namespace Parser
+} // namespace Kebab

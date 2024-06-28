@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <string>
 
+namespace Kebab {
+
 struct Position {
   size_t line, col;
   Position(size_t line, size_t col) : line(line), col(col) {}
@@ -19,5 +21,7 @@ struct Span {
 
   std::string to_string() const { return this->start.to_string() + " - " + this->end.to_string(); }
 };
+
+} // namespace Kebab
 
 #endif

@@ -7,6 +7,7 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 // TODO: Operator interface - is_operator(kind)
@@ -62,5 +63,6 @@ public:
 };
 
 } // namespace Parser
+} // namespace Kebab
 
 #endif

@@ -6,6 +6,8 @@
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 
+namespace Kebab {
+
 class Compiler {
 private:
   llvm::LLVMContext context;
@@ -27,5 +29,7 @@ public:
 
   void compile(Parser::AstNode *root);
 };
+
+} // namespace Kebab
 
 #endif

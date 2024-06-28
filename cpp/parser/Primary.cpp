@@ -5,6 +5,7 @@
 #include "Primary.hpp"
 #include "lexer/Token.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 PrimarySubscription *PrimarySubscription::parse(Lexer &lexer) {
@@ -71,4 +72,6 @@ Primary *Primary::parse(Lexer &lexer) {
   end_parsing("primary");
   return primary;
 }
+
 } // namespace Parser
+} // namespace Kebab

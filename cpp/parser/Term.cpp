@@ -3,6 +3,7 @@
 #include "Term.hpp"
 #include "lexer/Lexer.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 TermOperator *TermOperator::parse(Lexer &lexer) {
@@ -43,4 +44,6 @@ Term *Term::parse(Lexer &lexer) {
   end_parsing("term");
   return term;
 }
+
 } // namespace Parser
+} // namespace Kebab

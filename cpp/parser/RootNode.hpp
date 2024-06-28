@@ -6,6 +6,7 @@
 #include "parser/Parser.hpp"
 #include "parser/Statement.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 class RootNode : public AstNode {
@@ -16,5 +17,6 @@ public:
 };
 
 } // namespace Parser
+} // namespace Kebab
 
 #endif

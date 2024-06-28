@@ -4,6 +4,7 @@
 #include "Term.hpp"
 #include "lexer/Lexer.hpp"
 
+namespace Kebab {
 namespace Parser {
 
 ComparisonOperator *ComparisonOperator::parse(Lexer &lexer) {
@@ -62,4 +63,6 @@ Comparison *Comparison::parse(Lexer &lexer) {
   end_parsing("comparison");
   return comparison;
 }
+
 } // namespace Parser
+} // namespace Kebab
