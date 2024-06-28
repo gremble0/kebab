@@ -1,5 +1,4 @@
 #include <cassert>
-#include <cstdint>
 
 #include "Atom.hpp"
 #include "Expression.hpp"
@@ -11,9 +10,7 @@ CharAtom *CharAtom::parse(Lexer &lexer) {
   start_parsing("char-atom");
   CharAtom *atom = new CharAtom();
 
-  expect(lexer, Token::Kind::CHAR_LITERAL);
-  atom->c = std::get<uint8_t>(lexer.cur_token.value);
-  lexer.advance();
+  atom->c = skip_char(lexer);
 
   end_parsing("char-atom");
   return atom;
@@ -23,9 +20,7 @@ StringAtom *StringAtom::parse(Lexer &lexer) {
   start_parsing("string-atom");
   StringAtom *atom = new StringAtom();
 
-  expect(lexer, Token::Kind::CHAR_LITERAL);
-  atom->s = std::get<std::string>(lexer.cur_token.value);
-  lexer.advance();
+  atom->s = skip_string(lexer);
 
   end_parsing("string-atom");
   return atom;
@@ -49,9 +44,7 @@ NameAtom *NameAtom::parse(Lexer &lexer) {
   start_parsing("name-atom");
   NameAtom *atom = new NameAtom();
 
-  expect(lexer, Token::Kind::NAME);
-  atom->name = std::get<std::string>(lexer.cur_token.value);
-  lexer.advance();
+  atom->name = skip_name(lexer);
 
   end_parsing("name-atom");
   return atom;

@@ -1,6 +1,7 @@
 #ifndef KEBAB_PARSER_HPP
 #define KEBAB_PARSER_HPP
 
+#include <cstdint>
 #include <iostream>
 #include <string>
 
@@ -12,6 +13,17 @@ namespace Parser {
 static int indent_depth = 0;
 
 class AstNode {
+private:
+  /**
+   * @brief skip a token with an inner value and return it
+   */
+  template <typename T, Token::Kind K> static T skip_value(Lexer &lexer) {
+    expect(lexer, K);
+    T value = std::get<T>(lexer.cur_token.value);
+    lexer.advance();
+    return value;
+  }
+
 protected:
   AstNode() = default;
 
@@ -29,6 +41,26 @@ protected:
   static void skip(Lexer &lexer, Token::Kind kind) {
     expect(lexer, kind);
     lexer.advance();
+  }
+
+  static int64_t skip_int(Lexer &lexer) {
+    return skip_value<int64_t, Token::Kind::INT_LITERAL>(lexer);
+  }
+
+  static float_t skip_float(Lexer &lexer) {
+    return skip_value<float_t, Token::Kind::FLOAT_LITERAL>(lexer);
+  }
+
+  static uint8_t skip_char(Lexer &lexer) {
+    return skip_value<uint8_t, Token::Kind::CHAR_LITERAL>(lexer);
+  }
+
+  static std::string skip_string(Lexer &lexer) {
+    return skip_value<std::string, Token::Kind::STRING_LITERAL>(lexer);
+  }
+
+  static std::string skip_name(Lexer &lexer) {
+    return skip_value<std::string, Token::Kind::NAME>(lexer);
   }
 
   /**

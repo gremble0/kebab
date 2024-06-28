@@ -78,10 +78,7 @@ PrimitiveType *PrimitiveType::parse(Lexer &lexer) {
   start_parsing("primitive-type");
   PrimitiveType *type = new PrimitiveType();
 
-  // TODO: lexer.skip_name() ?
-  expect(lexer, Token::Kind::NAME);
-  type->name = std::get<std::string>(lexer.cur_token.value);
-  lexer.advance();
+  type->name = skip_name(lexer);
 
   end_parsing("primitive-type");
   return type;

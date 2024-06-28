@@ -64,9 +64,7 @@ FunctionParameter *FunctionParameter::parse(Lexer &lexer) {
   start_parsing("function-parameter");
   FunctionParameter *parameter = new FunctionParameter();
 
-  expect(lexer, Token::Kind::NAME);
-  parameter->name = std::get<std::string>(lexer.cur_token.value);
-  lexer.advance();
+  parameter->name = skip_name(lexer);
 
   skip(lexer, Token::Kind::COLON);
 

@@ -19,9 +19,7 @@ DefinitionStatement *DefinitionStatement::parse(Lexer &lexer) {
     def->is_mutable = false;
   }
 
-  expect(lexer, Token::Kind::NAME);
-  def->name = std::get<std::string>(lexer.cur_token.value);
-  lexer.advance();
+  def->name = skip_name(lexer);
 
   skip(lexer, Token::Kind::EQUALS);
 
