@@ -6,11 +6,15 @@
 #include "parser/Parser.hpp"
 #include "parser/Statement.hpp"
 
+namespace Parser {
+
 class RootNode : public AstNode {
 public:
   std::vector<Statement *> statements;
 
   static RootNode *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

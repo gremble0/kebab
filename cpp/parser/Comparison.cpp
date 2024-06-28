@@ -4,6 +4,8 @@
 #include "Term.hpp"
 #include "lexer/Lexer.hpp"
 
+namespace Parser {
+
 ComparisonOperator *ComparisonOperator::parse(Lexer &lexer) {
   start_parsing("comparison-operator");
   ComparisonOperator *operator_ = new ComparisonOperator();
@@ -60,3 +62,4 @@ Comparison *Comparison::parse(Lexer &lexer) {
   end_parsing("comparison");
   return comparison;
 }
+} // namespace Parser

@@ -4,6 +4,8 @@
 #include "Parser.hpp"
 #include "parser/Expression.hpp"
 
+namespace Parser {
+
 class AssignmentStatement;
 class DefinitionStatement;
 class ExpressionStatement;
@@ -37,5 +39,7 @@ public:
 
   static ExpressionStatement *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

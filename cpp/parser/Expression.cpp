@@ -1,6 +1,8 @@
 #include "Expression.hpp"
 #include "parser/AndTest.hpp"
 
+namespace Parser {
+
 Expression *Expression::parse(Lexer &lexer) {
   start_parsing("expression");
   Expression *expression;
@@ -71,3 +73,4 @@ FunctionExpression *FunctionExpression::parse(Lexer &lexer) {
   end_parsing("function-expression");
   return nullptr;
 }
+} // namespace Parser

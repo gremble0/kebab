@@ -2,6 +2,8 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Comparison.hpp"
 
+namespace Parser {
+
 NotTest *NotTest::parse(Lexer &lexer) {
   start_parsing("not-test");
   NotTest *not_test = new NotTest();
@@ -18,3 +20,4 @@ NotTest *NotTest::parse(Lexer &lexer) {
   end_parsing("not-test");
   return not_test;
 }
+} // namespace Parser

@@ -46,7 +46,7 @@ void Compiler::stop_main() {
   this->builder.CreateRet(return_value_i32);
 }
 
-void Compiler::compile(AstNode *root) {
+void Compiler::compile(Parser::AstNode *root) {
   this->load_globals();
   this->start_main();
 

@@ -8,6 +8,8 @@
 #include "lexer/Token.hpp"
 #include "parser/Parser.hpp"
 
+namespace Parser {
+
 class ComparisonOperator : AstNode {
 public:
   enum Type {
@@ -43,5 +45,7 @@ public:
 
   static Comparison *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

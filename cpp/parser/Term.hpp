@@ -7,6 +7,8 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
+namespace Parser {
+
 // this is a prefix?? dont remember will look into and maybe rename
 class TermOperator : AstNode {
 public:
@@ -36,5 +38,7 @@ public:
 
   static Term *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

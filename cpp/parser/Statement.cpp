@@ -1,7 +1,9 @@
 #include "Statement.hpp"
 #include "Constructor.hpp"
+#include "Parser.hpp"
 #include "lexer/Token.hpp"
-#include "parser/Parser.hpp"
+
+namespace Parser {
 
 DefinitionStatement *DefinitionStatement::parse(Lexer &lexer) {
   start_parsing("definition-statement");
@@ -89,3 +91,4 @@ Statement *Statement::parse(Lexer &lexer) {
   end_parsing("statement");
   return statement;
 }
+} // namespace Parser

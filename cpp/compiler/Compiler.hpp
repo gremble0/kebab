@@ -25,7 +25,7 @@ public:
       : context(llvm::LLVMContext()), module(llvm::Module("kebab", context)),
         builder(llvm::IRBuilder<>(context)) {}
 
-  void compile(AstNode *root);
+  void compile(Parser::AstNode *root);
 };
 
 #endif

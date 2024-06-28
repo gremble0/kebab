@@ -4,6 +4,8 @@
 #include "Atom.hpp"
 #include "Expression.hpp"
 
+namespace Parser {
+
 CharAtom *CharAtom::parse(Lexer &lexer) {
   start_parsing("char-atom");
   CharAtom *atom = new CharAtom();
@@ -123,3 +125,4 @@ Atom *Atom::parse(Lexer &lexer) {
   end_parsing("atom");
   return atom;
 }
+} // namespace Parser

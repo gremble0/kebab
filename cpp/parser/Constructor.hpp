@@ -7,6 +7,8 @@
 #include "parser/Parser.hpp"
 #include "parser/Statement.hpp"
 
+namespace Parser {
+
 class ListConstructor;
 class FunctionConstructor;
 class PrimitiveConstructor;
@@ -41,5 +43,7 @@ public:
 
   static PrimitiveConstructor *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

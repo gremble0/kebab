@@ -3,6 +3,8 @@
 #include "Term.hpp"
 #include "lexer/Lexer.hpp"
 
+namespace Parser {
+
 TermOperator *TermOperator::parse(Lexer &lexer) {
   start_parsing("term-operator");
   TermOperator *operator_ = new TermOperator();
@@ -41,3 +43,4 @@ Term *Term::parse(Lexer &lexer) {
   end_parsing("term");
   return term;
 }
+} // namespace Parser

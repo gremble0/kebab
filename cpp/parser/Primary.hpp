@@ -7,6 +7,8 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
+namespace Parser {
+
 class PrimarySuffix : public AstNode {
 public:
   static constexpr bool is_primary_suffix_opener(Token::Kind kind) {
@@ -44,5 +46,7 @@ public:
 
   static Primary *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

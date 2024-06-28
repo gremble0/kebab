@@ -8,6 +8,8 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
+namespace Parser {
+
 class Expression;
 
 class Atom : public AstNode {
@@ -56,5 +58,7 @@ public:
 
   static ListAtom *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

@@ -7,11 +7,15 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
+namespace Parser {
+
 class AndTest : AstNode {
 public:
   std::vector<NotTest *> not_tests;
 
   static AndTest *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

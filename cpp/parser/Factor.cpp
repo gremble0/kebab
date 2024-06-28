@@ -3,6 +3,8 @@
 #include "Factor.hpp"
 #include "parser/Primary.hpp"
 
+namespace Parser {
+
 FactorPrefix *FactorPrefix::parse(Lexer &lexer) {
   start_parsing("factor-prefix");
   FactorPrefix *prefix = new FactorPrefix();
@@ -72,3 +74,4 @@ FactorOperator *FactorOperator::parse(Lexer &lexer) {
   end_parsing("factor-operator");
   return operator_;
 }
+} // namespace Parser

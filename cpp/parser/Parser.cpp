@@ -1,9 +1,10 @@
+#include "Parser.hpp"
 #include "RootNode.hpp"
 #include "Statement.hpp"
 
 namespace Parser {
 
-RootNode *RootNode::parse(Lexer &lexer) {
+AstNode *parse(Lexer &lexer) {
   RootNode *root_node = new RootNode();
 
   while (lexer.cur_token.kind != Token::Kind::END_OF_FILE)

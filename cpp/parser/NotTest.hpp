@@ -5,6 +5,8 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
+namespace Parser {
+
 class NotTest : AstNode {
 public:
   bool is_negated;
@@ -12,5 +14,7 @@ public:
 
   static NotTest *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

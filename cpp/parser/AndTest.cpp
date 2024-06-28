@@ -2,6 +2,8 @@
 #include "lexer/Lexer.hpp"
 #include "parser/NotTest.hpp"
 
+namespace Parser {
+
 AndTest *AndTest::parse(Lexer &lexer) {
   start_parsing("and-test");
   AndTest *and_test = new AndTest();
@@ -17,3 +19,4 @@ AndTest *AndTest::parse(Lexer &lexer) {
   end_parsing("and-test");
   return and_test;
 }
+} // namespace Parser

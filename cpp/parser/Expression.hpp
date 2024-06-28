@@ -7,6 +7,8 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
+namespace Parser {
+
 class CondExpression;
 class NormalExpression;
 class ConstructorExpression;
@@ -32,5 +34,7 @@ class FunctionExpression : public Expression {
 public:
   static FunctionExpression *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

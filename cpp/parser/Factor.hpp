@@ -7,6 +7,8 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
+namespace Parser {
+
 // TODO: Operator interface - is_operator(kind)
 class FactorOperator : AstNode /*, Operator */ {
 public:
@@ -58,5 +60,7 @@ public:
 
   static Factor *parse(Lexer &lexer);
 };
+
+} // namespace Parser
 
 #endif

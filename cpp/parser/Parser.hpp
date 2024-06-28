@@ -5,8 +5,12 @@
 
 #include "lexer/Lexer.hpp"
 
+namespace Parser {
+
 class AstNode {
 protected:
+  AstNode();
+
   [[noreturn]] static void error(const std::string &message) {
     std::cerr << "parser-error: " + message + '\n';
 
@@ -17,10 +21,15 @@ protected:
     if (lexer.cur_token.kind != kind)
       error("unexpected token '" + lexer.cur_token.to_string() + '\'');
   }
+
   static void skip(Lexer &lexer, Token::Kind kind) {
     expect(lexer, kind);
     lexer.advance();
   }
+
+  /**
+   * @return whether the specified token was skipped
+   */
   static bool ignore(Lexer &lexer, Token::Kind kind) {
     if (lexer.cur_token.kind == kind) {
       lexer.advance();
@@ -37,5 +46,9 @@ public:
 
   static AstNode *parse(Lexer &lexer);
 };
+
+AstNode *parse(Lexer &lexer);
+
+} // namespace Parser
 
 #endif

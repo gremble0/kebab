@@ -1,9 +1,11 @@
 #include <cassert>
 
+#include "Atom.hpp"
+#include "Expression.hpp"
 #include "Primary.hpp"
 #include "lexer/Token.hpp"
-#include "parser/Atom.hpp"
-#include "parser/Expression.hpp"
+
+namespace Parser {
 
 PrimarySubscription *PrimarySubscription::parse(Lexer &lexer) {
   start_parsing("primary-subscription");
@@ -69,3 +71,4 @@ Primary *Primary::parse(Lexer &lexer) {
   end_parsing("primary");
   return primary;
 }
+} // namespace Parser
