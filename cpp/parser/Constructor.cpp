@@ -79,15 +79,14 @@ FunctionParameter *FunctionParameter::parse(Lexer &lexer) {
 void FunctionConstructor::parse_type(Lexer &lexer) {
   skip(lexer, Token::Kind::FN);
   skip(lexer, Token::Kind::LPAREN);
+  skip(lexer, Token::Kind::LPAREN);
 
-  while (true) {
+  while (lexer.cur_token.kind != Token::Kind::RPAREN) {
     FunctionParameter *parameter = FunctionParameter::parse(lexer);
     this->type->parameter_types.push_back(parameter->type);
     this->parameters.push_back(parameter);
 
-    if (lexer.cur_token.kind == Token::Kind::RPAREN)
-      break;
-    else
+    if (lexer.cur_token.kind != Token::Kind::RPAREN)
       skip(lexer, Token::Kind::COMMA);
   }
 
@@ -96,8 +95,9 @@ void FunctionConstructor::parse_type(Lexer &lexer) {
 
 void FunctionConstructor::parse_body(Lexer &lexer) {
   skip(lexer, Token::Kind::FAT_RARROW);
-  while (lexer.cur_token.kind != Token::Kind::RPAREN)
-    this->body.push_back(Statement::parse(lexer));
+  Constructor *body = Constructor::parse(lexer);
+  this->type->return_type = body->type;
+
   skip(lexer, Token::Kind::RPAREN);
 }
 

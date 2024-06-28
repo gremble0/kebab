@@ -17,3 +17,9 @@ def summed = int(sum(2, 3))
 def curried-add = fn((a : int) => fn((b : int) => int(a + b)))
 ; can be used like this:
 def curried-added = int(curried-add(3)(5))
+
+; a function that returns the identity function
+def a = fn(() =>
+  fn((a : int) => a)
+)
+def identity-function = fn(int) => int(a())

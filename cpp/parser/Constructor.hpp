@@ -19,7 +19,7 @@ protected:
   virtual void parse_body(Lexer &lexer) = 0;
 
 public:
-  std::vector<Statement *> body;
+  Type *type;
 
   static Constructor *parse(Lexer &lexer);
 };
@@ -31,6 +31,7 @@ private:
 
 public:
   ListType *type;
+  std::vector<Statement *> body;
 
   static ListConstructor *parse(Lexer &lexer);
 };
@@ -51,6 +52,7 @@ private:
 public:
   std::vector<FunctionParameter *> parameters;
   FunctionType *type;
+  Constructor *body;
 
   static FunctionConstructor *parse(Lexer &lexer);
 };
@@ -62,6 +64,7 @@ private:
 
 public:
   PrimitiveType *type;
+  std::vector<Statement *> body;
 
   static PrimitiveConstructor *parse(Lexer &lexer);
 };
