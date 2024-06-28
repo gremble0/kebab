@@ -22,6 +22,8 @@ Token::Token(Span span, std::string word) : span(span) {
     this->kind = ELSE;
   else if (word.compare("fn") == 0)
     this->kind = FN;
+  else if (word.compare("list") == 0)
+    this->kind = LIST;
   else if (word.compare("true") == 0)
     this->kind = TRUE;
   else if (word.compare("false") == 0)
@@ -61,8 +63,13 @@ std::string Token::to_string() const {
   case Token::Kind::ELSE:
     out = "<else>";
     break;
+
   case Token::Kind::FN:
     out = "<fn>";
+    break;
+
+  case Token::Kind::LIST:
+    out = "<list>";
     break;
 
     // Booleans

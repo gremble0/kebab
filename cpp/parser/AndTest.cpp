@@ -1,6 +1,6 @@
 #include "AndTest.hpp"
+#include "NotTest.hpp"
 #include "lexer/Lexer.hpp"
-#include "parser/NotTest.hpp"
 
 namespace Kebab {
 namespace Parser {

@@ -22,7 +22,10 @@ public:
     IF,   // if
     ELIF, // elif
     ELSE, // else
+
+    // Special constructors
     FN,   // fn
+    LIST, // list
 
     // Booleans
     TRUE,  // true
