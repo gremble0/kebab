@@ -2,11 +2,14 @@
 #define KEBAB_PARSER_HPP
 
 #include <iostream>
+#include <string>
 
 #include "lexer/Lexer.hpp"
 
 namespace Kebab {
 namespace Parser {
+
+static int indent_depth = 0;
 
 class AstNode {
 protected:
@@ -39,8 +42,17 @@ protected:
     return false;
   }
 
-  static void start_parsing(const std::string &node_name) { std::cout << '<' + node_name + ">\n"; }
-  static void end_parsing(const std::string &node_name) { std::cout << '<' + node_name + "/>\n"; }
+  static void start_parsing(const std::string &node_name) {
+    std::string indent = std::string(indent_depth, ' ');
+    std::cout << indent + '<' + node_name + ">\n";
+    ++indent_depth;
+  }
+
+  static void end_parsing(const std::string &node_name) {
+    --indent_depth;
+    std::string indent = std::string(indent_depth, ' ');
+    std::cout << indent + '<' + node_name + "/>\n";
+  }
 
 public:
   virtual ~AstNode() = default;
