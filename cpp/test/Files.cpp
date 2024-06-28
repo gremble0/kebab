@@ -1,7 +1,11 @@
 #include <gtest/gtest.h>
+#include <iostream>
 #include <string>
 
+#include "../lexer/Lexer.hpp"
 #include "Files.hpp"
+
+namespace Kebab {
 
 void ASSERT_FILES_EQ(std::ifstream &f1, std::ifstream &f2) {
   while (!f1.eof() && !f2.eof()) {
@@ -16,3 +20,33 @@ void ASSERT_FILES_EQ(std::ifstream &f1, std::ifstream &f2) {
 
   ASSERT_TRUE(f1.eof() && f2.eof());
 }
+
+static void replace_one(const std::string &basename) {
+  std::string source_path = "lexer-source/" + basename + ".keb";
+  std::string log_path = "lexer-expected/" + basename + ".log";
+
+  ASSERT_NO_FATAL_FAILURE({ Lexer l(source_path); });
+
+  {
+    std::ofstream log_file(log_path);
+    Lexer l(source_path);
+    while (l.cur_token.kind != Token::Kind::END_OF_FILE) {
+      log_file << l.cur_token.to_string() + '\n';
+      l.advance();
+    }
+  }
+
+  std::ifstream log_file(log_path);
+}
+
+void replace_expected() {
+  replace_one("comments");
+  replace_one("comparisons");
+  replace_one("constructors");
+  replace_one("operators");
+  replace_one("empty");
+
+  std::cout << "Replaced expected lexer output\n";
+}
+
+} // namespace Kebab

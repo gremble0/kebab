@@ -4,6 +4,8 @@
 #include "Files.hpp"
 #include "gtest/gtest.h"
 
+namespace Kebab {
+
 static void lex_file_with_logs(const std::string &basename) {
   std::string source_path = "lexer-source/" + basename + ".keb";
   std::string log_path = "lexer-logs/" + basename + ".log";
@@ -30,8 +32,6 @@ TEST(LexerTest, InitializesCorrectly) {
   ASSERT_DEATH({ Lexer l("non-existent-file"); }, "could not open file");
 
   Lexer l("lexer-source/comments.keb");
-  ASSERT_EQ(l.cur_token.kind, Token::Kind::ILLEGAL);
-  l.advance();
   ASSERT_NE(l.cur_token.kind, Token::Kind::ILLEGAL);
 }
 
@@ -64,3 +64,5 @@ TEST(LexerTest, ErrorsWhenOutOfRange) {
   const std::string basename = "out-of-range";
   ASSERT_DEATH({ lex_file_with_logs(basename); }, "number out of range");
 }
+
+} // namespace Kebab
