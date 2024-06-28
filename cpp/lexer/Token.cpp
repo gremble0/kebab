@@ -179,4 +179,87 @@ std::string Token::to_string() const {
   return out + ' ' + this->span.to_string();
 }
 
+std::string Token::kind_to_string(Kind kind) {
+  switch (kind) {
+  case DEF:
+    return "'def'";
+  case SET:
+    return "'set'";
+  case MUT:
+    return "'mut'";
+  case NIL:
+    return "'nil'";
+  case IF:
+    return "'if'";
+  case ELIF:
+    return "'elif'";
+  case ELSE:
+    return "'else'";
+  case FN:
+    return "fn";
+  case LIST:
+    return "list";
+  case TRUE:
+    return "true";
+  case FALSE:
+    return "false";
+  case AND:
+    return "and";
+  case OR:
+    return "or";
+  case COLON:
+    return ":";
+  case EQUALS:
+    return "=";
+  case COMMA:
+    return ",";
+  case LPAREN:
+    return "(";
+  case RPAREN:
+    return ")";
+  case LBRACKET:
+    return "[";
+  case RBRACKET:
+    return "]";
+  case FAT_RARROW:
+    return "=>";
+  case PLUS:
+    return "+";
+  case MINUS:
+    return "-";
+  case MULT:
+    return "*";
+  case DIV:
+    return "/";
+  case NOT:
+    return "~";
+  case LT:
+    return "<";
+  case LE:
+    return "<=";
+  case EQ:
+    return "==";
+  case NEQ:
+    return "~=";
+  case GT:
+    return ">";
+  case GE:
+    return ">=";
+  case INT_LITERAL:
+    return "<int-literal>";
+  case FLOAT_LITERAL:
+    return "<float-literal>";
+  case CHAR_LITERAL:
+    return "<char-literal>";
+  case STRING_LITERAL:
+    return "<string-literal>";
+  case NAME:
+    return "<name>";
+  case END_OF_FILE:
+    return "<end of file>";
+  case ILLEGAL:
+    return "<illegal token>";
+  }
+}
+
 } // namespace Kebab

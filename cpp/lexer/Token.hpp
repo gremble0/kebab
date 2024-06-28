@@ -83,6 +83,7 @@ public:
   Token(Span span, std::string word);
 
   std::string to_string() const;
+  static std::string kind_to_string(Kind kind);
 };
 
 } // namespace Kebab

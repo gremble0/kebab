@@ -28,14 +28,15 @@ protected:
   AstNode() = default;
 
   [[noreturn]] static void error(const std::string &message) {
-    std::cerr << "parser-error: " + message + '\n';
+    std::cerr << "parser-error: " + message << std::endl;
 
     exit(1);
   }
 
   static void expect(Lexer &lexer, Token::Kind kind) {
     if (lexer.cur_token.kind != kind)
-      error("unexpected token '" + lexer.cur_token.to_string() + '\'');
+      error("unexpected token: '" + lexer.cur_token.to_string() + "' expected: '" +
+            Token::kind_to_string(kind) + '\'');
   }
 
   static void skip(Lexer &lexer, Token::Kind kind) {
