@@ -10,7 +10,7 @@ namespace Parser {
 
 class AstNode {
 protected:
-  AstNode();
+  AstNode() = default;
 
   [[noreturn]] static void error(const std::string &message) {
     std::cerr << "parser-error: " + message + '\n';

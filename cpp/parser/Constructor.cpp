@@ -4,6 +4,11 @@
 namespace Kebab {
 namespace Parser {
 
+Constructor *Constructor::parse(Lexer &lexer) {
+  // TODO:
+  return nullptr;
+}
+
 ListConstructor *ListConstructor::parse(Lexer &lexer) {
   // TODO:
   return nullptr;

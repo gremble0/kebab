@@ -3,7 +3,7 @@
 
 #include "lexer/Lexer.hpp"
 
-namespace Kebab {
+using namespace Kebab;
 
 int main(int argc, char **argv) {
   if (argc < 2) {
@@ -22,5 +22,3 @@ int main(int argc, char **argv) {
 
   return 0;
 }
-
-} // namespace Kebab
