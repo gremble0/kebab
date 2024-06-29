@@ -23,29 +23,29 @@ public:
     }
   }
 
-  static PrimarySuffix *parse(Lexer &lexer);
+  static std::unique_ptr<PrimarySuffix> parse(Lexer &lexer);
 };
 
 class PrimarySubscription : public PrimarySuffix {
 public:
-  Expression *subscription;
+  std::unique_ptr<Expression> subscription;
 
-  static PrimarySubscription *parse(Lexer &lexer);
+  static std::unique_ptr<PrimarySubscription> parse(Lexer &lexer);
 };
 
 class PrimaryArguments : public PrimarySuffix {
 public:
-  std::vector<Expression *> arguments;
+  std::vector<std::unique_ptr<Expression>> arguments;
 
-  static PrimaryArguments *parse(Lexer &lexer);
+  static std::unique_ptr<PrimaryArguments> parse(Lexer &lexer);
 };
 
 class Primary : public AstNode {
 public:
-  Atom *atom;
-  std::vector<PrimarySuffix *> suffixes;
+  std::unique_ptr<Atom> atom;
+  std::vector<std::unique_ptr<PrimarySuffix>> suffixes;
 
-  static Primary *parse(Lexer &lexer);
+  static std::unique_ptr<Primary> parse(Lexer &lexer);
 };
 
 } // namespace Parser

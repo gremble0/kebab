@@ -36,15 +36,15 @@ public:
       return false;
     }
   }
-  static ComparisonOperator *parse(Lexer &lexer);
+  static std::unique_ptr<ComparisonOperator> parse(Lexer &lexer);
 };
 
 class Comparison : AstNode {
 public:
-  std::vector<ComparisonOperator *> operators;
-  std::vector<Term *> terms;
+  std::vector<std::unique_ptr<ComparisonOperator>> operators;
+  std::vector<std::unique_ptr<Term>> terms;
 
-  static Comparison *parse(Lexer &lexer);
+  static std::unique_ptr<Comparison> parse(Lexer &lexer);
 };
 
 } // namespace Parser

@@ -30,7 +30,7 @@ public:
     }
   }
 
-  static FactorOperator *parse(Lexer &lexer);
+  static std::unique_ptr<FactorOperator> parse(Lexer &lexer);
 };
 
 class FactorPrefix : public AstNode {
@@ -51,16 +51,16 @@ public:
     }
   }
 
-  static FactorPrefix *parse(Lexer &lexer);
+  static std::unique_ptr<FactorPrefix> parse(Lexer &lexer);
 };
 
 class Factor : public AstNode {
 public:
-  std::vector<std::optional<FactorPrefix *>> prefixes;
-  std::vector<Primary *> primaries;
-  std::vector<FactorOperator *> operators;
+  std::vector<std::optional<std::unique_ptr<FactorPrefix>>> prefixes;
+  std::vector<std::unique_ptr<Primary>> primaries;
+  std::vector<std::unique_ptr<FactorOperator>> operators;
 
-  static Factor *parse(Lexer &lexer);
+  static std::unique_ptr<Factor> parse(Lexer &lexer);
 };
 
 } // namespace Parser

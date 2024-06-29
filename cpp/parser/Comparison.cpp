@@ -7,9 +7,9 @@
 namespace Kebab {
 namespace Parser {
 
-ComparisonOperator *ComparisonOperator::parse(Lexer &lexer) {
+std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
   start_parsing("comparison-operator");
-  ComparisonOperator *operator_ = new ComparisonOperator();
+  std::unique_ptr<ComparisonOperator> operator_ = std::make_unique<ComparisonOperator>();
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::LT:
@@ -46,9 +46,9 @@ ComparisonOperator *ComparisonOperator::parse(Lexer &lexer) {
   return operator_;
 }
 
-Comparison *Comparison::parse(Lexer &lexer) {
+std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
   start_parsing("comparison");
-  Comparison *comparison = new Comparison();
+  std::unique_ptr<Comparison> comparison = std::make_unique<Comparison>();
 
   while (true) {
     comparison->terms.push_back(Term::parse(lexer));

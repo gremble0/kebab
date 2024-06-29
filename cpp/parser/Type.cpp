@@ -5,9 +5,9 @@
 namespace Kebab {
 namespace Parser {
 
-Type *Type::parse(Lexer &lexer) {
+std::unique_ptr<Type> Type::parse(Lexer &lexer) {
   start_parsing("type");
-  Type *type;
+  std::unique_ptr<Type> type;
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::FN:
@@ -30,9 +30,9 @@ Type *Type::parse(Lexer &lexer) {
   return type;
 }
 
-ListType *ListType::parse(Lexer &lexer) {
+std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   start_parsing("list-type");
-  ListType *type = new ListType();
+  std::unique_ptr<ListType> type = std::make_unique<ListType>();
 
   skip(lexer, Token::Kind::LIST);
   skip(lexer, Token::Kind::LPAREN);
@@ -54,9 +54,9 @@ void FunctionType::parse_parameter_types(Lexer &lexer) {
 
 void FunctionType::parse_return_type(Lexer &lexer) { this->return_type = Type::parse(lexer); }
 
-FunctionType *FunctionType::parse(Lexer &lexer) {
+std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
   start_parsing("function-type");
-  FunctionType *type = new FunctionType();
+  std::unique_ptr<FunctionType> type = std::make_unique<FunctionType>();
 
   skip(lexer, Token::Kind::FN);
   skip(lexer, Token::Kind::LPAREN);
@@ -72,9 +72,9 @@ FunctionType *FunctionType::parse(Lexer &lexer) {
   return type;
 }
 
-PrimitiveType *PrimitiveType::parse(Lexer &lexer) {
+std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
   start_parsing("primitive-type");
-  PrimitiveType *type = new PrimitiveType();
+  std::unique_ptr<PrimitiveType> type = std::make_unique<PrimitiveType>();
 
   type->name = skip_name(lexer);
 

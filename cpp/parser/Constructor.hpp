@@ -1,6 +1,7 @@
 #ifndef KEBAB_CONSTRUCTOR_HPP
 #define KEBAB_CONSTRUCTOR_HPP
 
+#include <memory>
 #include <vector>
 
 #include "lexer/Lexer.hpp"
@@ -19,9 +20,11 @@ protected:
   virtual void parse_body(Lexer &lexer) = 0;
 
 public:
-  Type *type;
+  // This pointer can be shared with the return type of a function constructor (the return type of a
+  // function constructor is the same as the type of the constructor in its body)
+  std::shared_ptr<Type> type;
 
-  static Constructor *parse(Lexer &lexer);
+  static std::unique_ptr<Constructor> parse(Lexer &lexer);
 };
 
 class ListConstructor : public Constructor {
@@ -30,18 +33,19 @@ private:
   void parse_body(Lexer &lexer);
 
 public:
-  ListType *type;
-  std::vector<Statement *> body;
+  std::unique_ptr<ListType> type;
+  std::vector<std::unique_ptr<Statement>> body;
 
-  static ListConstructor *parse(Lexer &lexer);
+  static std::unique_ptr<ListConstructor> parse(Lexer &lexer);
 };
 
 class FunctionParameter : public AstNode {
 public:
   std::string name;
-  Type *type;
+  // This type is shared with the type of the function the parameter belongs to
+  std::shared_ptr<Type> type;
 
-  static FunctionParameter *parse(Lexer &lexer);
+  static std::unique_ptr<FunctionParameter> parse(Lexer &lexer);
 };
 
 class FunctionConstructor : public Constructor {
@@ -50,11 +54,11 @@ private:
   void parse_body(Lexer &lexer);
 
 public:
-  std::vector<FunctionParameter *> parameters;
-  FunctionType *type;
-  Constructor *body;
+  std::vector<std::unique_ptr<FunctionParameter>> parameters;
+  std::unique_ptr<FunctionType> type;
+  std::unique_ptr<Constructor> body;
 
-  static FunctionConstructor *parse(Lexer &lexer);
+  static std::unique_ptr<FunctionConstructor> parse(Lexer &lexer);
 };
 
 class PrimitiveConstructor : public Constructor {
@@ -63,10 +67,10 @@ private:
   void parse_body(Lexer &lexer);
 
 public:
-  PrimitiveType *type;
-  std::vector<Statement *> body;
+  std::unique_ptr<PrimitiveType> type;
+  std::vector<std::unique_ptr<Statement>> body;
 
-  static PrimitiveConstructor *parse(Lexer &lexer);
+  static std::unique_ptr<PrimitiveConstructor> parse(Lexer &lexer);
 };
 
 } // namespace Parser

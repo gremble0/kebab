@@ -14,31 +14,31 @@ class Constructor; // Cant include Constructor.hpp because of recursive includes
 
 class Statement : public AstNode {
 public:
-  static Statement *parse(Lexer &lexer);
+  static std::unique_ptr<Statement> parse(Lexer &lexer);
 };
 
 class DefinitionStatement : public Statement {
 public:
   bool is_mutable;
   std::string name;
-  Constructor *constructor;
+  std::unique_ptr<Constructor> constructor;
 
-  static DefinitionStatement *parse(Lexer &lexer);
+  static std::unique_ptr<DefinitionStatement> parse(Lexer &lexer);
 };
 
 class AssignmentStatement : public Statement {
 public:
   std::string name;
-  Constructor *constructor;
+  std::unique_ptr<Constructor> constructor;
 
-  static AssignmentStatement *parse(Lexer &lexer);
+  static std::unique_ptr<AssignmentStatement> parse(Lexer &lexer);
 };
 
 class ExpressionStatement : public Statement {
 public:
-  Expression *expression;
+  std::unique_ptr<Expression> expression;
 
-  static ExpressionStatement *parse(Lexer &lexer);
+  static std::unique_ptr<ExpressionStatement> parse(Lexer &lexer);
 };
 
 } // namespace Parser

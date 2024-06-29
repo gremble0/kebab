@@ -15,63 +15,63 @@ class Expression;
 
 class Atom : public AstNode {
 public:
-  static Atom *parse(Lexer &lexer);
+  static std::unique_ptr<Atom> parse(Lexer &lexer);
 };
 
 class IntAtom : public Atom {
 public:
   int64_t i;
 
-  static IntAtom *parse(Lexer &lexer);
+  static std::unique_ptr<IntAtom> parse(Lexer &lexer);
 };
 
 class FloatAtom : public Atom {
 public:
   float_t f;
 
-  static FloatAtom *parse(Lexer &lexer);
+  static std::unique_ptr<FloatAtom> parse(Lexer &lexer);
 };
 
 class CharAtom : public Atom {
 public:
   uint8_t c;
 
-  static CharAtom *parse(Lexer &lexer);
+  static std::unique_ptr<CharAtom> parse(Lexer &lexer);
 };
 
 class StringAtom : public Atom {
 public:
   std::string s;
 
-  static StringAtom *parse(Lexer &lexer);
+  static std::unique_ptr<StringAtom> parse(Lexer &lexer);
 };
 
 class BoolAtom : public Atom {
 public:
   bool b;
 
-  static BoolAtom *parse(Lexer &lexer);
+  static std::unique_ptr<BoolAtom> parse(Lexer &lexer);
 };
 
 class NameAtom : public Atom {
 public:
   std::string name;
 
-  static NameAtom *parse(Lexer &lexer);
+  static std::unique_ptr<NameAtom> parse(Lexer &lexer);
 };
 
 class InnerExpressionAtom : public Atom {
 public:
-  Expression *expression;
+  std::unique_ptr<Expression> expression;
 
-  static InnerExpressionAtom *parse(Lexer &lexer);
+  static std::unique_ptr<InnerExpressionAtom> parse(Lexer &lexer);
 };
 
 class ListAtom : public Atom {
 public:
-  std::vector<Expression *> list;
+  std::vector<std::unique_ptr<Expression>> list;
 
-  static ListAtom *parse(Lexer &lexer);
+  static std::unique_ptr<ListAtom> parse(Lexer &lexer);
 };
 
 } // namespace Parser

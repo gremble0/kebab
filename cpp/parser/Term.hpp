@@ -29,15 +29,15 @@ public:
     }
   }
 
-  static TermOperator *parse(Lexer &lexer);
+  static std::unique_ptr<TermOperator> parse(Lexer &lexer);
 };
 
 class Term : AstNode {
 public:
-  std::vector<Factor *> factors;
-  std::vector<TermOperator *> operators;
+  std::vector<std::unique_ptr<Factor>> factors;
+  std::vector<std::unique_ptr<TermOperator>> operators;
 
-  static Term *parse(Lexer &lexer);
+  static std::unique_ptr<Term> parse(Lexer &lexer);
 };
 
 } // namespace Parser

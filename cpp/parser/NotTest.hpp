@@ -11,9 +11,9 @@ namespace Parser {
 class NotTest : AstNode {
 public:
   bool is_negated;
-  Comparison *comparison;
+  std::unique_ptr<Comparison> comparison;
 
-  static NotTest *parse(Lexer &lexer);
+  static std::unique_ptr<NotTest> parse(Lexer &lexer);
 };
 
 } // namespace Parser

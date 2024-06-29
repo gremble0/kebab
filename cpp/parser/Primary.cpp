@@ -8,9 +8,9 @@
 namespace Kebab {
 namespace Parser {
 
-PrimarySubscription *PrimarySubscription::parse(Lexer &lexer) {
+std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
   start_parsing("primary-subscription");
-  PrimarySubscription *subscription = new PrimarySubscription();
+  std::unique_ptr<PrimarySubscription> subscription = std::make_unique<PrimarySubscription>();
 
   skip(lexer, Token::Kind::LBRACKET);
   subscription->subscription = Expression::parse(lexer);
@@ -20,9 +20,9 @@ PrimarySubscription *PrimarySubscription::parse(Lexer &lexer) {
   return subscription;
 }
 
-PrimaryArguments *PrimaryArguments::parse(Lexer &lexer) {
+std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   start_parsing("primary-arguments");
-  PrimaryArguments *arguments = new PrimaryArguments();
+  std::unique_ptr<PrimaryArguments> arguments = std::make_unique<PrimaryArguments>();
 
   skip(lexer, Token::Kind::LPAREN);
   while (true) {
@@ -39,9 +39,9 @@ PrimaryArguments *PrimaryArguments::parse(Lexer &lexer) {
   return arguments;
 }
 
-PrimarySuffix *PrimarySuffix::parse(Lexer &lexer) {
+std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
   start_parsing("primary-suffix");
-  PrimarySuffix *suffix;
+  std::unique_ptr<PrimarySuffix> suffix;
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::LPAREN:
@@ -60,9 +60,9 @@ PrimarySuffix *PrimarySuffix::parse(Lexer &lexer) {
   return suffix;
 }
 
-Primary *Primary::parse(Lexer &lexer) {
+std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
   start_parsing("primary");
-  Primary *primary = new Primary();
+  std::unique_ptr<Primary> primary = std::make_unique<Primary>();
 
   primary->atom = Atom::parse(lexer);
   while (PrimarySuffix::is_primary_suffix_opener(lexer.cur_token.kind))

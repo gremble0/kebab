@@ -6,11 +6,11 @@
 namespace Kebab {
 namespace Parser {
 
-DefinitionStatement *DefinitionStatement::parse(Lexer &lexer) {
+std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   start_parsing("definition-statement");
-  skip(lexer, Token::Kind::DEF);
+  std::unique_ptr<DefinitionStatement> def = std::make_unique<DefinitionStatement>();
 
-  DefinitionStatement *def = new DefinitionStatement();
+  skip(lexer, Token::Kind::DEF);
 
   if (lexer.cur_token.kind == Token::Kind::MUT) {
     def->is_mutable = true;
@@ -20,37 +20,35 @@ DefinitionStatement *DefinitionStatement::parse(Lexer &lexer) {
   }
 
   def->name = skip_name(lexer);
-
   skip(lexer, Token::Kind::EQUALS);
-
   def->constructor = Constructor::parse(lexer);
 
   end_parsing("definition-statement");
   return def;
 }
 
-AssignmentStatement *AssignmentStatement::parse(Lexer &lexer) {
+std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   start_parsing("assignment-statement");
 
   // TODO:
 
   end_parsing("assignment-statement");
-  return new AssignmentStatement();
+  return nullptr;
 }
 
-ExpressionStatement *ExpressionStatement::parse(Lexer &lexer) {
+std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
   start_parsing("expression-statement");
+  std::unique_ptr<ExpressionStatement> expression = std::make_unique<ExpressionStatement>();
 
-  ExpressionStatement *expression = new ExpressionStatement();
   expression->expression = Expression::parse(lexer);
 
   end_parsing("expression-statement");
-  return new ExpressionStatement();
+  return expression;
 }
 
-Statement *Statement::parse(Lexer &lexer) {
+std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
   start_parsing("statement");
-  Statement *statement;
+  std::unique_ptr<Statement> statement;
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::DEF:

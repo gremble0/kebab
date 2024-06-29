@@ -5,9 +5,9 @@
 namespace Kebab {
 namespace Parser {
 
-NotTest *NotTest::parse(Lexer &lexer) {
+std::unique_ptr<NotTest> NotTest::parse(Lexer &lexer) {
   start_parsing("not-test");
-  NotTest *not_test = new NotTest();
+  std::unique_ptr<NotTest> not_test = std::make_unique<NotTest>();
 
   if (lexer.cur_token.kind == Token::Kind::NOT) {
     not_test->is_negated = true;

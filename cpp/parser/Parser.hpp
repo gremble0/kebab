@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <string>
 
 #include "lexer/Lexer.hpp"
@@ -105,10 +106,10 @@ protected:
 public:
   virtual ~AstNode() = default;
 
-  static AstNode *parse(Lexer &lexer);
+  static std::unique_ptr<AstNode> parse(Lexer &lexer);
 };
 
-AstNode *parse(Lexer &lexer);
+std::unique_ptr<AstNode> parse(Lexer &lexer);
 
 } // namespace Parser
 } // namespace Kebab

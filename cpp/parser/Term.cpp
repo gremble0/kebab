@@ -6,9 +6,9 @@
 namespace Kebab {
 namespace Parser {
 
-TermOperator *TermOperator::parse(Lexer &lexer) {
+std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
   start_parsing("term-operator");
-  TermOperator *operator_ = new TermOperator();
+  std::unique_ptr<TermOperator> operator_ = std::make_unique<TermOperator>();
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::PLUS:
@@ -29,9 +29,9 @@ TermOperator *TermOperator::parse(Lexer &lexer) {
   return operator_;
 }
 
-Term *Term::parse(Lexer &lexer) {
+std::unique_ptr<Term> Term::parse(Lexer &lexer) {
   start_parsing("term");
-  Term *term = new Term();
+  std::unique_ptr<Term> term = std::make_unique<Term>();
 
   while (true) {
     term->factors.push_back(Factor::parse(lexer));

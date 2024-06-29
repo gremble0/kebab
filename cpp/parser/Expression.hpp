@@ -16,24 +16,24 @@ class ConstructorExpression;
 
 class Expression : public AstNode {
 public:
-  static Expression *parse(Lexer &lexer);
+  static std::unique_ptr<Expression> parse(Lexer &lexer);
 };
 
 class CondExpression : public Expression {
 public:
-  static CondExpression *parse(Lexer &lexer);
+  static std::unique_ptr<CondExpression> parse(Lexer &lexer);
 };
 
 class NormalExpression : public Expression {
 public:
-  std::vector<AndTest *> and_tests;
+  std::vector<std::unique_ptr<AndTest>> and_tests;
 
-  static NormalExpression *parse(Lexer &lexer);
+  static std::unique_ptr<NormalExpression> parse(Lexer &lexer);
 };
 
 class FunctionExpression : public Expression {
 public:
-  static FunctionExpression *parse(Lexer &lexer);
+  static std::unique_ptr<FunctionExpression> parse(Lexer &lexer);
 };
 
 } // namespace Parser

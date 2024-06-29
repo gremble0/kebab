@@ -1,6 +1,7 @@
 #ifndef KEBAB_KEBAB_ANDTEST_HPP
 #define KEBAB_KEBAB_ANDTEST_HPP
 
+#include <memory>
 #include <vector>
 
 #include "NotTest.hpp"
@@ -12,9 +13,9 @@ namespace Parser {
 
 class AndTest : AstNode {
 public:
-  std::vector<NotTest *> not_tests;
+  std::vector<std::unique_ptr<NotTest>> not_tests;
 
-  static AndTest *parse(Lexer &lexer);
+  static std::unique_ptr<AndTest> parse(Lexer &lexer);
 };
 
 } // namespace Parser

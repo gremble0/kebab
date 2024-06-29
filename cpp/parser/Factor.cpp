@@ -7,9 +7,9 @@
 namespace Kebab {
 namespace Parser {
 
-FactorPrefix *FactorPrefix::parse(Lexer &lexer) {
+std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
   start_parsing("factor-prefix");
-  FactorPrefix *prefix = new FactorPrefix();
+  std::unique_ptr<FactorPrefix> prefix = std::make_unique<FactorPrefix>();
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::PLUS:
@@ -30,9 +30,9 @@ FactorPrefix *FactorPrefix::parse(Lexer &lexer) {
   return prefix;
 }
 
-Factor *Factor::parse(Lexer &lexer) {
+std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   start_parsing("factor");
-  Factor *factor = new Factor();
+  std::unique_ptr<Factor> factor = std::make_unique<Factor>();
 
   while (true) {
     if (FactorPrefix::is_factor_prefix(lexer.cur_token.kind))
@@ -51,9 +51,9 @@ Factor *Factor::parse(Lexer &lexer) {
   return factor;
 }
 
-FactorOperator *FactorOperator::parse(Lexer &lexer) {
+std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
   start_parsing("factor-operator");
-  FactorOperator *operator_ = new FactorOperator();
+  std::unique_ptr<FactorOperator> operator_ = std::make_unique<FactorOperator>();
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::MULT:

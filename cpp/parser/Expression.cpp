@@ -4,9 +4,9 @@
 namespace Kebab {
 namespace Parser {
 
-Expression *Expression::parse(Lexer &lexer) {
+std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
   start_parsing("expression");
-  Expression *expression;
+  std::unique_ptr<Expression> expression;
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::IF:
@@ -42,7 +42,7 @@ Expression *Expression::parse(Lexer &lexer) {
   return expression;
 }
 
-CondExpression *CondExpression::parse(Lexer &lexer) {
+std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
   start_parsing("cond-expression");
 
   // TODO:
@@ -51,9 +51,9 @@ CondExpression *CondExpression::parse(Lexer &lexer) {
   return nullptr;
 }
 
-NormalExpression *NormalExpression::parse(Lexer &lexer) {
+std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   start_parsing("normal-expression");
-  NormalExpression *expression = new NormalExpression();
+  std::unique_ptr<NormalExpression> expression = std::make_unique<NormalExpression>();
 
   // Keep parsing and tests until we have no longer ignored an `or` token
   while (true) {
@@ -68,7 +68,7 @@ NormalExpression *NormalExpression::parse(Lexer &lexer) {
   return expression;
 }
 
-FunctionExpression *FunctionExpression::parse(Lexer &lexer) {
+std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
   start_parsing("function-expression");
 
   // TODO:

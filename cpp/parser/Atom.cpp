@@ -4,9 +4,9 @@
 namespace Kebab {
 namespace Parser {
 
-IntAtom *IntAtom::parse(Lexer &lexer) {
+std::unique_ptr<IntAtom> IntAtom::parse(Lexer &lexer) {
   start_parsing("int-atom");
-  IntAtom *atom = new IntAtom();
+  std::unique_ptr<IntAtom> atom = std::make_unique<IntAtom>();
 
   atom->i = skip_int(lexer);
 
@@ -14,9 +14,9 @@ IntAtom *IntAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-FloatAtom *FloatAtom::parse(Lexer &lexer) {
+std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
   start_parsing("float-atom");
-  FloatAtom *atom = new FloatAtom();
+  std::unique_ptr<FloatAtom> atom = std::make_unique<FloatAtom>();
 
   atom->f = skip_float(lexer);
 
@@ -24,9 +24,9 @@ FloatAtom *FloatAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-CharAtom *CharAtom::parse(Lexer &lexer) {
+std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
   start_parsing("char-atom");
-  CharAtom *atom = new CharAtom();
+  std::unique_ptr<CharAtom> atom = std::make_unique<CharAtom>();
 
   atom->c = skip_char(lexer);
 
@@ -34,9 +34,9 @@ CharAtom *CharAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-StringAtom *StringAtom::parse(Lexer &lexer) {
+std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
   start_parsing("string-atom");
-  StringAtom *atom = new StringAtom();
+  std::unique_ptr<StringAtom> atom = std::make_unique<StringAtom>();
 
   atom->s = skip_string(lexer);
 
@@ -44,9 +44,9 @@ StringAtom *StringAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-BoolAtom *BoolAtom::parse(Lexer &lexer) {
+std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   start_parsing("bool-atom");
-  BoolAtom *atom = new BoolAtom();
+  std::unique_ptr<BoolAtom> atom = std::make_unique<BoolAtom>();
 
   if (lexer.cur_token.kind == Token::Kind::TRUE)
     atom->b = true;
@@ -58,9 +58,9 @@ BoolAtom *BoolAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-NameAtom *NameAtom::parse(Lexer &lexer) {
+std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
   start_parsing("name-atom");
-  NameAtom *atom = new NameAtom();
+  std::unique_ptr<NameAtom> atom = std::make_unique<NameAtom>();
 
   atom->name = skip_name(lexer);
 
@@ -68,9 +68,9 @@ NameAtom *NameAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-InnerExpressionAtom *InnerExpressionAtom::parse(Lexer &lexer) {
+std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
   start_parsing("inner-expression-atom");
-  InnerExpressionAtom *atom = new InnerExpressionAtom();
+  std::unique_ptr<InnerExpressionAtom> atom = std::make_unique<InnerExpressionAtom>();
 
   skip(lexer, Token::Kind::LPAREN);
   atom->expression = Expression::parse(lexer);
@@ -80,9 +80,9 @@ InnerExpressionAtom *InnerExpressionAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-ListAtom *ListAtom::parse(Lexer &lexer) {
+std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   start_parsing("list-atom");
-  ListAtom *atom = new ListAtom();
+  std::unique_ptr<ListAtom> atom = std::make_unique<ListAtom>();
 
   skip(lexer, Token::Kind::LBRACKET);
   while (lexer.cur_token.kind != Token::Kind::RBRACKET) {
@@ -97,9 +97,9 @@ ListAtom *ListAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-Atom *Atom::parse(Lexer &lexer) {
+std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
   start_parsing("atom");
-  Atom *atom;
+  std::unique_ptr<Atom> atom;
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::INT_LITERAL:

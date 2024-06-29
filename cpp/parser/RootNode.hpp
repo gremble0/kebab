@@ -1,6 +1,7 @@
 #ifndef KEBAB_ROOTNODE_HPP
 #define KEBAB_ROOTNODE_HPP
 
+#include <memory>
 #include <vector>
 
 #include "parser/Parser.hpp"
@@ -11,9 +12,9 @@ namespace Parser {
 
 class RootNode : public AstNode {
 public:
-  std::vector<Statement *> statements;
+  std::vector<std::unique_ptr<Statement>> statements;
 
-  static RootNode *parse(Lexer &lexer);
+  static std::unique_ptr<RootNode> parse(Lexer &lexer);
 };
 
 } // namespace Parser

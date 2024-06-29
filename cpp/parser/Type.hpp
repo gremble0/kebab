@@ -1,6 +1,7 @@
 #ifndef KEBAB_TYPE_HPP
 #define KEBAB_TYPE_HPP
 
+#include <memory>
 #include <vector>
 
 #include "lexer/Lexer.hpp"
@@ -14,14 +15,14 @@ protected:
   Type() = default;
 
 public:
-  static Type *parse(Lexer &lexer);
+  static std::unique_ptr<Type> parse(Lexer &lexer);
 };
 
 class ListType : public Type {
 public:
-  Type *content_type;
+  std::unique_ptr<Type> content_type;
 
-  static ListType *parse(Lexer &lexer);
+  static std::unique_ptr<ListType> parse(Lexer &lexer);
 };
 
 class FunctionType : public Type {
@@ -30,17 +31,19 @@ private:
   void parse_return_type(Lexer &lexer);
 
 public:
-  std::vector<Type *> parameter_types;
-  Type *return_type;
+  // The parameter types are shared with the types of each parameter in the function
+  std::vector<std::shared_ptr<Type>> parameter_types;
+  // This return type is shared with the type of the functions body
+  std::shared_ptr<Type> return_type;
 
-  static FunctionType *parse(Lexer &lexer);
+  static std::unique_ptr<FunctionType> parse(Lexer &lexer);
 };
 
 class PrimitiveType : public Type {
 public:
   std::string name;
 
-  static PrimitiveType *parse(Lexer &lexer);
+  static std::unique_ptr<PrimitiveType> parse(Lexer &lexer);
 };
 
 } // namespace Parser

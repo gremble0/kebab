@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "AndTest.hpp"
 #include "NotTest.hpp"
 #include "lexer/Lexer.hpp"
@@ -5,9 +7,9 @@
 namespace Kebab {
 namespace Parser {
 
-AndTest *AndTest::parse(Lexer &lexer) {
+std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
   start_parsing("and-test");
-  AndTest *and_test = new AndTest();
+  std::unique_ptr<AndTest> and_test = std::make_unique<AndTest>();
 
   // Keep parsing and tests until we have no longer ignored an `and` token
   while (true) {

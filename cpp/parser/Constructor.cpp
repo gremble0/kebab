@@ -1,4 +1,5 @@
 #include <cassert>
+#include <memory>
 
 #include "Constructor.hpp"
 #include "lexer/Lexer.hpp"
@@ -8,9 +9,9 @@
 namespace Kebab {
 namespace Parser {
 
-Constructor *Constructor::parse(Lexer &lexer) {
+std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
   start_parsing("constructor");
-  Constructor *constructor;
+  std::unique_ptr<Constructor> constructor;
 
   switch (lexer.cur_token.kind) {
   case Token::Kind::FN:
@@ -38,7 +39,7 @@ void ListConstructor::parse_type(Lexer &lexer) {
   skip(lexer, Token::Kind::LPAREN);
 
   skip(lexer, Token::Kind::LPAREN);
-  this->type = new ListType(); // TODO: make in constructor somewhere?
+  this->type = std::make_unique<ListType>(); // TODO: make in constructor somewhere?
   this->type->content_type = Type::parse(lexer);
   skip(lexer, Token::Kind::RPAREN);
 }
@@ -50,9 +51,9 @@ void ListConstructor::parse_body(Lexer &lexer) {
   skip(lexer, Token::Kind::RPAREN);
 }
 
-ListConstructor *ListConstructor::parse(Lexer &lexer) {
+std::unique_ptr<ListConstructor> ListConstructor::parse(Lexer &lexer) {
   start_parsing("list-constructor");
-  ListConstructor *constructor = new ListConstructor();
+  std::unique_ptr<ListConstructor> constructor = std::make_unique<ListConstructor>();
 
   constructor->parse_type(lexer);
   constructor->parse_body(lexer);
@@ -61,14 +62,12 @@ ListConstructor *ListConstructor::parse(Lexer &lexer) {
   return constructor;
 }
 
-FunctionParameter *FunctionParameter::parse(Lexer &lexer) {
+std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
   start_parsing("function-parameter");
-  FunctionParameter *parameter = new FunctionParameter();
+  std::unique_ptr<FunctionParameter> parameter = std::make_unique<FunctionParameter>();
 
   parameter->name = skip_name(lexer);
-
   skip(lexer, Token::Kind::COLON);
-
   parameter->type = Type::parse(lexer);
 
   end_parsing("function-parameter");
@@ -81,10 +80,10 @@ void FunctionConstructor::parse_type(Lexer &lexer) {
   skip(lexer, Token::Kind::LPAREN);
 
   // TODO: do this in some constructor?
-  this->type = new FunctionType();
+  this->type = std::make_unique<FunctionType>();
 
   while (lexer.cur_token.kind != Token::Kind::RPAREN) {
-    FunctionParameter *parameter = FunctionParameter::parse(lexer);
+    std::unique_ptr<FunctionParameter> parameter = FunctionParameter::parse(lexer);
     this->type->parameter_types.push_back(parameter->type);
     this->parameters.push_back(parameter);
 
@@ -97,15 +96,15 @@ void FunctionConstructor::parse_type(Lexer &lexer) {
 
 void FunctionConstructor::parse_body(Lexer &lexer) {
   skip(lexer, Token::Kind::FAT_RARROW);
-  Constructor *body = Constructor::parse(lexer);
+  std::unique_ptr<Constructor> body = Constructor::parse(lexer);
   this->type->return_type = body->type;
 
   skip(lexer, Token::Kind::RPAREN);
 }
 
-FunctionConstructor *FunctionConstructor::parse(Lexer &lexer) {
+std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
   start_parsing("function-constructor");
-  FunctionConstructor *constructor = new FunctionConstructor();
+  std::unique_ptr<FunctionConstructor> constructor = std::make_unique<FunctionConstructor>();
 
   constructor->parse_type(lexer);
   constructor->parse_body(lexer);
@@ -123,9 +122,9 @@ void PrimitiveConstructor::parse_body(Lexer &lexer) {
   skip(lexer, Token::Kind::RPAREN);
 }
 
-PrimitiveConstructor *PrimitiveConstructor::parse(Lexer &lexer) {
+std::unique_ptr<PrimitiveConstructor> PrimitiveConstructor::parse(Lexer &lexer) {
   start_parsing("primitive-constructor");
-  PrimitiveConstructor *constructor = new PrimitiveConstructor();
+  std::unique_ptr<PrimitiveConstructor> constructor = std::make_unique<PrimitiveConstructor>();
 
   constructor->parse_type(lexer);
   constructor->parse_body(lexer);
