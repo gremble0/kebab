@@ -16,7 +16,7 @@ static void lex_file_with_logs(const std::string &basename) {
   {
     std::ofstream log_file(log_path);
     Lexer l(source_path);
-    while (l.cur_token.kind != Token::Kind::END_OF_FILE) {
+    while (l.cur_token.type != Token::Type::END_OF_FILE) {
       log_file << l.cur_token.to_string() + '\n';
       l.advance();
     }
@@ -32,7 +32,7 @@ TEST(LexerTest, InitializesCorrectly) {
   ASSERT_DEATH({ Lexer l("non-existent-file"); }, "could not open file");
 
   Lexer l("lexer-source/comments.keb");
-  ASSERT_NE(l.cur_token.kind, Token::Kind::ILLEGAL);
+  ASSERT_NE(l.cur_token.type, Token::Type::ILLEGAL);
 }
 
 TEST(LexerTest, LexesCommentsKeb) {

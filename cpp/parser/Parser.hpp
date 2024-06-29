@@ -18,7 +18,7 @@ private:
   /**
    * @brief skip a token with an inner value and return it
    */
-  template <typename T, Token::Kind K> static T skip_value(Lexer &lexer) {
+  template <typename T, Token::Type K> static T skip_value(Lexer &lexer) {
     expect(lexer, K);
     T value = std::get<T>(lexer.cur_token.value);
     lexer.advance();
@@ -34,57 +34,57 @@ protected:
     exit(1);
   }
 
-  static void expect(Lexer &lexer, Token::Kind kind) {
-    if (lexer.cur_token.kind != kind)
+  static void expect(Lexer &lexer, Token::Type type) {
+    if (lexer.cur_token.type != type)
       error("unexpected token: '" + lexer.cur_token.to_string() + "' expected: '" +
-            Token::kind_to_string(kind) + '\'');
+            Token::type_to_string(type) + '\'');
   }
 
   // varargs?
-  static void expect(Lexer &lexer, Token::Kind either, Token::Kind or_) {
-    if (lexer.cur_token.kind != either && lexer.cur_token.kind != or_)
+  static void expect(Lexer &lexer, Token::Type either, Token::Type or_) {
+    if (lexer.cur_token.type != either && lexer.cur_token.type != or_)
       error("unexpected token: '" + lexer.cur_token.to_string() + "' expected: '" +
-            Token::kind_to_string(either) + "' or '" + Token::kind_to_string(or_) + '\'');
+            Token::type_to_string(either) + "' or '" + Token::type_to_string(or_) + '\'');
   }
 
   // TODO: make some more overloads - some times errors can be misleading if there are multiple
-  // acceptable token kinds, e.g. `def a = list((list(int)) => [[1,2],[3,4])` (missing closing
+  // acceptable token types, e.g. `def a = list((list(int)) => [[1,2],[3,4])` (missing closing
   // bracket, but parser says expects comma)
-  static void skip(Lexer &lexer, Token::Kind kind) {
-    expect(lexer, kind);
+  static void skip(Lexer &lexer, Token::Type type) {
+    expect(lexer, type);
     lexer.advance();
   }
 
-  static void skip(Lexer &lexer, Token::Kind either, Token::Kind or_) {
+  static void skip(Lexer &lexer, Token::Type either, Token::Type or_) {
     expect(lexer, either, or_);
     lexer.advance();
   }
 
   static int64_t skip_int(Lexer &lexer) {
-    return skip_value<int64_t, Token::Kind::INT_LITERAL>(lexer);
+    return skip_value<int64_t, Token::Type::INT_LITERAL>(lexer);
   }
 
   static float_t skip_float(Lexer &lexer) {
-    return skip_value<float_t, Token::Kind::FLOAT_LITERAL>(lexer);
+    return skip_value<float_t, Token::Type::FLOAT_LITERAL>(lexer);
   }
 
   static uint8_t skip_char(Lexer &lexer) {
-    return skip_value<uint8_t, Token::Kind::CHAR_LITERAL>(lexer);
+    return skip_value<uint8_t, Token::Type::CHAR_LITERAL>(lexer);
   }
 
   static std::string skip_string(Lexer &lexer) {
-    return skip_value<std::string, Token::Kind::STRING_LITERAL>(lexer);
+    return skip_value<std::string, Token::Type::STRING_LITERAL>(lexer);
   }
 
   static std::string skip_name(Lexer &lexer) {
-    return skip_value<std::string, Token::Kind::NAME>(lexer);
+    return skip_value<std::string, Token::Type::NAME>(lexer);
   }
 
   /**
    * @return whether the specified token was skipped
    */
-  static bool ignore(Lexer &lexer, Token::Kind kind) {
-    if (lexer.cur_token.kind == kind) {
+  static bool ignore(Lexer &lexer, Token::Type type) {
+    if (lexer.cur_token.type == type) {
       lexer.advance();
       return true;
     }

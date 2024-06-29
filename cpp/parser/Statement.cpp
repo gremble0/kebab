@@ -10,9 +10,9 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   start_parsing("definition-statement");
   std::unique_ptr<DefinitionStatement> def = std::make_unique<DefinitionStatement>();
 
-  skip(lexer, Token::Kind::DEF);
+  skip(lexer, Token::Type::DEF);
 
-  if (lexer.cur_token.kind == Token::Kind::MUT) {
+  if (lexer.cur_token.type == Token::Type::MUT) {
     def->is_mutable = true;
     lexer.advance();
   } else {
@@ -20,7 +20,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   }
 
   def->name = skip_name(lexer);
-  skip(lexer, Token::Kind::EQUALS);
+  skip(lexer, Token::Type::EQUALS);
   def->constructor = Constructor::parse(lexer);
 
   end_parsing("definition-statement");
@@ -50,35 +50,35 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
   start_parsing("statement");
   std::unique_ptr<Statement> statement;
 
-  switch (lexer.cur_token.kind) {
-  case Token::Kind::DEF:
+  switch (lexer.cur_token.type) {
+  case Token::Type::DEF:
     statement = DefinitionStatement::parse(lexer);
     break;
 
-  case Token::Kind::SET:
+  case Token::Type::SET:
     statement = AssignmentStatement::parse(lexer);
     break;
 
-  case Token::Kind::INT_LITERAL:
-  case Token::Kind::FLOAT_LITERAL:
-  case Token::Kind::CHAR_LITERAL:
-  case Token::Kind::STRING_LITERAL:
-  case Token::Kind::NAME:
+  case Token::Type::INT_LITERAL:
+  case Token::Type::FLOAT_LITERAL:
+  case Token::Type::CHAR_LITERAL:
+  case Token::Type::STRING_LITERAL:
+  case Token::Type::NAME:
   // Cond expressions (if/elif/else)
-  case Token::Kind::IF:
+  case Token::Type::IF:
   // Factor prefixes
-  case Token::Kind::PLUS:
-  case Token::Kind::MINUS:
-  case Token::Kind::MULT:
-  case Token::Kind::DIV:
-  case Token::Kind::NOT:
+  case Token::Type::PLUS:
+  case Token::Type::MINUS:
+  case Token::Type::MULT:
+  case Token::Type::DIV:
+  case Token::Type::NOT:
   // Booleans
-  case Token::Kind::TRUE:
-  case Token::Kind::FALSE:
+  case Token::Type::TRUE:
+  case Token::Type::FALSE:
   // Inner expression wrapped in parens, e.g. `(1 + 2)`
-  case Token::Kind::LPAREN:
+  case Token::Type::LPAREN:
   // Lists e.g. `[x, y, z]`
-  case Token::Kind::LBRACKET:
+  case Token::Type::LBRACKET:
     statement = ExpressionStatement::parse(lexer);
     break;
 

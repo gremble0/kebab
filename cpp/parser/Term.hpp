@@ -18,8 +18,8 @@ public:
     MINUS,
   } type;
 
-  static constexpr bool is_term_operator(Token::Kind kind) {
-    switch (kind) {
+  static constexpr bool is_term_operator(Token::Type type) {
+    switch (type) {
     case Token::PLUS:
     case Token::MINUS:
       return true;

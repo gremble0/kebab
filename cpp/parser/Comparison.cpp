@@ -11,28 +11,28 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
   start_parsing("comparison-operator");
   std::unique_ptr<ComparisonOperator> operator_ = std::make_unique<ComparisonOperator>();
 
-  switch (lexer.cur_token.kind) {
-  case Token::Kind::LT:
+  switch (lexer.cur_token.type) {
+  case Token::Type::LT:
     operator_->type = ComparisonOperator::Type::LT;
     break;
 
-  case Token::Kind::LE:
+  case Token::Type::LE:
     operator_->type = ComparisonOperator::Type::LE;
     break;
 
-  case Token::Kind::EQ:
+  case Token::Type::EQ:
     operator_->type = ComparisonOperator::Type::EQ;
     break;
 
-  case Token::Kind::NEQ:
+  case Token::Type::NEQ:
     operator_->type = ComparisonOperator::Type::NEQ;
     break;
 
-  case Token::Kind::GT:
+  case Token::Type::GT:
     operator_->type = ComparisonOperator::Type::GT;
     break;
 
-  case Token::Kind::GE:
+  case Token::Type::GE:
     operator_->type = ComparisonOperator::Type::GE;
     break;
 
@@ -53,7 +53,7 @@ std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
   while (true) {
     comparison->terms.push_back(Term::parse(lexer));
 
-    if (ComparisonOperator::is_comparison_operator(lexer.cur_token.kind))
+    if (ComparisonOperator::is_comparison_operator(lexer.cur_token.type))
       comparison->operators.push_back(ComparisonOperator::parse(lexer));
     else
       break;

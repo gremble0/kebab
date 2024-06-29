@@ -13,7 +13,7 @@ namespace Kebab {
 
 class Token {
 public:
-  enum Kind {
+  enum Type {
     // Keywords
     DEF,  // def
     SET,  // set
@@ -70,20 +70,19 @@ public:
     // Special
     END_OF_FILE, // <end of file>
     ILLEGAL,     // Illegal token, e.g. # @ % $, etc.
-  };
+  } type;
 
-  Kind kind;
   Span span;
   std::variant<uint8_t, int64_t, float_t, std::string> value;
 
   // make default constructors?
-  Token(Kind kind, Span span) : kind(kind), span(span) {}
-  Token(Kind kind, Span span, std::variant<uint8_t, int64_t, float_t, std::string> value)
-      : kind(kind), span(span), value(value) {}
+  Token(Type type, Span span) : type(type), span(span) {}
+  Token(Type type, Span span, std::variant<uint8_t, int64_t, float_t, std::string> value)
+      : type(type), span(span), value(value) {}
   Token(Span span, std::string word);
 
   std::string to_string() const;
-  static std::string kind_to_string(Kind kind);
+  static std::string type_to_string(Type type);
 };
 
 } // namespace Kebab

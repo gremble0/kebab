@@ -8,29 +8,29 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
   start_parsing("expression");
   std::unique_ptr<Expression> expression;
 
-  switch (lexer.cur_token.kind) {
-  case Token::Kind::IF:
+  switch (lexer.cur_token.type) {
+  case Token::Type::IF:
     expression = CondExpression::parse(lexer);
     break;
 
-  case Token::Kind::INT_LITERAL:
-  case Token::Kind::FLOAT_LITERAL:
-  case Token::Kind::CHAR_LITERAL:
-  case Token::Kind::STRING_LITERAL:
-  case Token::Kind::NAME:
-  case Token::Kind::PLUS:
-  case Token::Kind::MINUS:
-  case Token::Kind::MULT:
-  case Token::Kind::DIV:
-  case Token::Kind::NOT:
-  case Token::Kind::TRUE:
-  case Token::Kind::FALSE:
-  case Token::Kind::LPAREN:
-  case Token::Kind::LBRACKET:
+  case Token::Type::INT_LITERAL:
+  case Token::Type::FLOAT_LITERAL:
+  case Token::Type::CHAR_LITERAL:
+  case Token::Type::STRING_LITERAL:
+  case Token::Type::NAME:
+  case Token::Type::PLUS:
+  case Token::Type::MINUS:
+  case Token::Type::MULT:
+  case Token::Type::DIV:
+  case Token::Type::NOT:
+  case Token::Type::TRUE:
+  case Token::Type::FALSE:
+  case Token::Type::LPAREN:
+  case Token::Type::LBRACKET:
     expression = NormalExpression::parse(lexer);
     break;
 
-  case Token::Kind::FN:
+  case Token::Type::FN:
     expression = FunctionExpression::parse(lexer);
     break;
 
@@ -59,7 +59,7 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   while (true) {
     expression->and_tests.push_back(AndTest::parse(lexer));
 
-    bool ignored_or = ignore(lexer, Token::Kind::OR);
+    bool ignored_or = ignore(lexer, Token::Type::OR);
     if (!ignored_or)
       break;
   }

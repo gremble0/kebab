@@ -29,7 +29,7 @@ private:
   Token read_string();
   Token read_word();
 
-  void handle_one_char_kind(Token::Kind kind);
+  void handle_one_char_type(Token::Type type);
   void handle_newline();
   void handle_whitespace();
   void handle_colon();
@@ -50,7 +50,7 @@ private:
 public:
   Token cur_token;
 
-  Lexer(std::string path);
+  explicit Lexer(std::string path);
   void advance();
 };
 

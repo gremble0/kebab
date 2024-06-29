@@ -13,16 +13,16 @@ std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
   start_parsing("constructor");
   std::unique_ptr<Constructor> constructor;
 
-  switch (lexer.cur_token.kind) {
-  case Token::Kind::FN:
+  switch (lexer.cur_token.type) {
+  case Token::Type::FN:
     constructor = FunctionConstructor::parse(lexer);
     break;
 
-  case Token::Kind::LIST:
+  case Token::Type::LIST:
     constructor = ListConstructor::parse(lexer);
     break;
 
-  case Token::Kind::NAME:
+  case Token::Type::NAME:
     constructor = PrimitiveConstructor::parse(lexer);
     break;
 
@@ -35,20 +35,20 @@ std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
 }
 
 void ListConstructor::parse_type(Lexer &lexer) {
-  skip(lexer, Token::Kind::LIST);
-  skip(lexer, Token::Kind::LPAREN);
+  skip(lexer, Token::Type::LIST);
+  skip(lexer, Token::Type::LPAREN);
 
-  skip(lexer, Token::Kind::LPAREN);
+  skip(lexer, Token::Type::LPAREN);
   this->type = std::make_unique<ListType>(); // TODO: make in constructor somewhere?
   this->type->content_type = Type::parse(lexer);
-  skip(lexer, Token::Kind::RPAREN);
+  skip(lexer, Token::Type::RPAREN);
 }
 
 void ListConstructor::parse_body(Lexer &lexer) {
-  skip(lexer, Token::Kind::FAT_RARROW);
-  while (lexer.cur_token.kind != Token::Kind::RPAREN)
+  skip(lexer, Token::Type::FAT_RARROW);
+  while (lexer.cur_token.type != Token::Type::RPAREN)
     this->body.push_back(Statement::parse(lexer));
-  skip(lexer, Token::Kind::RPAREN);
+  skip(lexer, Token::Type::RPAREN);
 }
 
 std::unique_ptr<ListConstructor> ListConstructor::parse(Lexer &lexer) {
@@ -67,7 +67,7 @@ std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
   std::unique_ptr<FunctionParameter> parameter = std::make_unique<FunctionParameter>();
 
   parameter->name = skip_name(lexer);
-  skip(lexer, Token::Kind::COLON);
+  skip(lexer, Token::Type::COLON);
   parameter->type = Type::parse(lexer);
 
   end_parsing("function-parameter");
@@ -75,31 +75,31 @@ std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
 }
 
 void FunctionConstructor::parse_type(Lexer &lexer) {
-  skip(lexer, Token::Kind::FN);
-  skip(lexer, Token::Kind::LPAREN);
-  skip(lexer, Token::Kind::LPAREN);
+  skip(lexer, Token::Type::FN);
+  skip(lexer, Token::Type::LPAREN);
+  skip(lexer, Token::Type::LPAREN);
 
   // TODO: do this in some constructor?
   this->type = std::make_unique<FunctionType>();
 
-  while (lexer.cur_token.kind != Token::Kind::RPAREN) {
+  while (lexer.cur_token.type != Token::Type::RPAREN) {
     std::unique_ptr<FunctionParameter> parameter = FunctionParameter::parse(lexer);
     this->type->parameter_types.push_back(parameter->type);
     this->parameters.push_back(std::move(parameter));
 
-    expect(lexer, Token::Kind::COMMA, Token::Kind::RPAREN);
-    ignore(lexer, Token::Kind::COMMA);
+    expect(lexer, Token::Type::COMMA, Token::Type::RPAREN);
+    ignore(lexer, Token::Type::COMMA);
   }
 
-  skip(lexer, Token::Kind::RPAREN);
+  skip(lexer, Token::Type::RPAREN);
 }
 
 void FunctionConstructor::parse_body(Lexer &lexer) {
-  skip(lexer, Token::Kind::FAT_RARROW);
+  skip(lexer, Token::Type::FAT_RARROW);
   std::unique_ptr<Constructor> body = Constructor::parse(lexer);
   this->type->return_type = body->type;
 
-  skip(lexer, Token::Kind::RPAREN);
+  skip(lexer, Token::Type::RPAREN);
 }
 
 std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
@@ -116,10 +116,10 @@ std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
 void PrimitiveConstructor::parse_type(Lexer &lexer) { this->type = PrimitiveType::parse(lexer); }
 
 void PrimitiveConstructor::parse_body(Lexer &lexer) {
-  skip(lexer, Token::Kind::LPAREN);
-  while (lexer.cur_token.kind != Token::Kind::RPAREN)
+  skip(lexer, Token::Type::LPAREN);
+  while (lexer.cur_token.type != Token::Type::RPAREN)
     this->body.push_back(Statement::parse(lexer));
-  skip(lexer, Token::Kind::RPAREN);
+  skip(lexer, Token::Type::RPAREN);
 }
 
 std::unique_ptr<PrimitiveConstructor> PrimitiveConstructor::parse(Lexer &lexer) {

@@ -11,7 +11,7 @@ namespace Kebab {
 
 Lexer::Lexer(std::string path)
     : path(path), stream(path), line_number(0), line_pos(0),
-      cur_token(Token::Kind::ILLEGAL, Span(Position(0, 0), Position(0, 0))) {
+      cur_token(Token::Type::ILLEGAL, Span(Position(0, 0), Position(0, 0))) {
   if (!stream.is_open())
     this->error("could not open file " + path);
 
@@ -41,7 +41,7 @@ Position Lexer::position() const { return Position(this->line_number, this->line
 
 uint8_t Lexer::peek(int offset) const {
   bool too_big = this->line_pos + offset >= this->line.length();
-  bool too_small = this->line_pos + offset < 0;
+  bool too_small = (int)this->line_pos + offset < 0;
   if (too_big || too_small)
     return '\0';
 
@@ -73,9 +73,9 @@ Token Lexer::read_number() {
 
   try {
     if (has_seen_point)
-      return Token(Token::Kind::FLOAT_LITERAL, span, std::stof(&this->line[start.col]));
+      return Token(Token::Type::FLOAT_LITERAL, span, std::stof(&this->line[start.col]));
     else
-      return Token(Token::Kind::INT_LITERAL, span, std::stoi(&this->line[start.col]));
+      return Token(Token::Type::INT_LITERAL, span, std::stoi(&this->line[start.col]));
   } catch (std::out_of_range) {
     this->error("number out of range");
   }
@@ -95,7 +95,7 @@ Token Lexer::read_char() {
 
   Span span(start, this->position());
 
-  return Token(Token::Kind::CHAR_LITERAL, span, c);
+  return Token(Token::Type::CHAR_LITERAL, span, c);
 }
 
 Token Lexer::read_string() {
@@ -124,7 +124,7 @@ Token Lexer::read_string() {
   Position end = this->position();
   Span span(start, end);
 
-  return Token(Token::Kind::STRING_LITERAL, span,
+  return Token(Token::Type::STRING_LITERAL, span,
                this->line.substr(start.col + 1, end.col - start.col - 1));
 }
 
@@ -154,17 +154,17 @@ void Lexer::handle_newline() {
   this->next_line();
 
   if (stream.eof()) {
-    this->cur_token = Token(Token::Kind::END_OF_FILE, Span(this->position(), this->position()));
+    this->cur_token = Token(Token::Type::END_OF_FILE, Span(this->position(), this->position()));
     return;
   }
 
   this->advance();
 }
 
-void Lexer::handle_one_char_kind(Token::Kind kind) {
+void Lexer::handle_one_char_type(Token::Type type) {
   Position start = this->position();
   ++this->line_pos;
-  this->cur_token = Token(kind, Span(start, this->position()));
+  this->cur_token = Token(type, Span(start, this->position()));
 }
 
 void Lexer::handle_whitespace() {
@@ -172,94 +172,94 @@ void Lexer::handle_whitespace() {
   this->advance();
 }
 
-void Lexer::handle_colon() { this->handle_one_char_kind(Token::Kind::COLON); }
+void Lexer::handle_colon() { this->handle_one_char_type(Token::Type::COLON); }
 
 void Lexer::handle_equals() {
   Position start = this->position();
-  Token::Kind kind;
+  Token::Type type;
 
   switch (this->peek(1)) {
   case '>':
     this->line_pos += 2;
-    kind = Token::Kind::FAT_RARROW;
+    type = Token::Type::FAT_RARROW;
     break;
 
   case '=':
     this->line_pos += 2;
-    kind = Token::Kind::EQ;
+    type = Token::Type::EQ;
     break;
 
   default:
     ++this->line_pos;
-    kind = Token::Kind::EQUALS;
+    type = Token::Type::EQUALS;
     break;
   }
 
-  this->cur_token = Token(kind, Span(start, this->position()));
+  this->cur_token = Token(type, Span(start, this->position()));
 }
 
-void Lexer::handle_comma() { this->handle_one_char_kind(Token::Kind::COMMA); }
+void Lexer::handle_comma() { this->handle_one_char_type(Token::Type::COMMA); }
 
-void Lexer::handle_lparen() { this->handle_one_char_kind(Token::Kind::LPAREN); }
+void Lexer::handle_lparen() { this->handle_one_char_type(Token::Type::LPAREN); }
 
-void Lexer::handle_rparen() { this->handle_one_char_kind(Token::Kind::RPAREN); }
+void Lexer::handle_rparen() { this->handle_one_char_type(Token::Type::RPAREN); }
 
-void Lexer::handle_lbracket() { this->handle_one_char_kind(Token::Kind::LBRACKET); }
+void Lexer::handle_lbracket() { this->handle_one_char_type(Token::Type::LBRACKET); }
 
-void Lexer::handle_rbracket() { this->handle_one_char_kind(Token::Kind::RBRACKET); }
+void Lexer::handle_rbracket() { this->handle_one_char_type(Token::Type::RBRACKET); }
 
-void Lexer::handle_plus() { this->handle_one_char_kind(Token::Kind::PLUS); }
+void Lexer::handle_plus() { this->handle_one_char_type(Token::Type::PLUS); }
 
-void Lexer::handle_minus() { this->handle_one_char_kind(Token::Kind::MINUS); }
+void Lexer::handle_minus() { this->handle_one_char_type(Token::Type::MINUS); }
 
-void Lexer::handle_mult() { this->handle_one_char_kind(Token::Kind::MULT); }
+void Lexer::handle_mult() { this->handle_one_char_type(Token::Type::MULT); }
 
 void Lexer::handle_not() {
   Position start = this->position();
-  Token::Kind kind;
+  Token::Type type;
 
   if (this->peek(1) == '=') {
     this->line_pos += 2;
-    kind = Token::Kind::NEQ;
+    type = Token::Type::NEQ;
   } else {
     ++this->line_pos;
-    kind = Token::Kind::NOT;
+    type = Token::Type::NOT;
   }
 
-  this->cur_token = Token(kind, Span(start, this->position()));
+  this->cur_token = Token(type, Span(start, this->position()));
 }
 
 void Lexer::handle_lt() {
   Position start = this->position();
-  Token::Kind kind;
+  Token::Type type;
 
   if (this->peek(1) == '=') {
     this->line_pos += 2;
-    kind = Token::Kind::LE;
+    type = Token::Type::LE;
   } else {
     ++this->line_pos;
-    kind = Token::Kind::LT;
+    type = Token::Type::LT;
   }
 
-  this->cur_token = Token(kind, Span(start, this->position()));
+  this->cur_token = Token(type, Span(start, this->position()));
 }
 
 void Lexer::handle_gt() {
   Position start = this->position();
-  Token::Kind kind;
+  Token::Type type;
 
   if (this->peek(1) == '=') {
     this->line_pos += 2;
-    kind = Token::Kind::GE;
+    type = Token::Type::GE;
   } else {
     ++this->line_pos;
-    kind = Token::Kind::GT;
+    type = Token::Type::GT;
   }
 
-  this->cur_token = Token(kind, Span(start, this->position()));
+  this->cur_token = Token(type, Span(start, this->position()));
 }
 
-void Lexer::handle_div() { this->handle_one_char_kind(Token::Kind::DIV); }
+void Lexer::handle_div() { this->handle_one_char_type(Token::Type::DIV); }
 
 void Lexer::advance() {
   char peeked = this->peek(0);

@@ -11,12 +11,12 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
   start_parsing("factor-prefix");
   std::unique_ptr<FactorPrefix> prefix = std::make_unique<FactorPrefix>();
 
-  switch (lexer.cur_token.kind) {
-  case Token::Kind::PLUS:
+  switch (lexer.cur_token.type) {
+  case Token::Type::PLUS:
     prefix->type = FactorPrefix::Type::PLUS;
     break;
 
-  case Token::Kind::MINUS:
+  case Token::Type::MINUS:
     prefix->type = FactorPrefix::Type::MINUS;
     break;
 
@@ -35,14 +35,14 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   std::unique_ptr<Factor> factor = std::make_unique<Factor>();
 
   while (true) {
-    if (FactorPrefix::is_factor_prefix(lexer.cur_token.kind))
+    if (FactorPrefix::is_factor_prefix(lexer.cur_token.type))
       factor->prefixes.push_back(FactorPrefix::parse(lexer));
     else
       factor->prefixes.push_back(std::nullopt);
 
     factor->primaries.push_back(Primary::parse(lexer));
 
-    if (!FactorOperator::is_factor_operator(lexer.cur_token.kind))
+    if (!FactorOperator::is_factor_operator(lexer.cur_token.type))
       break;
     factor->operators.push_back(FactorOperator::parse(lexer));
   }
@@ -55,12 +55,12 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
   start_parsing("factor-operator");
   std::unique_ptr<FactorOperator> operator_ = std::make_unique<FactorOperator>();
 
-  switch (lexer.cur_token.kind) {
-  case Token::Kind::MULT:
+  switch (lexer.cur_token.type) {
+  case Token::Type::MULT:
     operator_->type = FactorOperator::Type::MULT;
     break;
 
-  case Token::Kind::DIV:
+  case Token::Type::DIV:
     operator_->type = FactorOperator::Type::DIV;
     break;
 

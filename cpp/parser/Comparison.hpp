@@ -22,8 +22,8 @@ public:
     GE,  // >=
   } type;
 
-  static constexpr bool is_comparison_operator(Token::Kind kind) {
-    switch (kind) {
+  static constexpr bool is_comparison_operator(Token::Type type) {
+    switch (type) {
     case Token::LT:
     case Token::LE:
     case Token::EQ:

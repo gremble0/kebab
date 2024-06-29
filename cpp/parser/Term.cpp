@@ -10,12 +10,12 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
   start_parsing("term-operator");
   std::unique_ptr<TermOperator> operator_ = std::make_unique<TermOperator>();
 
-  switch (lexer.cur_token.kind) {
-  case Token::Kind::PLUS:
+  switch (lexer.cur_token.type) {
+  case Token::Type::PLUS:
     operator_->type = TermOperator::Type::PLUS;
     break;
 
-  case Token::Kind::MINUS:
+  case Token::Type::MINUS:
     operator_->type = TermOperator::Type::MINUS;
     break;
 
@@ -36,7 +36,7 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
   while (true) {
     term->factors.push_back(Factor::parse(lexer));
 
-    if (TermOperator::is_term_operator(lexer.cur_token.kind))
+    if (TermOperator::is_term_operator(lexer.cur_token.type))
       term->operators.push_back(TermOperator::parse(lexer));
     else
       break;

@@ -15,7 +15,7 @@ std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
   while (true) {
     and_test->not_tests.push_back(NotTest::parse(lexer));
 
-    bool ignored_and = ignore(lexer, Token::Kind::AND);
+    bool ignored_and = ignore(lexer, Token::Type::AND);
     if (!ignored_and)
       break;
   }

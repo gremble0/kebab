@@ -9,16 +9,16 @@ std::unique_ptr<Type> Type::parse(Lexer &lexer) {
   start_parsing("type");
   std::unique_ptr<Type> type;
 
-  switch (lexer.cur_token.kind) {
-  case Token::Kind::FN:
+  switch (lexer.cur_token.type) {
+  case Token::Type::FN:
     type = FunctionType::parse(lexer);
     break;
 
-  case Token::Kind::LIST:
+  case Token::Type::LIST:
     type = ListType::parse(lexer);
     break;
 
-  case Token::Kind::NAME:
+  case Token::Type::NAME:
     type = PrimitiveType::parse(lexer);
     break;
 
@@ -34,21 +34,21 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   start_parsing("list-type");
   std::unique_ptr<ListType> type = std::make_unique<ListType>();
 
-  skip(lexer, Token::Kind::LIST);
-  skip(lexer, Token::Kind::LPAREN);
+  skip(lexer, Token::Type::LIST);
+  skip(lexer, Token::Type::LPAREN);
   type->content_type = Type::parse(lexer);
-  skip(lexer, Token::Kind::RPAREN);
+  skip(lexer, Token::Type::RPAREN);
 
   end_parsing("list-type");
   return type;
 }
 
 void FunctionType::parse_parameter_types(Lexer &lexer) {
-  while (lexer.cur_token.kind != Token::Kind::RPAREN) {
+  while (lexer.cur_token.type != Token::Type::RPAREN) {
     this->parameter_types.push_back(Type::parse(lexer));
 
-    expect(lexer, Token::Kind::COMMA, Token::Kind::RPAREN);
-    ignore(lexer, Token::Kind::COMMA);
+    expect(lexer, Token::Type::COMMA, Token::Type::RPAREN);
+    ignore(lexer, Token::Type::COMMA);
   }
 }
 
@@ -58,13 +58,13 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
   start_parsing("function-type");
   std::unique_ptr<FunctionType> type = std::make_unique<FunctionType>();
 
-  skip(lexer, Token::Kind::FN);
-  skip(lexer, Token::Kind::LPAREN);
+  skip(lexer, Token::Type::FN);
+  skip(lexer, Token::Type::LPAREN);
 
   type->parse_parameter_types(lexer);
 
-  skip(lexer, Token::Kind::RPAREN);
-  skip(lexer, Token::Kind::FAT_RARROW);
+  skip(lexer, Token::Type::RPAREN);
+  skip(lexer, Token::Type::FAT_RARROW);
 
   type->parse_return_type(lexer);
 

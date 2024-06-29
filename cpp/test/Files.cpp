@@ -30,7 +30,7 @@ static void replace_one(const std::string &basename) {
   {
     std::ofstream log_file(log_path);
     Lexer l(source_path);
-    while (l.cur_token.kind != Token::Kind::END_OF_FILE) {
+    while (l.cur_token.type != Token::Type::END_OF_FILE) {
       log_file << l.cur_token.to_string() + '\n';
       l.advance();
     }

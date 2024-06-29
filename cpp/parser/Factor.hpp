@@ -11,7 +11,7 @@
 namespace Kebab {
 namespace Parser {
 
-// TODO: Operator interface - is_operator(kind)
+// TODO: Operator interface - is_operator(type)
 class FactorOperator : public AstNode /*, Operator */ {
 public:
   enum Type {
@@ -19,8 +19,8 @@ public:
     DIV,
   } type;
 
-  static constexpr bool is_factor_operator(Token::Kind kind) {
-    switch (kind) {
+  static constexpr bool is_factor_operator(Token::Type type) {
+    switch (type) {
     case Token::DIV:
     case Token::MULT:
       return true;
@@ -40,8 +40,8 @@ public:
     MINUS,
   } type;
 
-  static constexpr bool is_factor_prefix(Token::Kind kind) {
-    switch (kind) {
+  static constexpr bool is_factor_prefix(Token::Type type) {
+    switch (type) {
     case Token::PLUS:
     case Token::MINUS:
       return true;

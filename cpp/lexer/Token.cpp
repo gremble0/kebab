@@ -9,59 +9,59 @@ Token::Token(Span span, std::string word) : span(span) {
   assert(word.find(' ') == std::string::npos);
 
   if (word.compare("def") == 0)
-    this->kind = DEF;
+    this->type = DEF;
   else if (word.compare("set") == 0)
-    this->kind = SET;
+    this->type = SET;
   else if (word.compare("mut") == 0)
-    this->kind = MUT;
+    this->type = MUT;
   else if (word.compare("if") == 0)
-    this->kind = IF;
+    this->type = IF;
   else if (word.compare("elif") == 0)
-    this->kind = ELIF;
+    this->type = ELIF;
   else if (word.compare("else") == 0)
-    this->kind = ELSE;
+    this->type = ELSE;
   else if (word.compare("fn") == 0)
-    this->kind = FN;
+    this->type = FN;
   else if (word.compare("list") == 0)
-    this->kind = LIST;
+    this->type = LIST;
   else if (word.compare("true") == 0)
-    this->kind = TRUE;
+    this->type = TRUE;
   else if (word.compare("false") == 0)
-    this->kind = FALSE;
+    this->type = FALSE;
   else if (word.compare("and") == 0)
-    this->kind = AND;
+    this->type = AND;
   else if (word.compare("or") == 0)
-    this->kind = OR;
+    this->type = OR;
   else {
-    this->kind = NAME;
+    this->type = NAME;
     this->value = word; // This should maybe be std::move ?
   }
 }
 
 std::string Token::to_string() const {
-  switch (this->kind) {
-  case Token::Kind::INT_LITERAL:
+  switch (this->type) {
+  case Token::Type::INT_LITERAL:
     return std::to_string(std::get<int64_t>(this->value));
 
-  case Token::Kind::FLOAT_LITERAL:
+  case Token::Type::FLOAT_LITERAL:
     return std::to_string(std::get<float_t>(this->value));
 
-  case Token::Kind::CHAR_LITERAL:
+  case Token::Type::CHAR_LITERAL:
     return std::to_string(std::get<uint8_t>(this->value));
 
-  case Token::Kind::STRING_LITERAL:
+  case Token::Type::STRING_LITERAL:
     return std::get<std::string>(this->value);
 
-  case Token::Kind::NAME:
+  case Token::Type::NAME:
     return std::get<std::string>(this->value);
 
   default:
-    return Token::kind_to_string(this->kind);
+    return Token::type_to_string(this->type);
   }
 }
 
-std::string Token::kind_to_string(Kind kind) {
-  switch (kind) {
+std::string Token::type_to_string(Type type) {
+  switch (type) {
   case DEF:
     return "def";
   case SET:
