@@ -85,12 +85,10 @@ ListAtom *ListAtom::parse(Lexer &lexer) {
   ListAtom *atom = new ListAtom();
 
   skip(lexer, Token::Kind::LBRACKET);
-  while (true) {
+  while (lexer.cur_token.kind != Token::Kind::RBRACKET) {
     atom->list.push_back(Expression::parse(lexer));
 
-    if (lexer.cur_token.kind == Token::Kind::RBRACKET)
-      break;
-    else
+    if (lexer.cur_token.kind != Token::Kind::RBRACKET)
       skip(lexer, Token::Kind::COMMA);
   }
   skip(lexer, Token::Kind::RBRACKET);

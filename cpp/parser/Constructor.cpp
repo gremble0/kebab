@@ -38,7 +38,8 @@ void ListConstructor::parse_type(Lexer &lexer) {
   skip(lexer, Token::Kind::LPAREN);
 
   skip(lexer, Token::Kind::LPAREN);
-  this->type = ListType::parse(lexer);
+  this->type = new ListType(); // TODO: make in constructor somewhere?
+  this->type->content_type = Type::parse(lexer);
   skip(lexer, Token::Kind::RPAREN);
 }
 
