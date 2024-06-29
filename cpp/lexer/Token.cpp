@@ -39,53 +39,43 @@ Token::Token(Span span, std::string word) : span(span) {
 }
 
 std::string Token::to_string() const {
-  std::string out;
-
   switch (this->kind) {
   case Token::Kind::INT_LITERAL:
-    out = "<int-literal=" + std::to_string(std::get<int64_t>(this->value)) + '>';
-    break;
+    return std::to_string(std::get<int64_t>(this->value));
 
   case Token::Kind::FLOAT_LITERAL:
-    out = "<float-literal=" + std::to_string(std::get<float_t>(this->value)) + '>';
-    break;
+    return std::to_string(std::get<float_t>(this->value));
 
   case Token::Kind::CHAR_LITERAL:
-    out = "<char-literal='" + std::to_string(std::get<uint8_t>(this->value)) + "'>";
-    break;
+    return std::to_string(std::get<uint8_t>(this->value));
 
   case Token::Kind::STRING_LITERAL:
-    out = "<string-literal=\"" + std::get<std::string>(this->value) + "\">";
-    break;
+    return std::get<std::string>(this->value);
 
   case Token::Kind::NAME:
-    out = "<name=\"" + std::get<std::string>(this->value) + "\">";
-    break;
+    return std::get<std::string>(this->value);
 
   default:
-    out = Token::kind_to_string(this->kind);
-    break;
+    return Token::kind_to_string(this->kind);
   }
-
-  return out + ' ' + this->span.to_string();
 }
 
 std::string Token::kind_to_string(Kind kind) {
   switch (kind) {
   case DEF:
-    return "'def'";
+    return "def";
   case SET:
-    return "'set'";
+    return "set";
   case MUT:
-    return "'mut'";
+    return "mut";
   case NIL:
-    return "'nil'";
+    return "nil";
   case IF:
-    return "'if'";
+    return "if";
   case ELIF:
-    return "'elif'";
+    return "elif";
   case ELSE:
-    return "'else'";
+    return "else";
   case FN:
     return "fn";
   case LIST:

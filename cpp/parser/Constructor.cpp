@@ -26,7 +26,7 @@ Constructor *Constructor::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") + lexer.cur_token.to_string());
+    error("unexpected token: '" + lexer.cur_token.to_string() + "' expected some type");
   }
 
   end_parsing("constructor");
