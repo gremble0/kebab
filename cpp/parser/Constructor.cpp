@@ -85,7 +85,7 @@ void FunctionConstructor::parse_type(Lexer &lexer) {
   while (lexer.cur_token.kind != Token::Kind::RPAREN) {
     std::unique_ptr<FunctionParameter> parameter = FunctionParameter::parse(lexer);
     this->type->parameter_types.push_back(parameter->type);
-    this->parameters.push_back(parameter);
+    this->parameters.push_back(std::move(parameter));
 
     expect(lexer, Token::Kind::COMMA, Token::Kind::RPAREN);
     ignore(lexer, Token::Kind::COMMA);
