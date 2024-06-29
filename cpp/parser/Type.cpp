@@ -44,13 +44,11 @@ ListType *ListType::parse(Lexer &lexer) {
 }
 
 void FunctionType::parse_parameter_types(Lexer &lexer) {
-  while (true) {
+  while (lexer.cur_token.kind != Token::Kind::RPAREN) {
     this->parameter_types.push_back(Type::parse(lexer));
 
-    if (lexer.cur_token.kind == Token::Kind::RPAREN)
-      break;
-    else
-      skip(lexer, Token::Kind::COMMA);
+    expect(lexer, Token::Kind::COMMA, Token::Kind::RPAREN);
+    ignore(lexer, Token::Kind::COMMA);
   }
 }
 

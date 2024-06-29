@@ -88,8 +88,8 @@ void FunctionConstructor::parse_type(Lexer &lexer) {
     this->type->parameter_types.push_back(parameter->type);
     this->parameters.push_back(parameter);
 
-    if (lexer.cur_token.kind != Token::Kind::RPAREN)
-      skip(lexer, Token::Kind::COMMA);
+    expect(lexer, Token::Kind::COMMA, Token::Kind::RPAREN);
+    ignore(lexer, Token::Kind::COMMA);
   }
 
   skip(lexer, Token::Kind::RPAREN);

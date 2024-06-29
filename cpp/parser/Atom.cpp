@@ -88,8 +88,8 @@ ListAtom *ListAtom::parse(Lexer &lexer) {
   while (lexer.cur_token.kind != Token::Kind::RBRACKET) {
     atom->list.push_back(Expression::parse(lexer));
 
-    if (lexer.cur_token.kind != Token::Kind::RBRACKET)
-      skip(lexer, Token::Kind::COMMA);
+    expect(lexer, Token::Kind::COMMA, Token::Kind::RBRACKET);
+    ignore(lexer, Token::Kind::COMMA);
   }
   skip(lexer, Token::Kind::RBRACKET);
 

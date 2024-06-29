@@ -1,0 +1,3 @@
+def func1 = fn((i : int) => int(i))
+def func2 = fn(() => int(5))
+def func3 = fn((i1 : int, i2 :int) => list((int) => [i1, i2]))

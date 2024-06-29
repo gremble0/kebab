@@ -39,8 +39,23 @@ protected:
             Token::kind_to_string(kind) + '\'');
   }
 
+  // varargs?
+  static void expect(Lexer &lexer, Token::Kind either, Token::Kind or_) {
+    if (lexer.cur_token.kind != either && lexer.cur_token.kind != or_)
+      error("unexpected token: '" + lexer.cur_token.to_string() + "' expected: '" +
+            Token::kind_to_string(either) + "' or '" + Token::kind_to_string(or_) + '\'');
+  }
+
+  // TODO: make some more overloads - some times errors can be misleading if there are multiple
+  // acceptable token kinds, e.g. `def a = list((list(int)) => [[1,2],[3,4])` (missing closing
+  // bracket, but parser says expects comma)
   static void skip(Lexer &lexer, Token::Kind kind) {
     expect(lexer, kind);
+    lexer.advance();
+  }
+
+  static void skip(Lexer &lexer, Token::Kind either, Token::Kind or_) {
+    expect(lexer, either, or_);
     lexer.advance();
   }
 

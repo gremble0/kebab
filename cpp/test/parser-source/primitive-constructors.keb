@@ -1,0 +1,3 @@
+def i = int(1)
+def f = float(1.5)
+def s = string("hello")
