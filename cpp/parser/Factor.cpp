@@ -1,4 +1,5 @@
 #include <cassert>
+#include <optional>
 
 #include "Factor.hpp"
 #include "parser/Primary.hpp"
@@ -37,14 +38,13 @@ Factor *Factor::parse(Lexer &lexer) {
     if (FactorPrefix::is_factor_prefix(lexer.cur_token.kind))
       factor->prefixes.push_back(FactorPrefix::parse(lexer));
     else
-      factor->prefixes.push_back(nullptr); // meh, nullptr bad
+      factor->prefixes.push_back(std::nullopt);
 
     factor->primaries.push_back(Primary::parse(lexer));
 
-    if (FactorOperator::is_factor_operator(lexer.cur_token.kind))
-      factor->operators.push_back(FactorOperator::parse(lexer));
-    else
+    if (!FactorOperator::is_factor_operator(lexer.cur_token.kind))
       break;
+    factor->operators.push_back(FactorOperator::parse(lexer));
   }
 
   end_parsing("factor");

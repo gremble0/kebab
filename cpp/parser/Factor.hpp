@@ -1,6 +1,7 @@
 #ifndef KEBAB_FACTOR_HPP
 #define KEBAB_FACTOR_HPP
 
+#include <optional>
 #include <vector>
 
 #include "Primary.hpp"
@@ -11,7 +12,7 @@ namespace Kebab {
 namespace Parser {
 
 // TODO: Operator interface - is_operator(kind)
-class FactorOperator : AstNode /*, Operator */ {
+class FactorOperator : public AstNode /*, Operator */ {
 public:
   enum Type {
     MULT,
@@ -32,7 +33,7 @@ public:
   static FactorOperator *parse(Lexer &lexer);
 };
 
-class FactorPrefix : AstNode {
+class FactorPrefix : public AstNode {
 public:
   enum Type {
     PLUS,
@@ -53,9 +54,9 @@ public:
   static FactorPrefix *parse(Lexer &lexer);
 };
 
-class Factor : AstNode {
+class Factor : public AstNode {
 public:
-  std::vector<FactorPrefix *> prefixes;
+  std::vector<std::optional<FactorPrefix *>> prefixes;
   std::vector<Primary *> primaries;
   std::vector<FactorOperator *> operators;
 
