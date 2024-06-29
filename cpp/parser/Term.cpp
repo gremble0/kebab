@@ -23,6 +23,8 @@ TermOperator *TermOperator::parse(Lexer &lexer) {
     error(std::string("reached unreachable branch with token: ") + lexer.cur_token.to_string());
   }
 
+  lexer.advance();
+
   end_parsing("term-operator");
   return operator_;
 }
