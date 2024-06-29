@@ -5,6 +5,7 @@
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
+#include <memory>
 
 namespace Kebab {
 
@@ -27,7 +28,7 @@ public:
       : context(llvm::LLVMContext()), module(llvm::Module("kebab", context)),
         builder(llvm::IRBuilder<>(context)) {}
 
-  void compile(Parser::AstNode *root);
+  void compile(std::unique_ptr<Parser::AstNode> root);
 };
 
 } // namespace Kebab

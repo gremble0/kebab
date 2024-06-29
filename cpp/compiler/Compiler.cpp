@@ -1,3 +1,4 @@
+#include <memory>
 #include <system_error>
 #include <vector>
 
@@ -48,7 +49,7 @@ void Compiler::stop_main() {
   this->builder.CreateRet(return_value_i32);
 }
 
-void Compiler::compile(Parser::AstNode *root) {
+void Compiler::compile(std::unique_ptr<Parser::AstNode> root) {
   this->load_globals();
   this->start_main();
 

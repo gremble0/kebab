@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ostream>
 
+#include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
@@ -13,9 +14,11 @@ int main(int argc, char **argv) {
   }
 
   std::string path(argv[1]);
-  Lexer lexer(path);
 
-  Parser::parse(lexer);
+  Lexer lexer(path);
+  auto ast = Parser::parse(lexer);
+  Compiler compiler;
+  compiler.compile(std::move(ast));
 
   return 0;
 }
