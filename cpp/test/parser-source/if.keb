@@ -1,0 +1,16 @@
+def i1 = int(if true => 0 else => 1)
+
+def i2 = int(
+  if false => 0
+  elif -2 == 2 => -1
+  else => 1
+)
+
+def l = list((int) =>
+  def q = int(1 + 2)
+  if 1 == 2 =>
+    def w = int(6)
+    [q, w]
+  elif 2 ~= 2 => [q, 1]
+  else => [1, 2]
+)

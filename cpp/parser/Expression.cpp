@@ -139,7 +139,7 @@ std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
   start_parsing("function-expression");
   std::unique_ptr<FunctionExpression> expression = std::make_unique<FunctionExpression>();
 
-  // TODO:
+  expression->function = FunctionConstructor::parse(lexer);
 
   end_parsing("function-expression");
   return expression;
