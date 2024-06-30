@@ -7,9 +7,6 @@
 namespace Kebab {
 namespace Parser {
 
-class AssignmentStatement;
-class DefinitionStatement;
-class ExpressionStatement;
 class Constructor; // Cant include Constructor.hpp because of recursive includes
 
 class Statement : public AstNode {

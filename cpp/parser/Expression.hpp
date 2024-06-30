@@ -21,6 +21,14 @@ public:
 };
 
 class CondExpression : public Expression {
+private:
+  void parse_test_body(Lexer &lexer);
+
+  void parse_if(Lexer &lexer);
+  void parse_elif(Lexer &lexer);
+  void parse_elifs(Lexer &lexer);
+  void parse_else(Lexer &lexer);
+
 public:
   std::vector<std::unique_ptr<Expression>> tests;
   std::vector<std::vector<std::unique_ptr<Statement>>> bodies;

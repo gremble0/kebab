@@ -47,9 +47,7 @@ protected:
             Token::type_to_string(either) + "' or '" + Token::type_to_string(or_) + '\'');
   }
 
-  // TODO: make some more overloads - some times errors can be misleading if there are multiple
-  // acceptable token types, e.g. `def a = list((list(int)) => [[1,2],[3,4])` (missing closing
-  // bracket, but parser says expects comma)
+  // Move to lexer?
   static void skip(Lexer &lexer, Token::Type type) {
     expect(lexer, type);
     lexer.advance();

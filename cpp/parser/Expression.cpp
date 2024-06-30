@@ -1,6 +1,8 @@
 #include <memory>
+#include <vector>
 
 #include "Expression.hpp"
+#include "lexer/Token.hpp"
 #include "parser/AndTest.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/Statement.hpp"
@@ -46,11 +48,71 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
   return expression;
 }
 
+void CondExpression::parse_test_body(Lexer &lexer) {
+  start_parsing("cond-test-body");
+
+  std::vector<std::unique_ptr<Statement>> body_statements;
+  while (true) {
+    std::unique_ptr<Statement> statement = Statement::parse(lexer);
+    if (dynamic_cast<ExpressionStatement *>(statement.get()) != nullptr) {
+      body_statements.push_back(std::move(statement));
+      break;
+    }
+
+    body_statements.push_back(std::move(statement));
+  }
+
+  end_parsing("cond-test-body");
+}
+
+void CondExpression::parse_if(Lexer &lexer) {
+  start_parsing("cond-if");
+
+  skip(lexer, Token::Type::IF);
+  this->tests.push_back(Expression::parse(lexer));
+  skip(lexer, Token::Type::FAT_RARROW);
+  this->parse_test_body(lexer);
+
+  end_parsing("cond-if");
+}
+
+void CondExpression::parse_elif(Lexer &lexer) {
+  start_parsing("cond-elif");
+
+  skip(lexer, Token::Type::ELIF);
+  this->tests.push_back(Expression::parse(lexer));
+  skip(lexer, Token::Type::FAT_RARROW);
+  this->parse_test_body(lexer);
+
+  end_parsing("cond-elif");
+}
+
+void CondExpression::parse_elifs(Lexer &lexer) {
+  start_parsing("cond-elifs");
+
+  while (lexer.cur_token.type == Token::Type::ELIF)
+    this->parse_elif(lexer);
+
+  end_parsing("cond-elifs");
+}
+
+void CondExpression::parse_else(Lexer &lexer) {
+  start_parsing("cond-else");
+
+  skip(lexer, Token::Type::ELSE);
+  skip(lexer, Token::Type::FAT_RARROW);
+  this->parse_test_body(lexer);
+
+  end_parsing("cond-else");
+}
+
 std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
   start_parsing("cond-expression");
   std::unique_ptr<CondExpression> expression = std::make_unique<CondExpression>();
 
-  // TODO:
+  expression->parse_if(lexer);
+  expression->parse_elifs(lexer);
+  expression->parse_else(lexer);
 
   end_parsing("cond-expression");
   return expression;
