@@ -15,6 +15,8 @@ protected:
   Type() = default;
 
 public:
+  virtual ~Type() = default;
+
   static std::unique_ptr<Type> parse(Lexer &lexer);
 };
 

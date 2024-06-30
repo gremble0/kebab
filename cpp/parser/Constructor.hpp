@@ -20,6 +20,8 @@ protected:
   virtual void parse_body(Lexer &lexer) = 0;
 
 public:
+  virtual ~Constructor() = default;
+
   // This pointer can be shared with the return type of a function constructor (the return type of a
   // function constructor is the same as the type of the constructor in its body)
   std::shared_ptr<Type> type;

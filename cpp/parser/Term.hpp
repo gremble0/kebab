@@ -32,7 +32,7 @@ public:
   static std::unique_ptr<TermOperator> parse(Lexer &lexer);
 };
 
-class Term : AstNode {
+class Term : public AstNode {
 public:
   std::vector<std::unique_ptr<Factor>> factors;
   std::vector<std::unique_ptr<TermOperator>> operators;

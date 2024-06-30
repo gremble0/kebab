@@ -11,7 +11,7 @@
 namespace Kebab {
 namespace Parser {
 
-class AndTest : AstNode {
+class AndTest : public AstNode {
 public:
   std::vector<std::unique_ptr<NotTest>> not_tests;
 

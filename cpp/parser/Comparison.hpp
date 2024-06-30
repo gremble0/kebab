@@ -3,15 +3,15 @@
 
 #include <vector>
 
-#include "Term.hpp"
 #include "lexer/Lexer.hpp"
 #include "lexer/Token.hpp"
 #include "parser/Parser.hpp"
+#include "parser/Term.hpp"
 
 namespace Kebab {
 namespace Parser {
 
-class ComparisonOperator : AstNode {
+class ComparisonOperator : public AstNode {
 public:
   enum Type {
     LT,  // <
@@ -24,12 +24,12 @@ public:
 
   static constexpr bool is_comparison_operator(Token::Type type) {
     switch (type) {
-    case Token::LT:
-    case Token::LE:
-    case Token::EQ:
-    case Token::NEQ:
-    case Token::GT:
-    case Token::GE:
+    case Token::Type::LT:
+    case Token::Type::LE:
+    case Token::Type::EQ:
+    case Token::Type::NEQ:
+    case Token::Type::GT:
+    case Token::Type::GE:
       return true;
 
     default:
@@ -39,7 +39,7 @@ public:
   static std::unique_ptr<ComparisonOperator> parse(Lexer &lexer);
 };
 
-class Comparison : AstNode {
+class Comparison : public AstNode {
 public:
   std::vector<std::unique_ptr<ComparisonOperator>> operators;
   std::vector<std::unique_ptr<Term>> terms;

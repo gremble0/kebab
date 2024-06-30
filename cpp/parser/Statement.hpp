@@ -14,6 +14,8 @@ class Constructor; // Cant include Constructor.hpp because of recursive includes
 
 class Statement : public AstNode {
 public:
+  virtual ~Statement() = default;
+
   static std::unique_ptr<Statement> parse(Lexer &lexer);
 };
 

@@ -8,7 +8,7 @@
 namespace Kebab {
 namespace Parser {
 
-class NotTest : AstNode {
+class NotTest : public AstNode {
 public:
   bool is_negated;
   std::unique_ptr<Comparison> comparison;

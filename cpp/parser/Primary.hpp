@@ -12,6 +12,8 @@ namespace Parser {
 
 class PrimarySuffix : public AstNode {
 public:
+  virtual ~PrimarySuffix() = default;
+
   static constexpr bool is_primary_suffix_opener(Token::Type type) {
     switch (type) {
     case Token::LBRACKET:

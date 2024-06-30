@@ -15,6 +15,8 @@ class Expression;
 
 class Atom : public AstNode {
 public:
+  virtual ~Atom() = default;
+
   static std::unique_ptr<Atom> parse(Lexer &lexer);
 };
 

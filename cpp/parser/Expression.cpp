@@ -1,5 +1,9 @@
+#include <memory>
+
 #include "Expression.hpp"
 #include "parser/AndTest.hpp"
+#include "parser/Constructor.hpp"
+#include "parser/Statement.hpp"
 
 namespace Kebab {
 namespace Parser {
@@ -44,11 +48,12 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
 
 std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
   start_parsing("cond-expression");
+  std::unique_ptr<CondExpression> expression = std::make_unique<CondExpression>();
 
   // TODO:
 
   end_parsing("cond-expression");
-  return nullptr;
+  return expression;
 }
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
@@ -70,11 +75,12 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
 
 std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
   start_parsing("function-expression");
+  std::unique_ptr<FunctionExpression> expression = std::make_unique<FunctionExpression>();
 
   // TODO:
 
   end_parsing("function-expression");
-  return nullptr;
+  return expression;
 }
 
 } // namespace Parser
