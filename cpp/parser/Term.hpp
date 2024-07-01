@@ -30,7 +30,7 @@ public:
   }
 
   static std::unique_ptr<TermOperator> parse(Lexer &lexer);
-  void compile(Compiler &compiler);
+  void compile(Compiler::Compiler &compiler);
 };
 
 class Term : public AstNode {
@@ -39,7 +39,7 @@ public:
   std::vector<std::unique_ptr<TermOperator>> operators;
 
   static std::unique_ptr<Term> parse(Lexer &lexer);
-  void compile(Compiler &compiler);
+  void compile(Compiler::Compiler &compiler);
 };
 
 } // namespace Parser

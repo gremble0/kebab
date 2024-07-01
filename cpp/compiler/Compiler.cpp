@@ -1,14 +1,15 @@
-#include <memory>
 #include <system_error>
 #include <vector>
 
 #include "Compiler.hpp"
+#include "parser/RootNode.hpp"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Type.h"
 #include "llvm/Support/raw_ostream.h"
 
 namespace Kebab {
+namespace Compiler {
 
 void Compiler::save_module(const std::string &path) {
   std::error_code error_code;
@@ -49,16 +50,18 @@ void Compiler::stop_main() {
   this->builder.CreateRet(return_value_i32);
 }
 
-void Compiler::compile(std::unique_ptr<Parser::AstNode> root) {
+void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   this->load_globals();
   this->start_main();
 
-  llvm::Function *printf_fn = this->module.getFunction("printf");
-  std::vector<llvm::Value *> args = {this->builder.CreateGlobalStringPtr("Hello, World!\n")};
-  this->builder.CreateCall(printf_fn, args);
+  // llvm::Function *printf_fn = this->module.getFunction("printf");
+  // std::vector<llvm::Value *> args = {this->builder.CreateGlobalStringPtr("Hello, World!\n")};
+  // this->builder.CreateCall(printf_fn, args);
+  root->compile(*this);
 
   this->stop_main();
   this->save_module("./out.ll");
 }
 
+} // namespace Compiler
 } // namespace Kebab

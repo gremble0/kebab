@@ -1,9 +1,11 @@
 #include <iostream>
+#include <memory>
 #include <ostream>
 
 #include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
+#include "parser/RootNode.hpp"
 
 using namespace Kebab;
 
@@ -18,9 +20,10 @@ int main(int argc, char **argv) {
   std::string path(argv[1]);
 
   Lexer lexer(path);
-  auto ast = Parser::parse(lexer);
-  Compiler compiler;
-  compiler.compile(std::move(ast));
+  std::unique_ptr<Parser::RootNode> root = Parser::parse(lexer);
+
+  Compiler::Compiler compiler;
+  compiler.compile(std::move(root));
 
   return 0;
 }

@@ -28,7 +28,7 @@ public:
   std::shared_ptr<Type> type;
 
   static std::unique_ptr<Constructor> parse(Lexer &lexer);
-  virtual void compile(Compiler &compiler) = 0;
+  virtual void compile(Compiler::Compiler &compiler) = 0;
 };
 
 class ListConstructor : public Constructor {
@@ -41,7 +41,7 @@ public:
   std::vector<std::unique_ptr<Statement>> body;
 
   static std::unique_ptr<ListConstructor> parse(Lexer &lexer);
-  void compile(Compiler &compiler);
+  void compile(Compiler::Compiler &compiler);
 };
 
 class FunctionParameter : public AstNode {
@@ -51,7 +51,7 @@ public:
   std::shared_ptr<Type> type;
 
   static std::unique_ptr<FunctionParameter> parse(Lexer &lexer);
-  void compile(Compiler &compiler);
+  void compile(Compiler::Compiler &compiler);
 };
 
 class FunctionConstructor : public Constructor {
@@ -65,7 +65,7 @@ public:
   std::unique_ptr<Constructor> body;
 
   static std::unique_ptr<FunctionConstructor> parse(Lexer &lexer);
-  void compile(Compiler &compiler);
+  void compile(Compiler::Compiler &compiler);
 };
 
 class PrimitiveConstructor : public Constructor {
@@ -78,7 +78,7 @@ public:
   std::vector<std::unique_ptr<Statement>> body;
 
   static std::unique_ptr<PrimitiveConstructor> parse(Lexer &lexer);
-  void compile(Compiler &compiler);
+  void compile(Compiler::Compiler &compiler);
 };
 
 } // namespace Parser

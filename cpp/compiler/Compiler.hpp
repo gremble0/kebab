@@ -3,19 +3,19 @@
 
 #include <memory>
 
-#include "parser/Parser.hpp"
+// #include "parser/RootNode.hpp"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 
 namespace Kebab {
+namespace Parser {
+class RootNode;
+}
+namespace Compiler {
 
 class Compiler {
 private:
-  llvm::LLVMContext context;
-  llvm::Module module;
-  llvm::IRBuilder<> builder;
-
   void save_module(const std::string &path);
 
   void load_printf();
@@ -25,13 +25,18 @@ private:
   void stop_main();
 
 public:
+  llvm::LLVMContext context;
+  llvm::Module module;
+  llvm::IRBuilder<> builder;
+
   Compiler()
       : context(llvm::LLVMContext()), module(llvm::Module("kebab", context)),
         builder(llvm::IRBuilder<>(context)) {}
 
-  void compile(std::unique_ptr<Parser::AstNode> root);
+  void compile(std::unique_ptr<Parser::RootNode> root);
 };
 
+} // namespace Compiler
 } // namespace Kebab
 
 #endif

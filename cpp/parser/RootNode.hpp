@@ -9,6 +9,7 @@
 #include "parser/Statement.hpp"
 
 namespace Kebab {
+
 namespace Parser {
 
 class RootNode : public AstNode {
@@ -16,7 +17,7 @@ public:
   std::vector<std::unique_ptr<Statement>> statements;
 
   static std::unique_ptr<RootNode> parse(Lexer &lexer);
-  void compile(Compiler &compiler);
+  void compile(Compiler::Compiler &compiler);
 };
 
 } // namespace Parser

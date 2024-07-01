@@ -30,7 +30,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   return def;
 }
 
-void DefinitionStatement::compile(Compiler &compiler) {}
+void DefinitionStatement::compile(Compiler::Compiler &compiler) {}
 
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   start_parsing("assignment-statement");
@@ -41,7 +41,7 @@ std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   return nullptr;
 }
 
-void AssignmentStatement::compile(Compiler &compiler) {}
+void AssignmentStatement::compile(Compiler::Compiler &compiler) {}
 
 std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
   start_parsing("expression-statement");
@@ -53,7 +53,7 @@ std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
   return expression;
 }
 
-void ExpressionStatement::compile(Compiler &compiler) {}
+void ExpressionStatement::compile(Compiler::Compiler &compiler) {}
 
 std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
   start_parsing("statement");

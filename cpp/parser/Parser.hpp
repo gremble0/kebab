@@ -6,12 +6,12 @@
 #include <memory>
 #include <string>
 
+#include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
 
 namespace Kebab {
 namespace Parser {
 
-class Compiler;
 static int indent_depth = 0;
 
 class AstNode {
@@ -106,10 +106,10 @@ public:
   virtual ~AstNode() = default;
 
   static std::unique_ptr<AstNode> parse(Lexer &lexer);
-  virtual void compile(Compiler &compiler) = 0;
+  virtual void compile(Compiler::Compiler &compiler) = 0;
 };
 
-std::unique_ptr<AstNode> parse(Lexer &lexer);
+std::unique_ptr<RootNode> parse(Lexer &lexer);
 
 } // namespace Parser
 } // namespace Kebab
