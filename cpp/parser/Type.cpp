@@ -1,6 +1,5 @@
 #include "parser/Type.hpp"
 #include "lexer/Lexer.hpp"
-#include "parser/Parser.hpp"
 
 namespace Kebab {
 namespace Parser {
@@ -43,7 +42,7 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   return type;
 }
 
-void ListType::compile(Compiler::Compiler &compiler) {}
+void ListType::compile(Compiler::Compiler &compiler) const {}
 
 void FunctionType::parse_parameter_types(Lexer &lexer) {
   while (lexer.cur_token.type != Token::Type::RPAREN) {
@@ -74,7 +73,7 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
   return type;
 }
 
-void FunctionType::compile(Compiler::Compiler &compiler) {}
+void FunctionType::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
   start_parsing("primitive-type");
@@ -86,7 +85,7 @@ std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
   return type;
 }
 
-void PrimitiveType::compile(Compiler::Compiler &compiler) {}
+void PrimitiveType::compile(Compiler::Compiler &compiler) const {}
 
 } // namespace Parser
 } // namespace Kebab

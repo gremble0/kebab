@@ -24,7 +24,7 @@ std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
   return and_test;
 }
 
-void AndTest::compile(Compiler &compiler) {}
+void AndTest::compile(Compiler::Compiler &compiler) const {}
 
 } // namespace Parser
 } // namespace Kebab

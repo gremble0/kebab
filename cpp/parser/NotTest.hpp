@@ -14,7 +14,7 @@ public:
   std::unique_ptr<Comparison> comparison;
 
   static std::unique_ptr<NotTest> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler);
+  void compile(Compiler::Compiler &compiler) const;
 };
 
 } // namespace Parser

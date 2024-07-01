@@ -54,9 +54,6 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   this->load_globals();
   this->start_main();
 
-  // llvm::Function *printf_fn = this->module.getFunction("printf");
-  // std::vector<llvm::Value *> args = {this->builder.CreateGlobalStringPtr("Hello, World!\n")};
-  // this->builder.CreateCall(printf_fn, args);
   root->compile(*this);
 
   this->stop_main();

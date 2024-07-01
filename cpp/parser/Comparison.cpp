@@ -46,7 +46,7 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
   return operator_;
 }
 
-void ComparisonOperator::compile(Compiler &compiler) {}
+void ComparisonOperator::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
   start_parsing("comparison");
@@ -65,7 +65,7 @@ std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
   return comparison;
 }
 
-void Comparison::compile(Compiler &compiler) {}
+void Comparison::compile(Compiler::Compiler &compiler) const {}
 
 } // namespace Parser
 } // namespace Kebab

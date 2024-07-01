@@ -18,7 +18,7 @@ public:
 
   static std::unique_ptr<Statement> parse(Lexer &lexer);
   static std::optional<std::unique_ptr<Statement>> try_parse_expression_statement(Lexer &lexer);
-  virtual void compile(Compiler::Compiler &compiler) = 0;
+  virtual void compile(Compiler::Compiler &compiler) const = 0;
 };
 
 class DefinitionStatement : public Statement {
@@ -28,7 +28,7 @@ public:
   std::unique_ptr<Constructor> constructor;
 
   static std::unique_ptr<DefinitionStatement> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler);
+  void compile(Compiler::Compiler &compiler) const;
 };
 
 class AssignmentStatement : public Statement {
@@ -37,7 +37,7 @@ public:
   std::unique_ptr<Constructor> constructor;
 
   static std::unique_ptr<AssignmentStatement> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler);
+  void compile(Compiler::Compiler &compiler) const;
 };
 
 class ExpressionStatement : public Statement {
@@ -45,7 +45,7 @@ public:
   std::unique_ptr<Expression> expression;
 
   static std::unique_ptr<ExpressionStatement> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler);
+  void compile(Compiler::Compiler &compiler) const;
 };
 
 } // namespace Parser

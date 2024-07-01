@@ -124,7 +124,7 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
   return expression;
 }
 
-void CondExpression::compile(Compiler &compiler) {}
+void CondExpression::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   start_parsing("normal-expression");
@@ -143,7 +143,7 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   return expression;
 }
 
-void NormalExpression::compile(Compiler &compiler) {}
+void NormalExpression::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
   start_parsing("function-expression");
@@ -155,7 +155,7 @@ std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
   return expression;
 }
 
-void FunctionExpression::compile(Compiler &compiler) {}
+void FunctionExpression::compile(Compiler::Compiler &compiler) const {}
 
 } // namespace Parser
 } // namespace Kebab

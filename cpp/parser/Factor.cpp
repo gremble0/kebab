@@ -30,7 +30,7 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
   return prefix;
 }
 
-void FactorPrefix::compile(Compiler &compiler) {}
+void FactorPrefix::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   start_parsing("factor");
@@ -53,7 +53,7 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   return factor;
 }
 
-void Factor::compile(Compiler &compiler) {}
+void Factor::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
   start_parsing("factor-operator");
@@ -78,7 +78,7 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
   return operator_;
 }
 
-void FactorOperator::compile(Compiler &compiler) {}
+void FactorOperator::compile(Compiler::Compiler &compiler) const {}
 
 } // namespace Parser
 } // namespace Kebab

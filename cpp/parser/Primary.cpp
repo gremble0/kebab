@@ -20,7 +20,7 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
   return subscription;
 }
 
-void PrimarySubscription::compile(Compiler &compiler) {}
+void PrimarySubscription::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   start_parsing("primary-arguments");
@@ -41,7 +41,7 @@ std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   return arguments;
 }
 
-void PrimaryArguments::compile(Compiler &compiler) {}
+void PrimaryArguments::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
   start_parsing("primary-suffix");
@@ -76,7 +76,7 @@ std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
   return primary;
 }
 
-void Primary::compile(Compiler &compiler) {}
+void Primary::compile(Compiler::Compiler &compiler) const {}
 
 } // namespace Parser
 } // namespace Kebab

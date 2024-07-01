@@ -29,7 +29,7 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
   return operator_;
 }
 
-void TermOperator::compile(Compiler &compiler) {}
+void TermOperator::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<Term> Term::parse(Lexer &lexer) {
   start_parsing("term");
@@ -48,7 +48,7 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
   return term;
 }
 
-void Term::compile(Compiler &compiler) {}
+void Term::compile(Compiler::Compiler &compiler) const {}
 
 } // namespace Parser
 } // namespace Kebab

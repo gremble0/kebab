@@ -19,7 +19,7 @@ public:
   virtual ~Type() = default;
 
   static std::unique_ptr<Type> parse(Lexer &lexer);
-  virtual void compile(Compiler::Compiler &compiler) = 0;
+  virtual void compile(Compiler::Compiler &compiler) const = 0;
 };
 
 class ListType : public Type {
@@ -27,7 +27,7 @@ public:
   std::unique_ptr<Type> content_type;
 
   static std::unique_ptr<ListType> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler);
+  void compile(Compiler::Compiler &compiler) const;
 };
 
 class FunctionType : public Type {
@@ -42,7 +42,7 @@ public:
   std::shared_ptr<Type> return_type;
 
   static std::unique_ptr<FunctionType> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler);
+  void compile(Compiler::Compiler &compiler) const;
 };
 
 class PrimitiveType : public Type {
@@ -50,7 +50,7 @@ public:
   std::string name;
 
   static std::unique_ptr<PrimitiveType> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler);
+  void compile(Compiler::Compiler &compiler) const;
 };
 
 } // namespace Parser

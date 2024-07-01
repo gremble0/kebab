@@ -16,7 +16,7 @@ public:
   std::vector<std::unique_ptr<NotTest>> not_tests;
 
   static std::unique_ptr<AndTest> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler);
+  void compile(Compiler::Compiler &compiler) const;
 };
 
 } // namespace Parser
