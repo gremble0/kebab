@@ -1,10 +1,11 @@
 #include <memory>
+#include <optional>
 #include <vector>
 
-#include "Expression.hpp"
 #include "lexer/Token.hpp"
 #include "parser/AndTest.hpp"
 #include "parser/Constructor.hpp"
+#include "parser/Expression.hpp"
 #include "parser/Statement.hpp"
 
 namespace Kebab {
@@ -53,13 +54,18 @@ void CondExpression::parse_test_body(Lexer &lexer) {
 
   std::vector<std::unique_ptr<Statement>> body_statements;
   while (true) {
-    std::unique_ptr<Statement> statement = Statement::parse(lexer);
-    if (dynamic_cast<ExpressionStatement *>(statement.get()) != nullptr) {
-      body_statements.push_back(std::move(statement));
-      break;
-    }
+    std::optional<std::unique_ptr<Statement>> statement =
+        Statement::try_parse_expression_statement(lexer);
 
-    body_statements.push_back(std::move(statement));
+    // If we managed to parse an expression statement that should be the final expression in the
+    // cond expression's body - so we break. Otherwise keep parsing statements until we parse an
+    // expression statement
+    if (statement != std::nullopt) {
+      body_statements.push_back(std::move(statement.value()));
+      break;
+    } else {
+      body_statements.push_back(Statement::parse(lexer));
+    }
   }
 
   end_parsing("cond-test-body");
@@ -118,6 +124,8 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
   return expression;
 }
 
+void CondExpression::compile(Compiler &compiler) {}
+
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   start_parsing("normal-expression");
   std::unique_ptr<NormalExpression> expression = std::make_unique<NormalExpression>();
@@ -135,6 +143,8 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   return expression;
 }
 
+void NormalExpression::compile(Compiler &compiler) {}
+
 std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
   start_parsing("function-expression");
   std::unique_ptr<FunctionExpression> expression = std::make_unique<FunctionExpression>();
@@ -144,6 +154,8 @@ std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
   end_parsing("function-expression");
   return expression;
 }
+
+void FunctionExpression::compile(Compiler &compiler) {}
 
 } // namespace Parser
 } // namespace Kebab

@@ -1,8 +1,10 @@
-#include "Statement.hpp"
-#include "Constructor.hpp"
-#include "Parser.hpp"
+#include <optional>
+
 #include "compiler/Compiler.hpp"
 #include "lexer/Token.hpp"
+#include "parser/Constructor.hpp"
+#include "parser/Parser.hpp"
+#include "parser/Statement.hpp"
 
 namespace Kebab {
 namespace Parser {
@@ -95,6 +97,30 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
 
   end_parsing("statement");
   return statement;
+}
+
+std::optional<std::unique_ptr<Statement>> Statement::try_parse_expression_statement(Lexer &lexer) {
+  switch (lexer.cur_token.type) {
+  case Token::Type::INT_LITERAL:
+  case Token::Type::FLOAT_LITERAL:
+  case Token::Type::CHAR_LITERAL:
+  case Token::Type::STRING_LITERAL:
+  case Token::Type::NAME:
+  case Token::Type::IF:
+  case Token::Type::PLUS:
+  case Token::Type::MINUS:
+  case Token::Type::MULT:
+  case Token::Type::DIV:
+  case Token::Type::NOT:
+  case Token::Type::TRUE:
+  case Token::Type::FALSE:
+  case Token::Type::LPAREN:
+  case Token::Type::LBRACKET:
+    return ExpressionStatement::parse(lexer);
+
+  default:
+    return std::nullopt;
+  }
 }
 
 } // namespace Parser

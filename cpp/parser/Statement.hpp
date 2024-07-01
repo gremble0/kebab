@@ -1,9 +1,12 @@
 #ifndef KEBAB_STATEMENT_HPP
 #define KEBAB_STATEMENT_HPP
 
-#include "Parser.hpp"
+#include <optional>
+
 #include "compiler/Compiler.hpp"
+#include "lexer/Lexer.hpp"
 #include "parser/Expression.hpp"
+#include "parser/Parser.hpp"
 
 namespace Kebab {
 namespace Parser {
@@ -15,6 +18,7 @@ public:
   virtual ~Statement() = default;
 
   static std::unique_ptr<Statement> parse(Lexer &lexer);
+  static std::optional<std::unique_ptr<Statement>> try_parse_expression_statement(Lexer &lexer);
   virtual void compile(Compiler &compiler) = 0;
 };
 
