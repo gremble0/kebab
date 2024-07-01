@@ -10,7 +10,7 @@
 namespace Kebab {
 namespace Parser {
 
-// this is a prefix?? dont remember will look into and maybe rename
+// this is a prefix?? dont remember should look into and maybe rename
 class TermOperator : AstNode {
 public:
   enum Type {
@@ -30,6 +30,7 @@ public:
   }
 
   static std::unique_ptr<TermOperator> parse(Lexer &lexer);
+  void compile(Compiler &compiler);
 };
 
 class Term : public AstNode {
@@ -38,6 +39,7 @@ public:
   std::vector<std::unique_ptr<TermOperator>> operators;
 
   static std::unique_ptr<Term> parse(Lexer &lexer);
+  void compile(Compiler &compiler);
 };
 
 } // namespace Parser

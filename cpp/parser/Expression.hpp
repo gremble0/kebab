@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "AndTest.hpp"
+#include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 
@@ -18,6 +19,7 @@ public:
   virtual ~Expression() = default;
 
   static std::unique_ptr<Expression> parse(Lexer &lexer);
+  virtual void compile(Compiler &compiler) = 0;
 };
 
 class CondExpression : public Expression {
@@ -34,6 +36,7 @@ public:
   std::vector<std::vector<std::unique_ptr<Statement>>> bodies;
 
   static std::unique_ptr<CondExpression> parse(Lexer &lexer);
+  void compile(Compiler &compiler);
 };
 
 class NormalExpression : public Expression {
@@ -41,6 +44,7 @@ public:
   std::vector<std::unique_ptr<AndTest>> and_tests;
 
   static std::unique_ptr<NormalExpression> parse(Lexer &lexer);
+  void compile(Compiler &compiler);
 };
 
 class FunctionExpression : public Expression {
@@ -48,6 +52,7 @@ public:
   std::unique_ptr<FunctionConstructor> function;
 
   static std::unique_ptr<FunctionExpression> parse(Lexer &lexer);
+  void compile(Compiler &compiler);
 };
 
 } // namespace Parser

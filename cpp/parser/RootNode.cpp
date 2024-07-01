@@ -1,5 +1,6 @@
 #include "RootNode.hpp"
 #include "Statement.hpp"
+#include "compiler/Compiler.hpp"
 
 namespace Kebab {
 namespace Parser {
@@ -11,6 +12,11 @@ std::unique_ptr<RootNode> RootNode::parse(Lexer &lexer) {
     root_node->statements.push_back(Statement::parse(lexer));
 
   return root_node;
+}
+
+void RootNode::compile(Compiler &compiler) {
+  for (std::unique_ptr<Statement> statement : this->statements)
+    statement->compile(compiler);
 }
 
 } // namespace Parser

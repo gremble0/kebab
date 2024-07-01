@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "compiler/Compiler.hpp"
 #include "parser/Parser.hpp"
 #include "parser/Statement.hpp"
 
@@ -15,6 +16,7 @@ public:
   std::vector<std::unique_ptr<Statement>> statements;
 
   static std::unique_ptr<RootNode> parse(Lexer &lexer);
+  void compile(Compiler &compiler);
 };
 
 } // namespace Parser

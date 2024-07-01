@@ -1,6 +1,7 @@
 #include "Statement.hpp"
 #include "Constructor.hpp"
 #include "Parser.hpp"
+#include "compiler/Compiler.hpp"
 #include "lexer/Token.hpp"
 
 namespace Kebab {
@@ -27,6 +28,8 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   return def;
 }
 
+void DefinitionStatement::compile(Compiler &compiler) {}
+
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   start_parsing("assignment-statement");
 
@@ -35,6 +38,8 @@ std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   end_parsing("assignment-statement");
   return nullptr;
 }
+
+void AssignmentStatement::compile(Compiler &compiler) {}
 
 std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
   start_parsing("expression-statement");
@@ -45,6 +50,8 @@ std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
   end_parsing("expression-statement");
   return expression;
 }
+
+void ExpressionStatement::compile(Compiler &compiler) {}
 
 std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
   start_parsing("statement");

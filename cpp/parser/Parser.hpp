@@ -11,6 +11,7 @@
 namespace Kebab {
 namespace Parser {
 
+class Compiler;
 static int indent_depth = 0;
 
 class AstNode {
@@ -105,6 +106,7 @@ public:
   virtual ~AstNode() = default;
 
   static std::unique_ptr<AstNode> parse(Lexer &lexer);
+  virtual void compile(Compiler &compiler) = 0;
 };
 
 std::unique_ptr<AstNode> parse(Lexer &lexer);

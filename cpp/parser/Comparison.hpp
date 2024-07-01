@@ -36,7 +36,9 @@ public:
       return false;
     }
   }
+
   static std::unique_ptr<ComparisonOperator> parse(Lexer &lexer);
+  void compile(Compiler &compiler);
 };
 
 class Comparison : public AstNode {
@@ -45,6 +47,7 @@ public:
   std::vector<std::unique_ptr<Term>> terms;
 
   static std::unique_ptr<Comparison> parse(Lexer &lexer);
+  void compile(Compiler &compiler);
 };
 
 } // namespace Parser
