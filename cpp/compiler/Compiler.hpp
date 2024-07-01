@@ -3,9 +3,15 @@
 
 #include <memory>
 
+// Disable unused parameter warnings for llvm headers
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
+
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
+
+#pragma clang diagnostic pop
 
 namespace Kebab {
 namespace Parser {
