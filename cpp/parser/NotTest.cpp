@@ -22,5 +22,7 @@ std::unique_ptr<NotTest> NotTest::parse(Lexer &lexer) {
   return not_test;
 }
 
+void NotTest::compile(Compiler &compiler) {}
+
 } // namespace Parser
 } // namespace Kebab

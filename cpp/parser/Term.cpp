@@ -29,6 +29,8 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
   return operator_;
 }
 
+void TermOperator::compile(Compiler &compiler) {}
+
 std::unique_ptr<Term> Term::parse(Lexer &lexer) {
   start_parsing("term");
   std::unique_ptr<Term> term = std::make_unique<Term>();
@@ -45,6 +47,8 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
   end_parsing("term");
   return term;
 }
+
+void Term::compile(Compiler &compiler) {}
 
 } // namespace Parser
 } // namespace Kebab

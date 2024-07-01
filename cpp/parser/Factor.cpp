@@ -1,7 +1,7 @@
 #include <cassert>
 #include <optional>
 
-#include "Factor.hpp"
+#include "parser/Factor.hpp"
 #include "parser/Primary.hpp"
 
 namespace Kebab {
@@ -30,6 +30,8 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
   return prefix;
 }
 
+void FactorPrefix::compile(Compiler &compiler) {}
+
 std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   start_parsing("factor");
   std::unique_ptr<Factor> factor = std::make_unique<Factor>();
@@ -50,6 +52,8 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   end_parsing("factor");
   return factor;
 }
+
+void Factor::compile(Compiler &compiler) {}
 
 std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
   start_parsing("factor-operator");
@@ -73,6 +77,8 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
   end_parsing("factor-operator");
   return operator_;
 }
+
+void FactorOperator::compile(Compiler &compiler) {}
 
 } // namespace Parser
 } // namespace Kebab

@@ -1,9 +1,9 @@
 #include <cassert>
 
-#include "Atom.hpp"
-#include "Expression.hpp"
-#include "Primary.hpp"
 #include "lexer/Token.hpp"
+#include "parser/Atom.hpp"
+#include "parser/Expression.hpp"
+#include "parser/Primary.hpp"
 
 namespace Kebab {
 namespace Parser {
@@ -19,6 +19,8 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
   end_parsing("primary-subscription");
   return subscription;
 }
+
+void PrimarySubscription::compile(Compiler &compiler) {}
 
 std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   start_parsing("primary-arguments");
@@ -38,6 +40,8 @@ std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   end_parsing("primary-arguments");
   return arguments;
 }
+
+void PrimaryArguments::compile(Compiler &compiler) {}
 
 std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
   start_parsing("primary-suffix");
@@ -71,6 +75,8 @@ std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
   end_parsing("primary");
   return primary;
 }
+
+void Primary::compile(Compiler &compiler) {}
 
 } // namespace Parser
 } // namespace Kebab

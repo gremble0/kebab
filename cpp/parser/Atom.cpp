@@ -1,5 +1,5 @@
-#include "Atom.hpp"
-#include "Expression.hpp"
+#include "parser/Atom.hpp"
+#include "parser/Expression.hpp"
 
 namespace Kebab {
 namespace Parser {
@@ -14,6 +14,8 @@ std::unique_ptr<IntAtom> IntAtom::parse(Lexer &lexer) {
   return atom;
 }
 
+void IntAtom::compile(Compiler &compiler) {}
+
 std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
   start_parsing("float-atom");
   std::unique_ptr<FloatAtom> atom = std::make_unique<FloatAtom>();
@@ -23,6 +25,8 @@ std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
   end_parsing("float-atom");
   return atom;
 }
+
+void FloatAtom::compile(Compiler &compiler) {}
 
 std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
   start_parsing("char-atom");
@@ -34,6 +38,8 @@ std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
   return atom;
 }
 
+void CharAtom::compile(Compiler &compiler) {}
+
 std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
   start_parsing("string-atom");
   std::unique_ptr<StringAtom> atom = std::make_unique<StringAtom>();
@@ -43,6 +49,8 @@ std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
   end_parsing("string-atom");
   return atom;
 }
+
+void StringAtom::compile(Compiler &compiler) {}
 
 std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   start_parsing("bool-atom");
@@ -58,6 +66,8 @@ std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   return atom;
 }
 
+void BoolAtom::compile(Compiler &compiler) {}
+
 std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
   start_parsing("name-atom");
   std::unique_ptr<NameAtom> atom = std::make_unique<NameAtom>();
@@ -67,6 +77,8 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
   end_parsing("name-atom");
   return atom;
 }
+
+void NameAtom::compile(Compiler &compiler) {}
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
   start_parsing("inner-expression-atom");
@@ -79,6 +91,8 @@ std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
   end_parsing("inner-expression-atom");
   return atom;
 }
+
+void InnerExpressionAtom::compile(Compiler &compiler) {}
 
 std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   start_parsing("list-atom");
@@ -96,6 +110,8 @@ std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   end_parsing("list-atom");
   return atom;
 }
+
+void ListAtom::compile(Compiler &compiler) {}
 
 std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
   start_parsing("atom");
