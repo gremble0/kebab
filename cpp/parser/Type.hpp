@@ -7,6 +7,8 @@
 #include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Type.h"
 
 namespace Kebab {
 namespace Parser {
@@ -20,6 +22,7 @@ public:
 
   static std::unique_ptr<Type> parse(Lexer &lexer);
   virtual void compile(Compiler::Compiler &compiler) const = 0;
+  virtual llvm::Type *get_llvm_type(llvm::IRBuilder<> &builder) const = 0;
 };
 
 class ListType : public Type {
@@ -28,6 +31,8 @@ public:
 
   static std::unique_ptr<ListType> parse(Lexer &lexer);
   void compile(Compiler::Compiler &compiler) const;
+  // ScalableVectorType may be right here? will look into
+  llvm::ScalableVectorType *get_llvm_type(llvm::IRBuilder<> &builder) const;
 };
 
 class FunctionType : public Type {
@@ -43,6 +48,8 @@ public:
 
   static std::unique_ptr<FunctionType> parse(Lexer &lexer);
   void compile(Compiler::Compiler &compiler) const;
+  // FunctionType is surely the right type here?
+  llvm::FunctionType *get_llvm_type(llvm::IRBuilder<> &builder) const;
 };
 
 class PrimitiveType : public Type {
@@ -51,6 +58,7 @@ public:
 
   static std::unique_ptr<PrimitiveType> parse(Lexer &lexer);
   void compile(Compiler::Compiler &compiler) const;
+  llvm::Type *get_llvm_type(llvm::IRBuilder<> &builder) const;
 };
 
 } // namespace Parser

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <optional>
 
 #include "compiler/Compiler.hpp"
@@ -5,6 +6,8 @@
 #include "parser/Constructor.hpp"
 #include "parser/Parser.hpp"
 #include "parser/Statement.hpp"
+#include "llvm/ADT/APInt.h"
+#include "llvm/IR/Constants.h"
 
 namespace Kebab {
 namespace Parser {
@@ -31,7 +34,8 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 }
 
 void DefinitionStatement::compile(Compiler::Compiler &compiler) const {
-  compiler.create_variable(compiler.builder.getInt32Ty(), this->name);
+  std::cout << this->constructor->type << std::endl;
+  // compiler.create_variable(this->constructor->type->get_llvm_type(compiler.builder), this->name);
 }
 
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {

@@ -1,5 +1,8 @@
 #include "parser/Type.hpp"
 #include "lexer/Lexer.hpp"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Type.h"
 
 namespace Kebab {
 namespace Parser {
@@ -42,7 +45,14 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   return type;
 }
 
-void ListType::compile(Compiler::Compiler &compiler) const {}
+llvm::ScalableVectorType *ListType::get_llvm_type(llvm::IRBuilder<> &builder) const {
+  // TODO:
+  return nullptr;
+}
+
+void ListType::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+}
 
 void FunctionType::parse_parameter_types(Lexer &lexer) {
   while (lexer.cur_token.type != Token::Type::RPAREN) {
@@ -73,7 +83,14 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
   return type;
 }
 
-void FunctionType::compile(Compiler::Compiler &compiler) const {}
+llvm::FunctionType *FunctionType::get_llvm_type(llvm::IRBuilder<> &builder) const {
+  // TODO:
+  return nullptr;
+}
+
+void FunctionType::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+}
 
 std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
   start_parsing("primitive-type");
@@ -85,7 +102,24 @@ std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
   return type;
 }
 
-void PrimitiveType::compile(Compiler::Compiler &compiler) const {}
+llvm::Type *PrimitiveType::get_llvm_type(llvm::IRBuilder<> &builder) const {
+  if (this->name.compare("int") == 0)
+    return builder.getInt64Ty();
+  else if (this->name.compare("float") == 0)
+    return builder.getFloatTy();
+  else if (this->name.compare("char") == 0)
+    return builder.getInt8Ty();
+  else if (this->name.compare("string") == 0)
+    return builder.getInt8Ty()->getPointerTo();
+  else if (this->name.compare("bool") == 0)
+    return builder.getInt8Ty();
+
+  error("unrecognized type: '" + this->name + '\'');
+}
+
+void PrimitiveType::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+}
 
 } // namespace Parser
 } // namespace Kebab
