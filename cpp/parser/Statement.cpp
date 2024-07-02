@@ -1,4 +1,3 @@
-#include <iostream>
 #include <optional>
 
 #include "compiler/Compiler.hpp"
@@ -6,31 +5,29 @@
 #include "parser/Constructor.hpp"
 #include "parser/Parser.hpp"
 #include "parser/Statement.hpp"
-#include "llvm/ADT/APInt.h"
-#include "llvm/IR/Constants.h"
 
 namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   start_parsing("definition-statement");
-  std::unique_ptr<DefinitionStatement> def = std::make_unique<DefinitionStatement>();
+  std::unique_ptr<DefinitionStatement> definition = std::make_unique<DefinitionStatement>();
 
   skip(lexer, Token::Type::DEF);
 
   if (lexer.cur_token.type == Token::Type::MUT) {
-    def->is_mutable = true;
+    definition->is_mutable = true;
     lexer.advance();
   } else {
-    def->is_mutable = false;
+    definition->is_mutable = false;
   }
 
-  def->name = skip_name(lexer);
+  definition->name = skip_name(lexer);
   skip(lexer, Token::Type::EQUALS);
-  def->constructor = Constructor::parse(lexer);
+  definition->constructor = Constructor::parse(lexer);
 
   end_parsing("definition-statement");
-  return def;
+  return definition;
 }
 
 void DefinitionStatement::compile(Compiler::Compiler &compiler) const {
@@ -40,11 +37,15 @@ void DefinitionStatement::compile(Compiler::Compiler &compiler) const {
 
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   start_parsing("assignment-statement");
+  std::unique_ptr<AssignmentStatement> assignment = std::make_unique<AssignmentStatement>();
 
-  // TODO:
+  skip(lexer, Token::Type::SET);
+  assignment->name = skip_name(lexer);
+  skip(lexer, Token::Type::EQUALS);
+  assignment->constructor = Constructor::parse(lexer);
 
   end_parsing("assignment-statement");
-  return nullptr;
+  return assignment;
 }
 
 void AssignmentStatement::compile(Compiler::Compiler &compiler) const {}
