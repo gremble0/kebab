@@ -101,7 +101,7 @@ void FunctionConstructor::parse_type(Lexer &lexer) {
 void FunctionConstructor::parse_body(Lexer &lexer) {
   skip(lexer, Token::Type::FAT_RARROW);
   std::unique_ptr<Constructor> body = Constructor::parse(lexer);
-  this->type->return_type = body->type;
+  this->type->return_type = body->get_type();
 
   skip(lexer, Token::Type::RPAREN);
 }
