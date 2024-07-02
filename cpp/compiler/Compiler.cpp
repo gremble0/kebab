@@ -1,3 +1,5 @@
+#include <optional>
+#include <string>
 #include <system_error>
 #include <vector>
 
@@ -5,7 +7,9 @@
 #include "parser/RootNode.hpp"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/IR/Type.h"
+#include "llvm/IR/Value.h"
 #include "llvm/Support/raw_ostream.h"
 
 namespace Kebab {
@@ -58,6 +62,15 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
 
   this->stop_main();
   this->save_module("./out.ll");
+}
+
+llvm::AllocaInst *Compiler::create_variable(llvm::Type *type, const std::string &name,
+                                            std::optional<llvm::Value *> init_value) {
+  llvm::AllocaInst *variable = this->builder.CreateAlloca(type, nullptr, name);
+  if (init_value != std::nullopt)
+    this->builder.CreateStore(init_value.value(), variable);
+
+  return variable;
 }
 
 } // namespace Compiler

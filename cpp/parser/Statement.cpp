@@ -30,7 +30,9 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   return def;
 }
 
-void DefinitionStatement::compile(Compiler::Compiler &compiler) const {}
+void DefinitionStatement::compile(Compiler::Compiler &compiler) const {
+  compiler.create_variable(compiler.builder.getInt32Ty(), this->name);
+}
 
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   start_parsing("assignment-statement");

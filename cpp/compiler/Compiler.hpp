@@ -2,6 +2,7 @@
 #define KEBAB_COMPILER_HPP
 
 #include <memory>
+#include <string>
 
 // Disable unused parameter warnings for llvm headers
 #pragma clang diagnostic push
@@ -39,6 +40,9 @@ public:
         builder(llvm::IRBuilder<>(context)) {}
 
   void compile(std::unique_ptr<Parser::RootNode> root);
+
+  llvm::AllocaInst *create_variable(llvm::Type *type, const std::string &name,
+                                    std::optional<llvm::Value *> init_value = std::nullopt);
 };
 
 } // namespace Compiler
