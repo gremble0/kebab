@@ -23,31 +23,31 @@ protected:
 public:
   virtual ~Constructor() = default;
 
-  // This pointer can be shared with the return type of a function constructor (the return type of a
-  // function constructor is the same as the type of the constructor in its body)
-  std::shared_ptr<Type> type;
-
   static std::unique_ptr<Constructor> parse(Lexer &lexer);
   virtual void compile(Compiler::Compiler &compiler) const = 0;
+  // This pointer can be shared between instances of subclasses of the Constructor class and the
+  // caller of this function (likely during compilation)
+  virtual std::shared_ptr<Type> get_type() const = 0;
 };
 
 class ListConstructor : public Constructor {
 private:
-  void parse_type(Lexer &lexer);
-  void parse_body(Lexer &lexer);
+  void parse_type(Lexer &lexer) override;
+  void parse_body(Lexer &lexer) override;
 
 public:
-  std::unique_ptr<ListType> type;
+  std::shared_ptr<ListType> type;
   std::vector<std::unique_ptr<Statement>> body;
 
   static std::unique_ptr<ListConstructor> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  void compile(Compiler::Compiler &compiler) const override;
+  std::shared_ptr<Type> get_type() const override { return this->type; }
 };
 
 class FunctionParameter : public AstNode {
 public:
   std::string name;
-  // This type is shared with the type of the function the parameter belongs to
+  // This type is shared with the type of the function the parameter belongs to (FunctionType obj)
   std::shared_ptr<Type> type;
 
   static std::unique_ptr<FunctionParameter> parse(Lexer &lexer);
@@ -56,29 +56,31 @@ public:
 
 class FunctionConstructor : public Constructor {
 private:
-  void parse_type(Lexer &lexer);
-  void parse_body(Lexer &lexer);
+  void parse_type(Lexer &lexer) override;
+  void parse_body(Lexer &lexer) override;
 
 public:
   std::vector<std::unique_ptr<FunctionParameter>> parameters;
-  std::unique_ptr<FunctionType> type;
+  std::shared_ptr<FunctionType> type;
   std::unique_ptr<Constructor> body;
 
   static std::unique_ptr<FunctionConstructor> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  void compile(Compiler::Compiler &compiler) const override;
+  std::shared_ptr<Type> get_type() const override { return this->type; }
 };
 
 class PrimitiveConstructor : public Constructor {
 private:
-  void parse_type(Lexer &lexer);
-  void parse_body(Lexer &lexer);
+  void parse_type(Lexer &lexer) override;
+  void parse_body(Lexer &lexer) override;
 
 public:
-  std::unique_ptr<PrimitiveType> type;
+  std::shared_ptr<PrimitiveType> type;
   std::vector<std::unique_ptr<Statement>> body;
 
   static std::unique_ptr<PrimitiveConstructor> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  void compile(Compiler::Compiler &compiler) const override;
+  std::shared_ptr<Type> get_type() const override { return this->type; }
 };
 
 } // namespace Parser
