@@ -9,12 +9,14 @@
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
 #include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 
 #pragma clang diagnostic pop
 
 namespace Kebab {
+// Can't unclude RootNode due to circular imports so have to declare independently
 namespace Parser {
 class RootNode;
 }
@@ -34,6 +36,7 @@ public:
   llvm::LLVMContext context;
   llvm::Module module;
   llvm::IRBuilder<> builder;
+  llvm::AllocaInst *current_variable;
 
   Compiler()
       : context(llvm::LLVMContext()), module(llvm::Module("kebab", context)),
@@ -41,8 +44,8 @@ public:
 
   void compile(std::unique_ptr<Parser::RootNode> root);
 
-  llvm::AllocaInst *create_variable(llvm::Type *type, const std::string &name,
-                                    std::optional<llvm::Value *> init_value = std::nullopt);
+  void create_variable(llvm::Type *type, const std::string &name,
+                       std::optional<llvm::Value *> init_value = std::nullopt);
 };
 
 } // namespace Compiler
