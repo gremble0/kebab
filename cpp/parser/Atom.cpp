@@ -1,5 +1,8 @@
+#include <cassert>
+
 #include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
+#include "llvm/IR/Constants.h"
 
 namespace Kebab {
 namespace Parser {
@@ -14,7 +17,9 @@ std::unique_ptr<IntAtom> IntAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *IntAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *IntAtom::compile(Compiler::Compiler &compiler) const {
+  return llvm::ConstantInt::get(compiler.builder.getInt64Ty(), this->i);
+}
 
 std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
   start_parsing("float-atom");
@@ -26,7 +31,9 @@ std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *FloatAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *FloatAtom::compile(Compiler::Compiler &compiler) const {
+  return llvm::ConstantFP::get(compiler.builder.getFloatTy(), this->f);
+}
 
 std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
   start_parsing("char-atom");
@@ -38,7 +45,9 @@ std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *CharAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *CharAtom::compile(Compiler::Compiler &compiler) const {
+  return llvm::ConstantInt::get(compiler.builder.getInt8Ty(), this->c);
+}
 
 std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
   start_parsing("string-atom");
@@ -50,7 +59,9 @@ std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *StringAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *StringAtom::compile(Compiler::Compiler &compiler) const {
+  assert(false && "unimplemented function StringAtom::compile");
+}
 
 std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   start_parsing("bool-atom");
@@ -66,7 +77,9 @@ std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *BoolAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *BoolAtom::compile(Compiler::Compiler &compiler) const {
+  return llvm::ConstantInt::get(compiler.builder.getInt8Ty(), this->b);
+}
 
 std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
   start_parsing("name-atom");
@@ -78,7 +91,9 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *NameAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *NameAtom::compile(Compiler::Compiler &compiler) const {
+  assert(false && "unimplemented function NameAtom::compile");
+}
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
   start_parsing("inner-expression-atom");
@@ -92,7 +107,9 @@ std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *InnerExpressionAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *InnerExpressionAtom::compile(Compiler::Compiler &compiler) const {
+  assert(false && "unimplemented function InnerExpressionAtom::compile");
+}
 
 std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   start_parsing("list-atom");
@@ -111,7 +128,9 @@ std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *ListAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *ListAtom::compile(Compiler::Compiler &compiler) const {
+  assert(false && "unimplemented function ListAtom::compile");
+}
 
 std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
   start_parsing("atom");
