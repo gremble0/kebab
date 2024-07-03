@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "Factor.hpp"
 #include "lexer/Lexer.hpp"
+#include "parser/Factor.hpp"
 #include "parser/Parser.hpp"
 
 namespace Kebab {
@@ -30,7 +30,7 @@ public:
   }
 
   static std::unique_ptr<TermOperator> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler::Compiler &compiler) const;
 };
 
 class Term : public AstNode {
@@ -39,7 +39,7 @@ public:
   std::vector<std::unique_ptr<TermOperator>> operators;
 
   static std::unique_ptr<Term> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler::Compiler &compiler) const;
 };
 
 } // namespace Parser

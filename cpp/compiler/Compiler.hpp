@@ -1,6 +1,7 @@
 #ifndef KEBAB_COMPILER_HPP
 #define KEBAB_COMPILER_HPP
 
+#include "llvm/IR/Function.h"
 #include <memory>
 #include <string>
 
@@ -36,7 +37,9 @@ public:
   llvm::LLVMContext context;
   llvm::Module module;
   llvm::IRBuilder<> builder;
+
   llvm::AllocaInst *current_variable;
+  llvm::Function *current_function;
 
   Compiler()
       : context(llvm::LLVMContext()), module(llvm::Module("kebab", context)),

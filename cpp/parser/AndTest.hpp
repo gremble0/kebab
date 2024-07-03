@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 
-#include "NotTest.hpp"
 #include "lexer/Lexer.hpp"
+#include "parser/NotTest.hpp"
 #include "parser/Parser.hpp"
 
 namespace Kebab {
@@ -16,7 +16,7 @@ public:
   std::vector<std::unique_ptr<NotTest>> not_tests;
 
   static std::unique_ptr<AndTest> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler::Compiler &compiler) const;
 };
 
 } // namespace Parser

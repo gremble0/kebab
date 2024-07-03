@@ -13,7 +13,7 @@ std::unique_ptr<RootNode> RootNode::parse(Lexer &lexer) {
   return root_node;
 }
 
-void RootNode::compile(Compiler::Compiler &compiler) const {
+llvm::Value *RootNode::compile(Compiler::Compiler &compiler) const {
   for (std::unique_ptr<Statement> const &statement : this->statements)
     statement->compile(compiler);
 }

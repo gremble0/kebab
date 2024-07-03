@@ -14,7 +14,7 @@ std::unique_ptr<IntAtom> IntAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-void IntAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *IntAtom::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
   start_parsing("float-atom");
@@ -26,7 +26,7 @@ std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-void FloatAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *FloatAtom::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
   start_parsing("char-atom");
@@ -38,7 +38,7 @@ std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-void CharAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *CharAtom::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
   start_parsing("string-atom");
@@ -50,7 +50,7 @@ std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-void StringAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *StringAtom::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   start_parsing("bool-atom");
@@ -66,7 +66,7 @@ std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-void BoolAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *BoolAtom::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
   start_parsing("name-atom");
@@ -78,7 +78,7 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-void NameAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *NameAtom::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
   start_parsing("inner-expression-atom");
@@ -92,7 +92,7 @@ std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-void InnerExpressionAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *InnerExpressionAtom::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   start_parsing("list-atom");
@@ -111,7 +111,7 @@ std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-void ListAtom::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *ListAtom::compile(Compiler::Compiler &compiler) const {}
 
 std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
   start_parsing("atom");

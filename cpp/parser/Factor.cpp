@@ -30,7 +30,7 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
   return prefix;
 }
 
-void FactorPrefix::compile(Compiler::Compiler &compiler) const {
+llvm::Value *FactorPrefix::compile(Compiler::Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function FactorPrefix::compile");
 }
@@ -56,7 +56,7 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   return factor;
 }
 
-void Factor::compile(Compiler::Compiler &compiler) const {
+llvm::Value *Factor::compile(Compiler::Compiler &compiler) const {
   // TODO: some operator logic (this->operators)
   // TODO: some prefix logic (this->prefixes)
   for (std::unique_ptr<Primary> const &primary : this->primaries)
@@ -86,7 +86,7 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
   return operator_;
 }
 
-void FactorOperator::compile(Compiler::Compiler &compiler) const {
+llvm::Value *FactorOperator::compile(Compiler::Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function FactorOperator::compile");
 }

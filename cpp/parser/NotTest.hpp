@@ -1,8 +1,8 @@
 #ifndef KEBAB_KEBAB_NOTTEST_HPP
 #define KEBAB_KEBAB_NOTTEST_HPP
 
-#include "Comparison.hpp"
 #include "lexer/Lexer.hpp"
+#include "parser/Comparison.hpp"
 #include "parser/Parser.hpp"
 
 namespace Kebab {
@@ -14,7 +14,7 @@ public:
   std::unique_ptr<Comparison> comparison;
 
   static std::unique_ptr<NotTest> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler::Compiler &compiler) const;
 };
 
 } // namespace Parser

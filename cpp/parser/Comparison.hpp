@@ -7,6 +7,7 @@
 #include "lexer/Token.hpp"
 #include "parser/Parser.hpp"
 #include "parser/Term.hpp"
+#include "llvm/IR/Value.h"
 
 namespace Kebab {
 namespace Parser {
@@ -38,7 +39,7 @@ public:
   }
 
   static std::unique_ptr<ComparisonOperator> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler::Compiler &compiler) const;
 };
 
 class Comparison : public AstNode {
@@ -47,7 +48,7 @@ public:
   std::vector<std::unique_ptr<Term>> terms;
 
   static std::unique_ptr<Comparison> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler::Compiler &compiler) const;
 };
 
 } // namespace Parser

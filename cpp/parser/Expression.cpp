@@ -125,7 +125,7 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
   return expression;
 }
 
-void CondExpression::compile(Compiler::Compiler &compiler) const {
+llvm::Value *CondExpression::compile(Compiler::Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function CondExpression::compile");
 }
@@ -147,7 +147,7 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   return expression;
 }
 
-void NormalExpression::compile(Compiler::Compiler &compiler) const {
+llvm::Value *NormalExpression::compile(Compiler::Compiler &compiler) const {
   for (std::unique_ptr<AndTest> const &and_test : this->and_tests)
     and_test->compile(compiler);
 }
@@ -162,7 +162,7 @@ std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
   return expression;
 }
 
-void FunctionExpression::compile(Compiler::Compiler &compiler) const {
+llvm::Value *FunctionExpression::compile(Compiler::Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function FunctionExpression::compile");
 }

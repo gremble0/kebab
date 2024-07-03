@@ -3,6 +3,7 @@
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Type.h"
+#include <cassert>
 
 namespace Kebab {
 namespace Parser {
@@ -47,11 +48,12 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
 
 llvm::ScalableVectorType *ListType::get_llvm_type(llvm::IRBuilder<> &builder) const {
   // TODO:
-  return nullptr;
+  assert(false && "unimplemented function ListType::get_llvm_type");
 }
 
-void ListType::compile(Compiler::Compiler &compiler) const {
+llvm::Value *ListType::compile(Compiler::Compiler &compiler) const {
   // TODO:
+  assert(false && "unimplemented function ListType::compile");
 }
 
 void FunctionType::parse_parameter_types(Lexer &lexer) {
@@ -85,11 +87,12 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
 
 llvm::FunctionType *FunctionType::get_llvm_type(llvm::IRBuilder<> &builder) const {
   // TODO:
-  return nullptr;
+  assert(false && "unimplemented function FunctionType::get_llvm_type");
 }
 
-void FunctionType::compile(Compiler::Compiler &compiler) const {
+llvm::Value *FunctionType::compile(Compiler::Compiler &compiler) const {
   // TODO:
+  assert(false && "unimplemented function FunctionType::compile");
 }
 
 std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
@@ -117,8 +120,9 @@ llvm::Type *PrimitiveType::get_llvm_type(llvm::IRBuilder<> &builder) const {
   error("unrecognized type: '" + this->name + '\'');
 }
 
-void PrimitiveType::compile(Compiler::Compiler &compiler) const {
+llvm::Value *PrimitiveType::compile(Compiler::Compiler &compiler) const {
   // TODO:
+  assert(false && "unimplemented function PrimitiveType::compile");
 }
 
 } // namespace Parser

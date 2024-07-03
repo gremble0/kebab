@@ -8,6 +8,7 @@
 
 #include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
+#include "llvm/IR/Value.h"
 
 namespace Kebab {
 namespace Parser {
@@ -106,7 +107,7 @@ public:
   virtual ~AstNode() = default;
 
   static std::unique_ptr<AstNode> parse(Lexer &lexer);
-  virtual void compile(Compiler::Compiler &compiler) const = 0;
+  virtual llvm::Value *compile(Compiler::Compiler &compiler) const = 0;
 };
 
 std::unique_ptr<RootNode> parse(Lexer &lexer);

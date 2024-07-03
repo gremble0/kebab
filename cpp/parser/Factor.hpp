@@ -4,9 +4,9 @@
 #include <optional>
 #include <vector>
 
-#include "Primary.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
+#include "parser/Primary.hpp"
 
 namespace Kebab {
 namespace Parser {
@@ -31,7 +31,7 @@ public:
   }
 
   static std::unique_ptr<FactorOperator> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler::Compiler &compiler) const;
 };
 
 class FactorPrefix : public AstNode {
@@ -53,7 +53,7 @@ public:
   }
 
   static std::unique_ptr<FactorPrefix> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler::Compiler &compiler) const;
 };
 
 class Factor : public AstNode {
@@ -63,7 +63,7 @@ public:
   std::vector<std::unique_ptr<FactorOperator>> operators;
 
   static std::unique_ptr<Factor> parse(Lexer &lexer);
-  void compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler::Compiler &compiler) const;
 };
 
 } // namespace Parser

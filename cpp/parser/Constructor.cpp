@@ -62,7 +62,7 @@ std::unique_ptr<ListConstructor> ListConstructor::parse(Lexer &lexer) {
   return constructor;
 }
 
-void ListConstructor::compile(Compiler::Compiler &compiler) const {
+llvm::Value *ListConstructor::compile(Compiler::Compiler &compiler) const {
   // TODO:
 }
 
@@ -78,7 +78,7 @@ std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
   return parameter;
 }
 
-void FunctionParameter::compile(Compiler::Compiler &compiler) const {
+llvm::Value *FunctionParameter::compile(Compiler::Compiler &compiler) const {
   // TODO:
 }
 
@@ -121,7 +121,7 @@ std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
   return constructor;
 }
 
-void FunctionConstructor::compile(Compiler::Compiler &compiler) const {
+llvm::Value *FunctionConstructor::compile(Compiler::Compiler &compiler) const {
   // TODO:
 }
 
@@ -145,7 +145,7 @@ std::unique_ptr<PrimitiveConstructor> PrimitiveConstructor::parse(Lexer &lexer) 
   return constructor;
 }
 
-void PrimitiveConstructor::compile(Compiler::Compiler &compiler) const {
+llvm::Value *PrimitiveConstructor::compile(Compiler::Compiler &compiler) const {
   for (std::unique_ptr<Statement> const &statement : this->body)
     statement->compile(compiler);
 }

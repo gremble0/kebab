@@ -29,7 +29,7 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
   return operator_;
 }
 
-void TermOperator::compile(Compiler::Compiler &compiler) const {
+llvm::Value *TermOperator::compile(Compiler::Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function TermOperator::compile");
 }
@@ -51,7 +51,7 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
   return term;
 }
 
-void Term::compile(Compiler::Compiler &compiler) const {
+llvm::Value *Term::compile(Compiler::Compiler &compiler) const {
   // TODO: some operator logic (this->operators)
   for (std::unique_ptr<Factor> const &factor : this->factors)
     factor->compile(compiler);
