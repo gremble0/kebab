@@ -33,7 +33,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 llvm::Value *DefinitionStatement::compile(Compiler::Compiler &compiler) const {
   compiler.create_variable(this->constructor->get_type()->get_llvm_type(compiler.builder),
                            this->name);
-  constructor->compile(compiler);
+  return constructor->compile(compiler);
 }
 
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
@@ -62,7 +62,7 @@ std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
 }
 
 llvm::Value *ExpressionStatement::compile(Compiler::Compiler &compiler) const {
-  this->expression->compile(compiler);
+  return this->expression->compile(compiler);
 }
 
 std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {

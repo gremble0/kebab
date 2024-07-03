@@ -146,8 +146,8 @@ std::unique_ptr<PrimitiveConstructor> PrimitiveConstructor::parse(Lexer &lexer) 
 }
 
 llvm::Value *PrimitiveConstructor::compile(Compiler::Compiler &compiler) const {
-  for (std::unique_ptr<Statement> const &statement : this->body)
-    statement->compile(compiler);
+  // for (std::unique_ptr<Statement> const &statement : this->body)
+  return this->body.at(0)->compile(compiler);
 }
 
 } // namespace Parser

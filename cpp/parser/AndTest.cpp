@@ -25,9 +25,8 @@ std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
 }
 
 llvm::Value *AndTest::compile(Compiler::Compiler &compiler) const {
-  // TODO: some and logic
-  for (std::unique_ptr<NotTest> const &not_test : this->not_tests)
-    not_test->compile(compiler);
+  // for (std::unique_ptr<NotTest> const &not_test : this->not_tests)
+  return not_tests.at(0)->compile(compiler);
 }
 
 } // namespace Parser

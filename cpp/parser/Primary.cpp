@@ -84,7 +84,7 @@ std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
 
 llvm::Value *Primary::compile(Compiler::Compiler &compiler) const {
   // TODO: some suffix logic (this->suffixes)
-  this->atom->compile(compiler);
+  return this->atom->compile(compiler);
 }
 
 } // namespace Parser

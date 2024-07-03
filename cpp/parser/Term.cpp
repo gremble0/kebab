@@ -53,8 +53,8 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
 
 llvm::Value *Term::compile(Compiler::Compiler &compiler) const {
   // TODO: some operator logic (this->operators)
-  for (std::unique_ptr<Factor> const &factor : this->factors)
-    factor->compile(compiler);
+  // for (std::unique_ptr<Factor> const &factor : this->factors)
+  return this->factors.at(0)->compile(compiler);
 }
 
 } // namespace Parser

@@ -59,8 +59,8 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
 llvm::Value *Factor::compile(Compiler::Compiler &compiler) const {
   // TODO: some operator logic (this->operators)
   // TODO: some prefix logic (this->prefixes)
-  for (std::unique_ptr<Primary> const &primary : this->primaries)
-    primary->compile(compiler);
+  // for (std::unique_ptr<Primary> const &primary : this->primaries)
+  return primaries.at(0)->compile(compiler);
 }
 
 std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {

@@ -16,6 +16,9 @@ std::unique_ptr<RootNode> RootNode::parse(Lexer &lexer) {
 llvm::Value *RootNode::compile(Compiler::Compiler &compiler) const {
   for (std::unique_ptr<Statement> const &statement : this->statements)
     statement->compile(compiler);
+
+  // meh
+  return nullptr;
 }
 
 } // namespace Parser
