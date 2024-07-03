@@ -1,1 +1,4 @@
-def a = int(42)
+def a = int(
+  def inner = int(0)
+  42
+)

@@ -62,7 +62,9 @@ std::unique_ptr<ListConstructor> ListConstructor::parse(Lexer &lexer) {
   return constructor;
 }
 
-void ListConstructor::compile(Compiler::Compiler &compiler) const {}
+void ListConstructor::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+}
 
 std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
   start_parsing("function-parameter");
@@ -76,7 +78,9 @@ std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
   return parameter;
 }
 
-void FunctionParameter::compile(Compiler::Compiler &compiler) const {}
+void FunctionParameter::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+}
 
 void FunctionConstructor::parse_type(Lexer &lexer) {
   skip(lexer, Token::Type::FN);
@@ -117,7 +121,9 @@ std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
   return constructor;
 }
 
-void FunctionConstructor::compile(Compiler::Compiler &compiler) const {}
+void FunctionConstructor::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+}
 
 void PrimitiveConstructor::parse_type(Lexer &lexer) { this->type = PrimitiveType::parse(lexer); }
 
@@ -139,7 +145,10 @@ std::unique_ptr<PrimitiveConstructor> PrimitiveConstructor::parse(Lexer &lexer) 
   return constructor;
 }
 
-void PrimitiveConstructor::compile(Compiler::Compiler &compiler) const {}
+void PrimitiveConstructor::compile(Compiler::Compiler &compiler) const {
+  for (std::unique_ptr<Statement> const &statement : this->body)
+    statement->compile(compiler);
+}
 
 } // namespace Parser
 } // namespace Kebab
