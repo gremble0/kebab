@@ -30,7 +30,10 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
   return prefix;
 }
 
-void FactorPrefix::compile(Compiler::Compiler &compiler) const {}
+void FactorPrefix::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+  assert(false && "unimplemented function FactorPrefix::compile");
+}
 
 std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   start_parsing("factor");
@@ -53,7 +56,12 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   return factor;
 }
 
-void Factor::compile(Compiler::Compiler &compiler) const {}
+void Factor::compile(Compiler::Compiler &compiler) const {
+  // TODO: some operator logic (this->operators)
+  // TODO: some prefix logic (this->prefixes)
+  for (std::unique_ptr<Primary> const &primary : this->primaries)
+    primary->compile(compiler);
+}
 
 std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
   start_parsing("factor-operator");
@@ -78,7 +86,10 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
   return operator_;
 }
 
-void FactorOperator::compile(Compiler::Compiler &compiler) const {}
+void FactorOperator::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+  assert(false && "unimplemented function FactorOperator::compile");
+}
 
 } // namespace Parser
 } // namespace Kebab

@@ -46,7 +46,10 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
   return operator_;
 }
 
-void ComparisonOperator::compile(Compiler::Compiler &compiler) const {}
+void ComparisonOperator::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+  assert(false && "unimplemented function ComparisonOperator::compile");
+}
 
 std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
   start_parsing("comparison");
@@ -65,7 +68,11 @@ std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
   return comparison;
 }
 
-void Comparison::compile(Compiler::Compiler &compiler) const {}
+void Comparison::compile(Compiler::Compiler &compiler) const {
+  // TODO: some operator logic (this->operators)
+  for (std::unique_ptr<Term> const &term : this->terms)
+    term->compile(compiler);
+}
 
 } // namespace Parser
 } // namespace Kebab

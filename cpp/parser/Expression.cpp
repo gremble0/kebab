@@ -1,3 +1,4 @@
+#include <cassert>
 #include <memory>
 #include <optional>
 #include <vector>
@@ -124,7 +125,10 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
   return expression;
 }
 
-void CondExpression::compile(Compiler::Compiler &compiler) const {}
+void CondExpression::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+  assert(false && "unimplemented function CondExpression::compile");
+}
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   start_parsing("normal-expression");
@@ -143,7 +147,10 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   return expression;
 }
 
-void NormalExpression::compile(Compiler::Compiler &compiler) const {}
+void NormalExpression::compile(Compiler::Compiler &compiler) const {
+  for (std::unique_ptr<AndTest> const &and_test : this->and_tests)
+    and_test->compile(compiler);
+}
 
 std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
   start_parsing("function-expression");
@@ -155,7 +162,10 @@ std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
   return expression;
 }
 
-void FunctionExpression::compile(Compiler::Compiler &compiler) const {}
+void FunctionExpression::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+  assert(false && "unimplemented function FunctionExpression::compile");
+}
 
 } // namespace Parser
 } // namespace Kebab

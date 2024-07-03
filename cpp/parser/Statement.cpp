@@ -61,7 +61,9 @@ std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
   return expression;
 }
 
-void ExpressionStatement::compile(Compiler::Compiler &compiler) const {}
+void ExpressionStatement::compile(Compiler::Compiler &compiler) const {
+  this->expression->compile(compiler);
+}
 
 std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
   start_parsing("statement");
