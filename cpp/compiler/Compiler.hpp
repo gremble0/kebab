@@ -45,6 +45,7 @@ public:
         builder(llvm::IRBuilder<>(context)) {}
 
   void compile(std::unique_ptr<Parser::RootNode> root);
+  [[noreturn]] void error(const std::string &message) const;
 
   // TODO: take type as param and compare with type of initializer
   llvm::GlobalVariable *create_global(const std::string &name, llvm::Constant *init);

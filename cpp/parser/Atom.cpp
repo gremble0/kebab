@@ -94,11 +94,11 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *NameAtom::compile(Compiler::Compiler &compiler) const {
-  llvm::GlobalValue *global = compiler.module.getNamedValue(this->name);
-  if (global == nullptr)
-    this->error(std::string("undefined identifier: '") + this->name + '\'');
+  llvm::GlobalValue *names_global = compiler.module.getNamedValue(this->name);
+  if (names_global == nullptr)
+    compiler.error(std::string("undefined identifier: '") + this->name + '\'');
 
-  return global;
+  return names_global;
 }
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {

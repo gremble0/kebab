@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <system_error>
 #include <vector>
@@ -63,6 +64,12 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
 
   this->stop_main();
   this->save_module("./out.ll");
+}
+
+[[noreturn]] void Compiler::error(const std::string &message) const {
+  std::cerr << "compiler-error: " + message << std::endl;
+
+  exit(1);
 }
 
 llvm::GlobalVariable *Compiler::create_global(const std::string &name, llvm::Constant *init) {
