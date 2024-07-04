@@ -115,7 +115,9 @@ llvm::Type *PrimitiveType::get_llvm_type(llvm::IRBuilder<> &builder) const {
   else if (this->name.compare("string") == 0)
     return builder.getInt8Ty()->getPointerTo();
   else if (this->name.compare("bool") == 0)
-    return builder.getInt8Ty();
+    return builder.getInt1Ty();
+  else if (this->name.compare("void") == 0)
+    return builder.getVoidTy();
 
   error("unrecognized type: '" + this->name + '\'');
 }

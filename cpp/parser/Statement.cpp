@@ -6,8 +6,8 @@
 #include "parser/Constructor.hpp"
 #include "parser/Parser.hpp"
 #include "parser/Statement.hpp"
+#include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Instructions.h"
-#include "llvm/IR/Type.h"
 
 namespace Kebab {
 namespace Parser {
@@ -34,9 +34,9 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 }
 
 llvm::Value *DefinitionStatement::compile(Compiler::Compiler &compiler) const {
-  llvm::Type *variable_type = this->constructor->get_type()->get_llvm_type(compiler.builder);
   llvm::Value *variable_value = this->constructor->compile(compiler);
-  llvm::AllocaInst *variable = compiler.create_variable(variable_type, this->name, variable_value);
+  llvm::GlobalVariable *variable =
+      compiler.create_variable(this->name, static_cast<llvm::Constant *>(variable_value));
 
   return variable;
 }

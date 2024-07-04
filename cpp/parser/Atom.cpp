@@ -62,11 +62,7 @@ std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *StringAtom::compile(Compiler::Compiler &compiler) const {
-  llvm::Constant *string_constant = llvm::ConstantDataArray::getString(compiler.context, this->s);
-  llvm::AllocaInst *string_variable = compiler.builder.CreateAlloca(string_constant->getType());
-  compiler.builder.CreateStore(string_constant, string_variable);
-
-  return string_variable;
+  return llvm::ConstantDataArray::getString(compiler.context, this->s);
 }
 
 std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
@@ -98,7 +94,7 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *NameAtom::compile(Compiler::Compiler &compiler) const {
-  assert(false && "unimplemented function NameAtom::compile");
+  return compiler.module.getNamedGlobal(this->name);
 }
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {

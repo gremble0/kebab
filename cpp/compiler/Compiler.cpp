@@ -6,7 +6,9 @@
 #include "Compiler.hpp"
 #include "parser/RootNode.hpp"
 #include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Constant.h"
 #include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
@@ -64,12 +66,14 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   this->save_module("./out.ll");
 }
 
-llvm::AllocaInst *Compiler::create_variable(llvm::Type *type, const std::string &name,
-                                            std::optional<llvm::Value *> init_value) {
-  llvm::AllocaInst *variable = this->builder.CreateAlloca(type, nullptr, name);
-  if (init_value != std::nullopt)
-    this->builder.CreateStore(init_value.value(), variable);
-  return variable;
+llvm::GlobalVariable *Compiler::create_variable(const std::string &name, llvm::Constant *init) {
+  this->module.getOrInsertGlobal(name, init->getType());
+  llvm::GlobalVariable *global = this->module.getNamedGlobal(name);
+  global->setAlignment(llvm::MaybeAlign(4));
+  global->setConstant(false);
+  global->setInitializer(init);
+
+  return global;
 }
 
 } // namespace Compiler

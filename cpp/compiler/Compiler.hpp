@@ -1,7 +1,6 @@
 #ifndef KEBAB_COMPILER_HPP
 #define KEBAB_COMPILER_HPP
 
-#include "llvm/IR/Function.h"
 #include <memory>
 #include <string>
 
@@ -9,6 +8,9 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
+#include "llvm/IR/Constant.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/LLVMContext.h"
@@ -44,8 +46,7 @@ public:
 
   void compile(std::unique_ptr<Parser::RootNode> root);
 
-  llvm::AllocaInst *create_variable(llvm::Type *type, const std::string &name,
-                                    std::optional<llvm::Value *> init_value = std::nullopt);
+  llvm::GlobalVariable *create_variable(const std::string &name, llvm::Constant *init);
 };
 
 } // namespace Compiler
