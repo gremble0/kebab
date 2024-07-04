@@ -1,10 +1,7 @@
 ; ModuleID = 'kebab'
 source_filename = "kebab"
 
-@b = global i64 2, align 4
-@c = global [7 x i8] c"hello\22\00", align 4
-@d = global ptr @c, align 4
-@a = global i64 4, align 4
+@v = global ptr @printf
 
 declare i32 @printf(ptr, ...)
 

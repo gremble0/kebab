@@ -1,15 +1,8 @@
-def a = int(
-  def b = int(2)
-  def c = string("hello")
-  def d = string(c)
-  4
-)
 ;def a = int(
-;  def inner = int(0)
-;  def f = float(0.9)
-;  42
+;  def b = int(2)
+;  def c = string("hello")
+;  def d = string(c)
+;  4
 ;)
-;
-;def s = string("hello")
-;
-;def v = void(printf("world"))
+
+def v = void(printf)

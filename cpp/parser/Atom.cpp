@@ -2,8 +2,8 @@
 
 #include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
-#include "llvm/IR/Constant.h"
 #include "llvm/IR/Constants.h"
+#include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Instructions.h"
 
 namespace Kebab {
@@ -94,7 +94,11 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *NameAtom::compile(Compiler::Compiler &compiler) const {
-  return compiler.module.getNamedGlobal(this->name);
+  llvm::GlobalValue *global = compiler.module.getNamedValue(this->name);
+  if (global == nullptr)
+    this->error(std::string("undefined identifier: '") + this->name + '\'');
+
+  return global;
 }
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {

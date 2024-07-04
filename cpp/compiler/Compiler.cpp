@@ -1,4 +1,3 @@
-#include <optional>
 #include <string>
 #include <system_error>
 #include <vector>
@@ -66,14 +65,10 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   this->save_module("./out.ll");
 }
 
-llvm::GlobalVariable *Compiler::create_variable(const std::string &name, llvm::Constant *init) {
-  this->module.getOrInsertGlobal(name, init->getType());
-  llvm::GlobalVariable *global = this->module.getNamedGlobal(name);
-  global->setAlignment(llvm::MaybeAlign(4));
-  global->setConstant(false);
-  global->setInitializer(init);
-
-  return global;
+llvm::GlobalVariable *Compiler::create_global(const std::string &name, llvm::Constant *init) {
+  // this->module takes ownership of this object
+  return new llvm::GlobalVariable(this->module, init->getType(), false,
+                                  llvm::GlobalValue::ExternalLinkage, init, name);
 }
 
 } // namespace Compiler

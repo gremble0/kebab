@@ -46,7 +46,8 @@ public:
 
   void compile(std::unique_ptr<Parser::RootNode> root);
 
-  llvm::GlobalVariable *create_variable(const std::string &name, llvm::Constant *init);
+  // TODO: take type as param and compare with type of initializer
+  llvm::GlobalVariable *create_global(const std::string &name, llvm::Constant *init);
 };
 
 } // namespace Compiler
