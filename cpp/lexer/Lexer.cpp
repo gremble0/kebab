@@ -130,7 +130,8 @@ Token Lexer::read_string() {
 
 Token Lexer::read_word() {
   auto is_kebab_case = [](uint8_t c) {
-    return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']';
+    return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']' &&
+           c != '\0';
   };
 
   if (!std::isalpha(this->peek(0)))
