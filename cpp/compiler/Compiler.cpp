@@ -64,11 +64,12 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   this->save_module("./out.ll");
 }
 
-void Compiler::create_variable(llvm::Type *type, const std::string &name,
-                               std::optional<llvm::Value *> init_value) {
-  this->current_variable = this->builder.CreateAlloca(type, nullptr, name);
+llvm::AllocaInst *Compiler::create_variable(llvm::Type *type, const std::string &name,
+                                            std::optional<llvm::Value *> init_value) {
+  llvm::AllocaInst *variable = this->builder.CreateAlloca(type, nullptr, name);
   if (init_value != std::nullopt)
-    this->builder.CreateStore(init_value.value(), this->current_variable);
+    this->builder.CreateStore(init_value.value(), variable);
+  return variable;
 }
 
 } // namespace Compiler

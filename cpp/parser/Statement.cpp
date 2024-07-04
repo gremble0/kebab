@@ -1,3 +1,4 @@
+#include <cassert>
 #include <optional>
 
 #include "compiler/Compiler.hpp"
@@ -5,6 +6,8 @@
 #include "parser/Constructor.hpp"
 #include "parser/Parser.hpp"
 #include "parser/Statement.hpp"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/Type.h"
 
 namespace Kebab {
 namespace Parser {
@@ -31,9 +34,11 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 }
 
 llvm::Value *DefinitionStatement::compile(Compiler::Compiler &compiler) const {
-  compiler.create_variable(this->constructor->get_type()->get_llvm_type(compiler.builder),
-                           this->name, constructor->compile(compiler));
-  return nullptr;
+  llvm::Type *variable_type = this->constructor->get_type()->get_llvm_type(compiler.builder);
+  llvm::Value *variable_value = this->constructor->compile(compiler);
+  llvm::AllocaInst *variable = compiler.create_variable(variable_type, this->name, variable_value);
+
+  return variable;
 }
 
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
@@ -49,7 +54,10 @@ std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   return assignment;
 }
 
-llvm::Value *AssignmentStatement::compile(Compiler::Compiler &compiler) const {}
+llvm::Value *AssignmentStatement::compile(Compiler::Compiler &compiler) const {
+  // TODO:
+  assert(false && "unimplemented function AssignmentStatement::compile");
+}
 
 std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
   start_parsing("expression-statement");

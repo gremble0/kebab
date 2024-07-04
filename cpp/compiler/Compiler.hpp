@@ -38,17 +38,14 @@ public:
   llvm::Module module;
   llvm::IRBuilder<> builder;
 
-  llvm::AllocaInst *current_variable;
-  llvm::Function *current_function;
-
   Compiler()
       : context(llvm::LLVMContext()), module(llvm::Module("kebab", context)),
         builder(llvm::IRBuilder<>(context)) {}
 
   void compile(std::unique_ptr<Parser::RootNode> root);
 
-  void create_variable(llvm::Type *type, const std::string &name,
-                       std::optional<llvm::Value *> init_value = std::nullopt);
+  llvm::AllocaInst *create_variable(llvm::Type *type, const std::string &name,
+                                    std::optional<llvm::Value *> init_value = std::nullopt);
 };
 
 } // namespace Compiler
