@@ -43,7 +43,7 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
     break;
 
   default:
-    error("illegal syntax");
+    error(std::string("illegal syntax ") + lexer.cur_token.to_string());
   }
 
   end_parsing("expression");

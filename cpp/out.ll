@@ -1,7 +1,7 @@
 ; ModuleID = 'kebab'
 source_filename = "kebab"
 
-@0 = private unnamed_addr constant [8 x i8] c"hello\\n\00", align 1
+@0 = private unnamed_addr constant [7 x i8] c"hello\0A\00", align 1
 @v = global ptr @printf
 
 declare i32 @printf(ptr, ...)

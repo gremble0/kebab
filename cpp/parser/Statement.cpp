@@ -110,7 +110,7 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
     break;
 
   default:
-    AstNode::error("illegal syntax");
+    error(std::string("illegal syntax ") + lexer.cur_token.to_string());
   }
 
   end_parsing("statement");
