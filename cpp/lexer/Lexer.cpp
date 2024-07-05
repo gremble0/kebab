@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "Lexer.hpp"
@@ -105,27 +106,45 @@ Token Lexer::read_string() {
     this->error("malformed string literal");
 
   Position start = this->position();
+  std::ostringstream stream;
   ++this->line_pos; // skip opening quote
 
   while (true) {
     uint8_t peeked = this->peek(0);
-
-    if (peeked == '\0')
+    switch (peeked) {
+    case '\0':
       this->error("unterminated string literal");
-    else if (peeked == '\\')
+
+    case '\\':
+      switch (this->peek(1)) {
+      case '\0':
+        this->error("unterminated string literal");
+
+      case 'n':
+        stream << '\n';
+        break;
+
+      default:
+        break;
+      }
       ++this->line_pos;
-    else if (peeked == '"')
       break;
 
+    case '"':
+      goto end_loop;
+
+    default:
+      stream << peeked;
+    }
     ++this->line_pos;
   }
+end_loop:
 
   ++this->line_pos; // skip closing quote
   Position end = this->position();
   Span span(start, end);
 
-  std::string str = this->line.substr(start.col + 1, end.col - start.col - 2);
-  return Token(Token::Type::STRING_LITERAL, span, str);
+  return Token(Token::Type::STRING_LITERAL, span, stream.str());
 }
 
 Token Lexer::read_word() {
