@@ -92,9 +92,9 @@ Token Lexer::read_char() {
 
   ++this->line_pos; // opening quote
   uint8_t c = this->read_maybe_escaped_char();
+  bool missing_closing_quote = this->peek(0) != '\'';
   ++this->line_pos; // closing quote
 
-  bool missing_closing_quote = this->peek(0) != '\'';
   if (missing_opening_quote || missing_closing_quote)
     this->error("malformed char literal");
 

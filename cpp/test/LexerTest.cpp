@@ -65,4 +65,9 @@ TEST(LexerTest, ErrorsWhenOutOfRange) {
   ASSERT_DEATH({ lex_file_with_logs(basename); }, "number out of range");
 }
 
+TEST(LexerTest, ErrorsWhenUnterminatedCharLiteral) {
+  const std::string basename = "unterminated-char-literal";
+  ASSERT_DEATH({ lex_file_with_logs(basename); }, "unterminated char literal");
+}
+
 } // namespace Kebab
