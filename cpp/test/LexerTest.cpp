@@ -55,7 +55,17 @@ TEST(LexerTest, LexesOperatorsKeb) {
   lex_file_with_logs(basename);
 }
 
-TEST(LexerTest, HandlesEmptyFile) {
+TEST(LexerTest, LexesConstAndMut) {
+  const std::string basename = "const-and-mut";
+  lex_file_with_logs(basename);
+}
+
+TEST(LexerTest, LexesEscapeSequences) {
+  const std::string basename = "escape-sequences";
+  lex_file_with_logs(basename);
+}
+
+TEST(LexerTest, LexesEmptyFile) {
   const std::string basename = "empty";
   lex_file_with_logs(basename);
 }
@@ -68,6 +78,11 @@ TEST(LexerTest, ErrorsWhenOutOfRange) {
 TEST(LexerTest, ErrorsWhenUnterminatedCharLiteral) {
   const std::string basename = "unterminated-char-literal";
   ASSERT_DEATH({ lex_file_with_logs(basename); }, "unterminated char literal");
+}
+
+TEST(LexerTest, ErrorsWhenMalformedCharLiteral) {
+  const std::string basename = "malformed-char-literal";
+  ASSERT_DEATH({ lex_file_with_logs(basename); }, "malformed char literal");
 }
 
 } // namespace Kebab

@@ -1,0 +1,5 @@
+def mut my-var = int(4)
+set my-var = int(6)
+
+def mut my-var-2 = int(my-var)
+set my-var-2 = int(1)

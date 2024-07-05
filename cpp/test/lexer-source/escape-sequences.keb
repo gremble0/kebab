@@ -1,0 +1,5 @@
+def s1 = string("hello, world\n")
+def s2 = string("\nhello\n, world\n")
+
+def c1 = char('\'')
+def c2 = char('\n')
