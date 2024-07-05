@@ -24,6 +24,8 @@ private:
   uint8_t peek(int offset) const;
   [[noreturn]] void error(std::string message) const;
 
+  uint8_t read_maybe_escaped_char();
+
   Token read_number();
   Token read_char();
   Token read_string();

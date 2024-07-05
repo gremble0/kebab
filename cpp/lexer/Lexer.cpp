@@ -99,6 +99,35 @@ Token Lexer::read_char() {
   return Token(Token::Type::CHAR_LITERAL, span, c);
 }
 
+uint8_t Lexer::read_maybe_escaped_char() {
+  uint8_t peeked = this->peek(0);
+  uint8_t output;
+
+  switch (peeked) {
+  case '\\': {
+    uint8_t escaped = this->peek(1);
+    switch (escaped) {
+    case 'n':
+      output = '\n';
+      break;
+
+    default:
+      output = escaped;
+      break;
+    }
+    this->line_pos += 2;
+    break;
+  }
+
+  default:
+    output = peeked;
+    ++this->line_pos;
+    break;
+  }
+
+  return output;
+}
+
 Token Lexer::read_string() {
   bool cant_read_char = this->line_pos + 2 >= this->line.length();
   bool missing_opening_quote = this->peek(0) != '"';
@@ -110,37 +139,16 @@ Token Lexer::read_string() {
   ++this->line_pos; // skip opening quote
 
   while (true) {
-    uint8_t peeked = this->peek(0);
-    switch (peeked) {
-    case '\0':
+    uint8_t read_char = this->read_maybe_escaped_char();
+    if (read_char == '\0')
       this->error("unterminated string literal");
-
-    case '\\':
-      switch (this->peek(1)) {
-      case '\0':
-        this->error("unterminated string literal");
-
-      case 'n':
-        stream << '\n';
-        break;
-
-      default:
-        break;
-      }
-      ++this->line_pos;
+    else if (read_char == '"')
       break;
-
-    case '"':
-      goto end_loop;
-
-    default:
-      stream << peeked;
-    }
-    ++this->line_pos;
+    else
+      stream << read_char;
   }
-end_loop:
+  // closing quote is skiped by read_maybe_escaped_char method
 
-  ++this->line_pos; // skip closing quote
   Position end = this->position();
   Span span(start, end);
 
