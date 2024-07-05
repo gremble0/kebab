@@ -45,6 +45,8 @@ void replace_expected() {
   replace_one("constructors");
   replace_one("operators");
   replace_one("empty");
+  replace_one("escape-sequences");
+  replace_one("const-and-mut");
 
   std::cout << "Replaced expected lexer output\n";
 }
