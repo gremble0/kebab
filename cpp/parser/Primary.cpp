@@ -1,9 +1,13 @@
 #include <cassert>
+#include <vector>
 
 #include "lexer/Token.hpp"
 #include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
 #include "parser/Primary.hpp"
+#include "llvm/ADT/ArrayRef.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/Value.h"
 
 namespace Kebab {
 namespace Parser {
@@ -45,8 +49,12 @@ std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
 }
 
 llvm::Value *PrimaryArguments::compile(Compiler::Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function PrimaryArguments::compile");
+  std::vector<llvm::Value *> arguments_compiled;
+  for (std::unique_ptr<Expression> const &argument : this->arguments)
+    arguments_compiled.push_back(argument->compile(compiler));
+
+  return compiler.builder.CreateCall(static_cast<llvm::Function *>(this->subscriptee),
+                                     arguments_compiled);
 }
 
 std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
@@ -83,8 +91,14 @@ std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
 }
 
 llvm::Value *Primary::compile(Compiler::Compiler &compiler) const {
-  // TODO: some suffix logic (this->suffixes)
-  return this->atom->compile(compiler);
+  llvm::Value *atom_compiled = this->atom->compile(compiler);
+
+  if (this->suffixes.size() > 0) {
+    this->suffixes.front()->subscriptee = atom_compiled;
+    this->suffixes.front()->compile(compiler);
+  }
+
+  return atom_compiled;
 }
 
 } // namespace Parser

@@ -24,6 +24,7 @@ public:
       return false;
     }
   }
+  llvm::Value *subscriptee;
 
   static std::unique_ptr<PrimarySuffix> parse(Lexer &lexer);
   virtual llvm::Value *compile(Compiler::Compiler &compiler) const = 0;
