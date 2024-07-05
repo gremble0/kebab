@@ -62,7 +62,7 @@ std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *StringAtom::compile(Compiler::Compiler &compiler) const {
-  return llvm::ConstantDataArray::getString(compiler.context, this->s);
+  return compiler.builder.CreateGlobalStringPtr(this->s);
 }
 
 std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
@@ -80,7 +80,7 @@ std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *BoolAtom::compile(Compiler::Compiler &compiler) const {
-  return llvm::ConstantInt::get(compiler.builder.getInt8Ty(), this->b);
+  return llvm::ConstantInt::get(compiler.builder.getInt1Ty(), this->b);
 }
 
 std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {

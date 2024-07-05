@@ -5,4 +5,4 @@
 ;  4
 ;)
 
-def v = void(printf)
+def v = void(printf("hello"))
