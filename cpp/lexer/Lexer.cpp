@@ -124,8 +124,8 @@ Token Lexer::read_string() {
   Position end = this->position();
   Span span(start, end);
 
-  return Token(Token::Type::STRING_LITERAL, span,
-               this->line.substr(start.col + 1, end.col - start.col - 1));
+  std::string str = this->line.substr(start.col + 1, end.col - start.col - 2);
+  return Token(Token::Type::STRING_LITERAL, span, str);
 }
 
 Token Lexer::read_word() {
