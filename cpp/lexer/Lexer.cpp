@@ -84,15 +84,19 @@ Token Lexer::read_number() {
 
 Token Lexer::read_char() {
   bool cant_read_char = this->line_pos + 3 >= this->line.length();
+  if (cant_read_char)
+    this->error("unterminated char literal");
   bool missing_opening_quote = this->peek(0) != '\'';
-  bool missing_closing_quote = this->peek(2) != '\'';
-  if (cant_read_char || missing_opening_quote || missing_closing_quote)
-    this->error("malformed char literal");
 
   Position start = this->position();
 
-  uint8_t c = this->peek(1);
-  this->line_pos += 3;
+  ++this->line_pos; // opening quote
+  uint8_t c = this->read_maybe_escaped_char();
+  ++this->line_pos; // closing quote
+
+  bool missing_closing_quote = this->peek(0) != '\'';
+  if (missing_opening_quote || missing_closing_quote)
+    this->error("malformed char literal");
 
   Span span(start, this->position());
 
