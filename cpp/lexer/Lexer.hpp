@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
+#include <memory>
 #include <string>
 
 #include "Token.hpp"
@@ -26,10 +27,10 @@ private:
 
   uint8_t read_maybe_escaped_char();
 
-  Token read_number();
-  Token read_char();
-  Token read_string();
-  Token read_word();
+  std::unique_ptr<Token> read_number();
+  std::unique_ptr<Token> read_char();
+  std::unique_ptr<Token> read_string();
+  std::unique_ptr<Token> read_word();
 
   void handle_one_char_type(Token::Type type);
   void handle_newline();
@@ -50,7 +51,7 @@ private:
   void handle_div();
 
 public:
-  Token cur_token;
+  std::unique_ptr<Token> cur_token;
 
   explicit Lexer(std::string path);
   void advance();

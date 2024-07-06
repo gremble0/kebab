@@ -70,19 +70,26 @@ public:
     // Special
     END_OF_FILE, // <end of file>
     ILLEGAL,     // Illegal token, e.g. # @ % $, etc.
-  } type;
+  } const type;
 
-  Span span;
-  std::variant<uint8_t, int64_t, float_t, std::string> value;
+  const std::variant<uint8_t, int64_t, float_t, std::string> value;
+  const Span span;
 
   // make default constructors?
-  Token(Type type, Span span) : type(type), span(span) {}
+  Token(Type type, Span span) : type(type), value(), span(span) {}
   Token(Type type, Span span, std::variant<uint8_t, int64_t, float_t, std::string> value)
-      : type(type), span(span), value(value) {}
-  Token(Span span, std::string word);
+      : type(type), value(value), span(span) {}
+  Token(Span span, const std::string &word)
+      : type(this->determine_type(word)), value(this->determine_value(this->type, word)),
+        span(span) {}
 
   std::string to_string() const;
   static std::string type_to_string(Type type);
+
+private:
+  static Type determine_type(const std::string &word);
+  static std::variant<uint8_t, int64_t, float_t, std::string>
+  determine_value(Type type, const std::string &word);
 };
 
 } // namespace Kebab

@@ -5,37 +5,41 @@
 
 namespace Kebab {
 
-Token::Token(Span span, std::string word) : span(span) {
-  assert(word.find(' ') == std::string::npos);
+Token::Type Token::determine_type(const std::string &word) {
+  if (word == "def")
+    return DEF;
+  else if (word == "set")
+    return SET;
+  else if (word == "mut")
+    return MUT;
+  else if (word == "if")
+    return IF;
+  else if (word == "elif")
+    return ELIF;
+  else if (word == "else")
+    return ELSE;
+  else if (word == "fn")
+    return FN;
+  else if (word == "list")
+    return LIST;
+  else if (word == "true")
+    return TRUE;
+  else if (word == "false")
+    return FALSE;
+  else if (word == "and")
+    return AND;
+  else if (word == "or")
+    return OR;
+  else
+    return NAME;
+}
 
-  if (word.compare("def") == 0)
-    this->type = DEF;
-  else if (word.compare("set") == 0)
-    this->type = SET;
-  else if (word.compare("mut") == 0)
-    this->type = MUT;
-  else if (word.compare("if") == 0)
-    this->type = IF;
-  else if (word.compare("elif") == 0)
-    this->type = ELIF;
-  else if (word.compare("else") == 0)
-    this->type = ELSE;
-  else if (word.compare("fn") == 0)
-    this->type = FN;
-  else if (word.compare("list") == 0)
-    this->type = LIST;
-  else if (word.compare("true") == 0)
-    this->type = TRUE;
-  else if (word.compare("false") == 0)
-    this->type = FALSE;
-  else if (word.compare("and") == 0)
-    this->type = AND;
-  else if (word.compare("or") == 0)
-    this->type = OR;
-  else {
-    this->type = NAME;
-    this->value = word; // This should maybe be std::move ?
-  }
+std::variant<uint8_t, int64_t, float_t, std::string>
+Token::determine_value(Type type, const std::string &word) {
+  if (type == NAME)
+    return word;
+
+  return {};
 }
 
 std::string Token::to_string() const {

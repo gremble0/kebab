@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <string>
 
@@ -12,8 +13,7 @@
 namespace Kebab {
 
 Lexer::Lexer(std::string path)
-    : path(path), stream(path), line_number(0), line_pos(0),
-      cur_token(Token::Type::ILLEGAL, Span()) {
+    : path(path), stream(path), line_number(0), line_pos(0), cur_token() {
   if (!stream.is_open())
     this->error("could not open file " + path);
 
@@ -51,7 +51,7 @@ uint8_t Lexer::peek(int offset) const {
 }
 
 // Returned token is either an integer literal or a float literal
-Token Lexer::read_number() {
+std::unique_ptr<Token> Lexer::read_number() {
   Position start = this->position();
   bool has_seen_point = false;
 
@@ -75,15 +75,17 @@ Token Lexer::read_number() {
 
   try {
     if (has_seen_point)
-      return Token(Token::Type::FLOAT_LITERAL, span, std::stof(&this->line[start.col]));
+      return std::make_unique<Token>(Token::Type::FLOAT_LITERAL, span,
+                                     std::stof(&this->line[start.col]));
     else
-      return Token(Token::Type::INT_LITERAL, span, std::stoi(&this->line[start.col]));
+      return std::make_unique<Token>(Token::Type::INT_LITERAL, span,
+                                     std::stoi(&this->line[start.col]));
   } catch (std::out_of_range) {
     this->error("number out of range");
   }
 }
 
-Token Lexer::read_char() {
+std::unique_ptr<Token> Lexer::read_char() {
   bool cant_read_char = this->line_pos + 3 >= this->line.length();
   if (cant_read_char)
     this->error("unterminated char literal");
@@ -101,7 +103,7 @@ Token Lexer::read_char() {
 
   Span span(start, this->position());
 
-  return Token(Token::Type::CHAR_LITERAL, span, c);
+  return std::make_unique<Token>(Token::Type::CHAR_LITERAL, span, c);
 }
 
 uint8_t Lexer::read_maybe_escaped_char() {
@@ -133,7 +135,7 @@ uint8_t Lexer::read_maybe_escaped_char() {
   return output;
 }
 
-Token Lexer::read_string() {
+std::unique_ptr<Token> Lexer::read_string() {
   bool cant_read_char = this->line_pos + 2 >= this->line.length();
   bool missing_opening_quote = this->peek(0) != '"';
   if (cant_read_char || missing_opening_quote)
@@ -157,10 +159,10 @@ Token Lexer::read_string() {
   Position end = this->position();
   Span span(start, end);
 
-  return Token(Token::Type::STRING_LITERAL, span, stream.str());
+  return std::make_unique<Token>(Token::Type::STRING_LITERAL, span, stream.str());
 }
 
-Token Lexer::read_word() {
+std::unique_ptr<Token> Lexer::read_word() {
   auto is_kebab_case = [](uint8_t c) {
     return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']' &&
            c != '\0';
@@ -177,7 +179,7 @@ Token Lexer::read_word() {
 
   std::string word = this->line.substr(start.col, end.col - start.col);
 
-  return Token(span, word);
+  return std::make_unique<Token>(span, word);
 }
 
 void Lexer::handle_newline() {
@@ -187,7 +189,8 @@ void Lexer::handle_newline() {
   this->next_line();
 
   if (stream.eof()) {
-    this->cur_token = Token(Token::Type::END_OF_FILE, Span(this->position(), this->position()));
+    this->cur_token =
+        std::make_unique<Token>(Token::Type::END_OF_FILE, Span(this->position(), this->position()));
     return;
   }
 
@@ -197,7 +200,7 @@ void Lexer::handle_newline() {
 void Lexer::handle_one_char_type(Token::Type type) {
   Position start = this->position();
   ++this->line_pos;
-  this->cur_token = Token(type, Span(start, this->position()));
+  this->cur_token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
 void Lexer::handle_whitespace() {
@@ -228,7 +231,7 @@ void Lexer::handle_equals() {
     break;
   }
 
-  this->cur_token = Token(type, Span(start, this->position()));
+  this->cur_token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
 void Lexer::handle_comma() { this->handle_one_char_type(Token::Type::COMMA); }
@@ -259,7 +262,7 @@ void Lexer::handle_not() {
     type = Token::Type::NOT;
   }
 
-  this->cur_token = Token(type, Span(start, this->position()));
+  this->cur_token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
 void Lexer::handle_lt() {
@@ -274,7 +277,7 @@ void Lexer::handle_lt() {
     type = Token::Type::LT;
   }
 
-  this->cur_token = Token(type, Span(start, this->position()));
+  this->cur_token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
 void Lexer::handle_gt() {
@@ -289,7 +292,7 @@ void Lexer::handle_gt() {
     type = Token::Type::GT;
   }
 
-  this->cur_token = Token(type, Span(start, this->position()));
+  this->cur_token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
 void Lexer::handle_div() { this->handle_one_char_type(Token::Type::DIV); }
@@ -376,7 +379,7 @@ void Lexer::advance() {
     break;
   }
 
-  Logger::log(this->cur_token.to_string());
+  Logger::log(this->cur_token->to_string());
 }
 
 } // namespace Kebab
