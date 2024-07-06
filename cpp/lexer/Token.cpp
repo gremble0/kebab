@@ -1,7 +1,7 @@
 #include <cstdint>
 #include <string>
 
-#include "Token.hpp"
+#include "lexer/Token.hpp"
 
 namespace Kebab {
 

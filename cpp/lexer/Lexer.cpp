@@ -305,13 +305,11 @@ void Lexer::advance() {
   // Comment start means we ignore the rest of the line
   case '\0':
   case ';':
-    this->handle_newline();
-    break;
+    return this->handle_newline();
 
   case '\t':
   case ' ':
-    this->handle_whitespace();
-    break;
+    return this->handle_whitespace();
 
   // Syntax
   case ':':
