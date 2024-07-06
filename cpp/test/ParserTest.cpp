@@ -19,13 +19,15 @@ static void parse_file_with_logs(const std::string &basename) {
   {
     std::ofstream log_file(log_path);
     Lexer l(source_path);
-    // Parser::parse(l);
+    Parser::parse(l);
   }
 
   std::ifstream expected_file(expected_path);
   std::ifstream log_file(log_path);
   ASSERT_FILES_EQ(expected_file, log_file);
 }
+
+TEST(ParserTest, ParsesIf) {}
 
 } // namespace Test
 } // namespace Kebab
