@@ -33,7 +33,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   return definition;
 }
 
-llvm::Value *DefinitionStatement::compile(Compiler::Compiler &compiler) const {
+llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   llvm::Value *variable_value = this->constructor->compile(compiler);
   llvm::GlobalVariable *variable =
       compiler.create_global(this->name, static_cast<llvm::Constant *>(variable_value));
@@ -54,7 +54,7 @@ std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   return assignment;
 }
 
-llvm::Value *AssignmentStatement::compile(Compiler::Compiler &compiler) const {
+llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function AssignmentStatement::compile");
 }
@@ -69,7 +69,7 @@ std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
   return expression;
 }
 
-llvm::Value *ExpressionStatement::compile(Compiler::Compiler &compiler) const {
+llvm::Value *ExpressionStatement::compile(Compiler &compiler) const {
   return this->expression->compile(compiler);
 }
 

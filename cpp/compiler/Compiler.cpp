@@ -15,7 +15,6 @@
 #include "llvm/Support/raw_ostream.h"
 
 namespace Kebab {
-namespace Compiler {
 
 void Compiler::save_module(const std::string &path) {
   std::error_code error_code;
@@ -78,5 +77,4 @@ llvm::GlobalVariable *Compiler::create_global(const std::string &name, llvm::Con
                                   llvm::GlobalValue::ExternalLinkage, init, name);
 }
 
-} // namespace Compiler
 } // namespace Kebab

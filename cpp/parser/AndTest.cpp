@@ -24,7 +24,7 @@ std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
   return and_test;
 }
 
-llvm::Value *AndTest::compile(Compiler::Compiler &compiler) const {
+llvm::Value *AndTest::compile(Compiler &compiler) const {
   // for (std::unique_ptr<NotTest> const &not_test : this->not_tests)
   return not_tests.at(0)->compile(compiler);
 }

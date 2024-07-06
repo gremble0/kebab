@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 
 namespace Kebab {
+namespace Test {
 
 static void lex_file_with_logs(const std::string &basename) {
   std::string source_path = "lexer-source/" + basename + ".keb";
@@ -85,4 +86,5 @@ TEST(LexerTest, ErrorsWhenMalformedCharLiteral) {
   ASSERT_DEATH({ lex_file_with_logs(basename); }, "malformed char literal");
 }
 
+} // namespace Test
 } // namespace Kebab

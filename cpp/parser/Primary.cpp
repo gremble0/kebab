@@ -24,7 +24,7 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
   return subscription;
 }
 
-llvm::Value *PrimarySubscription::compile(Compiler::Compiler &compiler) const {
+llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function PrimarySubscription::compile");
 }
@@ -48,7 +48,7 @@ std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   return arguments;
 }
 
-llvm::Value *PrimaryArguments::compile(Compiler::Compiler &compiler) const {
+llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
   std::vector<llvm::Value *> arguments_compiled;
   for (std::unique_ptr<Expression> const &argument : this->arguments)
     arguments_compiled.push_back(argument->compile(compiler));
@@ -90,7 +90,7 @@ std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
   return primary;
 }
 
-llvm::Value *Primary::compile(Compiler::Compiler &compiler) const {
+llvm::Value *Primary::compile(Compiler &compiler) const {
   llvm::Value *atom_compiled = this->atom->compile(compiler);
 
   if (this->suffixes.size() > 0) {

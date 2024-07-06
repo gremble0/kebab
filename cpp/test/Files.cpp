@@ -6,6 +6,7 @@
 #include "Files.hpp"
 
 namespace Kebab {
+namespace Test {
 
 void ASSERT_FILES_EQ(std::ifstream &f1, std::ifstream &f2) {
   while (!f1.eof() && !f2.eof()) {
@@ -51,4 +52,5 @@ void replace_expected() {
   std::cout << "Replaced expected lexer output\n";
 }
 
+} // namespace Test
 } // namespace Kebab

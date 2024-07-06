@@ -1,10 +1,11 @@
 #include <cstring>
+#include <iostream>
 
 #include "Files.hpp"
 #include "gtest/gtest.h"
-#include <iostream>
 
 using namespace Kebab;
+using namespace Test;
 
 static void handle_argv(char **argv) {
   if (strcmp(argv[1], "--replace-expected") == 0)
@@ -14,7 +15,7 @@ static void handle_argv(char **argv) {
 }
 
 int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
+  testing::InitGoogleTest(&argc, argv);
 
   if (argc > 1)
     handle_argv(argv);

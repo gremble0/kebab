@@ -23,7 +23,6 @@ namespace Kebab {
 namespace Parser {
 class RootNode;
 }
-namespace Compiler {
 
 class Compiler {
 private:
@@ -51,7 +50,6 @@ public:
   llvm::GlobalVariable *create_global(const std::string &name, llvm::Constant *init);
 };
 
-} // namespace Compiler
 } // namespace Kebab
 
 #endif

@@ -10,7 +10,6 @@
 #include "llvm/IR/Value.h"
 
 namespace Kebab {
-
 namespace Parser {
 
 class RootNode : public AstNode {
@@ -18,7 +17,7 @@ public:
   std::vector<std::unique_ptr<Statement>> statements;
 
   static std::unique_ptr<RootNode> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const;
 };
 
 } // namespace Parser

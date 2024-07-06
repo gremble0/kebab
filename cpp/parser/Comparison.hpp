@@ -39,7 +39,7 @@ public:
   }
 
   static std::unique_ptr<ComparisonOperator> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const;
 };
 
 class Comparison : public AstNode {
@@ -48,7 +48,7 @@ public:
   std::vector<std::unique_ptr<Term>> terms;
 
   static std::unique_ptr<Comparison> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const;
 };
 
 } // namespace Parser

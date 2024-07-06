@@ -22,7 +22,7 @@ std::unique_ptr<NotTest> NotTest::parse(Lexer &lexer) {
   return not_test;
 }
 
-llvm::Value *NotTest::compile(Compiler::Compiler &compiler) const {
+llvm::Value *NotTest::compile(Compiler &compiler) const {
   // TODO: some not logic (this->is_negated)
   return this->comparison->compile(compiler);
 }

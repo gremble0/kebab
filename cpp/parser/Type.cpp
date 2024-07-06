@@ -51,7 +51,7 @@ llvm::ScalableVectorType *ListType::get_llvm_type(llvm::IRBuilder<> &builder) co
   assert(false && "unimplemented function ListType::get_llvm_type");
 }
 
-llvm::Value *ListType::compile(Compiler::Compiler &compiler) const {
+llvm::Value *ListType::compile(Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function ListType::compile");
 }
@@ -90,7 +90,7 @@ llvm::FunctionType *FunctionType::get_llvm_type(llvm::IRBuilder<> &builder) cons
   assert(false && "unimplemented function FunctionType::get_llvm_type");
 }
 
-llvm::Value *FunctionType::compile(Compiler::Compiler &compiler) const {
+llvm::Value *FunctionType::compile(Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function FunctionType::compile");
 }
@@ -122,7 +122,7 @@ llvm::Type *PrimitiveType::get_llvm_type(llvm::IRBuilder<> &builder) const {
   error("unrecognized type: '" + this->name + '\'');
 }
 
-llvm::Value *PrimitiveType::compile(Compiler::Compiler &compiler) const {
+llvm::Value *PrimitiveType::compile(Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function PrimitiveType::compile");
 }

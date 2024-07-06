@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
   Lexer lexer(path);
   std::unique_ptr<Parser::RootNode> root = Parser::parse(lexer);
 
-  Compiler::Compiler compiler;
+  Compiler compiler;
   compiler.compile(std::move(root));
 
   return 0;

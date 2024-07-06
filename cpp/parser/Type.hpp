@@ -21,7 +21,7 @@ public:
   virtual ~Type() = default;
 
   static std::unique_ptr<Type> parse(Lexer &lexer);
-  virtual llvm::Value *compile(Compiler::Compiler &compiler) const = 0;
+  virtual llvm::Value *compile(Compiler &compiler) const = 0;
   virtual llvm::Type *get_llvm_type(llvm::IRBuilder<> &builder) const = 0;
 };
 
@@ -30,7 +30,7 @@ public:
   std::unique_ptr<Type> content_type;
 
   static std::unique_ptr<ListType> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const;
   // ScalableVectorType may be right here? will look into
   llvm::ScalableVectorType *get_llvm_type(llvm::IRBuilder<> &builder) const;
 };
@@ -47,7 +47,7 @@ public:
   std::shared_ptr<Type> return_type;
 
   static std::unique_ptr<FunctionType> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const;
   // FunctionType is surely the right type here?
   llvm::FunctionType *get_llvm_type(llvm::IRBuilder<> &builder) const;
 };
@@ -57,7 +57,7 @@ public:
   std::string name;
 
   static std::unique_ptr<PrimitiveType> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const;
   llvm::Type *get_llvm_type(llvm::IRBuilder<> &builder) const;
 };
 

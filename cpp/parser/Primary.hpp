@@ -27,7 +27,7 @@ public:
   llvm::Value *subscriptee;
 
   static std::unique_ptr<PrimarySuffix> parse(Lexer &lexer);
-  virtual llvm::Value *compile(Compiler::Compiler &compiler) const = 0;
+  virtual llvm::Value *compile(Compiler &compiler) const = 0;
 };
 
 class PrimarySubscription : public PrimarySuffix {
@@ -35,7 +35,7 @@ public:
   std::unique_ptr<Expression> subscription;
 
   static std::unique_ptr<PrimarySubscription> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const;
 };
 
 class PrimaryArguments : public PrimarySuffix {
@@ -43,7 +43,7 @@ public:
   std::vector<std::unique_ptr<Expression>> arguments;
 
   static std::unique_ptr<PrimaryArguments> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const;
 };
 
 class Primary : public AstNode {
@@ -52,7 +52,7 @@ public:
   std::vector<std::unique_ptr<PrimarySuffix>> suffixes;
 
   static std::unique_ptr<Primary> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler::Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const;
 };
 
 } // namespace Parser

@@ -107,7 +107,7 @@ public:
   virtual ~AstNode() = default;
 
   static std::unique_ptr<AstNode> parse(Lexer &lexer);
-  virtual llvm::Value *compile(Compiler::Compiler &compiler) const = 0;
+  virtual llvm::Value *compile(Compiler &compiler) const = 0;
 };
 
 std::unique_ptr<RootNode> parse(Lexer &lexer);
