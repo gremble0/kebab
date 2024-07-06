@@ -3,10 +3,12 @@ CFLAGS := -Wall -Wextra -g -std=c++17
 
 OBJS := Lexer.o Token.o
 
+INCLUDES := -I..
+
 all: $(OBJS)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -f *.o

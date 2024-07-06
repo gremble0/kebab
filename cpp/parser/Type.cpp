@@ -9,7 +9,7 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<Type> Type::parse(Lexer &lexer) {
-  Logger::start_parsing("type");
+  Logger::log_with_indent("type");
   std::unique_ptr<Type> type;
 
   switch (lexer.cur_token.type) {
@@ -29,12 +29,12 @@ std::unique_ptr<Type> Type::parse(Lexer &lexer) {
     error(std::string("reached unreachable branch with token: ") + lexer.cur_token.to_string());
   }
 
-  Logger::end_parsing("type");
+  Logger::log_with_dedent("type");
   return type;
 }
 
 std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
-  Logger::start_parsing("list-type");
+  Logger::log_with_indent("list-type");
   std::unique_ptr<ListType> type = std::make_unique<ListType>();
 
   skip(lexer, Token::Type::LIST);
@@ -42,7 +42,7 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   type->content_type = Type::parse(lexer);
   skip(lexer, Token::Type::RPAREN);
 
-  Logger::end_parsing("list-type");
+  Logger::log_with_dedent("list-type");
   return type;
 }
 
@@ -68,7 +68,7 @@ void FunctionType::parse_parameter_types(Lexer &lexer) {
 void FunctionType::parse_return_type(Lexer &lexer) { this->return_type = Type::parse(lexer); }
 
 std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
-  Logger::start_parsing("function-type");
+  Logger::log_with_indent("function-type");
   std::unique_ptr<FunctionType> type = std::make_unique<FunctionType>();
 
   skip(lexer, Token::Type::FN);
@@ -81,7 +81,7 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
 
   type->parse_return_type(lexer);
 
-  Logger::end_parsing("function-type");
+  Logger::log_with_dedent("function-type");
   return type;
 }
 
@@ -96,12 +96,12 @@ llvm::Value *FunctionType::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
-  Logger::start_parsing("primitive-type");
+  Logger::log_with_indent("primitive-type");
   std::unique_ptr<PrimitiveType> type = std::make_unique<PrimitiveType>();
 
   type->name = skip_name(lexer);
 
-  Logger::end_parsing("primitive-type");
+  Logger::log_with_dedent("primitive-type");
   return type;
 }
 

@@ -5,8 +5,9 @@
 #include <sstream>
 #include <string>
 
-#include "Lexer.hpp"
-#include "Token.hpp"
+#include "lexer/Lexer.hpp"
+#include "lexer/Token.hpp"
+#include "logging/Logger.hpp"
 
 namespace Kebab {
 
@@ -374,6 +375,8 @@ void Lexer::advance() {
 
     break;
   }
+
+  Logger::log(this->cur_token.to_string());
 }
 
 } // namespace Kebab

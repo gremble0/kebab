@@ -9,7 +9,7 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
-  Logger::start_parsing("and-test");
+  Logger::log_with_indent("and-test");
   std::unique_ptr<AndTest> and_test = std::make_unique<AndTest>();
 
   // Keep parsing and tests until we have no longer ignored an `and` token
@@ -21,7 +21,7 @@ std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
       break;
   }
 
-  Logger::end_parsing("and-test");
+  Logger::log_with_dedent("and-test");
   return and_test;
 }
 

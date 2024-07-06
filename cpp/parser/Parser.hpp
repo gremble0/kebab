@@ -13,8 +13,6 @@
 namespace Kebab {
 namespace Parser {
 
-static int indent_depth = 0;
-
 class AstNode {
 private:
   /**

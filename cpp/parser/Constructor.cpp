@@ -11,7 +11,7 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
-  Logger::start_parsing("constructor");
+  Logger::log_with_indent("constructor");
   std::unique_ptr<Constructor> constructor;
 
   switch (lexer.cur_token.type) {
@@ -31,7 +31,7 @@ std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
     error("unexpected token: '" + lexer.cur_token.to_string() + "' expected some type");
   }
 
-  Logger::end_parsing("constructor");
+  Logger::log_with_dedent("constructor");
   return constructor;
 }
 
@@ -53,13 +53,13 @@ void ListConstructor::parse_body(Lexer &lexer) {
 }
 
 std::unique_ptr<ListConstructor> ListConstructor::parse(Lexer &lexer) {
-  Logger::start_parsing("list-constructor");
+  Logger::log_with_indent("list-constructor");
   std::unique_ptr<ListConstructor> constructor = std::make_unique<ListConstructor>();
 
   constructor->parse_type(lexer);
   constructor->parse_body(lexer);
 
-  Logger::end_parsing("list-constructor");
+  Logger::log_with_dedent("list-constructor");
   return constructor;
 }
 
@@ -69,14 +69,14 @@ llvm::Value *ListConstructor::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
-  Logger::start_parsing("function-parameter");
+  Logger::log_with_indent("function-parameter");
   std::unique_ptr<FunctionParameter> parameter = std::make_unique<FunctionParameter>();
 
   parameter->name = skip_name(lexer);
   skip(lexer, Token::Type::COLON);
   parameter->type = Type::parse(lexer);
 
-  Logger::end_parsing("function-parameter");
+  Logger::log_with_dedent("function-parameter");
   return parameter;
 }
 
@@ -114,13 +114,13 @@ void FunctionConstructor::parse_body(Lexer &lexer) {
 }
 
 std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
-  Logger::start_parsing("function-constructor");
+  Logger::log_with_indent("function-constructor");
   std::unique_ptr<FunctionConstructor> constructor = std::make_unique<FunctionConstructor>();
 
   constructor->parse_type(lexer);
   constructor->parse_body(lexer);
 
-  Logger::end_parsing("function-constructor");
+  Logger::log_with_dedent("function-constructor");
   return constructor;
 }
 
@@ -139,13 +139,13 @@ void PrimitiveConstructor::parse_body(Lexer &lexer) {
 }
 
 std::unique_ptr<PrimitiveConstructor> PrimitiveConstructor::parse(Lexer &lexer) {
-  Logger::start_parsing("primitive-constructor");
+  Logger::log_with_indent("primitive-constructor");
   std::unique_ptr<PrimitiveConstructor> constructor = std::make_unique<PrimitiveConstructor>();
 
   constructor->parse_type(lexer);
   constructor->parse_body(lexer);
 
-  Logger::end_parsing("primitive-constructor");
+  Logger::log_with_dedent("primitive-constructor");
   return constructor;
 }
 

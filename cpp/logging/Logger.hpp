@@ -5,6 +5,7 @@
 #include <mutex>
 #include <ostream>
 
+// Singleton class for logging
 class Logger {
 private:
   std::ostream *stream;
@@ -20,32 +21,37 @@ private:
     return instance;
   }
 
-  void internal_set_stream(std::ostream &stream) {
+  void set_stream_(std::ostream &stream) {
     std::lock_guard<std::mutex> lock(mutex);
     this->stream = &stream;
   }
 
-  void internal_start_parsing(const std::string &node_name) {
+  void log_(const std::string &message) const {
     std::string indent = std::string(this->indent_depth, ' ');
-    *this->stream << indent + '<' + node_name + ">\n";
+    *this->stream << indent + message << std::endl;
+  }
+
+  void log_with_indent_(const std::string &message) {
+    log_(message);
     ++this->indent_depth;
   }
 
-  void internal_end_parsing(const std::string &node_name) {
+  void log_with_dedent_(const std::string &message) {
     --this->indent_depth;
-    std::string indent = std::string(this->indent_depth, ' ');
-    *this->stream << indent + '<' + node_name + ">\n";
+    log_(message);
   }
 
 public:
-  static void set_stream(std::ostream &stream) { get_logger().internal_set_stream(stream); }
+  static void set_stream(std::ostream &stream) { get_logger().set_stream_(stream); }
 
-  static void start_parsing(const std::string &node_name) {
-    get_logger().internal_start_parsing(node_name);
+  static void log(const std::string &message) { get_logger().log_(message); }
+
+  static void log_with_indent(const std::string &message) {
+    get_logger().log_with_indent_(message);
   }
 
-  static void end_parsing(const std::string &node_name) {
-    get_logger().internal_end_parsing(node_name);
+  static void log_with_dedent(const std::string &message) {
+    get_logger().log_with_dedent_(message);
   }
 };
 

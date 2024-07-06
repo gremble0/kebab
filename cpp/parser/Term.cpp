@@ -8,7 +8,7 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
-  Logger::start_parsing("term-operator");
+  Logger::log_with_indent("term-operator");
   std::unique_ptr<TermOperator> operator_ = std::make_unique<TermOperator>();
 
   switch (lexer.cur_token.type) {
@@ -26,7 +26,7 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
 
   lexer.advance();
 
-  Logger::end_parsing("term-operator");
+  Logger::log_with_dedent("term-operator");
   return operator_;
 }
 
@@ -36,7 +36,7 @@ llvm::Value *TermOperator::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Term> Term::parse(Lexer &lexer) {
-  Logger::start_parsing("term");
+  Logger::log_with_indent("term");
   std::unique_ptr<Term> term = std::make_unique<Term>();
 
   while (true) {
@@ -48,7 +48,7 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
       break;
   }
 
-  Logger::end_parsing("term");
+  Logger::log_with_dedent("term");
   return term;
 }
 
