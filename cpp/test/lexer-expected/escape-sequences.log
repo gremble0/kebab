@@ -1,0 +1,32 @@
+def
+s1
+=
+string
+(
+hello, world
+
+)
+def
+s2
+=
+string
+(
+
+hello
+, world
+
+)
+def
+c1
+=
+char
+(
+39
+)
+def
+c2
+=
+char
+(
+10
+)
