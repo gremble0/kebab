@@ -1,7 +1,7 @@
 #include <cstring>
 #include <iostream>
 
-#include "Files.hpp"
+#include "test/Files.hpp"
 #include "gtest/gtest.h"
 
 using namespace Kebab;

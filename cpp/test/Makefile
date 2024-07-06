@@ -5,8 +5,10 @@ LIBS := -L../../lib/googletest/build/lib -lgtest -lgtest_main
 INCLUDES := -I../../lib/googletest/googletest/include/ -I..
 
 LEXEROBJS := ../lexer/*.o
-OBJS := main.o LexerTest.o Files.o $(LEXEROBJS)
+PARSEROBJS := ../parser/*.o
+OBJS := main.o LexerTest.o Files.o $(LEXEROBJS) $(PARSEROBJS)
 
+# $(MAKE) -C .. ?
 all: $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) -o run_tests $(LIBS)
 

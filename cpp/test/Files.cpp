@@ -2,8 +2,8 @@
 #include <iostream>
 #include <string>
 
-#include "../lexer/Lexer.hpp"
-#include "Files.hpp"
+#include "lexer/Lexer.hpp"
+#include "test/Files.hpp"
 
 namespace Kebab {
 namespace Test {
@@ -22,6 +22,7 @@ void ASSERT_FILES_EQ(std::ifstream &f1, std::ifstream &f2) {
   ASSERT_TRUE(f1.eof() && f2.eof());
 }
 
+// TODO: replace_one_lexer.. or something
 static void replace_one(const std::string &basename) {
   std::string source_path = "lexer-source/" + basename + ".keb";
   std::string log_path = "lexer-expected/" + basename + ".log";

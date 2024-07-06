@@ -1,7 +1,7 @@
 #include <fstream>
 
-#include "../lexer/Lexer.hpp"
-#include "Files.hpp"
+#include "lexer/Lexer.hpp"
+#include "test/Files.hpp"
 #include "gtest/gtest.h"
 
 namespace Kebab {
