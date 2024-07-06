@@ -55,19 +55,15 @@ void CondExpression::parse_test_body(Lexer &lexer) {
 
   std::vector<std::unique_ptr<Statement>> body_statements;
   while (true) {
-    std::optional<std::unique_ptr<Statement>> statement =
-        Statement::try_parse_expression_statement(lexer);
-
-    // If we managed to parse an expression statement that should be the final expression in the
-    // cond expression's body - so we break. Otherwise keep parsing statements until we parse an
-    // expression statement
-    if (statement != std::nullopt) {
-      body_statements.push_back(std::move(statement.value()));
+    std::optional<std::unique_ptr<Statement>> statement = Statement::try_parse_statement(lexer);
+    if (statement == std::nullopt)
       break;
-    } else {
-      body_statements.push_back(Statement::parse(lexer));
-    }
+    else
+      body_statements.push_back(std::move(statement.value()));
   }
+
+  if (!body_statements.back()->is_expression())
+    this->error("every branch in a cond expression must return a value");
 
   end_parsing("cond-test-body");
 }

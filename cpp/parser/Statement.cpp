@@ -4,7 +4,6 @@
 #include "compiler/Compiler.hpp"
 #include "lexer/Token.hpp"
 #include "parser/Constructor.hpp"
-#include "parser/Parser.hpp"
 #include "parser/Statement.hpp"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Instructions.h"
@@ -117,8 +116,10 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
   return statement;
 }
 
-std::optional<std::unique_ptr<Statement>> Statement::try_parse_expression_statement(Lexer &lexer) {
+std::optional<std::unique_ptr<Statement>> Statement::try_parse_statement(Lexer &lexer) {
   switch (lexer.cur_token.type) {
+  case Token::Type::DEF:
+  case Token::Type::SET:
   case Token::Type::INT_LITERAL:
   case Token::Type::FLOAT_LITERAL:
   case Token::Type::CHAR_LITERAL:
@@ -134,7 +135,7 @@ std::optional<std::unique_ptr<Statement>> Statement::try_parse_expression_statem
   case Token::Type::FALSE:
   case Token::Type::LPAREN:
   case Token::Type::LBRACKET:
-    return ExpressionStatement::parse(lexer);
+    return Statement::parse(lexer);
 
   default:
     return std::nullopt;
