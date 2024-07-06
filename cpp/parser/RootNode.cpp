@@ -1,9 +1,11 @@
 #include "parser/RootNode.hpp"
+#include "logging/Logger.hpp"
 #include "parser/Statement.hpp"
 
 namespace Kebab {
 namespace Parser {
 
+// Delete file?
 std::unique_ptr<RootNode> RootNode::parse(Lexer &lexer) {
   std::unique_ptr<RootNode> root_node = std::make_unique<RootNode>();
 

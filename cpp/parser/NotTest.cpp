@@ -1,12 +1,13 @@
-#include "NotTest.hpp"
+#include "parser/NotTest.hpp"
 #include "lexer/Lexer.hpp"
+#include "logging/Logger.hpp"
 #include "parser/Comparison.hpp"
 
 namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<NotTest> NotTest::parse(Lexer &lexer) {
-  start_parsing("not-test");
+  Logger::start_parsing("not-test");
   std::unique_ptr<NotTest> not_test = std::make_unique<NotTest>();
 
   if (lexer.cur_token.type == Token::Type::NOT) {
@@ -18,7 +19,7 @@ std::unique_ptr<NotTest> NotTest::parse(Lexer &lexer) {
 
   not_test->comparison = Comparison::parse(lexer);
 
-  end_parsing("not-test");
+  Logger::end_parsing("not-test");
   return not_test;
 }
 

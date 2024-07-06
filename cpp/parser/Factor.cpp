@@ -1,6 +1,7 @@
 #include <cassert>
 #include <optional>
 
+#include "logging/Logger.hpp"
 #include "parser/Factor.hpp"
 #include "parser/Primary.hpp"
 
@@ -8,7 +9,7 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
-  start_parsing("factor-prefix");
+  Logger::start_parsing("factor-prefix");
   std::unique_ptr<FactorPrefix> prefix = std::make_unique<FactorPrefix>();
 
   switch (lexer.cur_token.type) {
@@ -26,7 +27,7 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
 
   lexer.advance();
 
-  end_parsing("factor-prefix");
+  Logger::end_parsing("factor-prefix");
   return prefix;
 }
 
@@ -36,7 +37,7 @@ llvm::Value *FactorPrefix::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
-  start_parsing("factor");
+  Logger::start_parsing("factor");
   std::unique_ptr<Factor> factor = std::make_unique<Factor>();
 
   while (true) {
@@ -52,7 +53,7 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
     factor->operators.push_back(FactorOperator::parse(lexer));
   }
 
-  end_parsing("factor");
+  Logger::end_parsing("factor");
   return factor;
 }
 
@@ -64,7 +65,7 @@ llvm::Value *Factor::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
-  start_parsing("factor-operator");
+  Logger::start_parsing("factor-operator");
   std::unique_ptr<FactorOperator> operator_ = std::make_unique<FactorOperator>();
 
   switch (lexer.cur_token.type) {
@@ -82,7 +83,7 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 
   lexer.advance();
 
-  end_parsing("factor-operator");
+  Logger::end_parsing("factor-operator");
   return operator_;
 }
 

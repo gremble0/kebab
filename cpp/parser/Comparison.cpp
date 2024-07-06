@@ -1,14 +1,15 @@
 #include <cassert>
 
-#include "Comparison.hpp"
-#include "Term.hpp"
 #include "lexer/Lexer.hpp"
+#include "logging/Logger.hpp"
+#include "parser/Comparison.hpp"
+#include "parser/Term.hpp"
 
 namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
-  start_parsing("comparison-operator");
+  Logger::start_parsing("comparison-operator");
   std::unique_ptr<ComparisonOperator> operator_ = std::make_unique<ComparisonOperator>();
 
   switch (lexer.cur_token.type) {
@@ -42,7 +43,7 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
 
   lexer.advance();
 
-  end_parsing("comparison-operator");
+  Logger::end_parsing("comparison-operator");
   return operator_;
 }
 
@@ -52,7 +53,7 @@ llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
-  start_parsing("comparison");
+  Logger::start_parsing("comparison");
   std::unique_ptr<Comparison> comparison = std::make_unique<Comparison>();
 
   while (true) {
@@ -64,7 +65,7 @@ std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
       break;
   }
 
-  end_parsing("comparison");
+  Logger::end_parsing("comparison");
   return comparison;
 }
 

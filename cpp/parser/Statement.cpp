@@ -3,6 +3,7 @@
 
 #include "compiler/Compiler.hpp"
 #include "lexer/Token.hpp"
+#include "logging/Logger.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/Statement.hpp"
 #include "llvm/IR/GlobalVariable.h"
@@ -12,7 +13,7 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
-  start_parsing("definition-statement");
+  Logger::start_parsing("definition-statement");
   std::unique_ptr<DefinitionStatement> definition = std::make_unique<DefinitionStatement>();
 
   skip(lexer, Token::Type::DEF);
@@ -28,7 +29,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   skip(lexer, Token::Type::EQUALS);
   definition->constructor = Constructor::parse(lexer);
 
-  end_parsing("definition-statement");
+  Logger::end_parsing("definition-statement");
   return definition;
 }
 
@@ -41,7 +42,7 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
-  start_parsing("assignment-statement");
+  Logger::start_parsing("assignment-statement");
   std::unique_ptr<AssignmentStatement> assignment = std::make_unique<AssignmentStatement>();
 
   skip(lexer, Token::Type::SET);
@@ -49,7 +50,7 @@ std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   skip(lexer, Token::Type::EQUALS);
   assignment->constructor = Constructor::parse(lexer);
 
-  end_parsing("assignment-statement");
+  Logger::end_parsing("assignment-statement");
   return assignment;
 }
 
@@ -59,12 +60,12 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
-  start_parsing("expression-statement");
+  Logger::start_parsing("expression-statement");
   std::unique_ptr<ExpressionStatement> expression = std::make_unique<ExpressionStatement>();
 
   expression->expression = Expression::parse(lexer);
 
-  end_parsing("expression-statement");
+  Logger::end_parsing("expression-statement");
   return expression;
 }
 
@@ -73,7 +74,7 @@ llvm::Value *ExpressionStatement::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
-  start_parsing("statement");
+  Logger::Logger::start_parsing("statement");
   std::unique_ptr<Statement> statement;
 
   switch (lexer.cur_token.type) {
@@ -112,7 +113,7 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
     error(std::string("illegal syntax ") + lexer.cur_token.to_string());
   }
 
-  end_parsing("statement");
+  Logger::Logger::end_parsing("statement");
   return statement;
 }
 

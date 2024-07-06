@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "lexer/Lexer.hpp"
+#include "logging/Logger.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/Statement.hpp"
 #include "parser/Type.hpp"
@@ -10,7 +11,7 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
-  start_parsing("constructor");
+  Logger::start_parsing("constructor");
   std::unique_ptr<Constructor> constructor;
 
   switch (lexer.cur_token.type) {
@@ -30,7 +31,7 @@ std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
     error("unexpected token: '" + lexer.cur_token.to_string() + "' expected some type");
   }
 
-  end_parsing("constructor");
+  Logger::end_parsing("constructor");
   return constructor;
 }
 
@@ -52,13 +53,13 @@ void ListConstructor::parse_body(Lexer &lexer) {
 }
 
 std::unique_ptr<ListConstructor> ListConstructor::parse(Lexer &lexer) {
-  start_parsing("list-constructor");
+  Logger::start_parsing("list-constructor");
   std::unique_ptr<ListConstructor> constructor = std::make_unique<ListConstructor>();
 
   constructor->parse_type(lexer);
   constructor->parse_body(lexer);
 
-  end_parsing("list-constructor");
+  Logger::end_parsing("list-constructor");
   return constructor;
 }
 
@@ -68,14 +69,14 @@ llvm::Value *ListConstructor::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
-  start_parsing("function-parameter");
+  Logger::start_parsing("function-parameter");
   std::unique_ptr<FunctionParameter> parameter = std::make_unique<FunctionParameter>();
 
   parameter->name = skip_name(lexer);
   skip(lexer, Token::Type::COLON);
   parameter->type = Type::parse(lexer);
 
-  end_parsing("function-parameter");
+  Logger::end_parsing("function-parameter");
   return parameter;
 }
 
@@ -113,13 +114,13 @@ void FunctionConstructor::parse_body(Lexer &lexer) {
 }
 
 std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
-  start_parsing("function-constructor");
+  Logger::start_parsing("function-constructor");
   std::unique_ptr<FunctionConstructor> constructor = std::make_unique<FunctionConstructor>();
 
   constructor->parse_type(lexer);
   constructor->parse_body(lexer);
 
-  end_parsing("function-constructor");
+  Logger::end_parsing("function-constructor");
   return constructor;
 }
 
@@ -138,13 +139,13 @@ void PrimitiveConstructor::parse_body(Lexer &lexer) {
 }
 
 std::unique_ptr<PrimitiveConstructor> PrimitiveConstructor::parse(Lexer &lexer) {
-  start_parsing("primitive-constructor");
+  Logger::start_parsing("primitive-constructor");
   std::unique_ptr<PrimitiveConstructor> constructor = std::make_unique<PrimitiveConstructor>();
 
   constructor->parse_type(lexer);
   constructor->parse_body(lexer);
 
-  end_parsing("primitive-constructor");
+  Logger::end_parsing("primitive-constructor");
   return constructor;
 }
 

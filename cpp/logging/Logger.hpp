@@ -11,7 +11,7 @@ private:
   std::mutex mutex; // Probably unnecessary but to future proof the class it is made thread safe
   size_t indent_depth;
 
-  Logger() : stream(&std::cout) {}
+  Logger() : stream(&std::cout), indent_depth(0) {}
   Logger(const Logger &) = delete;
   Logger &operator=(const Logger &) = delete;
 
@@ -25,26 +25,27 @@ private:
     this->stream = &stream;
   }
 
-  void internal_log(const std::string &message) {
-    std::lock_guard<std::mutex> lock(mutex);
-    *stream << message << std::endl;
+  void internal_start_parsing(const std::string &node_name) {
+    std::string indent = std::string(this->indent_depth, ' ');
+    *this->stream << indent + '<' + node_name + ">\n";
+    ++this->indent_depth;
+  }
+
+  void internal_end_parsing(const std::string &node_name) {
+    --this->indent_depth;
+    std::string indent = std::string(this->indent_depth, ' ');
+    *this->stream << indent + '<' + node_name + ">\n";
   }
 
 public:
   static void set_stream(std::ostream &stream) { get_logger().internal_set_stream(stream); }
 
   static void start_parsing(const std::string &node_name) {
-    static Logger instance;
-    std::string indent = std::string(instance.indent_depth, ' ');
-    *instance.stream << indent + '<' + node_name + ">\n";
-    ++instance.indent_depth;
+    get_logger().internal_start_parsing(node_name);
   }
 
   static void end_parsing(const std::string &node_name) {
-    static Logger instance;
-    --instance.indent_depth;
-    std::string indent = std::string(instance.indent_depth, ' ');
-    *instance.stream << indent + '<' + node_name + "/>\n";
+    get_logger().internal_end_parsing(node_name);
   }
 };
 

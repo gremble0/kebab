@@ -1,6 +1,6 @@
-#include "Parser.hpp"
-#include "RootNode.hpp"
-#include "Statement.hpp"
+#include "parser/Parser.hpp"
+#include "parser/RootNode.hpp"
+#include "parser/Statement.hpp"
 
 namespace Kebab {
 namespace Parser {

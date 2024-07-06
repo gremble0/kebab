@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "lexer/Token.hpp"
+#include "logging/Logger.hpp"
 #include "parser/AndTest.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/Expression.hpp"
@@ -13,7 +14,7 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
-  start_parsing("expression");
+  Logger::start_parsing("expression");
   std::unique_ptr<Expression> expression;
 
   switch (lexer.cur_token.type) {
@@ -46,12 +47,12 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
     error(std::string("illegal syntax ") + lexer.cur_token.to_string());
   }
 
-  end_parsing("expression");
+  Logger::end_parsing("expression");
   return expression;
 }
 
 void CondExpression::parse_test_body(Lexer &lexer) {
-  start_parsing("cond-test-body");
+  Logger::start_parsing("cond-test-body");
 
   std::vector<std::unique_ptr<Statement>> body_statements;
   while (true) {
@@ -65,59 +66,59 @@ void CondExpression::parse_test_body(Lexer &lexer) {
   if (!body_statements.back()->is_expression())
     this->error("every branch in a cond expression must return a value");
 
-  end_parsing("cond-test-body");
+  Logger::end_parsing("cond-test-body");
 }
 
 void CondExpression::parse_if(Lexer &lexer) {
-  start_parsing("cond-if");
+  Logger::start_parsing("cond-if");
 
   skip(lexer, Token::Type::IF);
   this->tests.push_back(Expression::parse(lexer));
   skip(lexer, Token::Type::FAT_RARROW);
   this->parse_test_body(lexer);
 
-  end_parsing("cond-if");
+  Logger::end_parsing("cond-if");
 }
 
 void CondExpression::parse_elif(Lexer &lexer) {
-  start_parsing("cond-elif");
+  Logger::start_parsing("cond-elif");
 
   skip(lexer, Token::Type::ELIF);
   this->tests.push_back(Expression::parse(lexer));
   skip(lexer, Token::Type::FAT_RARROW);
   this->parse_test_body(lexer);
 
-  end_parsing("cond-elif");
+  Logger::end_parsing("cond-elif");
 }
 
 void CondExpression::parse_elifs(Lexer &lexer) {
-  start_parsing("cond-elifs");
+  Logger::start_parsing("cond-elifs");
 
   while (lexer.cur_token.type == Token::Type::ELIF)
     this->parse_elif(lexer);
 
-  end_parsing("cond-elifs");
+  Logger::end_parsing("cond-elifs");
 }
 
 void CondExpression::parse_else(Lexer &lexer) {
-  start_parsing("cond-else");
+  Logger::start_parsing("cond-else");
 
   skip(lexer, Token::Type::ELSE);
   skip(lexer, Token::Type::FAT_RARROW);
   this->parse_test_body(lexer);
 
-  end_parsing("cond-else");
+  Logger::end_parsing("cond-else");
 }
 
 std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
-  start_parsing("cond-expression");
+  Logger::start_parsing("cond-expression");
   std::unique_ptr<CondExpression> expression = std::make_unique<CondExpression>();
 
   expression->parse_if(lexer);
   expression->parse_elifs(lexer);
   expression->parse_else(lexer);
 
-  end_parsing("cond-expression");
+  Logger::end_parsing("cond-expression");
   return expression;
 }
 
@@ -127,7 +128,7 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
-  start_parsing("normal-expression");
+  Logger::start_parsing("normal-expression");
   std::unique_ptr<NormalExpression> expression = std::make_unique<NormalExpression>();
 
   // Keep parsing and tests until we have no longer ignored an `or` token
@@ -139,7 +140,7 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
       break;
   }
 
-  end_parsing("normal-expression");
+  Logger::end_parsing("normal-expression");
   return expression;
 }
 
@@ -149,12 +150,12 @@ llvm::Value *NormalExpression::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
-  start_parsing("function-expression");
+  Logger::start_parsing("function-expression");
   std::unique_ptr<FunctionExpression> expression = std::make_unique<FunctionExpression>();
 
   expression->function = FunctionConstructor::parse(lexer);
 
-  end_parsing("function-expression");
+  Logger::end_parsing("function-expression");
   return expression;
 }
 

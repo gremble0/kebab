@@ -91,18 +91,6 @@ protected:
     return false;
   }
 
-  static void start_parsing(const std::string &node_name) {
-    std::string indent = std::string(indent_depth, ' ');
-    std::cout << indent + '<' + node_name + ">\n";
-    ++indent_depth;
-  }
-
-  static void end_parsing(const std::string &node_name) {
-    --indent_depth;
-    std::string indent = std::string(indent_depth, ' ');
-    std::cout << indent + '<' + node_name + "/>\n";
-  }
-
 public:
   virtual ~AstNode() = default;
 

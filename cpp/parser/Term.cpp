@@ -1,13 +1,14 @@
 #include <cassert>
 
-#include "Term.hpp"
 #include "lexer/Lexer.hpp"
+#include "logging/Logger.hpp"
+#include "parser/Term.hpp"
 
 namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
-  start_parsing("term-operator");
+  Logger::start_parsing("term-operator");
   std::unique_ptr<TermOperator> operator_ = std::make_unique<TermOperator>();
 
   switch (lexer.cur_token.type) {
@@ -25,7 +26,7 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
 
   lexer.advance();
 
-  end_parsing("term-operator");
+  Logger::end_parsing("term-operator");
   return operator_;
 }
 
@@ -35,7 +36,7 @@ llvm::Value *TermOperator::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Term> Term::parse(Lexer &lexer) {
-  start_parsing("term");
+  Logger::start_parsing("term");
   std::unique_ptr<Term> term = std::make_unique<Term>();
 
   while (true) {
@@ -47,7 +48,7 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
       break;
   }
 
-  end_parsing("term");
+  Logger::end_parsing("term");
   return term;
 }
 
