@@ -6,15 +6,23 @@ INCLUDES := -I../../lib/googletest/googletest/include/ -I..
 
 LEXEROBJS := ../lexer/*.o
 PARSEROBJS := ../parser/*.o
-OBJS := main.o LexerTest.o Files.o $(LEXEROBJS) $(PARSEROBJS)
+COMPILEROBJS := ../compiler/*.o
+SRCOBJS := $(LEXEROBJS) $(PARSEROBJS) $(COMPILEROBJS)
+TESTOBJS := main.o LexerTest.o Files.o
 
-# $(MAKE) -C .. ?
-all: $(OBJS)
-	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) -o run_tests $(LIBS)
+LLVM_DIR := ../../lib/llvm-project
+LLVM_CONFIG := $(LLVM_DIR)/build/bin/llvm-config
+LLVM_CXXFLAGS := $(shell $(LLVM_CONFIG) --cxxflags)
+LLVM_LDFLAGS := $(shell $(LLVM_CONFIG) --ldflags --system-libs --libs core)
+
+all: $(TESTOBJS)
+	$(MAKE) -C ..
+	$(CC) $(CFLAGS) $(LLVM_CXXFLAGS) $(INCLUDES) $(TESTOBJS) $(SRCOBJS) -o run_tests $(LIBS) $(LLVM_LDFLAGS)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(LLVM_CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
+	$(MAKE) -C .. clean
 	rm -f *.o
 	rm -f run_tests
