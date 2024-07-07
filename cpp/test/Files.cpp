@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include <iostream>
+#include <ostream>
 #include <string>
 
 #include "lexer/Lexer.hpp"
+#include "logging/Logger.hpp"
 #include "test/Files.hpp"
 
 namespace Kebab {
@@ -22,36 +24,37 @@ void ASSERT_FILES_EQ(std::ifstream &f1, std::ifstream &f2) {
   ASSERT_TRUE(f1.eof() && f2.eof());
 }
 
-// TODO: replace_one_lexer.. or something
-static void replace_one(const std::string &basename) {
+static void replace_one_lexer_expected(const std::string &basename) {
   std::string source_path = "lexer-source/" + basename + ".keb";
-  std::string log_path = "lexer-expected/" + basename + ".log";
+  std::string expected_path = "lexer-expected/" + basename + ".log";
 
-  ASSERT_NO_FATAL_FAILURE({ Lexer l(source_path); });
+  ASSERT_NO_FATAL_FAILURE({
+    std::ostream null(0);
+    Logger::set_stream(null);
+    Lexer lexer(source_path);
+  });
 
-  {
-    std::ofstream log_file(log_path);
-    Lexer l(source_path);
-    while (l.cur_token.type != Token::Type::END_OF_FILE) {
-      log_file << l.cur_token.to_string() + '\n';
-      l.advance();
-    }
-  }
+  std::ofstream log_file(expected_path);
+  Logger::set_stream(log_file);
 
-  std::ifstream log_file(log_path);
+  Lexer lexer(source_path);
+  while (lexer.cur_token->type != Token::Type::END_OF_FILE)
+    lexer.advance();
 }
 
-void replace_expected() {
-  replace_one("comments");
-  replace_one("comparisons");
-  replace_one("constructors");
-  replace_one("operators");
-  replace_one("empty");
-  replace_one("escape-sequences");
-  replace_one("const-and-mut");
+static void replace_lexer_expected() {
+  replace_one_lexer_expected("comments");
+  replace_one_lexer_expected("comparisons");
+  replace_one_lexer_expected("constructors");
+  replace_one_lexer_expected("operators");
+  replace_one_lexer_expected("empty");
+  replace_one_lexer_expected("escape-sequences");
+  replace_one_lexer_expected("const-and-mut");
 
   std::cout << "Replaced expected lexer output\n";
 }
+
+void replace_expected() { replace_lexer_expected(); }
 
 } // namespace Test
 } // namespace Kebab

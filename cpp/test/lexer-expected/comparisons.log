@@ -1,63 +1,63 @@
-def
-a
-=
-bool
-(
-b
-<
-2
-)
-def
-b
-=
-bool
-(
-string
-<
-true
-)
-def
-c
-=
-int
-(
-33
-<=
-2
-)
-def
-d
-=
-bool
-(
-g
-==
-3
-)
-def
-d
-=
-bool
-(
-g
-~=
-3
-)
-def
-e
-=
-bool
-(
-h
->
-0
-)
-def
-f
-=
-bool
-(
-a
->=
-103
-)
+<token "def" [3, 0] - [3, 3]>
+<token name: "a" [3, 4] - [3, 5]>
+<token "=" [3, 6] - [3, 7]>
+<token name: "bool" [3, 8] - [3, 12]>
+<token "(" [3, 12] - [3, 13]>
+<token name: "b" [3, 13] - [3, 14]>
+<token "<" [3, 15] - [3, 16]>
+<token int-literal: "2" [3, 17] - [3, 18]>
+<token ")" [3, 18] - [3, 19]>
+<token "def" [4, 0] - [4, 3]>
+<token name: "b" [4, 4] - [4, 5]>
+<token "=" [4, 6] - [4, 7]>
+<token name: "bool" [4, 8] - [4, 12]>
+<token "(" [4, 12] - [4, 13]>
+<token string-literal: "string" [4, 13] - [4, 21]>
+<token "<" [4, 22] - [4, 23]>
+<token "true" [4, 24] - [4, 28]>
+<token ")" [4, 28] - [4, 29]>
+<token "def" [5, 0] - [5, 3]>
+<token name: "c" [5, 4] - [5, 5]>
+<token "=" [5, 6] - [5, 7]>
+<token name: "int" [5, 8] - [5, 11]>
+<token "(" [5, 11] - [5, 12]>
+<token int-literal: "33" [5, 12] - [5, 14]>
+<token "<=" [5, 15] - [5, 17]>
+<token int-literal: "2" [5, 18] - [5, 19]>
+<token ")" [5, 19] - [5, 20]>
+<token "def" [6, 0] - [6, 3]>
+<token name: "d" [6, 4] - [6, 5]>
+<token "=" [6, 6] - [6, 7]>
+<token name: "bool" [6, 8] - [6, 12]>
+<token "(" [6, 12] - [6, 13]>
+<token name: "g" [6, 13] - [6, 14]>
+<token "==" [6, 15] - [6, 17]>
+<token int-literal: "3" [6, 18] - [6, 19]>
+<token ")" [6, 19] - [6, 20]>
+<token "def" [7, 0] - [7, 3]>
+<token name: "d" [7, 4] - [7, 5]>
+<token "=" [7, 6] - [7, 7]>
+<token name: "bool" [7, 8] - [7, 12]>
+<token "(" [7, 12] - [7, 13]>
+<token name: "g" [7, 13] - [7, 14]>
+<token "~=" [7, 15] - [7, 17]>
+<token int-literal: "3" [7, 18] - [7, 19]>
+<token ")" [7, 19] - [7, 20]>
+<token "def" [8, 0] - [8, 3]>
+<token name: "e" [8, 4] - [8, 5]>
+<token "=" [8, 6] - [8, 7]>
+<token name: "bool" [8, 8] - [8, 12]>
+<token "(" [8, 12] - [8, 13]>
+<token name: "h" [8, 13] - [8, 14]>
+<token ">" [8, 15] - [8, 16]>
+<token int-literal: "0" [8, 17] - [8, 18]>
+<token ")" [8, 18] - [8, 19]>
+<token "def" [9, 0] - [9, 3]>
+<token name: "f" [9, 4] - [9, 5]>
+<token "=" [9, 6] - [9, 7]>
+<token name: "bool" [9, 8] - [9, 12]>
+<token "(" [9, 12] - [9, 13]>
+<token string-literal: "a" [9, 13] - [9, 16]>
+<token ">=" [9, 17] - [9, 19]>
+<token char-literal: '103' [9, 20] - [9, 23]>
+<token ")" [9, 23] - [9, 24]>

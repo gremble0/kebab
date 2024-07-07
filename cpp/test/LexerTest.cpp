@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include "lexer/Lexer.hpp"
+#include "logging/Logger.hpp"
 #include "test/Files.hpp"
 #include "gtest/gtest.h"
 
@@ -16,11 +17,11 @@ static void lex_file_with_logs(const std::string &basename) {
 
   {
     std::ofstream log_file(log_path);
-    Lexer l(source_path);
-    while (l.cur_token.type != Token::Type::END_OF_FILE) {
-      log_file << l.cur_token.to_string() + '\n';
-      l.advance();
-    }
+    Logger::set_stream(log_file);
+
+    Lexer lexer(source_path);
+    while (lexer.cur_token->type != Token::Type::END_OF_FILE)
+      lexer.advance();
   }
 
   std::ifstream expected_file(expected_path);
@@ -29,11 +30,11 @@ static void lex_file_with_logs(const std::string &basename) {
 }
 
 TEST(LexerTest, InitializesCorrectly) {
-  ASSERT_NO_FATAL_FAILURE({ Lexer l("lexer-source/comments.keb"); });
-  ASSERT_DEATH({ Lexer l("non-existent-file"); }, "could not open file");
+  ASSERT_NO_FATAL_FAILURE({ Lexer lexer("lexer-source/comments.keb"); });
+  ASSERT_DEATH({ Lexer lexer("non-existent-file"); }, "could not open file");
 
   Lexer l("lexer-source/comments.keb");
-  ASSERT_NE(l.cur_token.type, Token::Type::ILLEGAL);
+  ASSERT_NE(l.cur_token->type, Token::Type::ILLEGAL);
 }
 
 TEST(LexerTest, LexesCommentsKeb) {

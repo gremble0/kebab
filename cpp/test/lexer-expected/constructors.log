@@ -1,114 +1,114 @@
-def
-add
-=
-int
-(
-2
-+
-2
-)
-def
-kebab-case
-=
-fn
-(
-(
-var
-:
-composite-type
-)
-=>
-int
-(
-var
-)
-)
-def
-c
-=
-char
-(
-99
-)
-def
-s
-=
-string
-(
-hey
-)
-def
-lst
-=
-list
-(
-(
-int
-)
-=>
-[
-1
-,
-2
-,
-3
-]
-)
-def
-f1
-=
-fn
-(
-(
-num1
-:
-int
-,
-nums
-:
-list
-(
-int
-)
-)
-=>
-int
-(
-num1
-+
-2
-)
-)
-def
-f2
-=
-fn
-(
-(
-)
-=>
-void
-(
-)
-)
-def
-f1
-=
-float
-(
-10.210000
-)
-def
-f2
-=
-float
-(
-0.000000
-)
-def
-f3
-=
-float
-(
-0.000020
-)
+<token "def" [1, 0] - [1, 3]>
+<token name: "add" [1, 4] - [1, 7]>
+<token "=" [1, 8] - [1, 9]>
+<token name: "int" [1, 10] - [1, 13]>
+<token "(" [1, 13] - [1, 14]>
+<token int-literal: "2" [1, 14] - [1, 15]>
+<token "+" [1, 16] - [1, 17]>
+<token int-literal: "2" [1, 18] - [1, 19]>
+<token ")" [1, 19] - [1, 20]>
+<token "def" [3, 0] - [3, 3]>
+<token name: "kebab-case" [3, 4] - [3, 14]>
+<token "=" [3, 15] - [3, 16]>
+<token "fn" [3, 17] - [3, 19]>
+<token "(" [3, 19] - [3, 20]>
+<token "(" [3, 20] - [3, 21]>
+<token name: "var" [3, 21] - [3, 24]>
+<token ":" [3, 25] - [3, 26]>
+<token name: "composite-type" [3, 27] - [3, 41]>
+<token ")" [3, 41] - [3, 42]>
+<token "=>" [3, 43] - [3, 45]>
+<token name: "int" [4, 2] - [4, 5]>
+<token "(" [4, 5] - [4, 6]>
+<token name: "var" [4, 6] - [4, 9]>
+<token ")" [4, 9] - [4, 10]>
+<token ")" [5, 0] - [5, 1]>
+<token "def" [7, 0] - [7, 3]>
+<token name: "c" [7, 4] - [7, 5]>
+<token "=" [7, 6] - [7, 7]>
+<token name: "char" [7, 8] - [7, 12]>
+<token "(" [7, 12] - [7, 13]>
+<token char-literal: '99' [7, 13] - [7, 16]>
+<token ")" [7, 16] - [7, 17]>
+<token "def" [8, 0] - [8, 3]>
+<token name: "s" [8, 4] - [8, 5]>
+<token "=" [8, 6] - [8, 7]>
+<token name: "string" [8, 8] - [8, 14]>
+<token "(" [8, 14] - [8, 15]>
+<token string-literal: "hey" [8, 15] - [8, 20]>
+<token ")" [8, 20] - [8, 21]>
+<token "def" [10, 0] - [10, 3]>
+<token name: "lst" [10, 4] - [10, 7]>
+<token "=" [10, 8] - [10, 9]>
+<token "list" [10, 10] - [10, 14]>
+<token "(" [10, 14] - [10, 15]>
+<token "(" [10, 15] - [10, 16]>
+<token name: "int" [10, 16] - [10, 19]>
+<token ")" [10, 19] - [10, 20]>
+<token "=>" [10, 21] - [10, 23]>
+<token "[" [10, 24] - [10, 25]>
+<token int-literal: "1" [10, 25] - [10, 26]>
+<token "," [10, 26] - [10, 27]>
+<token int-literal: "2" [10, 28] - [10, 29]>
+<token "," [10, 29] - [10, 30]>
+<token int-literal: "3" [10, 31] - [10, 32]>
+<token "]" [10, 32] - [10, 33]>
+<token ")" [10, 33] - [10, 34]>
+<token "def" [11, 0] - [11, 3]>
+<token name: "f1" [11, 4] - [11, 6]>
+<token "=" [11, 7] - [11, 8]>
+<token "fn" [11, 9] - [11, 11]>
+<token "(" [11, 11] - [11, 12]>
+<token "(" [11, 12] - [11, 13]>
+<token name: "num1" [11, 13] - [11, 17]>
+<token ":" [11, 18] - [11, 19]>
+<token name: "int" [11, 20] - [11, 23]>
+<token "," [11, 23] - [11, 24]>
+<token name: "nums" [11, 25] - [11, 29]>
+<token ":" [11, 30] - [11, 31]>
+<token "list" [11, 32] - [11, 36]>
+<token "(" [11, 36] - [11, 37]>
+<token name: "int" [11, 37] - [11, 40]>
+<token ")" [11, 40] - [11, 41]>
+<token ")" [11, 41] - [11, 42]>
+<token "=>" [11, 43] - [11, 45]>
+<token name: "int" [12, 2] - [12, 5]>
+<token "(" [12, 5] - [12, 6]>
+<token name: "num1" [12, 6] - [12, 10]>
+<token "+" [12, 11] - [12, 12]>
+<token int-literal: "2" [12, 13] - [12, 14]>
+<token ")" [12, 14] - [12, 15]>
+<token ")" [13, 0] - [13, 1]>
+<token "def" [14, 0] - [14, 3]>
+<token name: "f2" [14, 4] - [14, 6]>
+<token "=" [14, 7] - [14, 8]>
+<token "fn" [14, 9] - [14, 11]>
+<token "(" [14, 11] - [14, 12]>
+<token "(" [14, 12] - [14, 13]>
+<token ")" [14, 13] - [14, 14]>
+<token "=>" [14, 15] - [14, 17]>
+<token name: "void" [14, 18] - [14, 22]>
+<token "(" [14, 22] - [14, 23]>
+<token ")" [14, 23] - [14, 24]>
+<token ")" [14, 24] - [14, 25]>
+<token "def" [16, 0] - [16, 3]>
+<token name: "f1" [16, 4] - [16, 6]>
+<token "=" [16, 7] - [16, 8]>
+<token name: "float" [16, 9] - [16, 14]>
+<token "(" [16, 14] - [16, 15]>
+<token float-literal: "10.210000" [16, 15] - [16, 20]>
+<token ")" [16, 20] - [16, 21]>
+<token "def" [17, 0] - [17, 3]>
+<token name: "f2" [17, 4] - [17, 6]>
+<token "=" [17, 7] - [17, 8]>
+<token name: "float" [17, 9] - [17, 14]>
+<token "(" [17, 14] - [17, 15]>
+<token float-literal: "0.000000" [17, 15] - [17, 18]>
+<token ")" [17, 18] - [17, 19]>
+<token "def" [18, 0] - [18, 3]>
+<token name: "f3" [18, 4] - [18, 6]>
+<token "=" [18, 7] - [18, 8]>
+<token name: "float" [18, 9] - [18, 14]>
+<token "(" [18, 14] - [18, 15]>
+<token float-literal: "0.000020" [18, 15] - [18, 22]>
+<token ")" [18, 22] - [18, 23]>

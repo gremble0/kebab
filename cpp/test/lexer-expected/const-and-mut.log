@@ -1,30 +1,30 @@
-def
-mut
-my-var
-=
-int
-(
-4
-)
-set
-my-var
-=
-int
-(
-6
-)
-def
-mut
-my-var-2
-=
-int
-(
-my-var
-)
-set
-my-var-2
-=
-int
-(
-1
-)
+<token "def" [1, 0] - [1, 3]>
+<token "mut" [1, 4] - [1, 7]>
+<token name: "my-var" [1, 8] - [1, 14]>
+<token "=" [1, 15] - [1, 16]>
+<token name: "int" [1, 17] - [1, 20]>
+<token "(" [1, 20] - [1, 21]>
+<token int-literal: "4" [1, 21] - [1, 22]>
+<token ")" [1, 22] - [1, 23]>
+<token "set" [2, 0] - [2, 3]>
+<token name: "my-var" [2, 4] - [2, 10]>
+<token "=" [2, 11] - [2, 12]>
+<token name: "int" [2, 13] - [2, 16]>
+<token "(" [2, 16] - [2, 17]>
+<token int-literal: "6" [2, 17] - [2, 18]>
+<token ")" [2, 18] - [2, 19]>
+<token "def" [4, 0] - [4, 3]>
+<token "mut" [4, 4] - [4, 7]>
+<token name: "my-var-2" [4, 8] - [4, 16]>
+<token "=" [4, 17] - [4, 18]>
+<token name: "int" [4, 19] - [4, 22]>
+<token "(" [4, 22] - [4, 23]>
+<token name: "my-var" [4, 23] - [4, 29]>
+<token ")" [4, 29] - [4, 30]>
+<token "set" [5, 0] - [5, 3]>
+<token name: "my-var-2" [5, 4] - [5, 12]>
+<token "=" [5, 13] - [5, 14]>
+<token name: "int" [5, 15] - [5, 18]>
+<token "(" [5, 18] - [5, 19]>
+<token int-literal: "1" [5, 19] - [5, 20]>
+<token ")" [5, 20] - [5, 21]>
