@@ -44,18 +44,6 @@ static void replace_one_lexer_expected(const std::string &basename) {
     lexer.advance();
 }
 
-static void replace_lexer_expected() {
-  replace_one_lexer_expected("comments");
-  replace_one_lexer_expected("comparisons");
-  replace_one_lexer_expected("constructors");
-  replace_one_lexer_expected("operators");
-  replace_one_lexer_expected("empty");
-  replace_one_lexer_expected("escape-sequences");
-  replace_one_lexer_expected("const-and-mut");
-
-  std::cout << "Replaced expected lexer output" << std::endl;
-}
-
 static void replace_one_parser_expected(const std::string &basename) {
   std::string source_path = "parser-source/" + basename + ".keb";
   std::string expected_path = "parser-expected/" + basename + ".log";
@@ -73,13 +61,27 @@ static void replace_one_parser_expected(const std::string &basename) {
   std::unique_ptr<Parser::RootNode> root = Parser::parse(lexer);
 }
 
+// NOTE: These don't run on all the files because some of them are expected to fail and therefore do
+// not have an expected file at all
+static void replace_lexer_expected() {
+  replace_one_lexer_expected("comments");
+  replace_one_lexer_expected("comparisons");
+  replace_one_lexer_expected("constructors");
+  replace_one_lexer_expected("operators");
+  replace_one_lexer_expected("empty");
+  replace_one_lexer_expected("escape-sequences");
+  replace_one_lexer_expected("const-and-mut");
+
+  std::cout << "Replaced expected lexer output" << std::endl;
+}
+
 static void replace_parser_expected() {
+  replace_one_parser_expected("empty");
   replace_one_parser_expected("function-constructor");
   replace_one_parser_expected("if");
   replace_one_parser_expected("list-constructor");
   replace_one_parser_expected("operators");
   replace_one_parser_expected("primitive-constructors");
-  // syntax-error1-3.keb should error and do not have expected outputs
   replace_one_parser_expected("types");
 
   std::cout << "Replaced expected parser output" << std::endl;

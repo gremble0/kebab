@@ -35,6 +35,8 @@ static void ASSERT_EXPECTED_PARSING(const std::string &basename) {
   ASSERT_FILES_EQ(expected_file, log_file);
 }
 
+TEST(ParserTest, ParsesEmptyFile) { ASSERT_EXPECTED_PARSING("empty"); }
+
 TEST(ParserTest, ParsesFunctionConstructor) { ASSERT_EXPECTED_PARSING("function-constructor"); }
 
 TEST(ParserTest, ParsesIf) { ASSERT_EXPECTED_PARSING("if"); }

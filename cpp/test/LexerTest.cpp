@@ -41,54 +41,30 @@ TEST(LexerTest, InitializesCorrectly) {
   ASSERT_NE(lexer.cur_token->type, Token::Type::ILLEGAL);
 }
 
-TEST(LexerTest, LexesCommentsKeb) {
-  const std::string basename = "comments";
-  lex_file(basename);
-}
+TEST(LexerTest, LexesCommentsKeb) { lex_file("comments"); }
 
-TEST(LexerTest, LexesComparisonsKeb) {
-  const std::string basename = "comparisons";
-  lex_file(basename);
-}
+TEST(LexerTest, LexesComparisonsKeb) { lex_file("comparisons"); }
 
-TEST(LexerTest, LexesConstructorsKeb) {
-  const std::string basename = "constructors";
-  lex_file(basename);
-}
+TEST(LexerTest, LexesConstructorsKeb) { lex_file("constructors"); }
 
-TEST(LexerTest, LexesOperatorsKeb) {
-  const std::string basename = "operators";
-  lex_file(basename);
-}
+TEST(LexerTest, LexesOperatorsKeb) { lex_file("operators"); }
 
-TEST(LexerTest, LexesConstAndMut) {
-  const std::string basename = "const-and-mut";
-  lex_file(basename);
-}
+TEST(LexerTest, LexesConstAndMut) { lex_file("const-and-mut"); }
 
-TEST(LexerTest, LexesEscapeSequences) {
-  const std::string basename = "escape-sequences";
-  lex_file(basename);
-}
+TEST(LexerTest, LexesEscapeSequences) { lex_file("escape-sequences"); }
 
-TEST(LexerTest, LexesEmptyFile) {
-  const std::string basename = "empty";
-  lex_file(basename);
-}
+TEST(LexerTest, LexesEmptyFile) { lex_file("empty"); }
 
 TEST(LexerTest, ErrorsWhenOutOfRange) {
-  const std::string basename = "out-of-range";
-  ASSERT_DEATH({ lex_file(basename); }, "number out of range");
+  ASSERT_DEATH({ lex_file("out-of-range"); }, "number out of range");
 }
 
 TEST(LexerTest, ErrorsWhenUnterminatedCharLiteral) {
-  const std::string basename = "unterminated-char-literal";
-  ASSERT_DEATH({ lex_file(basename); }, "unterminated char literal");
+  ASSERT_DEATH({ lex_file("unterminated-char-literal"); }, "unterminated char literal");
 }
 
 TEST(LexerTest, ErrorsWhenMalformedCharLiteral) {
-  const std::string basename = "malformed-char-literal";
-  ASSERT_DEATH({ lex_file(basename); }, "malformed char literal");
+  ASSERT_DEATH({ lex_file("malformed-char-literal"); }, "malformed char literal");
 }
 
 } // namespace Test
