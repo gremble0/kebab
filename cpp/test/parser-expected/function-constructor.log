@@ -1,0 +1,231 @@
+<token "def" [1, 0] - [1, 3]>
+<statement>
+ <definition-statement>
+  <token name: "func1" [1, 4] - [1, 9]>
+  <token "=" [1, 10] - [1, 11]>
+  <token "fn" [1, 12] - [1, 14]>
+  <constructor>
+   <function-constructor>
+    <token "(" [1, 14] - [1, 15]>
+    <token "(" [1, 15] - [1, 16]>
+    <token name: "i" [1, 16] - [1, 17]>
+    <function-parameter>
+     <token ":" [1, 18] - [1, 19]>
+     <token name: "int" [1, 20] - [1, 23]>
+     <type>
+      <primitive-type>
+       <token ")" [1, 23] - [1, 24]>
+      <primitive-type/>
+     <type/>
+    <function-parameter/>
+    <token "=>" [1, 25] - [1, 27]>
+    <token name: "int" [1, 28] - [1, 31]>
+    <constructor>
+     <primitive-constructor>
+      <primitive-type>
+       <token "(" [1, 31] - [1, 32]>
+      <primitive-type/>
+      <token name: "i" [1, 32] - [1, 33]>
+      <statement>
+       <expression-statement>
+        <expression>
+         <normal-expression>
+          <and-test>
+           <not-test>
+            <comparison>
+             <term>
+              <factor>
+               <primary>
+                <atom>
+                 <name-atom>
+                  <token ")" [1, 33] - [1, 34]>
+                 <name-atom/>
+                <atom/>
+               <primary/>
+              <factor/>
+             <term/>
+            <comparison/>
+           <not-test/>
+          <and-test/>
+         <normal-expression/>
+        <expression/>
+       <expression-statement/>
+      <statement/>
+      <token ")" [1, 34] - [1, 35]>
+     <primitive-constructor/>
+    <constructor/>
+    <token "def" [2, 0] - [2, 3]>
+   <function-constructor/>
+  <constructor/>
+ <definition-statement/>
+<statement/>
+<statement>
+ <definition-statement>
+  <token name: "func2" [2, 4] - [2, 9]>
+  <token "=" [2, 10] - [2, 11]>
+  <token "fn" [2, 12] - [2, 14]>
+  <constructor>
+   <function-constructor>
+    <token "(" [2, 14] - [2, 15]>
+    <token "(" [2, 15] - [2, 16]>
+    <token ")" [2, 16] - [2, 17]>
+    <token "=>" [2, 18] - [2, 20]>
+    <token name: "int" [2, 21] - [2, 24]>
+    <constructor>
+     <primitive-constructor>
+      <primitive-type>
+       <token "(" [2, 24] - [2, 25]>
+      <primitive-type/>
+      <token int-literal: "5" [2, 25] - [2, 26]>
+      <statement>
+       <expression-statement>
+        <expression>
+         <normal-expression>
+          <and-test>
+           <not-test>
+            <comparison>
+             <term>
+              <factor>
+               <primary>
+                <atom>
+                 <int-atom>
+                  <token ")" [2, 26] - [2, 27]>
+                 <int-atom/>
+                <atom/>
+               <primary/>
+              <factor/>
+             <term/>
+            <comparison/>
+           <not-test/>
+          <and-test/>
+         <normal-expression/>
+        <expression/>
+       <expression-statement/>
+      <statement/>
+      <token ")" [2, 27] - [2, 28]>
+     <primitive-constructor/>
+    <constructor/>
+    <token "def" [3, 0] - [3, 3]>
+   <function-constructor/>
+  <constructor/>
+ <definition-statement/>
+<statement/>
+<statement>
+ <definition-statement>
+  <token name: "func3" [3, 4] - [3, 9]>
+  <token "=" [3, 10] - [3, 11]>
+  <token "fn" [3, 12] - [3, 14]>
+  <constructor>
+   <function-constructor>
+    <token "(" [3, 14] - [3, 15]>
+    <token "(" [3, 15] - [3, 16]>
+    <token name: "i1" [3, 16] - [3, 18]>
+    <function-parameter>
+     <token ":" [3, 19] - [3, 20]>
+     <token name: "int" [3, 21] - [3, 24]>
+     <type>
+      <primitive-type>
+       <token "," [3, 24] - [3, 25]>
+      <primitive-type/>
+     <type/>
+    <function-parameter/>
+    <token name: "i2" [3, 26] - [3, 28]>
+    <function-parameter>
+     <token ":" [3, 29] - [3, 30]>
+     <token name: "int" [3, 30] - [3, 33]>
+     <type>
+      <primitive-type>
+       <token ")" [3, 33] - [3, 34]>
+      <primitive-type/>
+     <type/>
+    <function-parameter/>
+    <token "=>" [3, 35] - [3, 37]>
+    <token "list" [3, 38] - [3, 42]>
+    <constructor>
+     <list-constructor>
+      <token "(" [3, 42] - [3, 43]>
+      <token "(" [3, 43] - [3, 44]>
+      <token name: "int" [3, 44] - [3, 47]>
+      <type>
+       <primitive-type>
+        <token ")" [3, 47] - [3, 48]>
+       <primitive-type/>
+      <type/>
+      <token "=>" [3, 49] - [3, 51]>
+      <token "[" [3, 52] - [3, 53]>
+      <statement>
+       <expression-statement>
+        <expression>
+         <normal-expression>
+          <and-test>
+           <not-test>
+            <comparison>
+             <term>
+              <factor>
+               <primary>
+                <atom>
+                 <list-atom>
+                  <token name: "i1" [3, 53] - [3, 55]>
+                  <expression>
+                   <normal-expression>
+                    <and-test>
+                     <not-test>
+                      <comparison>
+                       <term>
+                        <factor>
+                         <primary>
+                          <atom>
+                           <name-atom>
+                            <token "," [3, 55] - [3, 56]>
+                           <name-atom/>
+                          <atom/>
+                         <primary/>
+                        <factor/>
+                       <term/>
+                      <comparison/>
+                     <not-test/>
+                    <and-test/>
+                   <normal-expression/>
+                  <expression/>
+                  <token name: "i2" [3, 57] - [3, 59]>
+                  <expression>
+                   <normal-expression>
+                    <and-test>
+                     <not-test>
+                      <comparison>
+                       <term>
+                        <factor>
+                         <primary>
+                          <atom>
+                           <name-atom>
+                            <token "]" [3, 59] - [3, 60]>
+                           <name-atom/>
+                          <atom/>
+                         <primary/>
+                        <factor/>
+                       <term/>
+                      <comparison/>
+                     <not-test/>
+                    <and-test/>
+                   <normal-expression/>
+                  <expression/>
+                  <token ")" [3, 60] - [3, 61]>
+                 <list-atom/>
+                <atom/>
+               <primary/>
+              <factor/>
+             <term/>
+            <comparison/>
+           <not-test/>
+          <and-test/>
+         <normal-expression/>
+        <expression/>
+       <expression-statement/>
+      <statement/>
+      <token ")" [3, 61] - [3, 62]>
+     <list-constructor/>
+    <constructor/>
+   <function-constructor/>
+  <constructor/>
+ <definition-statement/>
+<statement/>

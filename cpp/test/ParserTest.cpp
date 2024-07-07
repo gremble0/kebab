@@ -1,25 +1,33 @@
 #include <fstream>
+#include <memory>
 #include <string>
 
 #include "Files.hpp"
 #include "lexer/Lexer.hpp"
+#include "logging/Logger.hpp"
 #include "parser/Parser.hpp"
+#include "parser/RootNode.hpp"
 #include "gtest/gtest.h"
 
 namespace Kebab {
 namespace Test {
 
-static void parse_file_with_logs(const std::string &basename) {
+static void ASSERT_EXPECTED_PARSING(const std::string &basename) {
   std::string source_path = "parser-source/" + basename + ".keb";
   std::string log_path = "parser-logs/" + basename + ".log";
   std::string expected_path = "parser-expected/" + basename + ".log";
 
-  ASSERT_NO_FATAL_FAILURE({ Lexer l(source_path); });
+  ASSERT_NO_FATAL_FAILURE({
+    Logger::silence();
+    Lexer lexer(source_path);
+  });
 
   {
     std::ofstream log_file(log_path);
-    Lexer l(source_path);
-    Parser::parse(l);
+    Logger::set_stream(log_file);
+
+    Lexer lexer(source_path);
+    std::unique_ptr<Parser::RootNode> root = Parser::parse(lexer);
   }
 
   std::ifstream expected_file(expected_path);
@@ -27,7 +35,28 @@ static void parse_file_with_logs(const std::string &basename) {
   ASSERT_FILES_EQ(expected_file, log_file);
 }
 
-TEST(ParserTest, ParsesIf) {}
+TEST(ParserTest, ParsesFunctionConstructor) { ASSERT_EXPECTED_PARSING("function-constructor"); }
+
+TEST(ParserTest, ParsesIf) { ASSERT_EXPECTED_PARSING("if"); }
+
+TEST(ParserTest, ParsesListConstructor) { ASSERT_EXPECTED_PARSING("list-constructor"); }
+
+TEST(ParserTest, ParsesOperators) { ASSERT_EXPECTED_PARSING("operators"); }
+
+TEST(ParserTest, ParsesPrimitiveConstructors) { ASSERT_EXPECTED_PARSING("primitive-constructors"); }
+
+TEST(ParserTest, ErrorsWhenMissingEquals) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_PARSING("missing-equals"); }, "unexpected token");
+}
+
+TEST(ParserTest, ErrorsWhenMissingConstructorType) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_PARSING("missing-constructor-type"); }, "unexpected token");
+}
+
+TEST(ParserTest, ErrorsWhenMissingConstructorTypeInFunction) {
+  ASSERT_DEATH(
+      { ASSERT_EXPECTED_PARSING("missing-constructor-type-in-function"); }, "unexpected token");
+}
 
 } // namespace Test
 } // namespace Kebab

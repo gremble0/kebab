@@ -1,0 +1,576 @@
+<token "def" [1, 0] - [1, 3]>
+<statement>
+ <definition-statement>
+  <token name: "f1" [1, 4] - [1, 6]>
+  <token "=" [1, 7] - [1, 8]>
+  <token "fn" [1, 9] - [1, 11]>
+  <constructor>
+   <function-constructor>
+    <token "(" [1, 11] - [1, 12]>
+    <token "(" [1, 12] - [1, 13]>
+    <token ")" [1, 13] - [1, 14]>
+    <token "=>" [1, 15] - [1, 17]>
+    <token name: "void" [1, 18] - [1, 22]>
+    <constructor>
+     <primitive-constructor>
+      <primitive-type>
+       <token "(" [1, 22] - [1, 23]>
+      <primitive-type/>
+      <token ")" [1, 23] - [1, 24]>
+      <token ")" [1, 24] - [1, 25]>
+     <primitive-constructor/>
+    <constructor/>
+    <token "def" [2, 0] - [2, 3]>
+   <function-constructor/>
+  <constructor/>
+ <definition-statement/>
+<statement/>
+<statement>
+ <definition-statement>
+  <token name: "f2" [2, 4] - [2, 6]>
+  <token "=" [2, 7] - [2, 8]>
+  <token "fn" [2, 9] - [2, 11]>
+  <constructor>
+   <function-constructor>
+    <token "(" [2, 11] - [2, 12]>
+    <token "(" [2, 12] - [2, 13]>
+    <token name: "inner-fn" [2, 13] - [2, 21]>
+    <function-parameter>
+     <token ":" [2, 22] - [2, 23]>
+     <token "fn" [2, 24] - [2, 26]>
+     <type>
+      <function-type>
+       <token "(" [2, 26] - [2, 27]>
+       <token name: "int" [2, 27] - [2, 30]>
+       <type>
+        <primitive-type>
+         <token "," [2, 30] - [2, 31]>
+        <primitive-type/>
+       <type/>
+       <token name: "int" [2, 32] - [2, 35]>
+       <type>
+        <primitive-type>
+         <token ")" [2, 35] - [2, 36]>
+        <primitive-type/>
+       <type/>
+       <token "=>" [2, 37] - [2, 39]>
+       <token name: "int" [2, 40] - [2, 43]>
+       <type>
+        <primitive-type>
+         <token ")" [2, 43] - [2, 44]>
+        <primitive-type/>
+       <type/>
+      <function-type/>
+     <type/>
+    <function-parameter/>
+    <token "=>" [2, 45] - [2, 47]>
+    <token name: "int" [2, 48] - [2, 51]>
+    <constructor>
+     <primitive-constructor>
+      <primitive-type>
+       <token "(" [2, 51] - [2, 52]>
+      <primitive-type/>
+      <token name: "inner-fn" [2, 52] - [2, 60]>
+      <statement>
+       <expression-statement>
+        <expression>
+         <normal-expression>
+          <and-test>
+           <not-test>
+            <comparison>
+             <term>
+              <factor>
+               <primary>
+                <atom>
+                 <name-atom>
+                  <token "(" [2, 60] - [2, 61]>
+                 <name-atom/>
+                <atom/>
+                <primary-suffix>
+                 <primary-arguments>
+                  <token int-literal: "1" [2, 61] - [2, 62]>
+                  <expression>
+                   <normal-expression>
+                    <and-test>
+                     <not-test>
+                      <comparison>
+                       <term>
+                        <factor>
+                         <primary>
+                          <atom>
+                           <int-atom>
+                            <token "," [2, 62] - [2, 63]>
+                           <int-atom/>
+                          <atom/>
+                         <primary/>
+                        <factor/>
+                       <term/>
+                      <comparison/>
+                     <not-test/>
+                    <and-test/>
+                   <normal-expression/>
+                  <expression/>
+                  <token int-literal: "2" [2, 64] - [2, 65]>
+                  <expression>
+                   <normal-expression>
+                    <and-test>
+                     <not-test>
+                      <comparison>
+                       <term>
+                        <factor>
+                         <primary>
+                          <atom>
+                           <int-atom>
+                            <token ")" [2, 65] - [2, 66]>
+                           <int-atom/>
+                          <atom/>
+                         <primary/>
+                        <factor/>
+                       <term/>
+                      <comparison/>
+                     <not-test/>
+                    <and-test/>
+                   <normal-expression/>
+                  <expression/>
+                  <token ")" [2, 66] - [2, 67]>
+                 <primary-arguments/>
+                <primary-suffix/>
+               <primary/>
+              <factor/>
+             <term/>
+            <comparison/>
+           <not-test/>
+          <and-test/>
+         <normal-expression/>
+        <expression/>
+       <expression-statement/>
+      <statement/>
+      <token ")" [2, 67] - [2, 68]>
+     <primitive-constructor/>
+    <constructor/>
+    <token "def" [4, 0] - [4, 3]>
+   <function-constructor/>
+  <constructor/>
+ <definition-statement/>
+<statement/>
+<statement>
+ <definition-statement>
+  <token name: "l1" [4, 4] - [4, 6]>
+  <token "=" [4, 7] - [4, 8]>
+  <token "list" [4, 9] - [4, 13]>
+  <constructor>
+   <list-constructor>
+    <token "(" [4, 13] - [4, 14]>
+    <token "(" [4, 14] - [4, 15]>
+    <token "list" [4, 15] - [4, 19]>
+    <type>
+     <list-type>
+      <token "(" [4, 19] - [4, 20]>
+      <token "fn" [4, 20] - [4, 22]>
+      <type>
+       <function-type>
+        <token "(" [4, 22] - [4, 23]>
+        <token ")" [4, 23] - [4, 24]>
+        <token "=>" [4, 25] - [4, 27]>
+        <token name: "void" [4, 28] - [4, 32]>
+        <type>
+         <primitive-type>
+          <token ")" [4, 32] - [4, 33]>
+         <primitive-type/>
+        <type/>
+       <function-type/>
+      <type/>
+      <token ")" [4, 33] - [4, 34]>
+     <list-type/>
+    <type/>
+    <token "=>" [4, 35] - [4, 37]>
+    <token "[" [4, 38] - [4, 39]>
+    <statement>
+     <expression-statement>
+      <expression>
+       <normal-expression>
+        <and-test>
+         <not-test>
+          <comparison>
+           <term>
+            <factor>
+             <primary>
+              <atom>
+               <list-atom>
+                <token "[" [5, 2] - [5, 3]>
+                <expression>
+                 <normal-expression>
+                  <and-test>
+                   <not-test>
+                    <comparison>
+                     <term>
+                      <factor>
+                       <primary>
+                        <atom>
+                         <list-atom>
+                          <token "fn" [5, 4] - [5, 6]>
+                          <expression>
+                           <function-expression>
+                            <function-constructor>
+                             <token "(" [5, 6] - [5, 7]>
+                             <token "(" [5, 7] - [5, 8]>
+                             <token ")" [5, 8] - [5, 9]>
+                             <token "=>" [5, 10] - [5, 12]>
+                             <token name: "void" [5, 13] - [5, 17]>
+                             <constructor>
+                              <primitive-constructor>
+                               <primitive-type>
+                                <token "(" [5, 17] - [5, 18]>
+                               <primitive-type/>
+                               <token name: "print" [5, 18] - [5, 23]>
+                               <statement>
+                                <expression-statement>
+                                 <expression>
+                                  <normal-expression>
+                                   <and-test>
+                                    <not-test>
+                                     <comparison>
+                                      <term>
+                                       <factor>
+                                        <primary>
+                                         <atom>
+                                          <name-atom>
+                                           <token "(" [5, 23] - [5, 24]>
+                                          <name-atom/>
+                                         <atom/>
+                                         <primary-suffix>
+                                          <primary-arguments>
+                                           <token string-literal: "hello" [5, 24] - [5, 31]>
+                                           <expression>
+                                            <normal-expression>
+                                             <and-test>
+                                              <not-test>
+                                               <comparison>
+                                                <term>
+                                                 <factor>
+                                                  <primary>
+                                                   <atom>
+                                                    <string-atom>
+                                                     <token ")" [5, 31] - [5, 32]>
+                                                    <string-atom/>
+                                                   <atom/>
+                                                  <primary/>
+                                                 <factor/>
+                                                <term/>
+                                               <comparison/>
+                                              <not-test/>
+                                             <and-test/>
+                                            <normal-expression/>
+                                           <expression/>
+                                           <token ")" [5, 32] - [5, 33]>
+                                          <primary-arguments/>
+                                         <primary-suffix/>
+                                        <primary/>
+                                       <factor/>
+                                      <term/>
+                                     <comparison/>
+                                    <not-test/>
+                                   <and-test/>
+                                  <normal-expression/>
+                                 <expression/>
+                                <expression-statement/>
+                               <statement/>
+                               <token ")" [5, 33] - [5, 34]>
+                              <primitive-constructor/>
+                             <constructor/>
+                             <token "]" [5, 35] - [5, 36]>
+                            <function-constructor/>
+                           <function-expression/>
+                          <expression/>
+                          <token "," [5, 36] - [5, 37]>
+                         <list-atom/>
+                        <atom/>
+                       <primary/>
+                      <factor/>
+                     <term/>
+                    <comparison/>
+                   <not-test/>
+                  <and-test/>
+                 <normal-expression/>
+                <expression/>
+                <token "[" [6, 2] - [6, 3]>
+                <expression>
+                 <normal-expression>
+                  <and-test>
+                   <not-test>
+                    <comparison>
+                     <term>
+                      <factor>
+                       <primary>
+                        <atom>
+                         <list-atom>
+                          <token "fn" [6, 4] - [6, 6]>
+                          <expression>
+                           <function-expression>
+                            <function-constructor>
+                             <token "(" [6, 6] - [6, 7]>
+                             <token "(" [6, 7] - [6, 8]>
+                             <token ")" [6, 8] - [6, 9]>
+                             <token "=>" [6, 10] - [6, 12]>
+                             <token name: "void" [6, 13] - [6, 17]>
+                             <constructor>
+                              <primitive-constructor>
+                               <primitive-type>
+                                <token "(" [6, 17] - [6, 18]>
+                               <primitive-type/>
+                               <token name: "print" [6, 18] - [6, 23]>
+                               <statement>
+                                <expression-statement>
+                                 <expression>
+                                  <normal-expression>
+                                   <and-test>
+                                    <not-test>
+                                     <comparison>
+                                      <term>
+                                       <factor>
+                                        <primary>
+                                         <atom>
+                                          <name-atom>
+                                           <token "(" [6, 23] - [6, 24]>
+                                          <name-atom/>
+                                         <atom/>
+                                         <primary-suffix>
+                                          <primary-arguments>
+                                           <token string-literal: "world" [6, 24] - [6, 31]>
+                                           <expression>
+                                            <normal-expression>
+                                             <and-test>
+                                              <not-test>
+                                               <comparison>
+                                                <term>
+                                                 <factor>
+                                                  <primary>
+                                                   <atom>
+                                                    <string-atom>
+                                                     <token ")" [6, 31] - [6, 32]>
+                                                    <string-atom/>
+                                                   <atom/>
+                                                  <primary/>
+                                                 <factor/>
+                                                <term/>
+                                               <comparison/>
+                                              <not-test/>
+                                             <and-test/>
+                                            <normal-expression/>
+                                           <expression/>
+                                           <token ")" [6, 32] - [6, 33]>
+                                          <primary-arguments/>
+                                         <primary-suffix/>
+                                        <primary/>
+                                       <factor/>
+                                      <term/>
+                                     <comparison/>
+                                    <not-test/>
+                                   <and-test/>
+                                  <normal-expression/>
+                                 <expression/>
+                                <expression-statement/>
+                               <statement/>
+                               <token ")" [6, 33] - [6, 34]>
+                              <primitive-constructor/>
+                             <constructor/>
+                             <token "]" [6, 35] - [6, 36]>
+                            <function-constructor/>
+                           <function-expression/>
+                          <expression/>
+                          <token "," [6, 36] - [6, 37]>
+                         <list-atom/>
+                        <atom/>
+                       <primary/>
+                      <factor/>
+                     <term/>
+                    <comparison/>
+                   <not-test/>
+                  <and-test/>
+                 <normal-expression/>
+                <expression/>
+                <token "]" [7, 0] - [7, 1]>
+                <token ")" [7, 1] - [7, 2]>
+               <list-atom/>
+              <atom/>
+             <primary/>
+            <factor/>
+           <term/>
+          <comparison/>
+         <not-test/>
+        <and-test/>
+       <normal-expression/>
+      <expression/>
+     <expression-statement/>
+    <statement/>
+    <token "def" [8, 0] - [8, 3]>
+   <list-constructor/>
+  <constructor/>
+ <definition-statement/>
+<statement/>
+<statement>
+ <definition-statement>
+  <token name: "l2" [8, 4] - [8, 6]>
+  <token "=" [8, 7] - [8, 8]>
+  <token "list" [8, 9] - [8, 13]>
+  <constructor>
+   <list-constructor>
+    <token "(" [8, 13] - [8, 14]>
+    <token "(" [8, 14] - [8, 15]>
+    <token "fn" [8, 15] - [8, 17]>
+    <type>
+     <function-type>
+      <token "(" [8, 17] - [8, 18]>
+      <token name: "string" [8, 18] - [8, 24]>
+      <type>
+       <primitive-type>
+        <token ")" [8, 24] - [8, 25]>
+       <primitive-type/>
+      <type/>
+      <token "=>" [8, 26] - [8, 28]>
+      <token "fn" [8, 29] - [8, 31]>
+      <type>
+       <function-type>
+        <token "(" [8, 31] - [8, 32]>
+        <token name: "int" [8, 32] - [8, 35]>
+        <type>
+         <primitive-type>
+          <token ")" [8, 35] - [8, 36]>
+         <primitive-type/>
+        <type/>
+        <token "=>" [8, 37] - [8, 39]>
+        <token name: "void" [8, 40] - [8, 44]>
+        <type>
+         <primitive-type>
+          <token ")" [8, 44] - [8, 45]>
+         <primitive-type/>
+        <type/>
+       <function-type/>
+      <type/>
+     <function-type/>
+    <type/>
+    <token "=>" [8, 46] - [8, 48]>
+    <token "[" [8, 49] - [8, 50]>
+    <statement>
+     <expression-statement>
+      <expression>
+       <normal-expression>
+        <and-test>
+         <not-test>
+          <comparison>
+           <term>
+            <factor>
+             <primary>
+              <atom>
+               <list-atom>
+                <token "fn" [9, 2] - [9, 4]>
+                <expression>
+                 <function-expression>
+                  <function-constructor>
+                   <token "(" [9, 4] - [9, 5]>
+                   <token "(" [9, 5] - [9, 6]>
+                   <token name: "s" [9, 6] - [9, 7]>
+                   <function-parameter>
+                    <token ":" [9, 8] - [9, 9]>
+                    <token name: "string" [9, 10] - [9, 16]>
+                    <type>
+                     <primitive-type>
+                      <token ")" [9, 16] - [9, 17]>
+                     <primitive-type/>
+                    <type/>
+                   <function-parameter/>
+                   <token "=>" [9, 18] - [9, 20]>
+                   <token name: "void" [9, 21] - [9, 25]>
+                   <constructor>
+                    <primitive-constructor>
+                     <primitive-type>
+                      <token "(" [9, 25] - [9, 26]>
+                     <primitive-type/>
+                     <token ")" [9, 26] - [9, 27]>
+                     <token ")" [9, 27] - [9, 28]>
+                    <primitive-constructor/>
+                   <constructor/>
+                   <token "," [9, 28] - [9, 29]>
+                  <function-constructor/>
+                 <function-expression/>
+                <expression/>
+                <token "fn" [10, 2] - [10, 4]>
+                <expression>
+                 <function-expression>
+                  <function-constructor>
+                   <token "(" [10, 4] - [10, 5]>
+                   <token "(" [10, 5] - [10, 6]>
+                   <token name: "s" [10, 6] - [10, 7]>
+                   <function-parameter>
+                    <token ":" [10, 8] - [10, 9]>
+                    <token name: "string" [10, 10] - [10, 16]>
+                    <type>
+                     <primitive-type>
+                      <token ")" [10, 16] - [10, 17]>
+                     <primitive-type/>
+                    <type/>
+                   <function-parameter/>
+                   <token "=>" [10, 18] - [10, 20]>
+                   <token name: "void" [10, 21] - [10, 25]>
+                   <constructor>
+                    <primitive-constructor>
+                     <primitive-type>
+                      <token "(" [10, 25] - [10, 26]>
+                     <primitive-type/>
+                     <token ")" [10, 26] - [10, 27]>
+                     <token ")" [10, 27] - [10, 28]>
+                    <primitive-constructor/>
+                   <constructor/>
+                   <token "," [10, 28] - [10, 29]>
+                  <function-constructor/>
+                 <function-expression/>
+                <expression/>
+                <token "fn" [11, 2] - [11, 4]>
+                <expression>
+                 <function-expression>
+                  <function-constructor>
+                   <token "(" [11, 4] - [11, 5]>
+                   <token "(" [11, 5] - [11, 6]>
+                   <token name: "s" [11, 6] - [11, 7]>
+                   <function-parameter>
+                    <token ":" [11, 8] - [11, 9]>
+                    <token name: "string" [11, 10] - [11, 16]>
+                    <type>
+                     <primitive-type>
+                      <token ")" [11, 16] - [11, 17]>
+                     <primitive-type/>
+                    <type/>
+                   <function-parameter/>
+                   <token "=>" [11, 18] - [11, 20]>
+                   <token name: "void" [11, 21] - [11, 25]>
+                   <constructor>
+                    <primitive-constructor>
+                     <primitive-type>
+                      <token "(" [11, 25] - [11, 26]>
+                     <primitive-type/>
+                     <token ")" [11, 26] - [11, 27]>
+                     <token ")" [11, 27] - [11, 28]>
+                    <primitive-constructor/>
+                   <constructor/>
+                   <token "," [11, 28] - [11, 29]>
+                  <function-constructor/>
+                 <function-expression/>
+                <expression/>
+                <token "]" [12, 0] - [12, 1]>
+                <token ")" [12, 1] - [12, 2]>
+               <list-atom/>
+              <atom/>
+             <primary/>
+            <factor/>
+           <term/>
+          <comparison/>
+         <not-test/>
+        <and-test/>
+       <normal-expression/>
+      <expression/>
+     <expression-statement/>
+    <statement/>
+   <list-constructor/>
+  <constructor/>
+ <definition-statement/>
+<statement/>

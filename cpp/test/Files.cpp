@@ -1,10 +1,13 @@
 #include <gtest/gtest.h>
 #include <iostream>
+#include <memory>
 #include <ostream>
 #include <string>
 
 #include "lexer/Lexer.hpp"
 #include "logging/Logger.hpp"
+#include "parser/Parser.hpp"
+#include "parser/RootNode.hpp"
 #include "test/Files.hpp"
 
 namespace Kebab {
@@ -53,7 +56,39 @@ static void replace_lexer_expected() {
   std::cout << "Replaced expected lexer output" << std::endl;
 }
 
-void replace_expected() { replace_lexer_expected(); }
+static void replace_one_parser_expected(const std::string &basename) {
+  std::string source_path = "parser-source/" + basename + ".keb";
+  std::string expected_path = "parser-expected/" + basename + ".log";
+
+  ASSERT_NO_FATAL_FAILURE({
+    Logger::silence();
+    Lexer lexer(source_path);
+    std::unique_ptr<Parser::RootNode> root = Parser::parse(lexer);
+  });
+
+  std::ofstream log_file(expected_path);
+  Logger::set_stream(log_file);
+
+  Lexer lexer(source_path);
+  std::unique_ptr<Parser::RootNode> root = Parser::parse(lexer);
+}
+
+static void replace_parser_expected() {
+  replace_one_parser_expected("function-constructor");
+  replace_one_parser_expected("if");
+  replace_one_parser_expected("list-constructor");
+  replace_one_parser_expected("operators");
+  replace_one_parser_expected("primitive-constructors");
+  // syntax-error1-3.keb should error and do not have expected outputs
+  replace_one_parser_expected("types");
+
+  std::cout << "Replaced expected parser output" << std::endl;
+}
+
+void replace_expected() {
+  replace_lexer_expected();
+  replace_parser_expected();
+}
 
 } // namespace Test
 } // namespace Kebab
