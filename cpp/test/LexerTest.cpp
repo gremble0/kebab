@@ -8,12 +8,15 @@
 namespace Kebab {
 namespace Test {
 
-static void lex_file_with_logs(const std::string &basename) {
+static void lex_file(const std::string &basename) {
   std::string source_path = "lexer-source/" + basename + ".keb";
   std::string log_path = "lexer-logs/" + basename + ".log";
   std::string expected_path = "lexer-expected/" + basename + ".log";
 
-  ASSERT_NO_FATAL_FAILURE({ Lexer l(source_path); });
+  ASSERT_NO_FATAL_FAILURE({
+    Logger::silence();
+    Lexer lexer(source_path);
+  });
 
   {
     std::ofstream log_file(log_path);
@@ -30,61 +33,62 @@ static void lex_file_with_logs(const std::string &basename) {
 }
 
 TEST(LexerTest, InitializesCorrectly) {
+  Logger::silence();
   ASSERT_NO_FATAL_FAILURE({ Lexer lexer("lexer-source/comments.keb"); });
   ASSERT_DEATH({ Lexer lexer("non-existent-file"); }, "could not open file");
 
-  Lexer l("lexer-source/comments.keb");
-  ASSERT_NE(l.cur_token->type, Token::Type::ILLEGAL);
+  Lexer lexer("lexer-source/comments.keb");
+  ASSERT_NE(lexer.cur_token->type, Token::Type::ILLEGAL);
 }
 
 TEST(LexerTest, LexesCommentsKeb) {
   const std::string basename = "comments";
-  lex_file_with_logs(basename);
+  lex_file(basename);
 }
 
 TEST(LexerTest, LexesComparisonsKeb) {
   const std::string basename = "comparisons";
-  lex_file_with_logs(basename);
+  lex_file(basename);
 }
 
 TEST(LexerTest, LexesConstructorsKeb) {
   const std::string basename = "constructors";
-  lex_file_with_logs(basename);
+  lex_file(basename);
 }
 
 TEST(LexerTest, LexesOperatorsKeb) {
   const std::string basename = "operators";
-  lex_file_with_logs(basename);
+  lex_file(basename);
 }
 
 TEST(LexerTest, LexesConstAndMut) {
   const std::string basename = "const-and-mut";
-  lex_file_with_logs(basename);
+  lex_file(basename);
 }
 
 TEST(LexerTest, LexesEscapeSequences) {
   const std::string basename = "escape-sequences";
-  lex_file_with_logs(basename);
+  lex_file(basename);
 }
 
 TEST(LexerTest, LexesEmptyFile) {
   const std::string basename = "empty";
-  lex_file_with_logs(basename);
+  lex_file(basename);
 }
 
 TEST(LexerTest, ErrorsWhenOutOfRange) {
   const std::string basename = "out-of-range";
-  ASSERT_DEATH({ lex_file_with_logs(basename); }, "number out of range");
+  ASSERT_DEATH({ lex_file(basename); }, "number out of range");
 }
 
 TEST(LexerTest, ErrorsWhenUnterminatedCharLiteral) {
   const std::string basename = "unterminated-char-literal";
-  ASSERT_DEATH({ lex_file_with_logs(basename); }, "unterminated char literal");
+  ASSERT_DEATH({ lex_file(basename); }, "unterminated char literal");
 }
 
 TEST(LexerTest, ErrorsWhenMalformedCharLiteral) {
   const std::string basename = "malformed-char-literal";
-  ASSERT_DEATH({ lex_file_with_logs(basename); }, "malformed char literal");
+  ASSERT_DEATH({ lex_file(basename); }, "malformed char literal");
 }
 
 } // namespace Test

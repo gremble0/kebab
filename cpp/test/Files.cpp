@@ -29,8 +29,7 @@ static void replace_one_lexer_expected(const std::string &basename) {
   std::string expected_path = "lexer-expected/" + basename + ".log";
 
   ASSERT_NO_FATAL_FAILURE({
-    std::ostream null(0);
-    Logger::set_stream(null);
+    Logger::silence();
     Lexer lexer(source_path);
   });
 
@@ -51,7 +50,7 @@ static void replace_lexer_expected() {
   replace_one_lexer_expected("escape-sequences");
   replace_one_lexer_expected("const-and-mut");
 
-  std::cout << "Replaced expected lexer output\n";
+  std::cout << "Replaced expected lexer output" << std::endl;
 }
 
 void replace_expected() { replace_lexer_expected(); }
