@@ -9,7 +9,7 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
-  Logger::log_with_indent("factor-prefix");
+  Logger::log_with_indent("<factor-prefix>");
   std::unique_ptr<FactorPrefix> prefix = std::make_unique<FactorPrefix>();
 
   switch (lexer.cur_token->type) {
@@ -27,7 +27,7 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
 
   lexer.advance();
 
-  Logger::log_with_dedent("factor-prefix");
+  Logger::log_with_dedent("<factor-prefix/>");
   return prefix;
 }
 
@@ -37,7 +37,7 @@ llvm::Value *FactorPrefix::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
-  Logger::log_with_indent("factor");
+  Logger::log_with_indent("<factor>");
   std::unique_ptr<Factor> factor = std::make_unique<Factor>();
 
   while (true) {
@@ -53,7 +53,7 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
     factor->operators.push_back(FactorOperator::parse(lexer));
   }
 
-  Logger::log_with_dedent("factor");
+  Logger::log_with_dedent("<factor/>");
   return factor;
 }
 
@@ -65,7 +65,7 @@ llvm::Value *Factor::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
-  Logger::log_with_indent("factor-operator");
+  Logger::log_with_indent("<factor-operator>");
   std::unique_ptr<FactorOperator> operator_ = std::make_unique<FactorOperator>();
 
   switch (lexer.cur_token->type) {
@@ -83,7 +83,7 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 
   lexer.advance();
 
-  Logger::log_with_dedent("factor-operator");
+  Logger::log_with_dedent("<factor-operator/>");
   return operator_;
 }
 

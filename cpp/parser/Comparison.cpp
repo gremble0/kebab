@@ -9,7 +9,7 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
-  Logger::log_with_indent("comparison-operator");
+  Logger::log_with_indent("<comparison-operator>");
   std::unique_ptr<ComparisonOperator> operator_ = std::make_unique<ComparisonOperator>();
 
   switch (lexer.cur_token->type) {
@@ -43,7 +43,7 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
 
   lexer.advance();
 
-  Logger::log_with_dedent("comparison-operator");
+  Logger::log_with_dedent("<comparison-operator/>");
   return operator_;
 }
 
@@ -53,7 +53,7 @@ llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
-  Logger::log_with_indent("comparison");
+  Logger::log_with_indent("<comparison>");
   std::unique_ptr<Comparison> comparison = std::make_unique<Comparison>();
 
   while (true) {
@@ -65,7 +65,7 @@ std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
       break;
   }
 
-  Logger::log_with_dedent("comparison");
+  Logger::log_with_dedent("<comparison/>");
   return comparison;
 }
 
