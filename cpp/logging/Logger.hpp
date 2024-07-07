@@ -44,6 +44,11 @@ private:
 public:
   static void set_stream(std::ostream &stream) { get_logger().set_stream_(stream); }
 
+  static void silence() {
+    static std::ostream null_stream(0);
+    get_logger().set_stream_(null_stream);
+  }
+
   static void log(const std::string &message) { get_logger().log_(message); }
 
   static void log_with_indent(const std::string &message) {
