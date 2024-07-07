@@ -86,9 +86,42 @@ public:
   static std::string type_to_string(Type type);
 
 private:
-  static Type determine_type(const std::string &word);
+  static constexpr Type determine_type(const std::string &word) {
+    if (word == "def")
+      return Type::DEF;
+    else if (word == "set")
+      return Type::SET;
+    else if (word == "mut")
+      return Type::MUT;
+    else if (word == "if")
+      return Type::IF;
+    else if (word == "elif")
+      return Type::ELIF;
+    else if (word == "else")
+      return Type::ELSE;
+    else if (word == "fn")
+      return Type::FN;
+    else if (word == "list")
+      return Type::LIST;
+    else if (word == "true")
+      return Type::TRUE;
+    else if (word == "false")
+      return Type::FALSE;
+    else if (word == "and")
+      return Type::AND;
+    else if (word == "or")
+      return Type::OR;
+    else
+      return Type::NAME;
+  }
+
   static std::variant<uint8_t, int64_t, float_t, std::string>
-  determine_value(Type type, const std::string &word);
+  determine_value(Type type, const std::string &word) {
+    if (type == Type::NAME)
+      return word;
+    else
+      return {};
+  }
 };
 
 } // namespace Kebab
