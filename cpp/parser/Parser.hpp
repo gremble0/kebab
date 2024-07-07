@@ -20,7 +20,7 @@ private:
    */
   template <typename T, Token::Type K> static T skip_value(Lexer &lexer) {
     expect(lexer, K);
-    T value = std::get<T>(lexer.cur_token.value);
+    T value = std::get<T>(lexer.cur_token->value);
     lexer.advance();
     return value;
   }
@@ -35,15 +35,15 @@ protected:
   }
 
   static void expect(Lexer &lexer, Token::Type type) {
-    if (lexer.cur_token.type != type)
-      error("unexpected token: '" + lexer.cur_token.to_string() + "' expected: '" +
+    if (lexer.cur_token->type != type)
+      error("unexpected token: '" + lexer.cur_token->to_string() + "' expected: '" +
             Token::type_to_string(type) + '\'');
   }
 
   // varargs?
   static void expect(Lexer &lexer, Token::Type either, Token::Type or_) {
-    if (lexer.cur_token.type != either && lexer.cur_token.type != or_)
-      error("unexpected token: '" + lexer.cur_token.to_string() + "' expected: '" +
+    if (lexer.cur_token->type != either && lexer.cur_token->type != or_)
+      error("unexpected token: '" + lexer.cur_token->to_string() + "' expected: '" +
             Token::type_to_string(either) + "' or '" + Token::type_to_string(or_) + '\'');
   }
 
@@ -82,7 +82,7 @@ protected:
    * @return whether the specified token was skipped
    */
   static bool ignore(Lexer &lexer, Token::Type type) {
-    if (lexer.cur_token.type == type) {
+    if (lexer.cur_token->type == type) {
       lexer.advance();
       return true;
     }

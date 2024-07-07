@@ -17,7 +17,7 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
   Logger::log_with_indent("expression");
   std::unique_ptr<Expression> expression;
 
-  switch (lexer.cur_token.type) {
+  switch (lexer.cur_token->type) {
   case Token::Type::IF:
     expression = CondExpression::parse(lexer);
     break;
@@ -44,7 +44,7 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("illegal syntax ") + lexer.cur_token.to_string());
+    error(std::string("illegal syntax ") + lexer.cur_token->to_string());
   }
 
   Logger::log_with_dedent("expression");
@@ -94,7 +94,7 @@ void CondExpression::parse_elif(Lexer &lexer) {
 void CondExpression::parse_elifs(Lexer &lexer) {
   Logger::log_with_indent("cond-elifs");
 
-  while (lexer.cur_token.type == Token::Type::ELIF)
+  while (lexer.cur_token->type == Token::Type::ELIF)
     this->parse_elif(lexer);
 
   Logger::log_with_dedent("cond-elifs");

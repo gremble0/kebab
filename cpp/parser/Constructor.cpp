@@ -14,7 +14,7 @@ std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
   Logger::log_with_indent("constructor");
   std::unique_ptr<Constructor> constructor;
 
-  switch (lexer.cur_token.type) {
+  switch (lexer.cur_token->type) {
   case Token::Type::FN:
     constructor = FunctionConstructor::parse(lexer);
     break;
@@ -28,7 +28,7 @@ std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
     break;
 
   default:
-    error("unexpected token: '" + lexer.cur_token.to_string() + "' expected some type");
+    error("unexpected token: '" + lexer.cur_token->to_string() + "' expected some type");
   }
 
   Logger::log_with_dedent("constructor");
@@ -47,7 +47,7 @@ void ListConstructor::parse_type(Lexer &lexer) {
 
 void ListConstructor::parse_body(Lexer &lexer) {
   skip(lexer, Token::Type::FAT_RARROW);
-  while (lexer.cur_token.type != Token::Type::RPAREN)
+  while (lexer.cur_token->type != Token::Type::RPAREN)
     this->body.push_back(Statement::parse(lexer));
   skip(lexer, Token::Type::RPAREN);
 }
@@ -93,7 +93,7 @@ void FunctionConstructor::parse_type(Lexer &lexer) {
   // TODO: do this in some constructor?
   this->type = std::make_unique<FunctionType>();
 
-  while (lexer.cur_token.type != Token::Type::RPAREN) {
+  while (lexer.cur_token->type != Token::Type::RPAREN) {
     std::unique_ptr<FunctionParameter> parameter = FunctionParameter::parse(lexer);
     this->type->parameter_types.push_back(parameter->type);
     this->parameters.push_back(std::move(parameter));
@@ -133,7 +133,7 @@ void PrimitiveConstructor::parse_type(Lexer &lexer) { this->type = PrimitiveType
 
 void PrimitiveConstructor::parse_body(Lexer &lexer) {
   skip(lexer, Token::Type::LPAREN);
-  while (lexer.cur_token.type != Token::Type::RPAREN)
+  while (lexer.cur_token->type != Token::Type::RPAREN)
     this->body.push_back(Statement::parse(lexer));
   skip(lexer, Token::Type::RPAREN);
 }

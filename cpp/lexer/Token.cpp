@@ -43,25 +43,36 @@ Token::determine_value(Type type, const std::string &word) {
 }
 
 std::string Token::to_string() const {
+  std::string out = "<token '";
+
   switch (this->type) {
   case Token::Type::INT_LITERAL:
-    return std::to_string(std::get<int64_t>(this->value));
+    out += std::to_string(std::get<int64_t>(this->value));
+    break;
 
   case Token::Type::FLOAT_LITERAL:
-    return std::to_string(std::get<float_t>(this->value));
+    out += std::to_string(std::get<float_t>(this->value));
+    break;
 
   case Token::Type::CHAR_LITERAL:
-    return std::to_string(std::get<uint8_t>(this->value));
+    out += std::to_string(std::get<uint8_t>(this->value));
+    break;
 
   case Token::Type::STRING_LITERAL:
-    return std::get<std::string>(this->value);
+    out += std::get<std::string>(this->value);
+    break;
 
   case Token::Type::NAME:
-    return std::get<std::string>(this->value);
+    out += std::get<std::string>(this->value);
+    break;
 
   default:
-    return Token::type_to_string(this->type);
+    out += Token::type_to_string(this->type);
+    break;
   }
+
+  out += "' " + this->span.to_string() + '>';
+  return out;
 }
 
 std::string Token::type_to_string(Type type) {

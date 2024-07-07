@@ -70,9 +70,9 @@ std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   Logger::log_with_indent("bool-atom");
   std::unique_ptr<BoolAtom> atom = std::make_unique<BoolAtom>();
 
-  if (lexer.cur_token.type == Token::Type::TRUE)
+  if (lexer.cur_token->type == Token::Type::TRUE)
     atom->b = true;
-  else if (lexer.cur_token.type == Token::Type::FALSE)
+  else if (lexer.cur_token->type == Token::Type::FALSE)
     atom->b = false;
   lexer.advance();
 
@@ -123,7 +123,7 @@ std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   std::unique_ptr<ListAtom> atom = std::make_unique<ListAtom>();
 
   skip(lexer, Token::Type::LBRACKET);
-  while (lexer.cur_token.type != Token::Type::RBRACKET) {
+  while (lexer.cur_token->type != Token::Type::RBRACKET) {
     atom->list.push_back(Expression::parse(lexer));
 
     expect(lexer, Token::Type::COMMA, Token::Type::RBRACKET);
@@ -143,7 +143,7 @@ std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
   Logger::log_with_indent("atom");
   std::unique_ptr<Atom> atom;
 
-  switch (lexer.cur_token.type) {
+  switch (lexer.cur_token->type) {
   case Token::Type::INT_LITERAL:
     atom = IntAtom::parse(lexer);
     break;
@@ -178,7 +178,7 @@ std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") + lexer.cur_token.to_string());
+    error(std::string("reached unreachable branch with token: ") + lexer.cur_token->to_string());
   }
 
   Logger::log_with_dedent("atom");

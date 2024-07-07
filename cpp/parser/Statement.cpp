@@ -18,7 +18,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 
   skip(lexer, Token::Type::DEF);
 
-  if (lexer.cur_token.type == Token::Type::MUT) {
+  if (lexer.cur_token->type == Token::Type::MUT) {
     definition->is_mutable = true;
     lexer.advance();
   } else {
@@ -77,7 +77,7 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
   Logger::Logger::log_with_indent("statement");
   std::unique_ptr<Statement> statement;
 
-  switch (lexer.cur_token.type) {
+  switch (lexer.cur_token->type) {
   case Token::Type::DEF:
     statement = DefinitionStatement::parse(lexer);
     break;
@@ -110,7 +110,7 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("illegal syntax ") + lexer.cur_token.to_string());
+    error(std::string("illegal syntax ") + lexer.cur_token->to_string());
   }
 
   Logger::Logger::log_with_dedent("statement");
@@ -118,7 +118,7 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
 }
 
 std::optional<std::unique_ptr<Statement>> Statement::try_parse_statement(Lexer &lexer) {
-  switch (lexer.cur_token.type) {
+  switch (lexer.cur_token->type) {
   case Token::Type::DEF:
   case Token::Type::SET:
   case Token::Type::INT_LITERAL:

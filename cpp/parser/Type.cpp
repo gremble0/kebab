@@ -12,7 +12,7 @@ std::unique_ptr<Type> Type::parse(Lexer &lexer) {
   Logger::log_with_indent("type");
   std::unique_ptr<Type> type;
 
-  switch (lexer.cur_token.type) {
+  switch (lexer.cur_token->type) {
   case Token::Type::FN:
     type = FunctionType::parse(lexer);
     break;
@@ -26,7 +26,7 @@ std::unique_ptr<Type> Type::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") + lexer.cur_token.to_string());
+    error(std::string("reached unreachable branch with token: ") + lexer.cur_token->to_string());
   }
 
   Logger::log_with_dedent("type");
@@ -57,7 +57,7 @@ llvm::Value *ListType::compile(Compiler &compiler) const {
 }
 
 void FunctionType::parse_parameter_types(Lexer &lexer) {
-  while (lexer.cur_token.type != Token::Type::RPAREN) {
+  while (lexer.cur_token->type != Token::Type::RPAREN) {
     this->parameter_types.push_back(Type::parse(lexer));
 
     expect(lexer, Token::Type::COMMA, Token::Type::RPAREN);

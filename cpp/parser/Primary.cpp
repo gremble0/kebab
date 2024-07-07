@@ -38,7 +38,7 @@ std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   while (true) {
     arguments->arguments.push_back(Expression::parse(lexer));
 
-    if (lexer.cur_token.type == Token::Type::RPAREN)
+    if (lexer.cur_token->type == Token::Type::RPAREN)
       break;
     else
       skip(lexer, Token::Type::COMMA);
@@ -62,7 +62,7 @@ std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
   Logger::log_with_indent("primary-suffix");
   std::unique_ptr<PrimarySuffix> suffix;
 
-  switch (lexer.cur_token.type) {
+  switch (lexer.cur_token->type) {
   case Token::Type::LPAREN:
     suffix = PrimaryArguments::parse(lexer);
     break;
@@ -72,7 +72,7 @@ std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") + lexer.cur_token.to_string());
+    error(std::string("reached unreachable branch with token: ") + lexer.cur_token->to_string());
   }
 
   Logger::log_with_dedent("primary-suffix");
@@ -84,7 +84,7 @@ std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
   std::unique_ptr<Primary> primary = std::make_unique<Primary>();
 
   primary->atom = Atom::parse(lexer);
-  while (PrimarySuffix::is_primary_suffix_opener(lexer.cur_token.type))
+  while (PrimarySuffix::is_primary_suffix_opener(lexer.cur_token->type))
     primary->suffixes.push_back(PrimarySuffix::parse(lexer));
 
   Logger::log_with_dedent("primary");
