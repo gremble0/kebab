@@ -28,7 +28,7 @@ std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
     break;
 
   default:
-    error("unexpected token: '" + lexer.cur_token->to_string() + "' expected some type");
+    error("unexpected token: '" + lexer.cur_token->to_string_short() + "' expected some type");
   }
 
   Logger::log_with_dedent("<constructor/>");

@@ -377,7 +377,7 @@ void Lexer::advance() {
     break;
   }
 
-  Logger::log(this->cur_token->to_string());
+  Logger::log(this->cur_token->to_string_verbose());
 }
 
 } // namespace Kebab

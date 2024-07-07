@@ -72,7 +72,8 @@ std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") + lexer.cur_token->to_string());
+    error(std::string("reached unreachable branch with token: ") +
+          lexer.cur_token->to_string_short());
   }
 
   Logger::log_with_dedent("<primary-suffix/>");

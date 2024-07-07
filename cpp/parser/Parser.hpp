@@ -36,14 +36,14 @@ protected:
 
   static void expect(Lexer &lexer, Token::Type type) {
     if (lexer.cur_token->type != type)
-      error("unexpected token: '" + lexer.cur_token->to_string() + "' expected: '" +
+      error("unexpected token: '" + lexer.cur_token->to_string_short() + "' expected: '" +
             Token::type_to_string(type) + '\'');
   }
 
   // varargs?
   static void expect(Lexer &lexer, Token::Type either, Token::Type or_) {
     if (lexer.cur_token->type != either && lexer.cur_token->type != or_)
-      error("unexpected token: '" + lexer.cur_token->to_string() + "' expected: '" +
+      error("unexpected token: '" + lexer.cur_token->to_string_short() + "' expected: '" +
             Token::type_to_string(either) + "' or '" + Token::type_to_string(or_) + '\'');
   }
 

@@ -82,7 +82,8 @@ public:
       : type(this->determine_type(word)), value(this->determine_value(this->type, word)),
         span(span) {}
 
-  std::string to_string() const;
+  std::string to_string_short() const;
+  std::string to_string_verbose() const;
   static std::string type_to_string(Type type);
 
 private:

@@ -44,7 +44,7 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("illegal syntax ") + lexer.cur_token->to_string());
+    error(std::string("illegal syntax ") + lexer.cur_token->to_string_short());
   }
 
   Logger::log_with_dedent("<expression/>");

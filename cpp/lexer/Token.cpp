@@ -5,7 +5,29 @@
 
 namespace Kebab {
 
-std::string Token::to_string() const {
+std::string Token::to_string_short() const {
+  switch (this->type) {
+  case Type::INT_LITERAL:
+    return std::to_string(std::get<int64_t>(this->value));
+
+  case Type::FLOAT_LITERAL:
+    return std::to_string(std::get<float_t>(this->value));
+
+  case Type::CHAR_LITERAL:
+    return std::to_string(std::get<uint8_t>(this->value));
+
+  case Type::STRING_LITERAL:
+    return std::get<std::string>(this->value);
+
+  case Type::NAME:
+    return std::get<std::string>(this->value);
+
+  default:
+    return Token::type_to_string(this->type);
+  }
+}
+
+std::string Token::to_string_verbose() const {
   std::string out = "<token ";
 
   switch (this->type) {
