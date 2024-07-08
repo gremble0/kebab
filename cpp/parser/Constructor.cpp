@@ -2,7 +2,6 @@
 #include <memory>
 
 #include "lexer/Lexer.hpp"
-#include "logging/Logger.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/Statement.hpp"
 #include "parser/Type.hpp"

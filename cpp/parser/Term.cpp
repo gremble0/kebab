@@ -1,7 +1,6 @@
 #include <cassert>
 
 #include "lexer/Lexer.hpp"
-#include "logging/Logger.hpp"
 #include "parser/Term.hpp"
 
 namespace Kebab {

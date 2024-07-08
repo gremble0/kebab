@@ -1,6 +1,5 @@
 #include <cassert>
 
-#include "logging/Logger.hpp"
 #include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
 #include "llvm/IR/Constants.h"

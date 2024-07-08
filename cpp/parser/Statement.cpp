@@ -3,7 +3,6 @@
 
 #include "compiler/Compiler.hpp"
 #include "lexer/Token.hpp"
-#include "logging/Logger.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/Statement.hpp"
 #include "llvm/IR/GlobalVariable.h"

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "compiler/Compiler.hpp"
-#include "parser/Parser.hpp"
+#include "parser/AstNode.hpp"
 #include "parser/Statement.hpp"
 #include "llvm/IR/Value.h"
 

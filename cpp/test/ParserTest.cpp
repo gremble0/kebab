@@ -5,7 +5,7 @@
 #include "Files.hpp"
 #include "lexer/Lexer.hpp"
 #include "logging/Logger.hpp"
-#include "parser/Parser.hpp"
+#include "parser/AstNode.hpp"
 #include "parser/RootNode.hpp"
 #include "gtest/gtest.h"
 
@@ -27,7 +27,7 @@ static void ASSERT_EXPECTED_PARSING(const std::string &basename) {
     Logger::set_stream(log_file);
 
     Lexer lexer(source_path);
-    std::unique_ptr<Parser::RootNode> root = Parser::parse(lexer);
+    std::unique_ptr<Parser::RootNode> root = Parser::RootNode::parse(lexer);
   }
 
   std::ifstream expected_file(expected_path);

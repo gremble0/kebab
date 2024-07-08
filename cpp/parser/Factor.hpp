@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "lexer/Lexer.hpp"
-#include "parser/Parser.hpp"
+#include "parser/AstNode.hpp"
 #include "parser/Primary.hpp"
 
 namespace Kebab {

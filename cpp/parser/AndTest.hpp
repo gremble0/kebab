@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "lexer/Lexer.hpp"
+#include "parser/AstNode.hpp"
 #include "parser/NotTest.hpp"
-#include "parser/Parser.hpp"
 
 namespace Kebab {
 namespace Parser {

@@ -5,7 +5,7 @@
 
 #include "lexer/Lexer.hpp"
 #include "lexer/Token.hpp"
-#include "parser/Parser.hpp"
+#include "parser/AstNode.hpp"
 #include "parser/Term.hpp"
 #include "llvm/IR/Value.h"
 

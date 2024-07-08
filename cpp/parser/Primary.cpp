@@ -2,7 +2,6 @@
 #include <vector>
 
 #include "lexer/Token.hpp"
-#include "logging/Logger.hpp"
 #include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
 #include "parser/Primary.hpp"

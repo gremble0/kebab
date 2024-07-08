@@ -4,7 +4,6 @@
 namespace Kebab {
 namespace Parser {
 
-// Delete file?
 std::unique_ptr<RootNode> RootNode::parse(Lexer &lexer) {
   std::unique_ptr<RootNode> root_node = std::make_unique<RootNode>();
   root_node->start_parsing(lexer, "<root>");

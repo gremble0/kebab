@@ -6,7 +6,6 @@
 
 #include "lexer/Lexer.hpp"
 #include "logging/Logger.hpp"
-#include "parser/Parser.hpp"
 #include "parser/RootNode.hpp"
 #include "test/Files.hpp"
 
@@ -51,14 +50,14 @@ static void replace_one_parser_expected(const std::string &basename) {
   ASSERT_NO_FATAL_FAILURE({
     Logger::silence();
     Lexer lexer(source_path);
-    std::unique_ptr<Parser::RootNode> root = Parser::parse(lexer);
+    std::unique_ptr<Parser::RootNode> root = Parser::RootNode::parse(lexer);
   });
 
   std::ofstream log_file(expected_path);
   Logger::set_stream(log_file);
 
   Lexer lexer(source_path);
-  std::unique_ptr<Parser::RootNode> root = Parser::parse(lexer);
+  std::unique_ptr<Parser::RootNode> root = Parser::RootNode::parse(lexer);
 }
 
 // NOTE: These don't run on all the files because some of them are expected to fail and therefore do

@@ -4,8 +4,8 @@
 #include <optional>
 
 #include "lexer/Lexer.hpp"
+#include "parser/AstNode.hpp"
 #include "parser/Expression.hpp"
-#include "parser/Parser.hpp"
 #include "llvm/IR/Value.h"
 
 namespace Kebab {

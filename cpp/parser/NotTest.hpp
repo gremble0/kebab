@@ -2,8 +2,8 @@
 #define KEBAB_KEBAB_NOTTEST_HPP
 
 #include "lexer/Lexer.hpp"
+#include "parser/AstNode.hpp"
 #include "parser/Comparison.hpp"
-#include "parser/Parser.hpp"
 
 namespace Kebab {
 namespace Parser {

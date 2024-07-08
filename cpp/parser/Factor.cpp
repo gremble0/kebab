@@ -1,7 +1,6 @@
 #include <cassert>
 #include <optional>
 
-#include "logging/Logger.hpp"
 #include "parser/Factor.hpp"
 #include "parser/Primary.hpp"
 

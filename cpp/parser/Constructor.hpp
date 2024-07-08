@@ -6,7 +6,7 @@
 
 #include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
-#include "parser/Parser.hpp"
+#include "parser/AstNode.hpp"
 #include "parser/Statement.hpp"
 #include "parser/Type.hpp"
 
