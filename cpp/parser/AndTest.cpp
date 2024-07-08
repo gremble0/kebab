@@ -1,7 +1,6 @@
 #include <memory>
 
 #include "lexer/Lexer.hpp"
-#include "logging/Logger.hpp"
 #include "parser/AndTest.hpp"
 #include "parser/NotTest.hpp"
 
@@ -9,8 +8,8 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
-  Logger::log_with_indent("<and-test>");
   std::unique_ptr<AndTest> and_test = std::make_unique<AndTest>();
+  and_test->start_parsing(lexer, "<and-test>");
 
   // Keep parsing and tests until we have no longer ignored an `and` token
   while (true) {
@@ -21,7 +20,7 @@ std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
       break;
   }
 
-  Logger::log_with_dedent("<and-test/>");
+  and_test->finish_parsing(lexer, "</and-test>");
   return and_test;
 }
 

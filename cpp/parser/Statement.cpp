@@ -13,8 +13,8 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
-  Logger::log_with_indent("<definition-statement>");
   std::unique_ptr<DefinitionStatement> definition = std::make_unique<DefinitionStatement>();
+  definition->start_parsing(lexer, "<definition-statement>");
 
   skip(lexer, Token::Type::DEF);
 
@@ -29,7 +29,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   skip(lexer, Token::Type::EQUALS);
   definition->constructor = Constructor::parse(lexer);
 
-  Logger::log_with_dedent("<definition-statement/>");
+  definition->finish_parsing(lexer, "</definition-statement>");
   return definition;
 }
 
@@ -42,15 +42,15 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
-  Logger::log_with_indent("<assignment-statement>");
   std::unique_ptr<AssignmentStatement> assignment = std::make_unique<AssignmentStatement>();
+  assignment->start_parsing(lexer, "<assignment-statement>");
 
   skip(lexer, Token::Type::SET);
   assignment->name = skip_name(lexer);
   skip(lexer, Token::Type::EQUALS);
   assignment->constructor = Constructor::parse(lexer);
 
-  Logger::log_with_dedent("<assignment-statement/>");
+  assignment->finish_parsing(lexer, "</assignment-statement>");
   return assignment;
 }
 
@@ -60,12 +60,12 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
-  Logger::log_with_indent("<expression-statement>");
   std::unique_ptr<ExpressionStatement> expression = std::make_unique<ExpressionStatement>();
+  expression->start_parsing(lexer, "<expression-statement>");
 
   expression->expression = Expression::parse(lexer);
 
-  Logger::log_with_dedent("<expression-statement/>");
+  expression->finish_parsing(lexer, "</expression-statement>");
   return expression;
 }
 
@@ -74,7 +74,6 @@ llvm::Value *ExpressionStatement::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
-  Logger::Logger::log_with_indent("<statement>");
   std::unique_ptr<Statement> statement;
 
   switch (lexer.cur_token->type) {
@@ -110,10 +109,10 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("unexpected token '") + lexer.cur_token->to_string_short() + '\'', lexer);
+    parser_error(std::string("unexpected token '") + lexer.cur_token->to_string_short() + '\'',
+                 lexer);
   }
 
-  Logger::Logger::log_with_dedent("<statement/>");
   return statement;
 }
 

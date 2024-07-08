@@ -14,7 +14,6 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
-  Logger::log_with_indent("<expression>");
   std::unique_ptr<Expression> expression;
 
   switch (lexer.cur_token->type) {
@@ -44,10 +43,10 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("unexpected token '") + lexer.cur_token->to_string_short() + '\'', lexer);
+    parser_error(std::string("unexpected token '") + lexer.cur_token->to_string_short() + '\'',
+                 lexer);
   }
 
-  Logger::log_with_dedent("<expression/>");
   return expression;
 }
 
@@ -64,11 +63,13 @@ void CondExpression::parse_test_body(Lexer &lexer) {
   }
 
   if (!body_statements.back()->is_expression())
-    this->error("every branch in a cond expression must return a value", lexer);
+    this->parser_error("every branch in a cond expression must return a value", lexer);
 
   Logger::log_with_dedent("<cond-test-body/>");
 }
 
+// TODO: maybe branches should be a class
+// TODO: maybe class
 void CondExpression::parse_if(Lexer &lexer) {
   Logger::log_with_indent("<cond-if>");
 
@@ -80,6 +81,7 @@ void CondExpression::parse_if(Lexer &lexer) {
   Logger::log_with_dedent("<cond-if/>");
 }
 
+// TODO: maybe class
 void CondExpression::parse_elif(Lexer &lexer) {
   Logger::log_with_indent("<cond-elif>");
 
@@ -91,6 +93,7 @@ void CondExpression::parse_elif(Lexer &lexer) {
   Logger::log_with_dedent("<cond-elif/>");
 }
 
+// TODO: maybe class
 void CondExpression::parse_elifs(Lexer &lexer) {
   Logger::log_with_indent("<cond-elifs>");
 
@@ -100,6 +103,7 @@ void CondExpression::parse_elifs(Lexer &lexer) {
   Logger::log_with_dedent("<cond-elifs/>");
 }
 
+// TODO: maybe class
 void CondExpression::parse_else(Lexer &lexer) {
   Logger::log_with_indent("<cond-else>");
 
@@ -111,14 +115,14 @@ void CondExpression::parse_else(Lexer &lexer) {
 }
 
 std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
-  Logger::log_with_indent("<cond-expression>");
   std::unique_ptr<CondExpression> expression = std::make_unique<CondExpression>();
+  expression->start_parsing(lexer, "<cond-expression>");
 
   expression->parse_if(lexer);
   expression->parse_elifs(lexer);
   expression->parse_else(lexer);
 
-  Logger::log_with_dedent("<cond-expression/>");
+  expression->finish_parsing(lexer, "</cond-expression>");
   return expression;
 }
 
@@ -128,8 +132,8 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
-  Logger::log_with_indent("<normal-expression>");
   std::unique_ptr<NormalExpression> expression = std::make_unique<NormalExpression>();
+  expression->start_parsing(lexer, "<normal-expression>");
 
   // Keep parsing and tests until we have no longer ignored an `or` token
   while (true) {
@@ -140,7 +144,7 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
       break;
   }
 
-  Logger::log_with_dedent("<normal-expression/>");
+  expression->finish_parsing(lexer, "</normal-expression>");
   return expression;
 }
 
@@ -150,12 +154,12 @@ llvm::Value *NormalExpression::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
-  Logger::log_with_indent("<function-expression>");
   std::unique_ptr<FunctionExpression> expression = std::make_unique<FunctionExpression>();
+  expression->start_parsing(lexer, "<function-expression>");
 
   expression->function = FunctionConstructor::parse(lexer);
 
-  Logger::log_with_dedent("<function-expression/>");
+  expression->finish_parsing(lexer, "</function-expression>");
   return expression;
 }
 

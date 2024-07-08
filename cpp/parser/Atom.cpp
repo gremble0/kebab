@@ -11,12 +11,12 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<IntAtom> IntAtom::parse(Lexer &lexer) {
-  Logger::log_with_indent("<int-atom>");
   std::unique_ptr<IntAtom> atom = std::make_unique<IntAtom>();
+  atom->start_parsing(lexer, "<int-atom>");
 
   atom->i = skip_int(lexer);
 
-  Logger::log_with_dedent("<int-atom/>");
+  atom->finish_parsing(lexer, "</int-atom>");
   return atom;
 }
 
@@ -25,12 +25,12 @@ llvm::Value *IntAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
-  Logger::log_with_indent("<float-atom>");
   std::unique_ptr<FloatAtom> atom = std::make_unique<FloatAtom>();
+  atom->start_parsing(lexer, "<float-atom>");
 
   atom->f = skip_float(lexer);
 
-  Logger::log_with_dedent("<float-atom/>");
+  atom->finish_parsing(lexer, "</float-atom>");
   return atom;
 }
 
@@ -39,12 +39,12 @@ llvm::Value *FloatAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
-  Logger::log_with_indent("<char-atom>");
   std::unique_ptr<CharAtom> atom = std::make_unique<CharAtom>();
+  atom->start_parsing(lexer, "<char-atom>");
 
   atom->c = skip_char(lexer);
 
-  Logger::log_with_dedent("<char-atom/>");
+  atom->finish_parsing(lexer, "</char-atom>");
   return atom;
 }
 
@@ -53,12 +53,12 @@ llvm::Value *CharAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
-  Logger::log_with_indent("<string-atom>");
   std::unique_ptr<StringAtom> atom = std::make_unique<StringAtom>();
+  atom->start_parsing(lexer, "<string-atom>");
 
   atom->s = skip_string(lexer);
 
-  Logger::log_with_dedent("<string-atom/>");
+  atom->finish_parsing(lexer, "</string-atom>");
   return atom;
 }
 
@@ -67,8 +67,8 @@ llvm::Value *StringAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
-  Logger::log_with_indent("<bool-atom>");
   std::unique_ptr<BoolAtom> atom = std::make_unique<BoolAtom>();
+  atom->start_parsing(lexer, "<bool-atom>");
 
   if (lexer.cur_token->type == Token::Type::TRUE)
     atom->b = true;
@@ -76,7 +76,7 @@ std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
     atom->b = false;
   lexer.advance();
 
-  Logger::log_with_dedent("<bool-atom/>");
+  atom->finish_parsing(lexer, "</bool-atom>");
   return atom;
 }
 
@@ -85,12 +85,12 @@ llvm::Value *BoolAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
-  Logger::log_with_indent("<name-atom>");
   std::unique_ptr<NameAtom> atom = std::make_unique<NameAtom>();
+  atom->start_parsing(lexer, "<name-atom>");
 
   atom->name = skip_name(lexer);
 
-  Logger::log_with_dedent("<name-atom/>");
+  atom->finish_parsing(lexer, "</name-atom>");
   return atom;
 }
 
@@ -103,14 +103,14 @@ llvm::Value *NameAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
-  Logger::log_with_indent("<inner-expression-atom>");
   std::unique_ptr<InnerExpressionAtom> atom = std::make_unique<InnerExpressionAtom>();
+  atom->start_parsing(lexer, "<inner-expression-atom>");
 
   skip(lexer, Token::Type::LPAREN);
   atom->expression = Expression::parse(lexer);
   skip(lexer, Token::Type::RPAREN);
 
-  Logger::log_with_dedent("<inner-expression-atom/>");
+  atom->finish_parsing(lexer, "</inner-expression-atom>");
   return atom;
 }
 
@@ -119,8 +119,8 @@ llvm::Value *InnerExpressionAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
-  Logger::log_with_indent("<list-atom>");
   std::unique_ptr<ListAtom> atom = std::make_unique<ListAtom>();
+  atom->start_parsing(lexer, "<list-atom>");
 
   skip(lexer, Token::Type::LBRACKET);
   while (lexer.cur_token->type != Token::Type::RBRACKET) {
@@ -131,7 +131,7 @@ std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   }
   skip(lexer, Token::Type::RBRACKET);
 
-  Logger::log_with_dedent("<list-atom/>");
+  atom->finish_parsing(lexer, "</list-atom>");
   return atom;
 }
 
@@ -140,7 +140,6 @@ llvm::Value *ListAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
-  Logger::log_with_indent("<atom>");
   std::unique_ptr<Atom> atom;
 
   switch (lexer.cur_token->type) {
@@ -178,12 +177,11 @@ std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token '") +
-              lexer.cur_token->to_string_short() + '\'',
-          lexer);
+    parser_error(std::string("reached unreachable branch with token '") +
+                     lexer.cur_token->to_string_short() + '\'',
+                 lexer);
   }
 
-  Logger::log_with_dedent("<atom/>");
   return atom;
 }
 

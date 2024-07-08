@@ -9,7 +9,6 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<Type> Type::parse(Lexer &lexer) {
-  Logger::log_with_indent("<type>");
   std::unique_ptr<Type> type;
 
   switch (lexer.cur_token->type) {
@@ -26,25 +25,24 @@ std::unique_ptr<Type> Type::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") +
-              lexer.cur_token->to_string_short(),
-          lexer);
+    parser_error(std::string("reached unreachable branch with token: ") +
+                     lexer.cur_token->to_string_short(),
+                 lexer);
   }
 
-  Logger::log_with_dedent("<type/>");
   return type;
 }
 
 std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
-  Logger::log_with_indent("<list-type>");
   std::unique_ptr<ListType> type = std::make_unique<ListType>();
+  type->start_parsing(lexer, "<list-type>");
 
   skip(lexer, Token::Type::LIST);
   skip(lexer, Token::Type::LPAREN);
   type->content_type = Type::parse(lexer);
   skip(lexer, Token::Type::RPAREN);
 
-  Logger::log_with_dedent("<list-type/>");
+  type->finish_parsing(lexer, "</list-type>");
   return type;
 }
 
@@ -70,8 +68,8 @@ void FunctionType::parse_parameter_types(Lexer &lexer) {
 void FunctionType::parse_return_type(Lexer &lexer) { this->return_type = Type::parse(lexer); }
 
 std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
-  Logger::log_with_indent("<function-type>");
   std::unique_ptr<FunctionType> type = std::make_unique<FunctionType>();
+  type->start_parsing(lexer, "<function-type>");
 
   skip(lexer, Token::Type::FN);
   skip(lexer, Token::Type::LPAREN);
@@ -83,7 +81,7 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
 
   type->parse_return_type(lexer);
 
-  Logger::log_with_dedent("<function-type/>");
+  type->finish_parsing(lexer, "</function-type>");
   return type;
 }
 
@@ -98,12 +96,12 @@ llvm::Value *FunctionType::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
-  Logger::log_with_indent("<primitive-type>");
   std::unique_ptr<PrimitiveType> type = std::make_unique<PrimitiveType>();
+  type->start_parsing(lexer, "<primitive-type>");
 
   type->name = skip_name(lexer);
 
-  Logger::log_with_dedent("<primitive-type/>");
+  type->finish_parsing(lexer, "</primitive-type>");
   return type;
 }
 
@@ -121,7 +119,7 @@ llvm::Type *PrimitiveType::get_llvm_type(llvm::IRBuilder<> &builder) const {
   else if (this->name.compare("void") == 0)
     return builder.getVoidTy();
 
-  this->error("unrecognized type: '" + this->name + '\'');
+  this->compiler_error("unrecognized type: '" + this->name + '\'');
 }
 
 llvm::Value *PrimitiveType::compile(Compiler &compiler) const {

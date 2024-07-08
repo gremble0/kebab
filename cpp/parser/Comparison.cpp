@@ -9,8 +9,8 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
-  Logger::log_with_indent("<comparison-operator>");
   std::unique_ptr<ComparisonOperator> operator_ = std::make_unique<ComparisonOperator>();
+  operator_->start_parsing(lexer, "<comparison-operator>");
 
   switch (lexer.cur_token->type) {
   case Token::Type::LT:
@@ -38,14 +38,14 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") +
-              lexer.cur_token->to_string_short(),
-          lexer);
+    parser_error(std::string("reached unreachable branch with token: ") +
+                     lexer.cur_token->to_string_short(),
+                 lexer);
   }
 
   lexer.advance();
 
-  Logger::log_with_dedent("<comparison-operator/>");
+  operator_->finish_parsing(lexer, "</comparison-operator>");
   return operator_;
 }
 
@@ -55,8 +55,8 @@ llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
-  Logger::log_with_indent("<comparison>");
   std::unique_ptr<Comparison> comparison = std::make_unique<Comparison>();
+  comparison->start_parsing(lexer, "<comparison>");
 
   while (true) {
     comparison->terms.push_back(Term::parse(lexer));
@@ -67,7 +67,7 @@ std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
       break;
   }
 
-  Logger::log_with_dedent("<comparison/>");
+  comparison->finish_parsing(lexer, "</comparison>");
   return comparison;
 }
 

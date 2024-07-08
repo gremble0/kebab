@@ -14,14 +14,14 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
-  Logger::log_with_indent("<primary-subscription>");
   std::unique_ptr<PrimarySubscription> subscription = std::make_unique<PrimarySubscription>();
+  subscription->start_parsing(lexer, "<primary-subscription>");
 
   skip(lexer, Token::Type::LBRACKET);
   subscription->subscription = Expression::parse(lexer);
   skip(lexer, Token::Type::RBRACKET);
 
-  Logger::log_with_dedent("<primary-subscription/>");
+  subscription->finish_parsing(lexer, "</primary-subscription>");
   return subscription;
 }
 
@@ -31,8 +31,8 @@ llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
-  Logger::log_with_indent("<primary-arguments>");
   std::unique_ptr<PrimaryArguments> arguments = std::make_unique<PrimaryArguments>();
+  arguments->start_parsing(lexer, "<primary-arguments>");
 
   skip(lexer, Token::Type::LPAREN);
   while (true) {
@@ -45,7 +45,7 @@ std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   }
   skip(lexer, Token::Type::RPAREN);
 
-  Logger::log_with_dedent("<primary-arguments/>");
+  arguments->finish_parsing(lexer, "</primary-arguments>");
   return arguments;
 }
 
@@ -59,7 +59,6 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
-  Logger::log_with_indent("<primary-suffix>");
   std::unique_ptr<PrimarySuffix> suffix;
 
   switch (lexer.cur_token->type) {
@@ -72,24 +71,23 @@ std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") +
-              lexer.cur_token->to_string_short(),
-          lexer);
+    parser_error(std::string("reached unreachable branch with token: ") +
+                     lexer.cur_token->to_string_short(),
+                 lexer);
   }
 
-  Logger::log_with_dedent("<primary-suffix/>");
   return suffix;
 }
 
 std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
-  Logger::log_with_indent("<primary>");
   std::unique_ptr<Primary> primary = std::make_unique<Primary>();
+  primary->start_parsing(lexer, "<primary>");
 
   primary->atom = Atom::parse(lexer);
   while (PrimarySuffix::is_primary_suffix_opener(lexer.cur_token->type))
     primary->suffixes.push_back(PrimarySuffix::parse(lexer));
 
-  Logger::log_with_dedent("<primary/>");
+  primary->finish_parsing(lexer, "</primary>");
   return primary;
 }
 

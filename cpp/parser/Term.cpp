@@ -8,8 +8,8 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
-  Logger::log_with_indent("<term-operator>");
   std::unique_ptr<TermOperator> operator_ = std::make_unique<TermOperator>();
+  operator_->start_parsing(lexer, "<term-operator>");
 
   switch (lexer.cur_token->type) {
   case Token::Type::PLUS:
@@ -21,14 +21,14 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") +
-              lexer.cur_token->to_string_short(),
-          lexer);
+    parser_error(std::string("reached unreachable branch with token: ") +
+                     lexer.cur_token->to_string_short(),
+                 lexer);
   }
 
   lexer.advance();
 
-  Logger::log_with_dedent("<term-operator/>");
+  operator_->finish_parsing(lexer, "</term-operator>");
   return operator_;
 }
 
@@ -38,8 +38,8 @@ llvm::Value *TermOperator::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Term> Term::parse(Lexer &lexer) {
-  Logger::log_with_indent("<term>");
   std::unique_ptr<Term> term = std::make_unique<Term>();
+  term->start_parsing(lexer, "<term>");
 
   while (true) {
     term->factors.push_back(Factor::parse(lexer));
@@ -50,7 +50,7 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
       break;
   }
 
-  Logger::log_with_dedent("<term/>");
+  term->finish_parsing(lexer, "</term>");
   return term;
 }
 

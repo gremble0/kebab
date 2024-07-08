@@ -9,8 +9,8 @@ namespace Kebab {
 namespace Parser {
 
 std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
-  Logger::log_with_indent("<factor-prefix>");
   std::unique_ptr<FactorPrefix> prefix = std::make_unique<FactorPrefix>();
+  prefix->start_parsing(lexer, "<factor-prefix>");
 
   switch (lexer.cur_token->type) {
   case Token::Type::PLUS:
@@ -22,14 +22,14 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") +
-              lexer.cur_token->to_string_short(),
-          lexer);
+    parser_error(std::string("reached unreachable branch with token: ") +
+                     lexer.cur_token->to_string_short(),
+                 lexer);
   }
 
   lexer.advance();
 
-  Logger::log_with_dedent("<factor-prefix/>");
+  prefix->finish_parsing(lexer, "</factor-prefix>");
   return prefix;
 }
 
@@ -39,8 +39,8 @@ llvm::Value *FactorPrefix::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
-  Logger::log_with_indent("<factor>");
   std::unique_ptr<Factor> factor = std::make_unique<Factor>();
+  factor->start_parsing(lexer, "<factor>");
 
   while (true) {
     if (FactorPrefix::is_factor_prefix(lexer.cur_token->type))
@@ -55,7 +55,7 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
     factor->operators.push_back(FactorOperator::parse(lexer));
   }
 
-  Logger::log_with_dedent("<factor/>");
+  factor->finish_parsing(lexer, "</factor>");
   return factor;
 }
 
@@ -67,8 +67,8 @@ llvm::Value *Factor::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
-  Logger::log_with_indent("<factor-operator>");
   std::unique_ptr<FactorOperator> operator_ = std::make_unique<FactorOperator>();
+  operator_->start_parsing(lexer, "<factor-operator>");
 
   switch (lexer.cur_token->type) {
   case Token::Type::MULT:
@@ -80,14 +80,14 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") +
-              lexer.cur_token->to_string_short(),
-          lexer);
+    parser_error(std::string("reached unreachable branch with token: ") +
+                     lexer.cur_token->to_string_short(),
+                 lexer);
   }
 
   lexer.advance();
 
-  Logger::log_with_dedent("<factor-operator/>");
+  operator_->finish_parsing(lexer, "</factor-operator>");
   return operator_;
 }
 
