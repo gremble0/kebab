@@ -21,7 +21,6 @@ private:
   size_t line_pos;
 
   void next_line();
-  Position position() const;
   uint8_t peek(int offset) const;
   [[noreturn]] void error(std::string message) const;
 
@@ -56,6 +55,7 @@ public:
   explicit Lexer(std::string path);
   void advance();
   std::string pretty_position() const;
+  Position position() const;
 };
 
 } // namespace Kebab
