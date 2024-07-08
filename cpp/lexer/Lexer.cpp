@@ -22,13 +22,10 @@ Lexer::Lexer(std::string path)
 }
 
 [[noreturn]] void Lexer::error(std::string message) const {
-  std::string where = this->path + ':' + std::to_string(this->line_number) + ':' +
-                      std::to_string(this->line_pos) + '\n';
-  std::string line = this->line + '\n';
-  std::string line_cursor = std::string(this->line_pos, ' ') + "^\n";
-  std::string full_message = "lexer-error: " + message + '\n';
+  std::string pretty_position = this->pretty_position();
+  std::string labeled_message = "lexer-error: " + message;
 
-  std::cerr << where + line + line_cursor + full_message;
+  std::cerr << pretty_position + labeled_message << std::endl;
 
   exit(1);
 }
@@ -40,6 +37,15 @@ void Lexer::next_line() {
 }
 
 Position Lexer::position() const { return Position(this->line_number, this->line_pos); }
+
+std::string Lexer::pretty_position() const {
+  std::string where = this->path + ':' + std::to_string(this->line_number) + ':' +
+                      std::to_string(this->line_pos) + '\n';
+  std::string line = this->line + '\n';
+  std::string line_cursor = std::string(this->line_pos, ' ') + "^\n";
+
+  return where + line + line_cursor;
+}
 
 uint8_t Lexer::peek(int offset) const {
   bool too_big = this->line_pos + offset >= this->line.length();

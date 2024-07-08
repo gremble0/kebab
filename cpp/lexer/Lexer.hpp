@@ -55,6 +55,7 @@ public:
 
   explicit Lexer(std::string path);
   void advance();
+  std::string pretty_position() const;
 };
 
 } // namespace Kebab
