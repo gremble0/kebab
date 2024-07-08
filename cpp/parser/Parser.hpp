@@ -28,23 +28,34 @@ private:
 protected:
   AstNode() = default;
 
-  [[noreturn]] static void error(const std::string &message) {
-    std::cerr << "parser-error: " + message << std::endl;
+  [[noreturn]] static void error(const std::string &message, Lexer &lexer) {
+    std::string pretty_position = lexer.pretty_position();
+    std::string labeled_message = "parser-error: " + message;
+    std::cerr << pretty_position << labeled_message << std::endl;
+
+    exit(1);
+  }
+
+  [[noreturn]] void error(const std::string &message) const {
+    std::string labeled_message = "parser-error: " + message;
+    std::cerr << labeled_message << std::endl;
 
     exit(1);
   }
 
   static void expect(Lexer &lexer, Token::Type type) {
     if (lexer.cur_token->type != type)
-      error("unexpected token: '" + lexer.cur_token->to_string_short() + "' expected: '" +
-            Token::type_to_string(type) + '\'');
+      error("unexpected token '" + lexer.cur_token->to_string_short() + "' expected: '" +
+                Token::type_to_string(type) + '\'',
+            lexer);
   }
 
   // varargs?
   static void expect(Lexer &lexer, Token::Type either, Token::Type or_) {
     if (lexer.cur_token->type != either && lexer.cur_token->type != or_)
-      error("unexpected token: '" + lexer.cur_token->to_string_short() + "' expected: '" +
-            Token::type_to_string(either) + "' or '" + Token::type_to_string(or_) + '\'');
+      error("unexpected token '" + lexer.cur_token->to_string_short() + "' expected: '" +
+                Token::type_to_string(either) + "' or '" + Token::type_to_string(or_) + '\'',
+            lexer);
   }
 
   // Move to lexer?

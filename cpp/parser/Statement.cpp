@@ -110,7 +110,7 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("illegal syntax ") + lexer.cur_token->to_string_short());
+    error(std::string("unexpected token '") + lexer.cur_token->to_string_short() + '\'', lexer);
   }
 
   Logger::Logger::log_with_dedent("<statement/>");

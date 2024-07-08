@@ -27,7 +27,8 @@ std::unique_ptr<Type> Type::parse(Lexer &lexer) {
 
   default:
     error(std::string("reached unreachable branch with token: ") +
-          lexer.cur_token->to_string_short());
+              lexer.cur_token->to_string_short(),
+          lexer);
   }
 
   Logger::log_with_dedent("<type/>");
@@ -120,7 +121,7 @@ llvm::Type *PrimitiveType::get_llvm_type(llvm::IRBuilder<> &builder) const {
   else if (this->name.compare("void") == 0)
     return builder.getVoidTy();
 
-  error("unrecognized type: '" + this->name + '\'');
+  this->error("unrecognized type: '" + this->name + '\'');
 }
 
 llvm::Value *PrimitiveType::compile(Compiler &compiler) const {

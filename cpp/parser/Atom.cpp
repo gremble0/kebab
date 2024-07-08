@@ -178,8 +178,9 @@ std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("reached unreachable branch with token: ") +
-          lexer.cur_token->to_string_short());
+    error(std::string("reached unreachable branch with token '") +
+              lexer.cur_token->to_string_short() + '\'',
+          lexer);
   }
 
   Logger::log_with_dedent("<atom/>");

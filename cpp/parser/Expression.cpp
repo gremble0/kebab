@@ -44,7 +44,7 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
     break;
 
   default:
-    error(std::string("illegal syntax ") + lexer.cur_token->to_string_short());
+    error(std::string("unexpected token '") + lexer.cur_token->to_string_short() + '\'', lexer);
   }
 
   Logger::log_with_dedent("<expression/>");
@@ -64,7 +64,7 @@ void CondExpression::parse_test_body(Lexer &lexer) {
   }
 
   if (!body_statements.back()->is_expression())
-    this->error("every branch in a cond expression must return a value");
+    this->error("every branch in a cond expression must return a value", lexer);
 
   Logger::log_with_dedent("<cond-test-body/>");
 }

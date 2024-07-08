@@ -39,7 +39,8 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
 
   default:
     error(std::string("reached unreachable branch with token: ") +
-          lexer.cur_token->to_string_short());
+              lexer.cur_token->to_string_short(),
+          lexer);
   }
 
   lexer.advance();

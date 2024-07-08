@@ -1,5 +1,4 @@
 #include "parser/RootNode.hpp"
-#include "logging/Logger.hpp"
 #include "parser/Statement.hpp"
 
 namespace Kebab {
