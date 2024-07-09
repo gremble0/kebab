@@ -42,7 +42,9 @@ std::string Lexer::pretty_position() const {
   std::string where = this->path + ':' + std::to_string(this->line_number) + ':' +
                       std::to_string(this->line_pos) + '\n';
   std::string line = this->line + '\n';
-  std::string line_cursor = std::string(this->line_pos, ' ') + "^\n";
+  // exclude leading spaces if line_pos is 0 to avoid underflow
+  std::string line_cursor =
+      this->line_pos > 0 ? std::string(this->line_pos - 1, ' ') + "^\n" : "^\n";
 
   return where + line + line_cursor;
 }

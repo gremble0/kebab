@@ -14,7 +14,6 @@ namespace Kebab {
 
 class Lexer {
 private:
-  std::string path;
   std::string line;
   std::ifstream stream;
   size_t line_number;
@@ -51,6 +50,7 @@ private:
 
 public:
   std::unique_ptr<Token> cur_token;
+  std::string path;
 
   explicit Lexer(std::string path);
   void advance();
