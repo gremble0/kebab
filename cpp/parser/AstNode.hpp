@@ -30,6 +30,9 @@ private:
         return "<reached unexpected end of file>";
     }
 
+    // unnecessary?
+    stream.close();
+
     return out;
   }
 
@@ -45,19 +48,26 @@ private:
 
 protected:
   Span span;
+  std::string path;
+
   AstNode() = default;
 
   [[noreturn]] static void parser_error(const std::string &message, Lexer &lexer) {
     std::string pretty_position = lexer.pretty_position();
     std::string labeled_message = "parser-error: " + message;
+
     std::cerr << pretty_position << labeled_message << std::endl;
 
     exit(1);
   }
 
   [[noreturn]] void compiler_error(const std::string &message) const {
+    std::string line = this->getnline(this->path, this->span.start.line);
+    std::string line_cursor =
+        this->span.start.col > 0 ? std::string(this->span.start.col - 1, ' ') + "^\n" : "^\n";
     std::string labeled_message = "compiler-error: " + message;
-    std::cerr << labeled_message << std::endl;
+
+    std::cerr << line << line_cursor << labeled_message << std::endl;
 
     exit(1);
   }
@@ -66,6 +76,7 @@ protected:
     // maybe some #ifdef for logging (this would affect testing too)
     Logger::log_with_indent(node_name);
     this->span.start = lexer.position();
+    this->path = lexer.path;
   }
 
   void finish_parsing(Lexer &lexer, const std::string &node_name) {
