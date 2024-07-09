@@ -17,6 +17,23 @@ namespace Parser {
 class AstNode {
 private:
   /**
+   * @brief get the nth line from a file given by path
+   */
+  static std::string getnline(const std::string &path, size_t line_number) {
+    std::ifstream stream(path);
+    std::string out;
+
+    while (line_number > 0) {
+      --line_number;
+      std::getline(stream, out);
+      if (stream.eof() || stream.fail())
+        return "<reached unexpected end of file>";
+    }
+
+    return out;
+  }
+
+  /**
    * @brief skip a token with an inner value and return it
    */
   template <typename T, Token::Type K> static T skip_value(Lexer &lexer) {
