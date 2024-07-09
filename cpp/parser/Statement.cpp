@@ -34,8 +34,9 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 
 llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   llvm::Value *variable_value = this->constructor->compile(compiler);
-  llvm::GlobalVariable *variable =
-      compiler.create_global(this->name, static_cast<llvm::Constant *>(variable_value));
+  llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler.builder);
+  llvm::GlobalVariable *variable = compiler.create_global(
+      this->name, static_cast<llvm::Constant *>(variable_value), declared_type);
 
   return variable;
 }

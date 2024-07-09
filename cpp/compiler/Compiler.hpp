@@ -47,7 +47,8 @@ public:
   [[noreturn]] void error(const std::string &message) const;
 
   // TODO: take type as param and compare with type of initializer
-  llvm::GlobalVariable *create_global(const std::string &name, llvm::Constant *init);
+  llvm::GlobalVariable *create_global(const std::string &name, llvm::Constant *init,
+                                      llvm::Type *type);
 };
 
 } // namespace Kebab
