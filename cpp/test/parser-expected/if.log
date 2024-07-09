@@ -1,371 +1,334 @@
 <token "def" [1, 0] - [1, 3]>
-<statement>
+<root>
  <definition-statement>
   <token name: "i1" [1, 4] - [1, 6]>
   <token "=" [1, 7] - [1, 8]>
   <token name: "int" [1, 9] - [1, 12]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [1, 12] - [1, 13]>
-    <primitive-type/>
-    <token "if" [1, 13] - [1, 15]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <cond-expression>
-        <cond-if>
-         <token "true" [1, 16] - [1, 20]>
-         <expression>
-          <normal-expression>
-           <and-test>
-            <not-test>
-             <comparison>
-              <term>
-               <factor>
-                <primary>
-                 <atom>
-                  <bool-atom>
-                   <token "=>" [1, 21] - [1, 23]>
-                  <bool-atom/>
-                 <atom/>
-                <primary/>
-               <factor/>
-              <term/>
-             <comparison/>
-            <not-test/>
-           <and-test/>
-          <normal-expression/>
-         <expression/>
-         <token int-literal: "0" [1, 24] - [1, 25]>
-         <cond-test-body>
-          <statement>
-           <expression-statement>
-            <expression>
-             <normal-expression>
-              <and-test>
-               <not-test>
-                <comparison>
-                 <term>
-                  <factor>
-                   <primary>
-                    <atom>
-                     <int-atom>
-                      <token "else" [1, 26] - [1, 30]>
-                     <int-atom/>
-                    <atom/>
-                   <primary/>
-                  <factor/>
-                 <term/>
-                <comparison/>
-               <not-test/>
-              <and-test/>
-             <normal-expression/>
-            <expression/>
-           <expression-statement/>
-          <statement/>
-         <cond-test-body/>
-        <cond-if/>
-        <cond-elifs>
-        <cond-elifs/>
-        <cond-else>
-         <token "=>" [1, 31] - [1, 33]>
-         <token int-literal: "1" [1, 34] - [1, 35]>
-         <cond-test-body>
-          <statement>
-           <expression-statement>
-            <expression>
-             <normal-expression>
-              <and-test>
-               <not-test>
-                <comparison>
-                 <term>
-                  <factor>
-                   <primary>
-                    <atom>
-                     <int-atom>
-                      <token ")" [1, 35] - [1, 36]>
-                     <int-atom/>
-                    <atom/>
-                   <primary/>
-                  <factor/>
-                 <term/>
-                <comparison/>
-               <not-test/>
-              <and-test/>
-             <normal-expression/>
-            <expression/>
-           <expression-statement/>
-          <statement/>
-         <cond-test-body/>
-        <cond-else/>
-       <cond-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [3, 0] - [3, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [1, 12] - [1, 13]>
+   </primitive-type>
+   <token "if" [1, 13] - [1, 15]>
+   <expression-statement>
+    <cond-expression>
+     <cond-if>
+      <token "true" [1, 16] - [1, 20]>
+      <normal-expression>
+       <and-test>
+        <not-test>
+         <comparison>
+          <term>
+           <factor>
+            <primary>
+             <bool-atom>
+              <token "=>" [1, 21] - [1, 23]>
+             </bool-atom>
+            </primary>
+           </factor>
+          </term>
+         </comparison>
+        </not-test>
+       </and-test>
+      </normal-expression>
+      <token int-literal: "0" [1, 24] - [1, 25]>
+      <cond-test-body>
+       <expression-statement>
+        <normal-expression>
+         <and-test>
+          <not-test>
+           <comparison>
+            <term>
+             <factor>
+              <primary>
+               <int-atom>
+                <token "else" [1, 26] - [1, 30]>
+               </int-atom>
+              </primary>
+             </factor>
+            </term>
+           </comparison>
+          </not-test>
+         </and-test>
+        </normal-expression>
+       </expression-statement>
+      </cond-test-body>
+     </cond-if>
+     <cond-elifs>
+     </cond-elifs>
+     <cond-else>
+      <token "=>" [1, 31] - [1, 33]>
+      <token int-literal: "1" [1, 34] - [1, 35]>
+      <cond-test-body>
+       <expression-statement>
+        <normal-expression>
+         <and-test>
+          <not-test>
+           <comparison>
+            <term>
+             <factor>
+              <primary>
+               <int-atom>
+                <token ")" [1, 35] - [1, 36]>
+               </int-atom>
+              </primary>
+             </factor>
+            </term>
+           </comparison>
+          </not-test>
+         </and-test>
+        </normal-expression>
+       </expression-statement>
+      </cond-test-body>
+     </cond-else>
+    </cond-expression>
+   </expression-statement>
+   <token "def" [3, 0] - [3, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "i2" [3, 4] - [3, 6]>
   <token "=" [3, 7] - [3, 8]>
   <token name: "int" [3, 9] - [3, 12]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [3, 12] - [3, 13]>
-    <primitive-type/>
-    <token "if" [4, 2] - [4, 4]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <cond-expression>
-        <cond-if>
-         <token "false" [4, 5] - [4, 10]>
-         <expression>
-          <normal-expression>
-           <and-test>
-            <not-test>
-             <comparison>
-              <term>
-               <factor>
-                <primary>
-                 <atom>
-                  <bool-atom>
-                   <token "=>" [4, 11] - [4, 13]>
-                  <bool-atom/>
-                 <atom/>
-                <primary/>
-               <factor/>
-              <term/>
-             <comparison/>
-            <not-test/>
-           <and-test/>
-          <normal-expression/>
-         <expression/>
-         <token int-literal: "0" [4, 14] - [4, 15]>
-         <cond-test-body>
-          <statement>
-           <expression-statement>
-            <expression>
-             <normal-expression>
-              <and-test>
-               <not-test>
-                <comparison>
-                 <term>
-                  <factor>
-                   <primary>
-                    <atom>
-                     <int-atom>
-                      <token "elif" [5, 2] - [5, 6]>
-                     <int-atom/>
-                    <atom/>
-                   <primary/>
-                  <factor/>
-                 <term/>
-                <comparison/>
-               <not-test/>
-              <and-test/>
-             <normal-expression/>
-            <expression/>
-           <expression-statement/>
-          <statement/>
-         <cond-test-body/>
-        <cond-if/>
-        <cond-elifs>
-         <cond-elif>
-          <token "-" [5, 7] - [5, 8]>
-          <expression>
-           <normal-expression>
-            <and-test>
-             <not-test>
-              <comparison>
-               <term>
-                <factor>
-                 <factor-prefix>
-                  <token int-literal: "2" [5, 8] - [5, 9]>
-                 <factor-prefix/>
-                 <primary>
-                  <atom>
-                   <int-atom>
-                    <token "==" [5, 10] - [5, 12]>
-                   <int-atom/>
-                  <atom/>
-                 <primary/>
-                <factor/>
-               <term/>
-               <comparison-operator>
-                <token int-literal: "2" [5, 13] - [5, 14]>
-               <comparison-operator/>
-               <term>
-                <factor>
-                 <primary>
-                  <atom>
-                   <int-atom>
-                    <token "=>" [5, 15] - [5, 17]>
-                   <int-atom/>
-                  <atom/>
-                 <primary/>
-                <factor/>
-               <term/>
-              <comparison/>
-             <not-test/>
-            <and-test/>
-           <normal-expression/>
-          <expression/>
-          <token "-" [5, 18] - [5, 19]>
-          <cond-test-body>
-           <statement>
-            <expression-statement>
-             <expression>
-              <normal-expression>
-               <and-test>
-                <not-test>
-                 <comparison>
-                  <term>
-                   <factor>
-                    <factor-prefix>
-                     <token int-literal: "1" [5, 19] - [5, 20]>
-                    <factor-prefix/>
-                    <primary>
-                     <atom>
-                      <int-atom>
-                       <token "else" [6, 2] - [6, 6]>
-                      <int-atom/>
-                     <atom/>
-                    <primary/>
-                   <factor/>
-                  <term/>
-                 <comparison/>
-                <not-test/>
-               <and-test/>
-              <normal-expression/>
-             <expression/>
-            <expression-statement/>
-           <statement/>
-          <cond-test-body/>
-         <cond-elif/>
-        <cond-elifs/>
-        <cond-else>
-         <token "=>" [6, 7] - [6, 9]>
-         <token int-literal: "1" [6, 10] - [6, 11]>
-         <cond-test-body>
-          <statement>
-           <expression-statement>
-            <expression>
-             <normal-expression>
-              <and-test>
-               <not-test>
-                <comparison>
-                 <term>
-                  <factor>
-                   <primary>
-                    <atom>
-                     <int-atom>
-                      <token ")" [7, 0] - [7, 1]>
-                     <int-atom/>
-                    <atom/>
-                   <primary/>
-                  <factor/>
-                 <term/>
-                <comparison/>
-               <not-test/>
-              <and-test/>
-             <normal-expression/>
-            <expression/>
-           <expression-statement/>
-          <statement/>
-         <cond-test-body/>
-        <cond-else/>
-       <cond-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [9, 0] - [9, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [3, 12] - [3, 13]>
+   </primitive-type>
+   <token "if" [4, 2] - [4, 4]>
+   <expression-statement>
+    <cond-expression>
+     <cond-if>
+      <token "false" [4, 5] - [4, 10]>
+      <normal-expression>
+       <and-test>
+        <not-test>
+         <comparison>
+          <term>
+           <factor>
+            <primary>
+             <bool-atom>
+              <token "=>" [4, 11] - [4, 13]>
+             </bool-atom>
+            </primary>
+           </factor>
+          </term>
+         </comparison>
+        </not-test>
+       </and-test>
+      </normal-expression>
+      <token int-literal: "0" [4, 14] - [4, 15]>
+      <cond-test-body>
+       <expression-statement>
+        <normal-expression>
+         <and-test>
+          <not-test>
+           <comparison>
+            <term>
+             <factor>
+              <primary>
+               <int-atom>
+                <token "elif" [5, 2] - [5, 6]>
+               </int-atom>
+              </primary>
+             </factor>
+            </term>
+           </comparison>
+          </not-test>
+         </and-test>
+        </normal-expression>
+       </expression-statement>
+      </cond-test-body>
+     </cond-if>
+     <cond-elifs>
+      <cond-elif>
+       <token "-" [5, 7] - [5, 8]>
+       <normal-expression>
+        <and-test>
+         <not-test>
+          <comparison>
+           <term>
+            <factor>
+             <factor-prefix>
+              <token int-literal: "2" [5, 8] - [5, 9]>
+             </factor-prefix>
+             <primary>
+              <int-atom>
+               <token "==" [5, 10] - [5, 12]>
+              </int-atom>
+             </primary>
+            </factor>
+           </term>
+           <comparison-operator>
+            <token int-literal: "2" [5, 13] - [5, 14]>
+           </comparison-operator>
+           <term>
+            <factor>
+             <primary>
+              <int-atom>
+               <token "=>" [5, 15] - [5, 17]>
+              </int-atom>
+             </primary>
+            </factor>
+           </term>
+          </comparison>
+         </not-test>
+        </and-test>
+       </normal-expression>
+       <token "-" [5, 18] - [5, 19]>
+       <cond-test-body>
+        <expression-statement>
+         <normal-expression>
+          <and-test>
+           <not-test>
+            <comparison>
+             <term>
+              <factor>
+               <factor-prefix>
+                <token int-literal: "1" [5, 19] - [5, 20]>
+               </factor-prefix>
+               <primary>
+                <int-atom>
+                 <token "else" [6, 2] - [6, 6]>
+                </int-atom>
+               </primary>
+              </factor>
+             </term>
+            </comparison>
+           </not-test>
+          </and-test>
+         </normal-expression>
+        </expression-statement>
+       </cond-test-body>
+      <cond-elif/>
+     </cond-elifs>
+     <cond-else>
+      <token "=>" [6, 7] - [6, 9]>
+      <token int-literal: "1" [6, 10] - [6, 11]>
+      <cond-test-body>
+       <expression-statement>
+        <normal-expression>
+         <and-test>
+          <not-test>
+           <comparison>
+            <term>
+             <factor>
+              <primary>
+               <int-atom>
+                <token ")" [7, 0] - [7, 1]>
+               </int-atom>
+              </primary>
+             </factor>
+            </term>
+           </comparison>
+          </not-test>
+         </and-test>
+        </normal-expression>
+       </expression-statement>
+      </cond-test-body>
+     </cond-else>
+    </cond-expression>
+   </expression-statement>
+   <token "def" [9, 0] - [9, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "l" [9, 4] - [9, 5]>
   <token "=" [9, 6] - [9, 7]>
   <token "list" [9, 8] - [9, 12]>
-  <constructor>
-   <list-constructor>
-    <token "(" [9, 12] - [9, 13]>
-    <token "(" [9, 13] - [9, 14]>
-    <token name: "int" [9, 14] - [9, 17]>
-    <type>
+  <list-constructor>
+   <token "(" [9, 12] - [9, 13]>
+   <token "(" [9, 13] - [9, 14]>
+   <token name: "int" [9, 14] - [9, 17]>
+   <primitive-type>
+    <token ")" [9, 17] - [9, 18]>
+   </primitive-type>
+   <token "=>" [9, 19] - [9, 21]>
+   <token "def" [10, 2] - [10, 5]>
+   <definition-statement>
+    <token name: "q" [10, 6] - [10, 7]>
+    <token "=" [10, 8] - [10, 9]>
+    <token name: "int" [10, 10] - [10, 13]>
+    <primitive-constructor>
      <primitive-type>
-      <token ")" [9, 17] - [9, 18]>
-     <primitive-type/>
-    <type/>
-    <token "=>" [9, 19] - [9, 21]>
-    <token "def" [10, 2] - [10, 5]>
-    <statement>
-     <definition-statement>
-      <token name: "q" [10, 6] - [10, 7]>
-      <token "=" [10, 8] - [10, 9]>
-      <token name: "int" [10, 10] - [10, 13]>
-      <constructor>
-       <primitive-constructor>
-        <primitive-type>
-         <token "(" [10, 13] - [10, 14]>
-        <primitive-type/>
-        <token int-literal: "1" [10, 14] - [10, 15]>
-        <statement>
-         <expression-statement>
-          <expression>
-           <normal-expression>
-            <and-test>
-             <not-test>
-              <comparison>
-               <term>
-                <factor>
-                 <primary>
-                  <atom>
-                   <int-atom>
-                    <token "+" [10, 16] - [10, 17]>
-                   <int-atom/>
-                  <atom/>
-                 <primary/>
-                <factor/>
-                <term-operator>
-                 <token int-literal: "2" [10, 18] - [10, 19]>
-                <term-operator/>
-                <factor>
-                 <primary>
-                  <atom>
-                   <int-atom>
-                    <token ")" [10, 19] - [10, 20]>
-                   <int-atom/>
-                  <atom/>
-                 <primary/>
-                <factor/>
-               <term/>
-              <comparison/>
-             <not-test/>
-            <and-test/>
-           <normal-expression/>
-          <expression/>
-         <expression-statement/>
-        <statement/>
-        <token "if" [11, 2] - [11, 4]>
-       <primitive-constructor/>
-      <constructor/>
-     <definition-statement/>
-    <statement/>
-    <statement>
+      <token "(" [10, 13] - [10, 14]>
+     </primitive-type>
+     <token int-literal: "1" [10, 14] - [10, 15]>
      <expression-statement>
-      <expression>
-       <cond-expression>
-        <cond-if>
-         <token int-literal: "1" [11, 5] - [11, 6]>
-         <expression>
+      <normal-expression>
+       <and-test>
+        <not-test>
+         <comparison>
+          <term>
+           <factor>
+            <primary>
+             <int-atom>
+              <token "+" [10, 16] - [10, 17]>
+             </int-atom>
+            </primary>
+           </factor>
+           <term-operator>
+            <token int-literal: "2" [10, 18] - [10, 19]>
+           </term-operator>
+           <factor>
+            <primary>
+             <int-atom>
+              <token ")" [10, 19] - [10, 20]>
+             </int-atom>
+            </primary>
+           </factor>
+          </term>
+         </comparison>
+        </not-test>
+       </and-test>
+      </normal-expression>
+     </expression-statement>
+     <token "if" [11, 2] - [11, 4]>
+    </primitive-constructor>
+   </definition-statement>
+   <expression-statement>
+    <cond-expression>
+     <cond-if>
+      <token int-literal: "1" [11, 5] - [11, 6]>
+      <normal-expression>
+       <and-test>
+        <not-test>
+         <comparison>
+          <term>
+           <factor>
+            <primary>
+             <int-atom>
+              <token "==" [11, 7] - [11, 9]>
+             </int-atom>
+            </primary>
+           </factor>
+          </term>
+          <comparison-operator>
+           <token int-literal: "2" [11, 10] - [11, 11]>
+          </comparison-operator>
+          <term>
+           <factor>
+            <primary>
+             <int-atom>
+              <token "=>" [11, 12] - [11, 14]>
+             </int-atom>
+            </primary>
+           </factor>
+          </term>
+         </comparison>
+        </not-test>
+       </and-test>
+      </normal-expression>
+      <token "def" [12, 4] - [12, 7]>
+      <cond-test-body>
+       <definition-statement>
+        <token name: "w" [12, 8] - [12, 9]>
+        <token "=" [12, 10] - [12, 11]>
+        <token name: "int" [12, 12] - [12, 15]>
+        <primitive-constructor>
+         <primitive-type>
+          <token "(" [12, 15] - [12, 16]>
+         </primitive-type>
+         <token int-literal: "6" [12, 16] - [12, 17]>
+         <expression-statement>
           <normal-expression>
            <and-test>
             <not-test>
@@ -373,49 +336,121 @@
               <term>
                <factor>
                 <primary>
-                 <atom>
-                  <int-atom>
-                   <token "==" [11, 7] - [11, 9]>
-                  <int-atom/>
-                 <atom/>
-                <primary/>
-               <factor/>
-              <term/>
-              <comparison-operator>
-               <token int-literal: "2" [11, 10] - [11, 11]>
-              <comparison-operator/>
-              <term>
-               <factor>
-                <primary>
-                 <atom>
-                  <int-atom>
-                   <token "=>" [11, 12] - [11, 14]>
-                  <int-atom/>
-                 <atom/>
-                <primary/>
-               <factor/>
-              <term/>
-             <comparison/>
-            <not-test/>
-           <and-test/>
-          <normal-expression/>
-         <expression/>
-         <token "def" [12, 4] - [12, 7]>
-         <cond-test-body>
-          <statement>
-           <definition-statement>
-            <token name: "w" [12, 8] - [12, 9]>
-            <token "=" [12, 10] - [12, 11]>
-            <token name: "int" [12, 12] - [12, 15]>
-            <constructor>
-             <primitive-constructor>
-              <primitive-type>
-               <token "(" [12, 15] - [12, 16]>
-              <primitive-type/>
-              <token int-literal: "6" [12, 16] - [12, 17]>
-              <statement>
-               <expression-statement>
-                <expression>
+                 <int-atom>
+                  <token ")" [12, 17] - [12, 18]>
+                 </int-atom>
+                </primary>
+               </factor>
+              </term>
+             </comparison>
+            </not-test>
+           </and-test>
+          </normal-expression>
+         </expression-statement>
+         <token "[" [13, 4] - [13, 5]>
+        </primitive-constructor>
+       </definition-statement>
+       <expression-statement>
+        <normal-expression>
+         <and-test>
+          <not-test>
+           <comparison>
+            <term>
+             <factor>
+              <primary>
+               <list-atom>
+                <token name: "q" [13, 5] - [13, 6]>
+                <normal-expression>
+                 <and-test>
+                  <not-test>
+                   <comparison>
+                    <term>
+                     <factor>
+                      <primary>
+                       <name-atom>
+                        <token "," [13, 6] - [13, 7]>
+                       </name-atom>
+                      </primary>
+                     </factor>
+                    </term>
+                   </comparison>
+                  </not-test>
+                 </and-test>
+                </normal-expression>
+                <token name: "w" [13, 8] - [13, 9]>
+                <normal-expression>
+                 <and-test>
+                  <not-test>
+                   <comparison>
+                    <term>
+                     <factor>
+                      <primary>
+                       <name-atom>
+                        <token "]" [13, 9] - [13, 10]>
+                       </name-atom>
+                      </primary>
+                     </factor>
+                    </term>
+                   </comparison>
+                  </not-test>
+                 </and-test>
+                </normal-expression>
+                <token "elif" [14, 2] - [14, 6]>
+               </list-atom>
+              </primary>
+             </factor>
+            </term>
+           </comparison>
+          </not-test>
+         </and-test>
+        </normal-expression>
+       </expression-statement>
+      </cond-test-body>
+     </cond-if>
+     <cond-elifs>
+      <cond-elif>
+       <token int-literal: "2" [14, 7] - [14, 8]>
+       <normal-expression>
+        <and-test>
+         <not-test>
+          <comparison>
+           <term>
+            <factor>
+             <primary>
+              <int-atom>
+               <token "~=" [14, 9] - [14, 11]>
+              </int-atom>
+             </primary>
+            </factor>
+           </term>
+           <comparison-operator>
+            <token int-literal: "2" [14, 12] - [14, 13]>
+           </comparison-operator>
+           <term>
+            <factor>
+             <primary>
+              <int-atom>
+               <token "=>" [14, 14] - [14, 16]>
+              </int-atom>
+             </primary>
+            </factor>
+           </term>
+          </comparison>
+         </not-test>
+        </and-test>
+       </normal-expression>
+       <token "[" [14, 17] - [14, 18]>
+       <cond-test-body>
+        <expression-statement>
+         <normal-expression>
+          <and-test>
+           <not-test>
+            <comparison>
+             <term>
+              <factor>
+               <primary>
+                <list-atom>
+                 <token name: "q" [14, 18] - [14, 19]>
                  <normal-expression>
                   <and-test>
                    <not-test>
@@ -423,289 +458,110 @@
                      <term>
                       <factor>
                        <primary>
-                        <atom>
-                         <int-atom>
-                          <token ")" [12, 17] - [12, 18]>
-                         <int-atom/>
-                        <atom/>
-                       <primary/>
-                      <factor/>
-                     <term/>
-                    <comparison/>
-                   <not-test/>
-                  <and-test/>
-                 <normal-expression/>
-                <expression/>
-               <expression-statement/>
-              <statement/>
-              <token "[" [13, 4] - [13, 5]>
-             <primitive-constructor/>
-            <constructor/>
-           <definition-statement/>
-          <statement/>
-          <statement>
-           <expression-statement>
-            <expression>
-             <normal-expression>
-              <and-test>
-               <not-test>
-                <comparison>
-                 <term>
-                  <factor>
-                   <primary>
-                    <atom>
-                     <list-atom>
-                      <token name: "q" [13, 5] - [13, 6]>
-                      <expression>
-                       <normal-expression>
-                        <and-test>
-                         <not-test>
-                          <comparison>
-                           <term>
-                            <factor>
-                             <primary>
-                              <atom>
-                               <name-atom>
-                                <token "," [13, 6] - [13, 7]>
-                               <name-atom/>
-                              <atom/>
-                             <primary/>
-                            <factor/>
-                           <term/>
-                          <comparison/>
-                         <not-test/>
-                        <and-test/>
-                       <normal-expression/>
-                      <expression/>
-                      <token name: "w" [13, 8] - [13, 9]>
-                      <expression>
-                       <normal-expression>
-                        <and-test>
-                         <not-test>
-                          <comparison>
-                           <term>
-                            <factor>
-                             <primary>
-                              <atom>
-                               <name-atom>
-                                <token "]" [13, 9] - [13, 10]>
-                               <name-atom/>
-                              <atom/>
-                             <primary/>
-                            <factor/>
-                           <term/>
-                          <comparison/>
-                         <not-test/>
-                        <and-test/>
-                       <normal-expression/>
-                      <expression/>
-                      <token "elif" [14, 2] - [14, 6]>
-                     <list-atom/>
-                    <atom/>
-                   <primary/>
-                  <factor/>
-                 <term/>
-                <comparison/>
-               <not-test/>
-              <and-test/>
-             <normal-expression/>
-            <expression/>
-           <expression-statement/>
-          <statement/>
-         <cond-test-body/>
-        <cond-if/>
-        <cond-elifs>
-         <cond-elif>
-          <token int-literal: "2" [14, 7] - [14, 8]>
-          <expression>
-           <normal-expression>
-            <and-test>
-             <not-test>
-              <comparison>
-               <term>
-                <factor>
-                 <primary>
-                  <atom>
-                   <int-atom>
-                    <token "~=" [14, 9] - [14, 11]>
-                   <int-atom/>
-                  <atom/>
-                 <primary/>
-                <factor/>
-               <term/>
-               <comparison-operator>
-                <token int-literal: "2" [14, 12] - [14, 13]>
-               <comparison-operator/>
-               <term>
-                <factor>
-                 <primary>
-                  <atom>
-                   <int-atom>
-                    <token "=>" [14, 14] - [14, 16]>
-                   <int-atom/>
-                  <atom/>
-                 <primary/>
-                <factor/>
-               <term/>
-              <comparison/>
-             <not-test/>
-            <and-test/>
-           <normal-expression/>
-          <expression/>
-          <token "[" [14, 17] - [14, 18]>
-          <cond-test-body>
-           <statement>
-            <expression-statement>
-             <expression>
-              <normal-expression>
-               <and-test>
-                <not-test>
-                 <comparison>
-                  <term>
-                   <factor>
-                    <primary>
-                     <atom>
-                      <list-atom>
-                       <token name: "q" [14, 18] - [14, 19]>
-                       <expression>
-                        <normal-expression>
-                         <and-test>
-                          <not-test>
-                           <comparison>
-                            <term>
-                             <factor>
-                              <primary>
-                               <atom>
-                                <name-atom>
-                                 <token "," [14, 19] - [14, 20]>
-                                <name-atom/>
-                               <atom/>
-                              <primary/>
-                             <factor/>
-                            <term/>
-                           <comparison/>
-                          <not-test/>
-                         <and-test/>
-                        <normal-expression/>
-                       <expression/>
-                       <token int-literal: "1" [14, 21] - [14, 22]>
-                       <expression>
-                        <normal-expression>
-                         <and-test>
-                          <not-test>
-                           <comparison>
-                            <term>
-                             <factor>
-                              <primary>
-                               <atom>
-                                <int-atom>
-                                 <token "]" [14, 22] - [14, 23]>
-                                <int-atom/>
-                               <atom/>
-                              <primary/>
-                             <factor/>
-                            <term/>
-                           <comparison/>
-                          <not-test/>
-                         <and-test/>
-                        <normal-expression/>
-                       <expression/>
-                       <token "else" [15, 2] - [15, 6]>
-                      <list-atom/>
-                     <atom/>
-                    <primary/>
-                   <factor/>
-                  <term/>
-                 <comparison/>
-                <not-test/>
-               <and-test/>
-              <normal-expression/>
-             <expression/>
-            <expression-statement/>
-           <statement/>
-          <cond-test-body/>
-         <cond-elif/>
-        <cond-elifs/>
-        <cond-else>
-         <token "=>" [15, 7] - [15, 9]>
-         <token "[" [15, 10] - [15, 11]>
-         <cond-test-body>
-          <statement>
-           <expression-statement>
-            <expression>
-             <normal-expression>
-              <and-test>
-               <not-test>
-                <comparison>
-                 <term>
-                  <factor>
-                   <primary>
-                    <atom>
-                     <list-atom>
-                      <token int-literal: "1" [15, 11] - [15, 12]>
-                      <expression>
-                       <normal-expression>
-                        <and-test>
-                         <not-test>
-                          <comparison>
-                           <term>
-                            <factor>
-                             <primary>
-                              <atom>
-                               <int-atom>
-                                <token "," [15, 12] - [15, 13]>
-                               <int-atom/>
-                              <atom/>
-                             <primary/>
-                            <factor/>
-                           <term/>
-                          <comparison/>
-                         <not-test/>
-                        <and-test/>
-                       <normal-expression/>
-                      <expression/>
-                      <token int-literal: "2" [15, 14] - [15, 15]>
-                      <expression>
-                       <normal-expression>
-                        <and-test>
-                         <not-test>
-                          <comparison>
-                           <term>
-                            <factor>
-                             <primary>
-                              <atom>
-                               <int-atom>
-                                <token "]" [15, 15] - [15, 16]>
-                               <int-atom/>
-                              <atom/>
-                             <primary/>
-                            <factor/>
-                           <term/>
-                          <comparison/>
-                         <not-test/>
-                        <and-test/>
-                       <normal-expression/>
-                      <expression/>
-                      <token ")" [16, 0] - [16, 1]>
-                     <list-atom/>
-                    <atom/>
-                   <primary/>
-                  <factor/>
-                 <term/>
-                <comparison/>
-               <not-test/>
-              <and-test/>
-             <normal-expression/>
-            <expression/>
-           <expression-statement/>
-          <statement/>
-         <cond-test-body/>
-        <cond-else/>
-       <cond-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-   <list-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
+                        <name-atom>
+                         <token "," [14, 19] - [14, 20]>
+                        </name-atom>
+                       </primary>
+                      </factor>
+                     </term>
+                    </comparison>
+                   </not-test>
+                  </and-test>
+                 </normal-expression>
+                 <token int-literal: "1" [14, 21] - [14, 22]>
+                 <normal-expression>
+                  <and-test>
+                   <not-test>
+                    <comparison>
+                     <term>
+                      <factor>
+                       <primary>
+                        <int-atom>
+                         <token "]" [14, 22] - [14, 23]>
+                        </int-atom>
+                       </primary>
+                      </factor>
+                     </term>
+                    </comparison>
+                   </not-test>
+                  </and-test>
+                 </normal-expression>
+                 <token "else" [15, 2] - [15, 6]>
+                </list-atom>
+               </primary>
+              </factor>
+             </term>
+            </comparison>
+           </not-test>
+          </and-test>
+         </normal-expression>
+        </expression-statement>
+       </cond-test-body>
+      <cond-elif/>
+     </cond-elifs>
+     <cond-else>
+      <token "=>" [15, 7] - [15, 9]>
+      <token "[" [15, 10] - [15, 11]>
+      <cond-test-body>
+       <expression-statement>
+        <normal-expression>
+         <and-test>
+          <not-test>
+           <comparison>
+            <term>
+             <factor>
+              <primary>
+               <list-atom>
+                <token int-literal: "1" [15, 11] - [15, 12]>
+                <normal-expression>
+                 <and-test>
+                  <not-test>
+                   <comparison>
+                    <term>
+                     <factor>
+                      <primary>
+                       <int-atom>
+                        <token "," [15, 12] - [15, 13]>
+                       </int-atom>
+                      </primary>
+                     </factor>
+                    </term>
+                   </comparison>
+                  </not-test>
+                 </and-test>
+                </normal-expression>
+                <token int-literal: "2" [15, 14] - [15, 15]>
+                <normal-expression>
+                 <and-test>
+                  <not-test>
+                   <comparison>
+                    <term>
+                     <factor>
+                      <primary>
+                       <int-atom>
+                        <token "]" [15, 15] - [15, 16]>
+                       </int-atom>
+                      </primary>
+                     </factor>
+                    </term>
+                   </comparison>
+                  </not-test>
+                 </and-test>
+                </normal-expression>
+                <token ")" [16, 0] - [16, 1]>
+               </list-atom>
+              </primary>
+             </factor>
+            </term>
+           </comparison>
+          </not-test>
+         </and-test>
+        </normal-expression>
+       </expression-statement>
+      </cond-test-body>
+     </cond-else>
+    </cond-expression>
+   </expression-statement>
+  </list-constructor>
+ </definition-statement>
+</root>

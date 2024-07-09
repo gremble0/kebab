@@ -1,955 +1,769 @@
 <token "def" [1, 0] - [1, 3]>
-<statement>
+<root>
  <definition-statement>
   <token name: "i1" [1, 4] - [1, 6]>
   <token "=" [1, 7] - [1, 8]>
   <token name: "int" [1, 9] - [1, 12]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [1, 12] - [1, 13]>
-    <primitive-type/>
-    <token int-literal: "1" [1, 13] - [1, 14]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "+" [1, 15] - [1, 16]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-            <term-operator>
-             <token int-literal: "2" [1, 17] - [1, 18]>
-            <term-operator/>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "*" [1, 19] - [1, 20]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-             <factor-operator>
-              <token int-literal: "3" [1, 21] - [1, 22]>
-             <factor-operator/>
-             <primary>
-              <atom>
-               <int-atom>
-                <token ")" [1, 22] - [1, 23]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [2, 0] - [2, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [1, 12] - [1, 13]>
+   </primitive-type>
+   <token int-literal: "1" [1, 13] - [1, 14]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <int-atom>
+            <token "+" [1, 15] - [1, 16]>
+           </int-atom>
+          </primary>
+         </factor>
+         <term-operator>
+          <token int-literal: "2" [1, 17] - [1, 18]>
+         </term-operator>
+         <factor>
+          <primary>
+           <int-atom>
+            <token "*" [1, 19] - [1, 20]>
+           </int-atom>
+          </primary>
+          <factor-operator>
+           <token int-literal: "3" [1, 21] - [1, 22]>
+          </factor-operator>
+          <primary>
+           <int-atom>
+            <token ")" [1, 22] - [1, 23]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+   <token "def" [2, 0] - [2, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "i2" [2, 4] - [2, 6]>
   <token "=" [2, 7] - [2, 8]>
   <token name: "int" [2, 9] - [2, 12]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [2, 12] - [2, 13]>
-    <primitive-type/>
-    <token int-literal: "4" [2, 13] - [2, 14]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "*" [2, 15] - [2, 16]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-             <factor-operator>
-              <token int-literal: "5" [2, 17] - [2, 18]>
-             <factor-operator/>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "/" [2, 19] - [2, 20]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-             <factor-operator>
-              <token int-literal: "6" [2, 21] - [2, 22]>
-             <factor-operator/>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "-" [2, 23] - [2, 24]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-            <term-operator>
-             <token int-literal: "1" [2, 25] - [2, 26]>
-            <term-operator/>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token ")" [2, 26] - [2, 27]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [3, 0] - [3, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [2, 12] - [2, 13]>
+   </primitive-type>
+   <token int-literal: "4" [2, 13] - [2, 14]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <int-atom>
+            <token "*" [2, 15] - [2, 16]>
+           </int-atom>
+          </primary>
+          <factor-operator>
+           <token int-literal: "5" [2, 17] - [2, 18]>
+          </factor-operator>
+          <primary>
+           <int-atom>
+            <token "/" [2, 19] - [2, 20]>
+           </int-atom>
+          </primary>
+          <factor-operator>
+           <token int-literal: "6" [2, 21] - [2, 22]>
+          </factor-operator>
+          <primary>
+           <int-atom>
+            <token "-" [2, 23] - [2, 24]>
+           </int-atom>
+          </primary>
+         </factor>
+         <term-operator>
+          <token int-literal: "1" [2, 25] - [2, 26]>
+         </term-operator>
+         <factor>
+          <primary>
+           <int-atom>
+            <token ")" [2, 26] - [2, 27]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+   <token "def" [3, 0] - [3, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "i3" [3, 4] - [3, 6]>
   <token "=" [3, 7] - [3, 8]>
   <token name: "int" [3, 9] - [3, 12]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [3, 12] - [3, 13]>
-    <primitive-type/>
-    <token "-" [3, 13] - [3, 14]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <factor-prefix>
-              <token int-literal: "2" [3, 14] - [3, 15]>
-             <factor-prefix/>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "+" [3, 16] - [3, 17]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-            <term-operator>
-             <token "-" [3, 18] - [3, 19]>
-            <term-operator/>
-            <factor>
-             <factor-prefix>
-              <token int-literal: "1" [3, 19] - [3, 20]>
-             <factor-prefix/>
-             <primary>
-              <atom>
-               <int-atom>
-                <token ")" [3, 20] - [3, 21]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [4, 0] - [4, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [3, 12] - [3, 13]>
+   </primitive-type>
+   <token "-" [3, 13] - [3, 14]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <factor-prefix>
+           <token int-literal: "2" [3, 14] - [3, 15]>
+          </factor-prefix>
+          <primary>
+           <int-atom>
+            <token "+" [3, 16] - [3, 17]>
+           </int-atom>
+          </primary>
+         </factor>
+         <term-operator>
+          <token "-" [3, 18] - [3, 19]>
+         </term-operator>
+         <factor>
+          <factor-prefix>
+           <token int-literal: "1" [3, 19] - [3, 20]>
+          </factor-prefix>
+          <primary>
+           <int-atom>
+            <token ")" [3, 20] - [3, 21]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+   <token "def" [4, 0] - [4, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "i4" [4, 4] - [4, 6]>
   <token "=" [4, 7] - [4, 8]>
   <token name: "int" [4, 9] - [4, 12]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [4, 12] - [4, 13]>
-    <primitive-type/>
-    <token "+" [4, 13] - [4, 14]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <factor-prefix>
-              <token int-literal: "2" [4, 14] - [4, 15]>
-             <factor-prefix/>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "/" [4, 16] - [4, 17]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-             <factor-operator>
-              <token int-literal: "2" [4, 18] - [4, 19]>
-             <factor-operator/>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "+" [4, 20] - [4, 21]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-            <term-operator>
-             <token "-" [4, 22] - [4, 23]>
-            <term-operator/>
-            <factor>
-             <factor-prefix>
-              <token int-literal: "1" [4, 23] - [4, 24]>
-             <factor-prefix/>
-             <primary>
-              <atom>
-               <int-atom>
-                <token ")" [4, 24] - [4, 25]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [5, 0] - [5, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [4, 12] - [4, 13]>
+   </primitive-type>
+   <token "+" [4, 13] - [4, 14]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <factor-prefix>
+           <token int-literal: "2" [4, 14] - [4, 15]>
+          </factor-prefix>
+          <primary>
+           <int-atom>
+            <token "/" [4, 16] - [4, 17]>
+           </int-atom>
+          </primary>
+          <factor-operator>
+           <token int-literal: "2" [4, 18] - [4, 19]>
+          </factor-operator>
+          <primary>
+           <int-atom>
+            <token "+" [4, 20] - [4, 21]>
+           </int-atom>
+          </primary>
+         </factor>
+         <term-operator>
+          <token "-" [4, 22] - [4, 23]>
+         </term-operator>
+         <factor>
+          <factor-prefix>
+           <token int-literal: "1" [4, 23] - [4, 24]>
+          </factor-prefix>
+          <primary>
+           <int-atom>
+            <token ")" [4, 24] - [4, 25]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+   <token "def" [5, 0] - [5, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "i5" [5, 4] - [5, 6]>
   <token "=" [5, 7] - [5, 8]>
   <token name: "int" [5, 9] - [5, 12]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [5, 12] - [5, 13]>
-    <primitive-type/>
-    <token "(" [5, 13] - [5, 14]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <inner-expression-atom>
-                <token "-" [5, 14] - [5, 15]>
-                <expression>
-                 <normal-expression>
-                  <and-test>
-                   <not-test>
-                    <comparison>
-                     <term>
-                      <factor>
-                       <factor-prefix>
-                        <token "(" [5, 15] - [5, 16]>
-                       <factor-prefix/>
-                       <primary>
-                        <atom>
-                         <inner-expression-atom>
-                          <token "-" [5, 16] - [5, 17]>
-                          <expression>
-                           <normal-expression>
-                            <and-test>
-                             <not-test>
-                              <comparison>
-                               <term>
-                                <factor>
-                                 <factor-prefix>
-                                  <token int-literal: "1" [5, 17] - [5, 18]>
-                                 <factor-prefix/>
-                                 <primary>
-                                  <atom>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [5, 12] - [5, 13]>
+   </primitive-type>
+   <token "(" [5, 13] - [5, 14]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <inner-expression-atom>
+            <token "-" [5, 14] - [5, 15]>
+            <normal-expression>
+             <and-test>
+              <not-test>
+               <comparison>
+                <term>
+                 <factor>
+                  <factor-prefix>
+                   <token "(" [5, 15] - [5, 16]>
+                  </factor-prefix>
+                  <primary>
+                   <inner-expression-atom>
+                    <token "-" [5, 16] - [5, 17]>
+                    <normal-expression>
+                     <and-test>
+                      <not-test>
+                       <comparison>
+                        <term>
+                         <factor>
+                          <factor-prefix>
+                           <token int-literal: "1" [5, 17] - [5, 18]>
+                          </factor-prefix>
+                          <primary>
+                           <int-atom>
+                            <token ")" [5, 18] - [5, 19]>
+                           </int-atom>
+                          </primary>
+                         </factor>
+                        </term>
+                       </comparison>
+                      </not-test>
+                     </and-test>
+                    </normal-expression>
+                    <token "/" [5, 20] - [5, 21]>
+                   </inner-expression-atom>
+                  </primary>
+                  <factor-operator>
+                   <token int-literal: "2" [5, 22] - [5, 23]>
+                  </factor-operator>
+                  <primary>
+                   <int-atom>
+                    <token ")" [5, 23] - [5, 24]>
+                   </int-atom>
+                  </primary>
+                 </factor>
+                </term>
+               </comparison>
+              </not-test>
+             </and-test>
+            </normal-expression>
+            <token "+" [5, 25] - [5, 26]>
+           </inner-expression-atom>
+          </primary>
+         </factor>
+         <term-operator>
+          <token "(" [5, 27] - [5, 28]>
+         </term-operator>
+         <factor>
+          <primary>
+           <inner-expression-atom>
+            <token "-" [5, 28] - [5, 29]>
+            <normal-expression>
+             <and-test>
+              <not-test>
+               <comparison>
+                <term>
+                 <factor>
+                  <factor-prefix>
+                   <token "(" [5, 29] - [5, 30]>
+                  </factor-prefix>
+                  <primary>
+                   <inner-expression-atom>
+                    <token "+" [5, 30] - [5, 31]>
+                    <normal-expression>
+                     <and-test>
+                      <not-test>
+                       <comparison>
+                        <term>
+                         <factor>
+                          <factor-prefix>
+                           <token "(" [5, 31] - [5, 32]>
+                          </factor-prefix>
+                          <primary>
+                           <inner-expression-atom>
+                            <token "-" [5, 32] - [5, 33]>
+                            <normal-expression>
+                             <and-test>
+                              <not-test>
+                               <comparison>
+                                <term>
+                                 <factor>
+                                  <factor-prefix>
+                                   <token int-literal: "1" [5, 33] - [5, 34]>
+                                  </factor-prefix>
+                                  <primary>
                                    <int-atom>
-                                    <token ")" [5, 18] - [5, 19]>
-                                   <int-atom/>
-                                  <atom/>
-                                 <primary/>
-                                <factor/>
-                               <term/>
-                              <comparison/>
-                             <not-test/>
-                            <and-test/>
-                           <normal-expression/>
-                          <expression/>
-                          <token "/" [5, 20] - [5, 21]>
-                         <inner-expression-atom/>
-                        <atom/>
-                       <primary/>
-                       <factor-operator>
-                        <token int-literal: "2" [5, 22] - [5, 23]>
-                       <factor-operator/>
-                       <primary>
-                        <atom>
-                         <int-atom>
-                          <token ")" [5, 23] - [5, 24]>
-                         <int-atom/>
-                        <atom/>
-                       <primary/>
-                      <factor/>
-                     <term/>
-                    <comparison/>
-                   <not-test/>
-                  <and-test/>
-                 <normal-expression/>
-                <expression/>
-                <token "+" [5, 25] - [5, 26]>
-               <inner-expression-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-            <term-operator>
-             <token "(" [5, 27] - [5, 28]>
-            <term-operator/>
-            <factor>
-             <primary>
-              <atom>
-               <inner-expression-atom>
-                <token "-" [5, 28] - [5, 29]>
-                <expression>
-                 <normal-expression>
-                  <and-test>
-                   <not-test>
-                    <comparison>
-                     <term>
-                      <factor>
-                       <factor-prefix>
-                        <token "(" [5, 29] - [5, 30]>
-                       <factor-prefix/>
-                       <primary>
-                        <atom>
-                         <inner-expression-atom>
-                          <token "+" [5, 30] - [5, 31]>
-                          <expression>
-                           <normal-expression>
-                            <and-test>
-                             <not-test>
-                              <comparison>
-                               <term>
-                                <factor>
-                                 <factor-prefix>
-                                  <token "(" [5, 31] - [5, 32]>
-                                 <factor-prefix/>
-                                 <primary>
-                                  <atom>
-                                   <inner-expression-atom>
-                                    <token "-" [5, 32] - [5, 33]>
-                                    <expression>
-                                     <normal-expression>
-                                      <and-test>
-                                       <not-test>
-                                        <comparison>
-                                         <term>
-                                          <factor>
-                                           <factor-prefix>
-                                            <token int-literal: "1" [5, 33] - [5, 34]>
-                                           <factor-prefix/>
-                                           <primary>
-                                            <atom>
-                                             <int-atom>
-                                              <token ")" [5, 34] - [5, 35]>
-                                             <int-atom/>
-                                            <atom/>
-                                           <primary/>
-                                          <factor/>
-                                         <term/>
-                                        <comparison/>
-                                       <not-test/>
-                                      <and-test/>
-                                     <normal-expression/>
-                                    <expression/>
-                                    <token ")" [5, 35] - [5, 36]>
-                                   <inner-expression-atom/>
-                                  <atom/>
-                                 <primary/>
-                                <factor/>
-                               <term/>
-                              <comparison/>
-                             <not-test/>
-                            <and-test/>
-                           <normal-expression/>
-                          <expression/>
-                          <token ")" [5, 36] - [5, 37]>
-                         <inner-expression-atom/>
-                        <atom/>
-                       <primary/>
-                      <factor/>
-                     <term/>
-                    <comparison/>
-                   <not-test/>
-                  <and-test/>
-                 <normal-expression/>
-                <expression/>
-                <token ")" [5, 37] - [5, 38]>
-               <inner-expression-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [7, 0] - [7, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+                                    <token ")" [5, 34] - [5, 35]>
+                                   </int-atom>
+                                  </primary>
+                                 </factor>
+                                </term>
+                               </comparison>
+                              </not-test>
+                             </and-test>
+                            </normal-expression>
+                            <token ")" [5, 35] - [5, 36]>
+                           </inner-expression-atom>
+                          </primary>
+                         </factor>
+                        </term>
+                       </comparison>
+                      </not-test>
+                     </and-test>
+                    </normal-expression>
+                    <token ")" [5, 36] - [5, 37]>
+                   </inner-expression-atom>
+                  </primary>
+                 </factor>
+                </term>
+               </comparison>
+              </not-test>
+             </and-test>
+            </normal-expression>
+            <token ")" [5, 37] - [5, 38]>
+           </inner-expression-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+   <token "def" [7, 0] - [7, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "f1" [7, 4] - [7, 6]>
   <token "=" [7, 7] - [7, 8]>
   <token name: "float" [7, 9] - [7, 14]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [7, 14] - [7, 15]>
-    <primitive-type/>
-    <token float-literal: "1.500000" [7, 15] - [7, 18]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <float-atom>
-                <token "-" [7, 19] - [7, 20]>
-               <float-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-            <term-operator>
-             <token float-literal: "0.500000" [7, 21] - [7, 24]>
-            <term-operator/>
-            <factor>
-             <primary>
-              <atom>
-               <float-atom>
-                <token ")" [7, 24] - [7, 25]>
-               <float-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [8, 0] - [8, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [7, 14] - [7, 15]>
+   </primitive-type>
+   <token float-literal: "1.500000" [7, 15] - [7, 18]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <float-atom>
+            <token "-" [7, 19] - [7, 20]>
+           </float-atom>
+          </primary>
+         </factor>
+         <term-operator>
+          <token float-literal: "0.500000" [7, 21] - [7, 24]>
+         </term-operator>
+         <factor>
+          <primary>
+           <float-atom>
+            <token ")" [7, 24] - [7, 25]>
+           </float-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+   <token "def" [8, 0] - [8, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "f2" [8, 4] - [8, 6]>
   <token "=" [8, 7] - [8, 8]>
   <token name: "float" [8, 9] - [8, 14]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [8, 14] - [8, 15]>
-    <primitive-type/>
-    <token "(" [8, 15] - [8, 16]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <inner-expression-atom>
-                <token float-literal: "1.500000" [8, 16] - [8, 19]>
-                <expression>
-                 <normal-expression>
-                  <and-test>
-                   <not-test>
-                    <comparison>
-                     <term>
-                      <factor>
-                       <primary>
-                        <atom>
-                         <float-atom>
-                          <token ")" [8, 19] - [8, 20]>
-                         <float-atom/>
-                        <atom/>
-                       <primary/>
-                      <factor/>
-                     <term/>
-                    <comparison/>
-                   <not-test/>
-                  <and-test/>
-                 <normal-expression/>
-                <expression/>
-                <token "+" [8, 21] - [8, 22]>
-               <inner-expression-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-            <term-operator>
-             <token "(" [8, 23] - [8, 24]>
-            <term-operator/>
-            <factor>
-             <primary>
-              <atom>
-               <inner-expression-atom>
-                <token "(" [8, 24] - [8, 25]>
-                <expression>
-                 <normal-expression>
-                  <and-test>
-                   <not-test>
-                    <comparison>
-                     <term>
-                      <factor>
-                       <primary>
-                        <atom>
-                         <inner-expression-atom>
-                          <token "-" [8, 25] - [8, 26]>
-                          <expression>
-                           <normal-expression>
-                            <and-test>
-                             <not-test>
-                              <comparison>
-                               <term>
-                                <factor>
-                                 <factor-prefix>
-                                  <token "(" [8, 26] - [8, 27]>
-                                 <factor-prefix/>
-                                 <primary>
-                                  <atom>
-                                   <inner-expression-atom>
-                                    <token float-literal: "0.500000" [8, 27] - [8, 30]>
-                                    <expression>
-                                     <normal-expression>
-                                      <and-test>
-                                       <not-test>
-                                        <comparison>
-                                         <term>
-                                          <factor>
-                                           <primary>
-                                            <atom>
-                                             <float-atom>
-                                              <token ")" [8, 30] - [8, 31]>
-                                             <float-atom/>
-                                            <atom/>
-                                           <primary/>
-                                          <factor/>
-                                         <term/>
-                                        <comparison/>
-                                       <not-test/>
-                                      <and-test/>
-                                     <normal-expression/>
-                                    <expression/>
-                                    <token ")" [8, 31] - [8, 32]>
-                                   <inner-expression-atom/>
-                                  <atom/>
-                                 <primary/>
-                                <factor/>
-                               <term/>
-                              <comparison/>
-                             <not-test/>
-                            <and-test/>
-                           <normal-expression/>
-                          <expression/>
-                          <token ")" [8, 32] - [8, 33]>
-                         <inner-expression-atom/>
-                        <atom/>
-                       <primary/>
-                      <factor/>
-                     <term/>
-                    <comparison/>
-                   <not-test/>
-                  <and-test/>
-                 <normal-expression/>
-                <expression/>
-                <token ")" [8, 33] - [8, 34]>
-               <inner-expression-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [10, 0] - [10, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [8, 14] - [8, 15]>
+   </primitive-type>
+   <token "(" [8, 15] - [8, 16]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <inner-expression-atom>
+            <token float-literal: "1.500000" [8, 16] - [8, 19]>
+            <normal-expression>
+             <and-test>
+              <not-test>
+               <comparison>
+                <term>
+                 <factor>
+                  <primary>
+                   <float-atom>
+                    <token ")" [8, 19] - [8, 20]>
+                   </float-atom>
+                  </primary>
+                 </factor>
+                </term>
+               </comparison>
+              </not-test>
+             </and-test>
+            </normal-expression>
+            <token "+" [8, 21] - [8, 22]>
+           </inner-expression-atom>
+          </primary>
+         </factor>
+         <term-operator>
+          <token "(" [8, 23] - [8, 24]>
+         </term-operator>
+         <factor>
+          <primary>
+           <inner-expression-atom>
+            <token "(" [8, 24] - [8, 25]>
+            <normal-expression>
+             <and-test>
+              <not-test>
+               <comparison>
+                <term>
+                 <factor>
+                  <primary>
+                   <inner-expression-atom>
+                    <token "-" [8, 25] - [8, 26]>
+                    <normal-expression>
+                     <and-test>
+                      <not-test>
+                       <comparison>
+                        <term>
+                         <factor>
+                          <factor-prefix>
+                           <token "(" [8, 26] - [8, 27]>
+                          </factor-prefix>
+                          <primary>
+                           <inner-expression-atom>
+                            <token float-literal: "0.500000" [8, 27] - [8, 30]>
+                            <normal-expression>
+                             <and-test>
+                              <not-test>
+                               <comparison>
+                                <term>
+                                 <factor>
+                                  <primary>
+                                   <float-atom>
+                                    <token ")" [8, 30] - [8, 31]>
+                                   </float-atom>
+                                  </primary>
+                                 </factor>
+                                </term>
+                               </comparison>
+                              </not-test>
+                             </and-test>
+                            </normal-expression>
+                            <token ")" [8, 31] - [8, 32]>
+                           </inner-expression-atom>
+                          </primary>
+                         </factor>
+                        </term>
+                       </comparison>
+                      </not-test>
+                     </and-test>
+                    </normal-expression>
+                    <token ")" [8, 32] - [8, 33]>
+                   </inner-expression-atom>
+                  </primary>
+                 </factor>
+                </term>
+               </comparison>
+              </not-test>
+             </and-test>
+            </normal-expression>
+            <token ")" [8, 33] - [8, 34]>
+           </inner-expression-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+   <token "def" [10, 0] - [10, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "b1" [10, 4] - [10, 6]>
   <token "=" [10, 7] - [10, 8]>
   <token name: "bool" [10, 9] - [10, 13]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [10, 13] - [10, 14]>
-    <primitive-type/>
-    <token "true" [10, 14] - [10, 18]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <bool-atom>
-                <token "and" [10, 19] - [10, 22]>
-               <bool-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-         <token "true" [10, 23] - [10, 27]>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <bool-atom>
-                <token ")" [10, 27] - [10, 28]>
-               <bool-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [11, 0] - [11, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [10, 13] - [10, 14]>
+   </primitive-type>
+   <token "true" [10, 14] - [10, 18]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <bool-atom>
+            <token "and" [10, 19] - [10, 22]>
+           </bool-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+      <token "true" [10, 23] - [10, 27]>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <bool-atom>
+            <token ")" [10, 27] - [10, 28]>
+           </bool-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+   <token "def" [11, 0] - [11, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "b2" [11, 4] - [11, 6]>
   <token "=" [11, 7] - [11, 8]>
   <token name: "bool" [11, 9] - [11, 13]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [11, 13] - [11, 14]>
-    <primitive-type/>
-    <token "false" [11, 14] - [11, 19]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <bool-atom>
-                <token "or" [11, 20] - [11, 22]>
-               <bool-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-        <token "~" [11, 23] - [11, 24]>
-        <and-test>
-         <not-test>
-          <token "false" [11, 24] - [11, 29]>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <bool-atom>
-                <token ")" [11, 29] - [11, 30]>
-               <bool-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [12, 0] - [12, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [11, 13] - [11, 14]>
+   </primitive-type>
+   <token "false" [11, 14] - [11, 19]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <bool-atom>
+            <token "or" [11, 20] - [11, 22]>
+           </bool-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+     <token "~" [11, 23] - [11, 24]>
+     <and-test>
+      <not-test>
+       <token "false" [11, 24] - [11, 29]>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <bool-atom>
+            <token ")" [11, 29] - [11, 30]>
+           </bool-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+   <token "def" [12, 0] - [12, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "b3" [12, 4] - [12, 6]>
   <token "=" [12, 7] - [12, 8]>
   <token name: "bool" [12, 9] - [12, 13]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [12, 13] - [12, 14]>
-    <primitive-type/>
-    <token int-literal: "1" [12, 14] - [12, 15]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "==" [12, 16] - [12, 18]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-           <comparison-operator>
-            <token int-literal: "2" [12, 19] - [12, 20]>
-           <comparison-operator/>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "or" [12, 21] - [12, 23]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-        <token int-literal: "3" [12, 24] - [12, 25]>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "~=" [12, 26] - [12, 28]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-           <comparison-operator>
-            <token int-literal: "4" [12, 29] - [12, 30]>
-           <comparison-operator/>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token ")" [12, 30] - [12, 31]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-    <token "def" [13, 0] - [13, 3]>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
-<statement>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [12, 13] - [12, 14]>
+   </primitive-type>
+   <token int-literal: "1" [12, 14] - [12, 15]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <int-atom>
+            <token "==" [12, 16] - [12, 18]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+        <comparison-operator>
+         <token int-literal: "2" [12, 19] - [12, 20]>
+        </comparison-operator>
+        <term>
+         <factor>
+          <primary>
+           <int-atom>
+            <token "or" [12, 21] - [12, 23]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+     <token int-literal: "3" [12, 24] - [12, 25]>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <int-atom>
+            <token "~=" [12, 26] - [12, 28]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+        <comparison-operator>
+         <token int-literal: "4" [12, 29] - [12, 30]>
+        </comparison-operator>
+        <term>
+         <factor>
+          <primary>
+           <int-atom>
+            <token ")" [12, 30] - [12, 31]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+   <token "def" [13, 0] - [13, 3]>
+  </primitive-constructor>
+ </definition-statement>
  <definition-statement>
   <token name: "b4" [13, 4] - [13, 6]>
   <token "=" [13, 7] - [13, 8]>
   <token name: "bool" [13, 9] - [13, 13]>
-  <constructor>
-   <primitive-constructor>
-    <primitive-type>
-     <token "(" [13, 13] - [13, 14]>
-    <primitive-type/>
-    <token int-literal: "5" [13, 14] - [13, 15]>
-    <statement>
-     <expression-statement>
-      <expression>
-       <normal-expression>
-        <and-test>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token ">=" [13, 16] - [13, 18]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-           <comparison-operator>
-            <token int-literal: "6" [13, 19] - [13, 20]>
-           <comparison-operator/>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "and" [13, 21] - [13, 24]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-         <token int-literal: "7" [13, 25] - [13, 26]>
-         <not-test>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "<" [13, 27] - [13, 28]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-           <comparison-operator>
-            <token int-literal: "8" [13, 29] - [13, 30]>
-           <comparison-operator/>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <int-atom>
-                <token "and" [13, 31] - [13, 34]>
-               <int-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-         <token "~" [13, 35] - [13, 36]>
-         <not-test>
-          <token "true" [13, 36] - [13, 40]>
-          <comparison>
-           <term>
-            <factor>
-             <primary>
-              <atom>
-               <bool-atom>
-                <token ")" [13, 40] - [13, 41]>
-               <bool-atom/>
-              <atom/>
-             <primary/>
-            <factor/>
-           <term/>
-          <comparison/>
-         <not-test/>
-        <and-test/>
-       <normal-expression/>
-      <expression/>
-     <expression-statement/>
-    <statement/>
-   <primitive-constructor/>
-  <constructor/>
- <definition-statement/>
-<statement/>
+  <primitive-constructor>
+   <primitive-type>
+    <token "(" [13, 13] - [13, 14]>
+   </primitive-type>
+   <token int-literal: "5" [13, 14] - [13, 15]>
+   <expression-statement>
+    <normal-expression>
+     <and-test>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <int-atom>
+            <token ">=" [13, 16] - [13, 18]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+        <comparison-operator>
+         <token int-literal: "6" [13, 19] - [13, 20]>
+        </comparison-operator>
+        <term>
+         <factor>
+          <primary>
+           <int-atom>
+            <token "and" [13, 21] - [13, 24]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+      <token int-literal: "7" [13, 25] - [13, 26]>
+      <not-test>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <int-atom>
+            <token "<" [13, 27] - [13, 28]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+        <comparison-operator>
+         <token int-literal: "8" [13, 29] - [13, 30]>
+        </comparison-operator>
+        <term>
+         <factor>
+          <primary>
+           <int-atom>
+            <token "and" [13, 31] - [13, 34]>
+           </int-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+      <token "~" [13, 35] - [13, 36]>
+      <not-test>
+       <token "true" [13, 36] - [13, 40]>
+       <comparison>
+        <term>
+         <factor>
+          <primary>
+           <bool-atom>
+            <token ")" [13, 40] - [13, 41]>
+           </bool-atom>
+          </primary>
+         </factor>
+        </term>
+       </comparison>
+      </not-test>
+     </and-test>
+    </normal-expression>
+   </expression-statement>
+  </primitive-constructor>
+ </definition-statement>
+</root>
