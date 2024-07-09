@@ -13,7 +13,7 @@
 namespace Kebab {
 
 Lexer::Lexer(std::string path)
-    : path(path), stream(path), line_number(0), line_pos(0), cur_token() {
+    : stream(path), line_number(0), line_pos(0), cur_token(), path(path) {
   if (!stream.is_open())
     this->error("could not open file " + path);
 

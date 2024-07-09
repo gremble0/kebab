@@ -65,7 +65,7 @@ void CondExpression::parse_test_body(Lexer &lexer) {
   if (!body_statements.back()->is_expression())
     this->parser_error("every branch in a cond expression must return a value", lexer);
 
-  Logger::log_with_dedent("<cond-test-body/>");
+  Logger::log_with_dedent("</cond-test-body>");
 }
 
 // TODO: maybe branches should be a class
@@ -78,7 +78,7 @@ void CondExpression::parse_if(Lexer &lexer) {
   skip(lexer, Token::Type::FAT_RARROW);
   this->parse_test_body(lexer);
 
-  Logger::log_with_dedent("<cond-if/>");
+  Logger::log_with_dedent("</cond-if>");
 }
 
 // TODO: maybe class
@@ -100,7 +100,7 @@ void CondExpression::parse_elifs(Lexer &lexer) {
   while (lexer.cur_token->type == Token::Type::ELIF)
     this->parse_elif(lexer);
 
-  Logger::log_with_dedent("<cond-elifs/>");
+  Logger::log_with_dedent("</cond-elifs>");
 }
 
 // TODO: maybe class
@@ -111,7 +111,7 @@ void CondExpression::parse_else(Lexer &lexer) {
   skip(lexer, Token::Type::FAT_RARROW);
   this->parse_test_body(lexer);
 
-  Logger::log_with_dedent("<cond-else/>");
+  Logger::log_with_dedent("</cond-else>");
 }
 
 std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
