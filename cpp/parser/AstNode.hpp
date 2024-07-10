@@ -19,6 +19,8 @@ private:
    */
   static std::string getnline(const std::string &path, size_t line_number);
 
+  static std::string llvm_type_to_string(const llvm::Type *type);
+
   std::string where() const;
 
   /**
@@ -39,6 +41,7 @@ protected:
 
   [[noreturn]] static void parser_error(const std::string &message, Lexer &lexer);
   [[noreturn]] void compiler_error(const std::string &message) const;
+  [[noreturn]] void type_error(const llvm::Type *expected, const llvm::Type *actual) const;
 
   void start_parsing(Lexer &lexer, const std::string &node_name);
   void finish_parsing(Lexer &lexer, const std::string &node_name);

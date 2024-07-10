@@ -4,6 +4,7 @@
 #include "logging/Logger.hpp"
 #include "parser/AstNode.hpp"
 #include "llvm/IR/Type.h"
+#include "llvm/Support/raw_ostream.h"
 
 namespace Kebab {
 namespace Parser {
@@ -25,6 +26,23 @@ std::string AstNode::getnline(const std::string &path, size_t line_number) {
   return out;
 }
 
+std::string AstNode::llvm_type_to_string(const llvm::Type *type) {
+  std::string type_str;
+  llvm::raw_string_ostream stream(type_str);
+  type->print(stream);
+  return type_str;
+}
+
+std::string AstNode::where() const {
+  std::string file_coordinates = this->path + ':' + std::to_string(this->span.start.line) + ':' +
+                                 std::to_string(this->span.start.col) + '\n';
+  std::string line = this->getnline(this->path, this->span.start.line) + '\n';
+  std::string line_cursor =
+      this->span.start.col > 0 ? std::string(this->span.start.col - 1, ' ') + "^\n" : "^\n";
+
+  return file_coordinates + line + line_cursor;
+}
+
 [[noreturn]] void AstNode::parser_error(const std::string &message, Lexer &lexer) {
   std::string pretty_position = lexer.pretty_position();
   std::string labeled_message = "parser-error: " + message;
@@ -35,14 +53,21 @@ std::string AstNode::getnline(const std::string &path, size_t line_number) {
 }
 
 [[noreturn]] void AstNode::compiler_error(const std::string &message) const {
-  std::string where = this->path + ':' + std::to_string(this->span.start.line) + ':' +
-                      std::to_string(this->span.start.col) + '\n';
-  std::string line = this->getnline(this->path, this->span.start.line) + '\n';
-  std::string line_cursor =
-      this->span.start.col > 0 ? std::string(this->span.start.col - 1, ' ') + "^\n" : "^\n";
+  std::string where = this->where();
   std::string labeled_message = "compiler-error: " + message;
 
-  std::cerr << where << line << line_cursor << labeled_message << std::endl;
+  std::cerr << where << labeled_message << std::endl;
+
+  exit(1);
+}
+
+[[noreturn]] void AstNode::type_error(const llvm::Type *actual, const llvm::Type *expected) const {
+  std::string where = this->where();
+  std::string actual_str = llvm_type_to_string(actual);
+  std::string expected_str = llvm_type_to_string(expected);
+
+  std::cerr << where << "type-error: actual type '" << actual_str
+            << "' does not match expected type '" << expected_str << "'" << std::endl;
 
   exit(1);
 }

@@ -2,7 +2,7 @@
 source_filename = "kebab"
 
 @0 = private unnamed_addr constant [7 x i8] c"hello\0A\00", align 1
-@v = global void @printf
+@v = global i32 %2
 
 declare i32 @printf(ptr, ...)
 

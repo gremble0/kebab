@@ -1,5 +1,7 @@
 #include <cassert>
+#include <iostream>
 #include <optional>
+#include <string>
 
 #include "compiler/Compiler.hpp"
 #include "lexer/Token.hpp"
@@ -35,12 +37,13 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   llvm::Value *variable_value = this->constructor->compile(compiler);
   llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler.builder);
-  // if (declared_type != variable_value->getType())
-  // TODO: better description
-  // compiler_error("actual type does not match declared type");
+  llvm::Type *actual_type = variable_value->getType();
+
+  if (actual_type->getTypeID() != declared_type->getTypeID())
+    this->type_error(declared_type, actual_type);
 
   llvm::GlobalVariable *variable = compiler.create_global(
-      this->name, static_cast<llvm::Constant *>(variable_value), declared_type);
+      this->name, static_cast<llvm::Constant *>(variable_value), actual_type);
 
   return variable;
 }
