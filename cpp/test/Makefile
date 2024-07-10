@@ -1,5 +1,5 @@
 CC := clang++
-CFLAGS := -Wall -Wextra -g -std=c++17
+CFLAGS := -Wall -Wextra -g -std=c++20
 
 LIBS := -L../../lib/googletest/build/lib -lgtest -lgtest_main
 INCLUDES := -I../../lib/googletest/googletest/include/ -I..

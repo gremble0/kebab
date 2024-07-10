@@ -1,5 +1,5 @@
 CC := clang++
-CFLAGS := -Wall -Wextra -g -std=c++17
+CFLAGS := -Wall -Wextra -g -std=c++20
 
 LEXERSRC := ./lexer
 PARSERSRC := ./parser

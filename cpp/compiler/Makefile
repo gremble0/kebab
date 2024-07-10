@@ -1,5 +1,5 @@
 CC := clang++
-CFLAGS := -Wall -Wextra -g -std=c++17
+CFLAGS := -Wall -Wextra -g -std=c++20
 
 LLVM_DIR := ../../lib/llvm-project
 LLVM_CONFIG := $(LLVM_DIR)/build/bin/llvm-config
