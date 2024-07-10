@@ -1,6 +1,7 @@
 #include <cctype>
 #include <cstdint>
 #include <cstdio>
+#include <format>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -38,14 +39,14 @@ void Lexer::next_line() {
 Position Lexer::position() const { return Position(this->line_number, this->line_pos); }
 
 std::string Lexer::pretty_position() const {
-  std::string where = this->path + ':' + std::to_string(this->line_number) + ':' +
-                      std::to_string(this->line_pos) + '\n';
-  std::string line = this->line + '\n';
+  std::string coordinates = std::format("{}:{}:{}\n", this->path, std::to_string(this->line_number),
+                                        std::to_string(this->line_pos));
+  std::string line_with_newline = this->line + '\n';
   // exclude leading spaces if line_pos is 0 to avoid underflow
   std::string line_cursor =
       this->line_pos > 0 ? std::string(this->line_pos - 1, ' ') + "^\n" : "^\n";
 
-  return where + line + line_cursor;
+  return coordinates + line_with_newline + line_cursor;
 }
 
 uint8_t Lexer::peek(int offset) const {
