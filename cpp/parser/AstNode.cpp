@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include "logging/Logger.hpp"
 #include "parser/AstNode.hpp"
@@ -33,12 +34,14 @@ std::string AstNode::getnline(const std::string &path, size_t line_number) {
 }
 
 [[noreturn]] void AstNode::compiler_error(const std::string &message) const {
+  std::string where = this->path + ':' + std::to_string(this->span.start.line) + ':' +
+                      std::to_string(this->span.start.col) + '\n';
   std::string line = this->getnline(this->path, this->span.start.line) + '\n';
   std::string line_cursor =
       this->span.start.col > 0 ? std::string(this->span.start.col - 1, ' ') + "^\n" : "^\n";
   std::string labeled_message = "compiler-error: " + message;
 
-  std::cerr << line << line_cursor << labeled_message << std::endl;
+  std::cerr << where << line << line_cursor << labeled_message << std::endl;
 
   exit(1);
 }
