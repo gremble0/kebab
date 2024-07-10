@@ -118,7 +118,7 @@ llvm::Type *PrimitiveType::get_llvm_type(llvm::IRBuilder<> &builder) const {
   else if (this->name.compare("void") == 0)
     return builder.getVoidTy();
 
-  this->compiler_error("unrecognized type: '" + this->name + '\'');
+  this->unrecognized_type_error(this->name);
 }
 
 llvm::Value *PrimitiveType::compile(Compiler &compiler) const {

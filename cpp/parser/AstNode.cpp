@@ -45,9 +45,9 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-[[noreturn]] void AstNode::compiler_error(const std::string &message) const {
+[[noreturn]] void AstNode::unrecognized_type_error(const std::string &type_name) const {
   std::string where = this->where();
-  std::string labeled_message = "compiler-error: " + message;
+  std::string labeled_message = "unrecognized-type-error: '" + type_name + '\'';
 
   std::cerr << where << labeled_message << std::endl;
 

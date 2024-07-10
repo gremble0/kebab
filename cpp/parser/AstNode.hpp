@@ -38,7 +38,7 @@ protected:
   AstNode() = default;
 
   [[noreturn]] static void parser_error(const std::string &message, Lexer &lexer);
-  [[noreturn]] void compiler_error(const std::string &message) const;
+  [[noreturn]] void unrecognized_type_error(const std::string &type_name) const;
   [[noreturn]] void type_error(const llvm::Type *expected, const llvm::Type *actual) const;
 
   void start_parsing(Lexer &lexer, const std::string &node_name);
