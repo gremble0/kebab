@@ -94,8 +94,9 @@ llvm::Value *Primary::compile(Compiler &compiler) const {
   llvm::Value *atom_compiled = this->atom->compile(compiler);
 
   if (this->suffixes.size() > 0) {
+    // TODO: This does not compile multiple suffixes
     this->suffixes.front()->subscriptee = atom_compiled;
-    this->suffixes.front()->compile(compiler);
+    return this->suffixes.front()->compile(compiler);
   }
 
   return atom_compiled;
