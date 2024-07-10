@@ -3,6 +3,7 @@
 
 #include "logging/Logger.hpp"
 #include "parser/AstNode.hpp"
+#include "llvm/IR/Type.h"
 
 namespace Kebab {
 namespace Parser {

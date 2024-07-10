@@ -19,6 +19,8 @@ private:
    */
   static std::string getnline(const std::string &path, size_t line_number);
 
+  std::string where() const;
+
   /**
    * @brief skip a token with an inner value and return it
    */
