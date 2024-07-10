@@ -19,8 +19,6 @@ private:
    */
   static std::string getnline(const std::string &path, size_t line_number);
 
-  static std::string llvm_type_to_string(const llvm::Type *type);
-
   std::string where() const;
 
   /**

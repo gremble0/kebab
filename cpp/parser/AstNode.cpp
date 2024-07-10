@@ -26,13 +26,6 @@ std::string AstNode::getnline(const std::string &path, size_t line_number) {
   return out;
 }
 
-std::string AstNode::llvm_type_to_string(const llvm::Type *type) {
-  std::string type_str;
-  llvm::raw_string_ostream stream(type_str);
-  type->print(stream);
-  return type_str;
-}
-
 std::string AstNode::where() const {
   std::string file_coordinates = this->path + ':' + std::to_string(this->span.start.line) + ':' +
                                  std::to_string(this->span.start.col) + '\n';
@@ -61,13 +54,17 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-[[noreturn]] void AstNode::type_error(const llvm::Type *actual, const llvm::Type *expected) const {
-  std::string where = this->where();
-  std::string actual_str = llvm_type_to_string(actual);
-  std::string expected_str = llvm_type_to_string(expected);
+[[noreturn]] void AstNode::type_error(const llvm::Type *expected, const llvm::Type *actual) const {
+  std::string message;
+  llvm::raw_string_ostream stream(message);
+  stream << this->where();
+  stream << "type-error: actual type '";
+  actual->print(stream);
+  stream << "' does not match expected type '";
+  expected->print(stream);
+  stream << '\'';
 
-  std::cerr << where << "type-error: actual type '" << actual_str
-            << "' does not match expected type '" << expected_str << "'" << std::endl;
+  std::cerr << message << std::endl;
 
   exit(1);
 }
