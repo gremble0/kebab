@@ -94,8 +94,7 @@ std::unique_ptr<Token> Lexer::read_number() {
 }
 
 std::unique_ptr<Token> Lexer::read_char() {
-  bool cant_read_char = this->line_pos + 3 >= this->line.length();
-  if (cant_read_char)
+  if (bool cant_read_char = this->line_pos + 3 >= this->line.length())
     this->error("unterminated char literal");
   bool missing_opening_quote = this->peek(0) != '\'';
 
@@ -118,26 +117,16 @@ uint8_t Lexer::read_maybe_escaped_char() {
   uint8_t peeked = this->peek(0);
   uint8_t output;
 
-  switch (peeked) {
-  case '\\': {
+  if (peeked == '\\') {
     uint8_t escaped = this->peek(1);
-    switch (escaped) {
-    case 'n':
+    if (escaped == 'n')
       output = '\n';
-      break;
-
-    default:
+    else
       output = escaped;
-      break;
-    }
     this->line_pos += 2;
-    break;
-  }
-
-  default:
+  } else {
     output = peeked;
     ++this->line_pos;
-    break;
   }
 
   return output;
@@ -150,7 +139,7 @@ std::unique_ptr<Token> Lexer::read_string() {
     this->error("malformed string literal");
 
   Position start = this->position();
-  std::ostringstream stream;
+  std::ostringstream string_stream;
   ++this->line_pos; // skip opening quote
 
   while (true) {
@@ -160,14 +149,14 @@ std::unique_ptr<Token> Lexer::read_string() {
     else if (read_char == '"')
       break;
     else
-      stream << read_char;
+      string_stream << read_char;
   }
   // closing quote is skiped by read_maybe_escaped_char method
 
   Position end = this->position();
   Span span(start, end);
 
-  return std::make_unique<Token>(Token::Type::STRING_LITERAL, span, stream.str());
+  return std::make_unique<Token>(Token::Type::STRING_LITERAL, span, string_stream.str());
 }
 
 std::unique_ptr<Token> Lexer::read_word() {
@@ -306,9 +295,7 @@ void Lexer::handle_gt() {
 void Lexer::handle_div() { this->handle_one_char_type(Token::Type::DIV); }
 
 void Lexer::advance() {
-  char peeked = this->peek(0);
-
-  switch (peeked) {
+  switch (char peeked = this->peek(0)) {
   // Nullbyte means end of the string effectively indicating a newline
   // Comment start means we ignore the rest of the line
   case '\0':
