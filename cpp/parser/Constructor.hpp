@@ -24,7 +24,7 @@ public:
   virtual ~Constructor() = default;
 
   static std::unique_ptr<Constructor> parse(Lexer &lexer);
-  virtual llvm::Value *compile(Compiler &compiler) const = 0;
+  virtual llvm::Value *compile(Compiler &compiler) const override = 0;
   // This pointer can be shared between instances of subclasses of the Constructor class and the
   // caller of this function (likely during compilation)
   virtual std::shared_ptr<Type> get_type() const = 0;
@@ -51,7 +51,7 @@ public:
   std::shared_ptr<Type> type;
 
   static std::unique_ptr<FunctionParameter> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const override;
 };
 
 class FunctionConstructor : public Constructor {

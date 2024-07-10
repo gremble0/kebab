@@ -19,7 +19,7 @@ public:
   virtual ~Expression() = default;
 
   static std::unique_ptr<Expression> parse(Lexer &lexer);
-  virtual llvm::Value *compile(Compiler &compiler) const = 0;
+  virtual llvm::Value *compile(Compiler &compiler) const override = 0;
 };
 
 class CondExpression : public Expression {
@@ -36,7 +36,7 @@ public:
   std::vector<std::vector<std::unique_ptr<Statement>>> bodies;
 
   static std::unique_ptr<CondExpression> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const override;
 };
 
 class NormalExpression : public Expression {
@@ -44,7 +44,7 @@ public:
   std::vector<std::unique_ptr<AndTest>> and_tests;
 
   static std::unique_ptr<NormalExpression> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const override;
 };
 
 class FunctionExpression : public Expression {
@@ -52,7 +52,7 @@ public:
   std::unique_ptr<FunctionConstructor> function;
 
   static std::unique_ptr<FunctionExpression> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const;
+  llvm::Value *compile(Compiler &compiler) const override;
 };
 
 } // namespace Parser

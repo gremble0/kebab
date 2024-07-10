@@ -19,7 +19,7 @@ public:
 
   static std::unique_ptr<Statement> parse(Lexer &lexer);
   static std::optional<std::unique_ptr<Statement>> try_parse_statement(Lexer &lexer);
-  virtual llvm::Value *compile(Compiler &compiler) const = 0;
+  virtual llvm::Value *compile(Compiler &compiler) const override = 0;
   virtual bool is_expression() const = 0;
 };
 
@@ -30,8 +30,8 @@ public:
   std::unique_ptr<Constructor> constructor;
 
   static std::unique_ptr<DefinitionStatement> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const;
-  bool is_expression() const { return false; }
+  llvm::Value *compile(Compiler &compiler) const override;
+  bool is_expression() const override { return false; }
 };
 
 class AssignmentStatement : public Statement {
@@ -40,8 +40,8 @@ public:
   std::unique_ptr<Constructor> constructor;
 
   static std::unique_ptr<AssignmentStatement> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const;
-  bool is_expression() const { return false; }
+  llvm::Value *compile(Compiler &compiler) const override;
+  bool is_expression() const override { return false; }
 };
 
 class ExpressionStatement : public Statement {
@@ -49,8 +49,8 @@ public:
   std::unique_ptr<Expression> expression;
 
   static std::unique_ptr<ExpressionStatement> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const;
-  bool is_expression() const { return true; }
+  llvm::Value *compile(Compiler &compiler) const override;
+  bool is_expression() const override { return true; }
 };
 
 } // namespace Parser
