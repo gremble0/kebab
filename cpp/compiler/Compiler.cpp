@@ -16,7 +16,7 @@
 
 namespace Kebab {
 
-void Compiler::save_module(const std::string &path) {
+void Compiler::save_module(const std::string &path) const {
   std::error_code error_code;
   llvm::raw_fd_stream fd(path, error_code);
   this->module.print(fd, nullptr);

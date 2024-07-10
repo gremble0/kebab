@@ -12,8 +12,7 @@
 
 namespace Kebab {
 
-Lexer::Lexer(std::string path)
-    : stream(path), line_number(0), line_pos(0), cur_token(), path(path) {
+Lexer::Lexer(const std::string &path) : stream(path), cur_token(), path(path) {
   if (!stream.is_open())
     this->error("could not open file " + path);
 
@@ -21,7 +20,7 @@ Lexer::Lexer(std::string path)
   this->advance();
 }
 
-[[noreturn]] void Lexer::error(std::string message) const {
+[[noreturn]] void Lexer::error(const std::string &message) const {
   std::string pretty_position = this->pretty_position();
   std::string labeled_message = "lexer-error: " + message;
 
@@ -88,7 +87,7 @@ std::unique_ptr<Token> Lexer::read_number() {
     else
       return std::make_unique<Token>(Token::Type::INT_LITERAL, span,
                                      std::stoi(&this->line[start.col]));
-  } catch (std::out_of_range) {
+  } catch (std::out_of_range &e) {
     this->error("number out of range");
   }
 }

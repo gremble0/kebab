@@ -16,12 +16,12 @@ class Lexer {
 private:
   std::string line;
   std::ifstream stream;
-  size_t line_number;
-  size_t line_pos;
+  size_t line_number = 0;
+  size_t line_pos = 0;
 
   void next_line();
   uint8_t peek(int offset) const;
-  [[noreturn]] void error(std::string message) const;
+  [[noreturn]] void error(const std::string &message) const;
 
   uint8_t read_maybe_escaped_char();
 
@@ -52,7 +52,7 @@ public:
   std::unique_ptr<Token> cur_token;
   std::string path;
 
-  explicit Lexer(std::string path);
+  explicit Lexer(const std::string &path);
   void advance();
   std::string pretty_position() const;
   Position position() const;

@@ -26,7 +26,7 @@ class RootNode;
 
 class Compiler {
 private:
-  void save_module(const std::string &path);
+  void save_module(const std::string &path) const;
 
   void load_printf();
   void load_globals();
@@ -40,8 +40,7 @@ public:
   llvm::IRBuilder<> builder;
 
   Compiler()
-      : context(llvm::LLVMContext()), module(llvm::Module("kebab", context)),
-        builder(llvm::IRBuilder<>(context)) {}
+      : context(), module(llvm::Module("kebab", context)), builder(llvm::IRBuilder<>(context)) {}
 
   void compile(std::unique_ptr<Parser::RootNode> root);
   [[noreturn]] void error(const std::string &message) const;
