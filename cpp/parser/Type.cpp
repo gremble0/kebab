@@ -10,7 +10,7 @@ namespace Parser {
 std::unique_ptr<Type> Type::parse(Lexer &lexer) {
   std::unique_ptr<Type> type;
 
-  switch (lexer.cur_token->type) {
+  switch (lexer.get_token()->type) {
   case Token::Type::FN:
     type = FunctionType::parse(lexer);
     break;
@@ -25,7 +25,7 @@ std::unique_ptr<Type> Type::parse(Lexer &lexer) {
 
   default:
     parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.cur_token->to_string_short(),
+                     lexer.get_token()->to_string_short(),
                  lexer);
   }
 
@@ -56,7 +56,7 @@ llvm::Value *ListType::compile(Compiler &compiler) const {
 }
 
 void FunctionType::parse_parameter_types(Lexer &lexer) {
-  while (lexer.cur_token->type != Token::Type::RPAREN) {
+  while (lexer.get_token()->type != Token::Type::RPAREN) {
     this->parameter_types.push_back(Type::parse(lexer));
 
     expect(lexer, Token::Type::COMMA, Token::Type::RPAREN);

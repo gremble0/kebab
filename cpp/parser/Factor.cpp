@@ -11,7 +11,7 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
   std::unique_ptr<FactorPrefix> prefix = std::make_unique<FactorPrefix>();
   prefix->start_parsing(lexer, "<factor-prefix>");
 
-  switch (lexer.cur_token->type) {
+  switch (lexer.get_token()->type) {
   case Token::Type::PLUS:
     prefix->type = FactorPrefix::Type::PLUS;
     break;
@@ -22,7 +22,7 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
 
   default:
     parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.cur_token->to_string_short(),
+                     lexer.get_token()->to_string_short(),
                  lexer);
   }
 
@@ -42,14 +42,14 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   factor->start_parsing(lexer, "<factor>");
 
   while (true) {
-    if (FactorPrefix::is_factor_prefix(lexer.cur_token->type))
+    if (FactorPrefix::is_factor_prefix(lexer.get_token()->type))
       factor->prefixes.push_back(FactorPrefix::parse(lexer));
     else
       factor->prefixes.push_back(std::nullopt);
 
     factor->primaries.push_back(Primary::parse(lexer));
 
-    if (!FactorOperator::is_factor_operator(lexer.cur_token->type))
+    if (!FactorOperator::is_factor_operator(lexer.get_token()->type))
       break;
     factor->operators.push_back(FactorOperator::parse(lexer));
   }
@@ -69,7 +69,7 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
   std::unique_ptr<FactorOperator> operator_ = std::make_unique<FactorOperator>();
   operator_->start_parsing(lexer, "<factor-operator>");
 
-  switch (lexer.cur_token->type) {
+  switch (lexer.get_token()->type) {
   case Token::Type::MULT:
     operator_->type = FactorOperator::Type::MULT;
     break;
@@ -80,7 +80,7 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 
   default:
     parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.cur_token->to_string_short(),
+                     lexer.get_token()->to_string_short(),
                  lexer);
   }
 

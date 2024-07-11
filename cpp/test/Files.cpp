@@ -39,7 +39,7 @@ static void replace_one_lexer_expected(const std::string &basename) {
   Logger::set_stream(log_file);
 
   Lexer lexer(source_path);
-  while (lexer.cur_token->type != Token::Type::END_OF_FILE)
+  while (lexer.get_token()->type != Token::Type::END_OF_FILE)
     lexer.advance();
 }
 

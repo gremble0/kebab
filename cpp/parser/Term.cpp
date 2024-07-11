@@ -10,7 +10,7 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
   std::unique_ptr<TermOperator> operator_ = std::make_unique<TermOperator>();
   operator_->start_parsing(lexer, "<term-operator>");
 
-  switch (lexer.cur_token->type) {
+  switch (lexer.get_token()->type) {
   case Token::Type::PLUS:
     operator_->type = TermOperator::Type::PLUS;
     break;
@@ -21,7 +21,7 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
 
   default:
     parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.cur_token->to_string_short(),
+                     lexer.get_token()->to_string_short(),
                  lexer);
   }
 
@@ -43,7 +43,7 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
   while (true) {
     term->factors.push_back(Factor::parse(lexer));
 
-    if (TermOperator::is_term_operator(lexer.cur_token->type))
+    if (TermOperator::is_term_operator(lexer.get_token()->type))
       term->operators.push_back(TermOperator::parse(lexer));
     else
       break;

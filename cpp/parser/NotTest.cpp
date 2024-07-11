@@ -9,7 +9,7 @@ std::unique_ptr<NotTest> NotTest::parse(Lexer &lexer) {
   std::unique_ptr<NotTest> not_test = std::make_unique<NotTest>();
   not_test->start_parsing(lexer, "<not-test>");
 
-  if (lexer.cur_token->type == Token::Type::NOT) {
+  if (lexer.get_token()->type == Token::Type::NOT) {
     not_test->is_negated = true;
     lexer.advance();
   } else {

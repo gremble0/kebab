@@ -26,7 +26,7 @@ private:
    */
   template <typename T, Token::Type K> static T skip_value(Lexer &lexer) {
     expect(lexer, K);
-    T value = std::get<T>(lexer.cur_token->value);
+    T value = std::get<T>(lexer.get_token()->value);
     lexer.advance();
     return value;
   }

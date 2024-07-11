@@ -19,7 +19,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 
   skip(lexer, Token::Type::DEF);
 
-  if (lexer.cur_token->type == Token::Type::MUT) {
+  if (lexer.get_token()->type == Token::Type::MUT) {
     definition->is_mutable = true;
     lexer.advance();
   } else {
@@ -83,7 +83,7 @@ llvm::Value *ExpressionStatement::compile(Compiler &compiler) const {
 std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
   std::unique_ptr<Statement> statement;
 
-  switch (lexer.cur_token->type) {
+  switch (lexer.get_token()->type) {
   case Token::Type::DEF:
     statement = DefinitionStatement::parse(lexer);
     break;
@@ -116,7 +116,7 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
     break;
 
   default:
-    parser_error(std::string("unexpected token '") + lexer.cur_token->to_string_short() + '\'',
+    parser_error(std::string("unexpected token '") + lexer.get_token()->to_string_short() + '\'',
                  lexer);
   }
 
@@ -124,7 +124,7 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
 }
 
 std::optional<std::unique_ptr<Statement>> Statement::try_parse_statement(Lexer &lexer) {
-  switch (lexer.cur_token->type) {
+  switch (lexer.get_token()->type) {
   case Token::Type::DEF:
   case Token::Type::SET:
   case Token::Type::INT_LITERAL:

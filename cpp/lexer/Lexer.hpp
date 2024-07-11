@@ -14,10 +14,12 @@ namespace Kebab {
 
 class Lexer {
 private:
+  const std::string path;
   std::string line;
   std::ifstream stream;
   size_t line_number = 0;
   size_t line_pos = 0;
+  std::shared_ptr<Token> token;
 
   void next_line();
   uint8_t peek(int offset) const;
@@ -49,13 +51,14 @@ private:
   void handle_div();
 
 public:
-  std::unique_ptr<Token> cur_token;
-  std::string path;
-
   explicit Lexer(const std::string &path);
+
   void advance();
+  std::shared_ptr<Token> get_token() const { return this->token; }
+
   std::string pretty_position() const;
-  Position position() const;
+  Position position() const { return Position(this->line_number, this->line_pos); };
+  const std::string &get_path() const { return this->path; };
 };
 
 } // namespace Kebab

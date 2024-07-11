@@ -13,7 +13,7 @@
 
 namespace Kebab {
 
-Lexer::Lexer(const std::string &path) : stream(path), cur_token(), path(path) {
+Lexer::Lexer(const std::string &path) : path(path), stream(path), token() {
   if (!stream.is_open())
     this->error("could not open file " + path);
 
@@ -35,8 +35,6 @@ void Lexer::next_line() {
   ++this->line_number;
   this->line_pos = 0;
 }
-
-Position Lexer::position() const { return Position(this->line_number, this->line_pos); }
 
 std::string Lexer::pretty_position() const {
   std::string coordinates = std::format("{}:{}:{}\n", this->path, std::to_string(this->line_number),
@@ -186,7 +184,7 @@ void Lexer::handle_newline() {
   this->next_line();
 
   if (stream.eof()) {
-    this->cur_token =
+    this->token =
         std::make_unique<Token>(Token::Type::END_OF_FILE, Span(this->position(), this->position()));
     return;
   }
@@ -197,7 +195,7 @@ void Lexer::handle_newline() {
 void Lexer::handle_one_char_type(Token::Type type) {
   Position start = this->position();
   ++this->line_pos;
-  this->cur_token = std::make_unique<Token>(type, Span(start, this->position()));
+  this->token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
 void Lexer::handle_whitespace() {
@@ -228,7 +226,7 @@ void Lexer::handle_equals() {
     break;
   }
 
-  this->cur_token = std::make_unique<Token>(type, Span(start, this->position()));
+  this->token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
 void Lexer::handle_comma() { this->handle_one_char_type(Token::Type::COMMA); }
@@ -259,7 +257,7 @@ void Lexer::handle_not() {
     type = Token::Type::NOT;
   }
 
-  this->cur_token = std::make_unique<Token>(type, Span(start, this->position()));
+  this->token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
 void Lexer::handle_lt() {
@@ -274,7 +272,7 @@ void Lexer::handle_lt() {
     type = Token::Type::LT;
   }
 
-  this->cur_token = std::make_unique<Token>(type, Span(start, this->position()));
+  this->token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
 void Lexer::handle_gt() {
@@ -289,7 +287,7 @@ void Lexer::handle_gt() {
     type = Token::Type::GT;
   }
 
-  this->cur_token = std::make_unique<Token>(type, Span(start, this->position()));
+  this->token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
 void Lexer::handle_div() { this->handle_one_char_type(Token::Type::DIV); }
@@ -354,25 +352,25 @@ void Lexer::advance() {
 
   // Literals
   case '"':
-    this->cur_token = Lexer::read_string();
+    this->token = Lexer::read_string();
     break;
   case '\'':
-    this->cur_token = Lexer::read_char();
+    this->token = Lexer::read_char();
     break;
 
   // Either a keyword, a name, a number or an illegal token
   default:
     if (std::isalpha(peeked))
-      this->cur_token = Lexer::read_word();
+      this->token = Lexer::read_word();
     else if (std::isalnum(peeked))
-      this->cur_token = Lexer::read_number();
+      this->token = Lexer::read_number();
     else
       this->error(std::string("illegal token '") + peeked + "'");
 
     break;
   }
 
-  Logger::log(this->cur_token->to_string_verbose());
+  Logger::log(this->token->to_string_verbose());
 }
 
 } // namespace Kebab

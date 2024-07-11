@@ -73,7 +73,7 @@ void AstNode::start_parsing(Lexer &lexer, const std::string &node_name) {
   // maybe some #ifdef for logging (this would affect testing too)
   Logger::log_with_indent(node_name);
   this->span.start = lexer.position();
-  this->path = lexer.path;
+  this->path = lexer.get_path();
 }
 
 void AstNode::finish_parsing(Lexer &lexer, const std::string &node_name) {
@@ -83,15 +83,15 @@ void AstNode::finish_parsing(Lexer &lexer, const std::string &node_name) {
 }
 
 void AstNode::expect(Lexer &lexer, Token::Type type) {
-  if (lexer.cur_token->type != type)
-    parser_error("unexpected token '" + lexer.cur_token->to_string_short() + "' expected: '" +
+  if (lexer.get_token()->type != type)
+    parser_error("unexpected token '" + lexer.get_token()->to_string_short() + "' expected: '" +
                      Token::type_to_string(type) + '\'',
                  lexer);
 }
 
 void AstNode::expect(Lexer &lexer, Token::Type either, Token::Type or_) {
-  if (lexer.cur_token->type != either && lexer.cur_token->type != or_)
-    parser_error("unexpected token '" + lexer.cur_token->to_string_short() + "' expected: '" +
+  if (lexer.get_token()->type != either && lexer.get_token()->type != or_)
+    parser_error("unexpected token '" + lexer.get_token()->to_string_short() + "' expected: '" +
                      Token::type_to_string(either) + "' or '" + Token::type_to_string(or_) + '\'',
                  lexer);
 }
@@ -110,7 +110,7 @@ void AstNode::skip(Lexer &lexer, Token::Type either, Token::Type or_) {
  * @return whether the specified token was skipped
  */
 bool AstNode::ignore(Lexer &lexer, Token::Type type) {
-  if (lexer.cur_token->type == type) {
+  if (lexer.get_token()->type == type) {
     lexer.advance();
     return true;
   }
