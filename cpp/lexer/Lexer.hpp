@@ -27,10 +27,10 @@ private:
 
   uint8_t read_maybe_escaped_char();
 
-  std::unique_ptr<Token> handle_number();
-  std::unique_ptr<Token> handle_char();
-  std::unique_ptr<Token> handle_string();
-  std::unique_ptr<Token> handle_word();
+  void handle_number();
+  void handle_char();
+  void handle_string();
+  void handle_word();
 
   void handle_one_char_type(Token::Type type);
   void handle_newline();

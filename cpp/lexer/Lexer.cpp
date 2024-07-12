@@ -57,8 +57,27 @@ uint8_t Lexer::peek(int offset) const {
   return this->line[this->line_pos + offset];
 }
 
+uint8_t Lexer::read_maybe_escaped_char() {
+  uint8_t peeked = this->peek(0);
+  uint8_t output;
+
+  if (peeked == '\\') {
+    uint8_t escaped = this->peek(1);
+    if (escaped == 'n')
+      output = '\n';
+    else
+      output = escaped;
+    this->line_pos += 2;
+  } else {
+    output = peeked;
+    ++this->line_pos;
+  }
+
+  return output;
+}
+
 // Returned token is either an integer literal or a float literal
-std::unique_ptr<Token> Lexer::handle_number() {
+void Lexer::handle_number() {
   Position start = this->position();
   bool has_seen_point = false;
 
@@ -82,17 +101,17 @@ std::unique_ptr<Token> Lexer::handle_number() {
 
   try {
     if (has_seen_point)
-      return std::make_unique<Token>(Token::Type::FLOAT_LITERAL, span,
-                                     std::stof(&this->line[start.col]));
+      this->token = std::make_unique<Token>(Token::Type::FLOAT_LITERAL, span,
+                                            std::stof(&this->line[start.col]));
     else
-      return std::make_unique<Token>(Token::Type::INT_LITERAL, span,
-                                     std::stoi(&this->line[start.col]));
+      this->token = std::make_unique<Token>(Token::Type::INT_LITERAL, span,
+                                            std::stoi(&this->line[start.col]));
   } catch (std::out_of_range &e) {
     this->error("number out of range");
   }
 }
 
-std::unique_ptr<Token> Lexer::handle_char() {
+void Lexer::handle_char() {
   if (bool cant_read_char = this->line_pos + 3 >= this->line.length())
     this->error("unterminated char literal");
   bool missing_opening_quote = this->peek(0) != '\'';
@@ -109,29 +128,10 @@ std::unique_ptr<Token> Lexer::handle_char() {
 
   Span span(start, this->position());
 
-  return std::make_unique<Token>(Token::Type::CHAR_LITERAL, span, c);
+  this->token = std::make_unique<Token>(Token::Type::CHAR_LITERAL, span, c);
 }
 
-uint8_t Lexer::read_maybe_escaped_char() {
-  uint8_t peeked = this->peek(0);
-  uint8_t output;
-
-  if (peeked == '\\') {
-    uint8_t escaped = this->peek(1);
-    if (escaped == 'n')
-      output = '\n';
-    else
-      output = escaped;
-    this->line_pos += 2;
-  } else {
-    output = peeked;
-    ++this->line_pos;
-  }
-
-  return output;
-}
-
-std::unique_ptr<Token> Lexer::handle_string() {
+void Lexer::handle_string() {
   bool cant_read_char = this->line_pos + 2 >= this->line.length();
   bool missing_opening_quote = this->peek(0) != '"';
   if (cant_read_char || missing_opening_quote)
@@ -155,10 +155,10 @@ std::unique_ptr<Token> Lexer::handle_string() {
   Position end = this->position();
   Span span(start, end);
 
-  return std::make_unique<Token>(Token::Type::STRING_LITERAL, span, string_stream.str());
+  this->token = std::make_unique<Token>(Token::Type::STRING_LITERAL, span, string_stream.str());
 }
 
-std::unique_ptr<Token> Lexer::handle_word() {
+void Lexer::handle_word() {
   auto is_kebab_case = [](uint8_t c) {
     return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']' &&
            c != '\0';
@@ -175,7 +175,7 @@ std::unique_ptr<Token> Lexer::handle_word() {
 
   std::string word = this->line.substr(start.col, end.col - start.col);
 
-  return std::make_unique<Token>(span, word);
+  this->token = std::make_unique<Token>(span, word);
 }
 
 void Lexer::handle_newline() {
@@ -400,18 +400,18 @@ void Lexer::advance() {
 
   // Literals
   case '"':
-    this->token = Lexer::handle_string();
+    this->handle_string();
     break;
   case '\'':
-    this->token = Lexer::handle_char();
+    this->handle_char();
     break;
 
   // Either a keyword, a name, a number or an illegal token
   default:
     if (std::isalpha(peeked))
-      this->token = Lexer::handle_word();
+      this->handle_word();
     else if (std::isalnum(peeked))
-      this->token = Lexer::handle_number();
+      this->Lexer::handle_number();
     else
       this->error(std::string("illegal token '") + peeked + "'");
 
