@@ -21,6 +21,7 @@ Lexer::Lexer(const std::string &path) : path(path), stream(path), token() {
   this->advance();
 }
 
+// TODO: dont label as lexer-error since can be from parser, maybe make separate error handler class
 [[noreturn]] void Lexer::error(const std::string &message) const {
   std::string pretty_position = this->pretty_position();
   std::string labeled_message = "lexer-error: " + message;
@@ -290,6 +291,13 @@ void Lexer::handle_gt() {
   this->token = std::make_unique<Token>(type, Span(start, this->position()));
 }
 
+template <typename T, Token::Type K> T Lexer::skip_value() {
+  this->expect(K);
+  T value = std::get<T>(this->peek()->value);
+  this->advance();
+  return value;
+}
+
 void Lexer::handle_div() { this->handle_one_char_type(Token::Type::DIV); }
 
 int64_t Lexer::skip_int() { return skip_value<int64_t, Token::Type::INT_LITERAL>(); }
@@ -301,6 +309,37 @@ uint8_t Lexer::skip_char() { return skip_value<uint8_t, Token::Type::CHAR_LITERA
 std::string Lexer::skip_string() { return skip_value<std::string, Token::Type::STRING_LITERAL>(); }
 
 std::string Lexer::skip_name() { return skip_value<std::string, Token::Type::NAME>(); }
+
+void Lexer::expect(Token::Type expected) const {
+  if (this->token->type != expected)
+    this->error("unexpected token '" + this->token->to_string_short() + "' expected: '" +
+                Token::type_to_string(expected) + '\'');
+}
+
+void Lexer::expect(Token::Type either, Token::Type or_) const {
+  if (this->token->type != either && this->token->type != or_)
+    this->error("unexpected token '" + this->token->to_string_short() + "' expected: '" +
+                Token::type_to_string(either) + "' or '" + Token::type_to_string(or_) + '\'');
+}
+
+void Lexer::skip(Token::Type type) {
+  this->expect(type);
+  this->advance();
+}
+
+void Lexer::skip(Token::Type either, Token::Type or_) {
+  this->expect(either, or_);
+  this->advance();
+}
+
+// TODO: optional instead
+bool Lexer::ignore(Token::Type type) {
+  if (this->token->type == type) {
+    this->advance();
+    return true;
+  }
+  return false;
+}
 
 void Lexer::advance() {
   switch (char peeked = this->peek(0)) {

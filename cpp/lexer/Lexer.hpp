@@ -50,12 +50,7 @@ private:
   void handle_gt();
   void handle_div();
 
-  template <typename T, Token::Type K> T skip_value() {
-    this->expect(K);
-    T value = std::get<T>(this->peek()->value);
-    this->advance();
-    return value;
-  }
+  template <typename T, Token::Type K> T skip_value();
 
 public:
   explicit Lexer(const std::string &path);

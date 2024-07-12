@@ -36,15 +36,6 @@ std::string AstNode::where() const {
   return file_coordinates + line + line_cursor;
 }
 
-[[noreturn]] void AstNode::parser_error(const std::string &message, Lexer &lexer) {
-  std::string pretty_position = lexer.pretty_position();
-  std::string labeled_message = "parser-error: " + message;
-
-  std::cerr << pretty_position << labeled_message << std::endl;
-
-  exit(1);
-}
-
 [[noreturn]] void AstNode::unrecognized_type_error(const std::string &type_name) const {
   std::string where = this->where();
   std::string labeled_message = "unrecognized-type-error: '" + type_name + '\'';
@@ -80,41 +71,6 @@ void AstNode::finish_parsing(Lexer &lexer, const std::string &node_name) {
   // maybe some #ifdef for logging (this would affect testing too)
   Logger::log_with_dedent(node_name);
   this->span.end = lexer.position();
-}
-
-void AstNode::expect(Lexer &lexer, Token::Type type) {
-  if (lexer.get_token()->type != type)
-    parser_error("unexpected token '" + lexer.get_token()->to_string_short() + "' expected: '" +
-                     Token::type_to_string(type) + '\'',
-                 lexer);
-}
-
-void AstNode::expect(Lexer &lexer, Token::Type either, Token::Type or_) {
-  if (lexer.get_token()->type != either && lexer.get_token()->type != or_)
-    parser_error("unexpected token '" + lexer.get_token()->to_string_short() + "' expected: '" +
-                     Token::type_to_string(either) + "' or '" + Token::type_to_string(or_) + '\'',
-                 lexer);
-}
-
-void AstNode::skip(Lexer &lexer, Token::Type type) {
-  expect(lexer, type);
-  lexer.advance();
-}
-
-void AstNode::skip(Lexer &lexer, Token::Type either, Token::Type or_) {
-  expect(lexer, either, or_);
-  lexer.advance();
-}
-
-/**
- * @return whether the specified token was skipped
- */
-bool AstNode::ignore(Lexer &lexer, Token::Type type) {
-  if (lexer.get_token()->type == type) {
-    lexer.advance();
-    return true;
-  }
-  return false;
 }
 
 } // namespace Parser
