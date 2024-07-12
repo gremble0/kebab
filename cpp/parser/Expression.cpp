@@ -16,7 +16,7 @@ namespace Parser {
 std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
   std::unique_ptr<Expression> expression;
 
-  switch (lexer.get_token()->type) {
+  switch (lexer.peek()->type) {
   case Token::Type::IF:
     expression = CondExpression::parse(lexer);
     break;
@@ -43,8 +43,7 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
     break;
 
   default:
-    parser_error(std::string("unexpected token '") + lexer.get_token()->to_string_short() + '\'',
-                 lexer);
+    parser_error(std::string("unexpected token '") + lexer.peek()->to_string_short() + '\'', lexer);
   }
 
   return expression;
@@ -73,9 +72,9 @@ void CondExpression::parse_test_body(Lexer &lexer) {
 void CondExpression::parse_if(Lexer &lexer) {
   Logger::log_with_indent("<cond-if>");
 
-  skip(lexer, Token::Type::IF);
+  lexer.skip(Token::Type::IF);
   this->tests.push_back(Expression::parse(lexer));
-  skip(lexer, Token::Type::FAT_RARROW);
+  lexer.skip(Token::Type::FAT_RARROW);
   this->parse_test_body(lexer);
 
   Logger::log_with_dedent("</cond-if>");
@@ -85,9 +84,9 @@ void CondExpression::parse_if(Lexer &lexer) {
 void CondExpression::parse_elif(Lexer &lexer) {
   Logger::log_with_indent("<cond-elif>");
 
-  skip(lexer, Token::Type::ELIF);
+  lexer.skip(Token::Type::ELIF);
   this->tests.push_back(Expression::parse(lexer));
-  skip(lexer, Token::Type::FAT_RARROW);
+  lexer.skip(Token::Type::FAT_RARROW);
   this->parse_test_body(lexer);
 
   Logger::log_with_dedent("<cond-elif/>");
@@ -97,7 +96,7 @@ void CondExpression::parse_elif(Lexer &lexer) {
 void CondExpression::parse_elifs(Lexer &lexer) {
   Logger::log_with_indent("<cond-elifs>");
 
-  while (lexer.get_token()->type == Token::Type::ELIF)
+  while (lexer.peek()->type == Token::Type::ELIF)
     this->parse_elif(lexer);
 
   Logger::log_with_dedent("</cond-elifs>");
@@ -107,8 +106,8 @@ void CondExpression::parse_elifs(Lexer &lexer) {
 void CondExpression::parse_else(Lexer &lexer) {
   Logger::log_with_indent("<cond-else>");
 
-  skip(lexer, Token::Type::ELSE);
-  skip(lexer, Token::Type::FAT_RARROW);
+  lexer.skip(Token::Type::ELSE);
+  lexer.skip(Token::Type::FAT_RARROW);
   this->parse_test_body(lexer);
 
   Logger::log_with_dedent("</cond-else>");
@@ -139,7 +138,7 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   while (true) {
     expression->and_tests.push_back(AndTest::parse(lexer));
 
-    bool ignored_or = ignore(lexer, Token::Type::OR);
+    bool ignored_or = lexer.ignore(Token::Type::OR);
     if (!ignored_or)
       break;
   }

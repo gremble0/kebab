@@ -1,5 +1,4 @@
 #include <cassert>
-#include <iostream>
 #include <optional>
 #include <string>
 
@@ -17,17 +16,17 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   std::unique_ptr<DefinitionStatement> definition = std::make_unique<DefinitionStatement>();
   definition->start_parsing(lexer, "<definition-statement>");
 
-  skip(lexer, Token::Type::DEF);
+  lexer.skip(Token::Type::DEF);
 
-  if (lexer.get_token()->type == Token::Type::MUT) {
+  if (lexer.peek()->type == Token::Type::MUT) {
     definition->is_mutable = true;
     lexer.advance();
   } else {
     definition->is_mutable = false;
   }
 
-  definition->name = skip_name(lexer);
-  skip(lexer, Token::Type::EQUALS);
+  definition->name = lexer.skip_name();
+  lexer.skip(Token::Type::EQUALS);
   definition->constructor = Constructor::parse(lexer);
 
   definition->finish_parsing(lexer, "</definition-statement>");
@@ -52,9 +51,9 @@ std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   std::unique_ptr<AssignmentStatement> assignment = std::make_unique<AssignmentStatement>();
   assignment->start_parsing(lexer, "<assignment-statement>");
 
-  skip(lexer, Token::Type::SET);
-  assignment->name = skip_name(lexer);
-  skip(lexer, Token::Type::EQUALS);
+  lexer.skip(Token::Type::SET);
+  assignment->name = lexer.skip_name();
+  lexer.skip(Token::Type::EQUALS);
   assignment->constructor = Constructor::parse(lexer);
 
   assignment->finish_parsing(lexer, "</assignment-statement>");
@@ -83,7 +82,7 @@ llvm::Value *ExpressionStatement::compile(Compiler &compiler) const {
 std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
   std::unique_ptr<Statement> statement;
 
-  switch (lexer.get_token()->type) {
+  switch (lexer.peek()->type) {
   case Token::Type::DEF:
     statement = DefinitionStatement::parse(lexer);
     break;
@@ -116,15 +115,14 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
     break;
 
   default:
-    parser_error(std::string("unexpected token '") + lexer.get_token()->to_string_short() + '\'',
-                 lexer);
+    parser_error(std::string("unexpected token '") + lexer.peek()->to_string_short() + '\'', lexer);
   }
 
   return statement;
 }
 
 std::optional<std::unique_ptr<Statement>> Statement::try_parse_statement(Lexer &lexer) {
-  switch (lexer.get_token()->type) {
+  switch (lexer.peek()->type) {
   case Token::Type::DEF:
   case Token::Type::SET:
   case Token::Type::INT_LITERAL:

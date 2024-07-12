@@ -11,7 +11,7 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
   std::unique_ptr<ComparisonOperator> operator_ = std::make_unique<ComparisonOperator>();
   operator_->start_parsing(lexer, "<comparison-operator>");
 
-  switch (lexer.get_token()->type) {
+  switch (lexer.peek()->type) {
   case Token::Type::LT:
     operator_->type = ComparisonOperator::Type::LT;
     break;
@@ -37,8 +37,9 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
     break;
 
   default:
+    // TODO: bad
     parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.get_token()->to_string_short(),
+                     lexer.peek()->to_string_short(),
                  lexer);
   }
 
@@ -60,7 +61,7 @@ std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
   while (true) {
     comparison->terms.push_back(Term::parse(lexer));
 
-    if (ComparisonOperator::is_comparison_operator(lexer.get_token()->type))
+    if (ComparisonOperator::is_comparison_operator(lexer.peek()->type))
       comparison->operators.push_back(ComparisonOperator::parse(lexer));
     else
       break;

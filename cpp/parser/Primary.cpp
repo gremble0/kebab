@@ -16,9 +16,9 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
   std::unique_ptr<PrimarySubscription> subscription = std::make_unique<PrimarySubscription>();
   subscription->start_parsing(lexer, "<primary-subscription>");
 
-  skip(lexer, Token::Type::LBRACKET);
+  lexer.skip(Token::Type::LBRACKET);
   subscription->subscription = Expression::parse(lexer);
-  skip(lexer, Token::Type::RBRACKET);
+  lexer.skip(Token::Type::RBRACKET);
 
   subscription->finish_parsing(lexer, "</primary-subscription>");
   return subscription;
@@ -33,16 +33,16 @@ std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   std::unique_ptr<PrimaryArguments> arguments = std::make_unique<PrimaryArguments>();
   arguments->start_parsing(lexer, "<primary-arguments>");
 
-  skip(lexer, Token::Type::LPAREN);
+  lexer.skip(Token::Type::LPAREN);
   while (true) {
     arguments->arguments.push_back(Expression::parse(lexer));
 
-    if (lexer.get_token()->type == Token::Type::RPAREN)
+    if (lexer.peek()->type == Token::Type::RPAREN)
       break;
     else
-      skip(lexer, Token::Type::COMMA);
+      lexer.skip(Token::Type::COMMA);
   }
-  skip(lexer, Token::Type::RPAREN);
+  lexer.skip(Token::Type::RPAREN);
 
   arguments->finish_parsing(lexer, "</primary-arguments>");
   return arguments;
@@ -60,7 +60,7 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
 std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
   std::unique_ptr<PrimarySuffix> suffix;
 
-  switch (lexer.get_token()->type) {
+  switch (lexer.peek()->type) {
   case Token::Type::LPAREN:
     suffix = PrimaryArguments::parse(lexer);
     break;
@@ -71,7 +71,7 @@ std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
 
   default:
     parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.get_token()->to_string_short(),
+                     lexer.peek()->to_string_short(),
                  lexer);
   }
 
@@ -83,7 +83,7 @@ std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
   primary->start_parsing(lexer, "<primary>");
 
   primary->atom = Atom::parse(lexer);
-  while (PrimarySuffix::is_primary_suffix_opener(lexer.get_token()->type))
+  while (PrimarySuffix::is_primary_suffix_opener(lexer.peek()->type))
     primary->suffixes.push_back(PrimarySuffix::parse(lexer));
 
   primary->finish_parsing(lexer, "</primary>");

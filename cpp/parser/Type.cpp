@@ -10,7 +10,7 @@ namespace Parser {
 std::unique_ptr<Type> Type::parse(Lexer &lexer) {
   std::unique_ptr<Type> type;
 
-  switch (lexer.get_token()->type) {
+  switch (lexer.peek()->type) {
   case Token::Type::FN:
     type = FunctionType::parse(lexer);
     break;
@@ -25,7 +25,7 @@ std::unique_ptr<Type> Type::parse(Lexer &lexer) {
 
   default:
     parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.get_token()->to_string_short(),
+                     lexer.peek()->to_string_short(),
                  lexer);
   }
 
@@ -36,10 +36,10 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   std::unique_ptr<ListType> type = std::make_unique<ListType>();
   type->start_parsing(lexer, "<list-type>");
 
-  skip(lexer, Token::Type::LIST);
-  skip(lexer, Token::Type::LPAREN);
+  lexer.skip(Token::Type::LIST);
+  lexer.skip(Token::Type::LPAREN);
   type->content_type = Type::parse(lexer);
-  skip(lexer, Token::Type::RPAREN);
+  lexer.skip(Token::Type::RPAREN);
 
   type->finish_parsing(lexer, "</list-type>");
   return type;
@@ -56,11 +56,11 @@ llvm::Value *ListType::compile(Compiler &compiler) const {
 }
 
 void FunctionType::parse_parameter_types(Lexer &lexer) {
-  while (lexer.get_token()->type != Token::Type::RPAREN) {
+  while (lexer.peek()->type != Token::Type::RPAREN) {
     this->parameter_types.push_back(Type::parse(lexer));
 
-    expect(lexer, Token::Type::COMMA, Token::Type::RPAREN);
-    ignore(lexer, Token::Type::COMMA);
+    lexer.expect(Token::Type::COMMA, Token::Type::RPAREN);
+    lexer.ignore(Token::Type::COMMA);
   }
 }
 
@@ -70,13 +70,13 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
   std::unique_ptr<FunctionType> type = std::make_unique<FunctionType>();
   type->start_parsing(lexer, "<function-type>");
 
-  skip(lexer, Token::Type::FN);
-  skip(lexer, Token::Type::LPAREN);
+  lexer.skip(Token::Type::FN);
+  lexer.skip(Token::Type::LPAREN);
 
   type->parse_parameter_types(lexer);
 
-  skip(lexer, Token::Type::RPAREN);
-  skip(lexer, Token::Type::FAT_RARROW);
+  lexer.skip(Token::Type::RPAREN);
+  lexer.skip(Token::Type::FAT_RARROW);
 
   type->parse_return_type(lexer);
 
@@ -98,7 +98,7 @@ std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
   std::unique_ptr<PrimitiveType> type = std::make_unique<PrimitiveType>();
   type->start_parsing(lexer, "<primitive-type>");
 
-  type->name = skip_name(lexer);
+  type->name = lexer.skip_name();
 
   type->finish_parsing(lexer, "</primitive-type>");
   return type;
