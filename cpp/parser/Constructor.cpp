@@ -97,7 +97,7 @@ void FunctionConstructor::parse_type(Lexer &lexer) {
     this->parameters.push_back(std::move(parameter));
 
     lexer.expect(Token::Type::COMMA, Token::Type::RPAREN);
-    lexer.ignore(Token::Type::COMMA);
+    lexer.try_skip(Token::Type::COMMA);
   }
 
   lexer.skip(Token::Type::RPAREN);

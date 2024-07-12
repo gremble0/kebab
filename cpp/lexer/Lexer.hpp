@@ -19,7 +19,7 @@ private:
   std::ifstream stream;
   size_t line_number = 0;
   size_t line_pos = 0;
-  std::shared_ptr<Token> token;
+  std::shared_ptr<Token> token; // shared with callers of Lexer::peek()
 
   void next_line();
   uint8_t peek(int offset) const;
@@ -27,10 +27,10 @@ private:
 
   uint8_t read_maybe_escaped_char();
 
-  std::unique_ptr<Token> read_number();
-  std::unique_ptr<Token> read_char();
-  std::unique_ptr<Token> read_string();
-  std::unique_ptr<Token> read_word();
+  std::unique_ptr<Token> handle_number();
+  std::unique_ptr<Token> handle_char();
+  std::unique_ptr<Token> handle_string();
+  std::unique_ptr<Token> handle_word();
 
   void handle_one_char_type(Token::Type type);
   void handle_newline();
@@ -60,7 +60,7 @@ public:
 
   void expect(Token::Type expected) const;
   void expect(Token::Type either, Token::Type or_) const;
-  bool ignore(Token::Type type);
+  bool try_skip(Token::Type expected);
   void skip(Token::Type expected);
   void skip(Token::Type either, Token::Type or_);
 

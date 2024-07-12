@@ -138,7 +138,7 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   while (true) {
     expression->and_tests.push_back(AndTest::parse(lexer));
 
-    bool ignored_or = lexer.ignore(Token::Type::OR);
+    bool ignored_or = lexer.try_skip(Token::Type::OR);
     if (!ignored_or)
       break;
   }

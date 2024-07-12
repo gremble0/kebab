@@ -58,7 +58,7 @@ uint8_t Lexer::peek(int offset) const {
 }
 
 // Returned token is either an integer literal or a float literal
-std::unique_ptr<Token> Lexer::read_number() {
+std::unique_ptr<Token> Lexer::handle_number() {
   Position start = this->position();
   bool has_seen_point = false;
 
@@ -92,7 +92,7 @@ std::unique_ptr<Token> Lexer::read_number() {
   }
 }
 
-std::unique_ptr<Token> Lexer::read_char() {
+std::unique_ptr<Token> Lexer::handle_char() {
   if (bool cant_read_char = this->line_pos + 3 >= this->line.length())
     this->error("unterminated char literal");
   bool missing_opening_quote = this->peek(0) != '\'';
@@ -131,7 +131,7 @@ uint8_t Lexer::read_maybe_escaped_char() {
   return output;
 }
 
-std::unique_ptr<Token> Lexer::read_string() {
+std::unique_ptr<Token> Lexer::handle_string() {
   bool cant_read_char = this->line_pos + 2 >= this->line.length();
   bool missing_opening_quote = this->peek(0) != '"';
   if (cant_read_char || missing_opening_quote)
@@ -158,7 +158,7 @@ std::unique_ptr<Token> Lexer::read_string() {
   return std::make_unique<Token>(Token::Type::STRING_LITERAL, span, string_stream.str());
 }
 
-std::unique_ptr<Token> Lexer::read_word() {
+std::unique_ptr<Token> Lexer::handle_word() {
   auto is_kebab_case = [](uint8_t c) {
     return !std::isspace(c) && c != ',' && c != '(' && c != ')' && c != '[' && c != ']' &&
            c != '\0';
@@ -332,9 +332,8 @@ void Lexer::skip(Token::Type either, Token::Type or_) {
   this->advance();
 }
 
-// TODO: optional instead
-bool Lexer::ignore(Token::Type type) {
-  if (this->token->type == type) {
+bool Lexer::try_skip(Token::Type expected) {
+  if (this->token->type == expected) {
     this->advance();
     return true;
   }
@@ -401,18 +400,18 @@ void Lexer::advance() {
 
   // Literals
   case '"':
-    this->token = Lexer::read_string();
+    this->token = Lexer::handle_string();
     break;
   case '\'':
-    this->token = Lexer::read_char();
+    this->token = Lexer::handle_char();
     break;
 
   // Either a keyword, a name, a number or an illegal token
   default:
     if (std::isalpha(peeked))
-      this->token = Lexer::read_word();
+      this->token = Lexer::handle_word();
     else if (std::isalnum(peeked))
-      this->token = Lexer::read_number();
+      this->token = Lexer::handle_number();
     else
       this->error(std::string("illegal token '") + peeked + "'");
 

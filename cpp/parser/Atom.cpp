@@ -127,7 +127,7 @@ std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
     atom->list.push_back(Expression::parse(lexer));
 
     lexer.expect(Token::Type::COMMA, Token::Type::RBRACKET);
-    lexer.ignore(Token::Type::COMMA);
+    lexer.try_skip(Token::Type::COMMA);
   }
   lexer.skip(Token::Type::RBRACKET);
 

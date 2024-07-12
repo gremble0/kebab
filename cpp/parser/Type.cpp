@@ -60,7 +60,7 @@ void FunctionType::parse_parameter_types(Lexer &lexer) {
     this->parameter_types.push_back(Type::parse(lexer));
 
     lexer.expect(Token::Type::COMMA, Token::Type::RPAREN);
-    lexer.ignore(Token::Type::COMMA);
+    lexer.try_skip(Token::Type::COMMA);
   }
 }
 
