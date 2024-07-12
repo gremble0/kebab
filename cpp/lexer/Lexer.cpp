@@ -292,6 +292,16 @@ void Lexer::handle_gt() {
 
 void Lexer::handle_div() { this->handle_one_char_type(Token::Type::DIV); }
 
+int64_t Lexer::skip_int() { return skip_value<int64_t, Token::Type::INT_LITERAL>(); }
+
+float_t Lexer::skip_float() { return skip_value<float_t, Token::Type::FLOAT_LITERAL>(); }
+
+uint8_t Lexer::skip_char() { return skip_value<uint8_t, Token::Type::CHAR_LITERAL>(); }
+
+std::string Lexer::skip_string() { return skip_value<std::string, Token::Type::STRING_LITERAL>(); }
+
+std::string Lexer::skip_name() { return skip_value<std::string, Token::Type::NAME>(); }
+
 void Lexer::advance() {
   switch (char peeked = this->peek(0)) {
   // Nullbyte means end of the string effectively indicating a newline

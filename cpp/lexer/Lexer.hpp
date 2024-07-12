@@ -50,10 +50,10 @@ private:
   void handle_gt();
   void handle_div();
 
-  template <typename T, Token::Type K> T skip_value(Lexer &lexer) {
+  template <typename T, Token::Type K> T skip_value() {
     this->expect(K);
-    T value = std::get<T>(lexer.peek()->value);
-    lexer.advance();
+    T value = std::get<T>(this->peek()->value);
+    this->advance();
     return value;
   }
 
@@ -65,23 +65,15 @@ public:
 
   void expect(Token::Type expected) const;
   void expect(Token::Type either, Token::Type or_) const;
+  bool ignore(Token::Type type);
   void skip(Token::Type expected);
   void skip(Token::Type either, Token::Type or_);
-  bool ignore(Token::Type type);
 
-  int64_t skip_int(Lexer &lexer) { return skip_value<int64_t, Token::Type::INT_LITERAL>(lexer); }
-
-  float_t skip_float(Lexer &lexer) {
-    return skip_value<float_t, Token::Type::FLOAT_LITERAL>(lexer);
-  }
-
-  uint8_t skip_char(Lexer &lexer) { return skip_value<uint8_t, Token::Type::CHAR_LITERAL>(lexer); }
-
-  std::string skip_string(Lexer &lexer) {
-    return skip_value<std::string, Token::Type::STRING_LITERAL>(lexer);
-  }
-
-  std::string skip_name(Lexer &lexer) { return skip_value<std::string, Token::Type::NAME>(lexer); }
+  int64_t skip_int();
+  float_t skip_float();
+  uint8_t skip_char();
+  std::string skip_string();
+  std::string skip_name();
 
   std::string pretty_position() const;
   Position position() const { return Position(this->line_number, this->line_pos); };
