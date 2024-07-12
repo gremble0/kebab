@@ -13,7 +13,7 @@ std::unique_ptr<IntAtom> IntAtom::parse(Lexer &lexer) {
   std::unique_ptr<IntAtom> atom = std::make_unique<IntAtom>();
   atom->start_parsing(lexer, "<int-atom>");
 
-  atom->i = skip_int(lexer);
+  atom->i = lexer.skip_int();
 
   atom->finish_parsing(lexer, "</int-atom>");
   return atom;
@@ -27,7 +27,7 @@ std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
   std::unique_ptr<FloatAtom> atom = std::make_unique<FloatAtom>();
   atom->start_parsing(lexer, "<float-atom>");
 
-  atom->f = skip_float(lexer);
+  atom->f = lexer.skip_float();
 
   atom->finish_parsing(lexer, "</float-atom>");
   return atom;
@@ -41,7 +41,7 @@ std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
   std::unique_ptr<CharAtom> atom = std::make_unique<CharAtom>();
   atom->start_parsing(lexer, "<char-atom>");
 
-  atom->c = skip_char(lexer);
+  atom->c = lexer.skip_char();
 
   atom->finish_parsing(lexer, "</char-atom>");
   return atom;
@@ -55,7 +55,7 @@ std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
   std::unique_ptr<StringAtom> atom = std::make_unique<StringAtom>();
   atom->start_parsing(lexer, "<string-atom>");
 
-  atom->s = skip_string(lexer);
+  atom->s = lexer.skip_string();
 
   atom->finish_parsing(lexer, "</string-atom>");
   return atom;
@@ -69,9 +69,10 @@ std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   std::unique_ptr<BoolAtom> atom = std::make_unique<BoolAtom>();
   atom->start_parsing(lexer, "<bool-atom>");
 
-  if (lexer.get_token()->type == Token::Type::TRUE)
+  // TODO: make bool token contain inner bool to not have to do this
+  if (lexer.peek()->type == Token::Type::TRUE)
     atom->b = true;
-  else if (lexer.get_token()->type == Token::Type::FALSE)
+  else if (lexer.peek()->type == Token::Type::FALSE)
     atom->b = false;
   lexer.advance();
 
@@ -87,7 +88,7 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
   std::unique_ptr<NameAtom> atom = std::make_unique<NameAtom>();
   atom->start_parsing(lexer, "<name-atom>");
 
-  atom->name = skip_name(lexer);
+  atom->name = lexer.skip_name();
 
   atom->finish_parsing(lexer, "</name-atom>");
   return atom;
@@ -105,9 +106,9 @@ std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
   std::unique_ptr<InnerExpressionAtom> atom = std::make_unique<InnerExpressionAtom>();
   atom->start_parsing(lexer, "<inner-expression-atom>");
 
-  skip(lexer, Token::Type::LPAREN);
+  lexer.skip(Token::Type::LPAREN);
   atom->expression = Expression::parse(lexer);
-  skip(lexer, Token::Type::RPAREN);
+  lexer.skip(Token::Type::RPAREN);
 
   atom->finish_parsing(lexer, "</inner-expression-atom>");
   return atom;
@@ -121,14 +122,14 @@ std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   std::unique_ptr<ListAtom> atom = std::make_unique<ListAtom>();
   atom->start_parsing(lexer, "<list-atom>");
 
-  skip(lexer, Token::Type::LBRACKET);
-  while (lexer.get_token()->type != Token::Type::RBRACKET) {
+  lexer.skip(Token::Type::LBRACKET);
+  while (lexer.peek()->type != Token::Type::RBRACKET) {
     atom->list.push_back(Expression::parse(lexer));
 
-    expect(lexer, Token::Type::COMMA, Token::Type::RBRACKET);
-    ignore(lexer, Token::Type::COMMA);
+    lexer.expect(Token::Type::COMMA, Token::Type::RBRACKET);
+    lexer.ignore(Token::Type::COMMA);
   }
-  skip(lexer, Token::Type::RBRACKET);
+  lexer.skip(Token::Type::RBRACKET);
 
   atom->finish_parsing(lexer, "</list-atom>");
   return atom;
@@ -141,7 +142,7 @@ llvm::Value *ListAtom::compile(Compiler &compiler) const {
 std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
   std::unique_ptr<Atom> atom;
 
-  switch (lexer.get_token()->type) {
+  switch (lexer.peek()->type) {
   case Token::Type::INT_LITERAL:
     atom = IntAtom::parse(lexer);
     break;
@@ -177,7 +178,7 @@ std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
 
   default:
     parser_error(std::string("reached unreachable branch with token '") +
-                     lexer.get_token()->to_string_short() + '\'',
+                     lexer.peek()->to_string_short() + '\'',
                  lexer);
   }
 

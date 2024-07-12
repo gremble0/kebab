@@ -36,6 +36,16 @@ std::string AstNode::where() const {
   return file_coordinates + line + line_cursor;
 }
 
+// TODO: remove this function
+[[noreturn]] void AstNode::parser_error(const std::string &message, Lexer &lexer) {
+  std::string pretty_position = lexer.pretty_position();
+  std::string labeled_message = "parser-error: " + message;
+
+  std::cerr << pretty_position << labeled_message << std::endl;
+
+  exit(1);
+}
+
 [[noreturn]] void AstNode::unrecognized_type_error(const std::string &type_name) const {
   std::string where = this->where();
   std::string labeled_message = "unrecognized-type-error: '" + type_name + '\'';
