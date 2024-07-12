@@ -67,5 +67,9 @@ TEST(LexerTest, ErrorsWhenMalformedCharLiteral) {
   ASSERT_DEATH({ lex_file("malformed-char-literal"); }, "malformed char literal");
 }
 
+TEST(LexerTest, ErrorsWhenIllegalToken) {
+  ASSERT_DEATH({ lex_file("illegal"); }, "illegal token");
+}
+
 } // namespace Test
 } // namespace Kebab
