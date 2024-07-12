@@ -23,7 +23,7 @@ static void lex_file(const std::string &basename) {
     Logger::set_stream(log_file);
 
     Lexer lexer(source_path);
-    while (lexer.get_token()->type != Token::Type::END_OF_FILE)
+    while (lexer.peek()->type != Token::Type::END_OF_FILE)
       lexer.advance();
   }
 
@@ -38,7 +38,7 @@ TEST(LexerTest, InitializesCorrectly) {
   ASSERT_DEATH({ Lexer lexer("non-existent-file"); }, "could not open file");
 
   Lexer lexer("lexer-source/comments.keb");
-  ASSERT_NE(lexer.get_token()->type, Token::Type::ILLEGAL);
+  ASSERT_NE(lexer.peek()->type, Token::Type::ILLEGAL);
 }
 
 TEST(LexerTest, LexesCommentsKeb) { lex_file("comments"); }
