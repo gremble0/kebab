@@ -69,7 +69,6 @@ public:
 
     // Special
     END_OF_FILE, // <end of file>
-    ILLEGAL,     // Illegal token, e.g. # @ % $, etc.
   } const type;
 
   const std::variant<uint8_t, int64_t, float_t, std::string> value;

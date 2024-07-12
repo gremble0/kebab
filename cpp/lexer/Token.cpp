@@ -138,8 +138,6 @@ std::string Token::type_to_string(Type type) {
     return "<name>";
   case Type::END_OF_FILE:
     return "<end of file>";
-  case Type::ILLEGAL:
-    return "<illegal token>";
   }
 }
 

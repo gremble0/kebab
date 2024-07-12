@@ -38,7 +38,7 @@ TEST(LexerTest, InitializesCorrectly) {
   ASSERT_DEATH({ Lexer lexer("non-existent-file"); }, "could not open file");
 
   Lexer lexer("lexer-source/comments.keb");
-  ASSERT_NE(lexer.peek()->type, Token::Type::ILLEGAL);
+  ASSERT_NE(lexer.peek()->type, Token::Type::END_OF_FILE);
 }
 
 TEST(LexerTest, LexesCommentsKeb) { lex_file("comments"); }
