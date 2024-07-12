@@ -21,16 +21,6 @@ private:
 
   std::string where() const;
 
-  /**
-   * @brief skip a token with an inner value and return it
-   */
-  template <typename T, Token::Type K> static T skip_value(Lexer &lexer) {
-    expect(lexer, K);
-    T value = std::get<T>(lexer.get_token()->value);
-    lexer.advance();
-    return value;
-  }
-
 protected:
   Span span;
   std::string path;
@@ -43,34 +33,6 @@ protected:
 
   void start_parsing(Lexer &lexer, const std::string &node_name);
   void finish_parsing(Lexer &lexer, const std::string &node_name);
-
-  // varargs?
-  // move to lexer?
-  static void expect(Lexer &lexer, Token::Type type);
-  static void expect(Lexer &lexer, Token::Type either, Token::Type or_);
-  static void skip(Lexer &lexer, Token::Type type);
-  static void skip(Lexer &lexer, Token::Type either, Token::Type or_);
-  static bool ignore(Lexer &lexer, Token::Type type);
-
-  static int64_t skip_int(Lexer &lexer) {
-    return skip_value<int64_t, Token::Type::INT_LITERAL>(lexer);
-  }
-
-  static float_t skip_float(Lexer &lexer) {
-    return skip_value<float_t, Token::Type::FLOAT_LITERAL>(lexer);
-  }
-
-  static uint8_t skip_char(Lexer &lexer) {
-    return skip_value<uint8_t, Token::Type::CHAR_LITERAL>(lexer);
-  }
-
-  static std::string skip_string(Lexer &lexer) {
-    return skip_value<std::string, Token::Type::STRING_LITERAL>(lexer);
-  }
-
-  static std::string skip_name(Lexer &lexer) {
-    return skip_value<std::string, Token::Type::NAME>(lexer);
-  }
 
 public:
   virtual ~AstNode() = default;
