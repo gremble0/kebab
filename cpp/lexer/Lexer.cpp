@@ -310,30 +310,21 @@ std::string Lexer::skip_string() { return skip_value<std::string, Token::Type::S
 
 std::string Lexer::skip_name() { return skip_value<std::string, Token::Type::NAME>(); }
 
-void Lexer::expect(Token::Type expected) const {
-  if (this->token->type != expected)
+void Lexer::expect(std::initializer_list<Token::Type> expected) const {
+  if (is_expected(expected)) {
+    // TODO: foreach expected to make string?
     this->error("unexpected token '" + this->token->to_string_short() + "' expected: '" +
                 Token::type_to_string(expected) + '\'');
+  }
 }
 
-void Lexer::expect(Token::Type either, Token::Type or_) const {
-  if (this->token->type != either && this->token->type != or_)
-    this->error("unexpected token '" + this->token->to_string_short() + "' expected: '" +
-                Token::type_to_string(either) + "' or '" + Token::type_to_string(or_) + '\'');
-}
-
-void Lexer::skip(Token::Type type) {
-  this->expect(type);
+void Lexer::skip(std::initializer_list<Token::Type> expected) {
+  this->expect(expected);
   this->advance();
 }
 
-void Lexer::skip(Token::Type either, Token::Type or_) {
-  this->expect(either, or_);
-  this->advance();
-}
-
-bool Lexer::try_skip(Token::Type expected) {
-  if (this->token->type == expected) {
+bool Lexer::try_skip(std::initializer_list<Token::Type> expected) {
+  if (is_expected(expected)) {
     this->advance();
     return true;
   }

@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
+#include <initializer_list>
 #include <memory>
 #include <string>
 
@@ -52,17 +53,17 @@ private:
 
   template <typename T, Token::Type K> T skip_value();
 
+  bool is_expected(std::initializer_list<Token::Type> expected) const;
+
 public:
   explicit Lexer(const std::string &path);
 
   void advance();
   std::shared_ptr<Token> peek() const { return this->token; }
 
-  void expect(Token::Type expected) const;
-  void expect(Token::Type either, Token::Type or_) const;
-  bool try_skip(Token::Type expected);
-  void skip(Token::Type expected);
-  void skip(Token::Type either, Token::Type or_);
+  void expect(std::initializer_list<Token::Type> expected) const;
+  bool try_skip(std::initializer_list<Token::Type> expected);
+  void skip(std::initializer_list<Token::Type> expected);
 
   int64_t skip_int();
   float_t skip_float();
