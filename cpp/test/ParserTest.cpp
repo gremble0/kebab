@@ -60,5 +60,12 @@ TEST(ParserTest, ErrorsWhenMissingConstructorTypeInFunction) {
       { ASSERT_EXPECTED_PARSING("missing-constructor-type-in-function"); }, "unexpected token");
 }
 
+TEST(ParserTest, ErrorsWithGoodMessageWhenUnexpectedToken) {
+  // ( and ) are escaped by \\ because otherwise they would be parsed as being regex symbols instead
+  // of literal parens
+  ASSERT_DEATH(
+      { ASSERT_EXPECTED_PARSING("unexpected"); }, "unexpected token '\\(' expected ',' or '\\)'");
+}
+
 } // namespace Test
 } // namespace Kebab
