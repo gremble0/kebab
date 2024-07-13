@@ -58,9 +58,9 @@ private:
 public:
   explicit Lexer(const std::string &path);
 
-  void advance();
   std::shared_ptr<Token> peek() const { return this->token; }
 
+  void advance();
   void expect(std::initializer_list<Token::Type> expected) const;
   bool try_skip(std::initializer_list<Token::Type> expected);
   void skip(std::initializer_list<Token::Type> expected);

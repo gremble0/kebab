@@ -292,7 +292,7 @@ void Lexer::handle_gt() {
 }
 
 template <typename T, Token::Type K> T Lexer::skip_value() {
-  this->expect(K);
+  this->expect({K});
   T value = std::get<T>(this->peek()->value);
   this->advance();
   return value;
@@ -310,12 +310,30 @@ std::string Lexer::skip_string() { return skip_value<std::string, Token::Type::S
 
 std::string Lexer::skip_name() { return skip_value<std::string, Token::Type::NAME>(); }
 
+bool Lexer::is_expected(std::initializer_list<Token::Type> expected) const {
+  for (const Token::Type &type : expected)
+    if (this->token->type == type)
+      return true;
+
+  return false;
+}
+
 void Lexer::expect(std::initializer_list<Token::Type> expected) const {
-  if (is_expected(expected)) {
-    // TODO: foreach expected to make string?
-    this->error("unexpected token '" + this->token->to_string_short() + "' expected: '" +
-                Token::type_to_string(expected) + '\'');
+  if (is_expected(expected))
+    return;
+
+  std::string message = "unexpected token '" + this->token->to_string_short() + "' expected ";
+
+  int i = 0;
+  int size = expected.size();
+  for (const Token::Type &type : expected) {
+    message += '\'' + Token::type_to_string(type) + '\'';
+    ++i;
+    if (i != size)
+      message += ", or ";
   }
+
+  this->error(message);
 }
 
 void Lexer::skip(std::initializer_list<Token::Type> expected) {
@@ -327,8 +345,9 @@ bool Lexer::try_skip(std::initializer_list<Token::Type> expected) {
   if (is_expected(expected)) {
     this->advance();
     return true;
+  } else {
+    return false;
   }
-  return false;
 }
 
 void Lexer::advance() {
