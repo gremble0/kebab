@@ -36,10 +36,10 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   std::unique_ptr<ListType> type = std::make_unique<ListType>();
   type->start_parsing(lexer, "<list-type>");
 
-  lexer.skip(Token::Type::LIST);
-  lexer.skip(Token::Type::LPAREN);
+  lexer.skip({Token::Type::LIST});
+  lexer.skip({Token::Type::LPAREN});
   type->content_type = Type::parse(lexer);
-  lexer.skip(Token::Type::RPAREN);
+  lexer.skip({Token::Type::RPAREN});
 
   type->finish_parsing(lexer, "</list-type>");
   return type;
@@ -59,8 +59,8 @@ void FunctionType::parse_parameter_types(Lexer &lexer) {
   while (lexer.peek()->type != Token::Type::RPAREN) {
     this->parameter_types.push_back(Type::parse(lexer));
 
-    lexer.expect(Token::Type::COMMA, Token::Type::RPAREN);
-    lexer.try_skip(Token::Type::COMMA);
+    lexer.expect({Token::Type::COMMA, Token::Type::RPAREN});
+    lexer.try_skip({Token::Type::COMMA});
   }
 }
 
@@ -70,13 +70,13 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
   std::unique_ptr<FunctionType> type = std::make_unique<FunctionType>();
   type->start_parsing(lexer, "<function-type>");
 
-  lexer.skip(Token::Type::FN);
-  lexer.skip(Token::Type::LPAREN);
+  lexer.skip({Token::Type::FN});
+  lexer.skip({Token::Type::LPAREN});
 
   type->parse_parameter_types(lexer);
 
-  lexer.skip(Token::Type::RPAREN);
-  lexer.skip(Token::Type::FAT_RARROW);
+  lexer.skip({Token::Type::RPAREN});
+  lexer.skip({Token::Type::FAT_RARROW});
 
   type->parse_return_type(lexer);
 

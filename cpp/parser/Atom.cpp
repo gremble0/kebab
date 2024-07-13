@@ -106,9 +106,9 @@ std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
   std::unique_ptr<InnerExpressionAtom> atom = std::make_unique<InnerExpressionAtom>();
   atom->start_parsing(lexer, "<inner-expression-atom>");
 
-  lexer.skip(Token::Type::LPAREN);
+  lexer.skip({Token::Type::LPAREN});
   atom->expression = Expression::parse(lexer);
-  lexer.skip(Token::Type::RPAREN);
+  lexer.skip({Token::Type::RPAREN});
 
   atom->finish_parsing(lexer, "</inner-expression-atom>");
   return atom;
@@ -122,14 +122,14 @@ std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
   std::unique_ptr<ListAtom> atom = std::make_unique<ListAtom>();
   atom->start_parsing(lexer, "<list-atom>");
 
-  lexer.skip(Token::Type::LBRACKET);
+  lexer.skip({Token::Type::LBRACKET});
   while (lexer.peek()->type != Token::Type::RBRACKET) {
     atom->list.push_back(Expression::parse(lexer));
 
-    lexer.expect(Token::Type::COMMA, Token::Type::RBRACKET);
-    lexer.try_skip(Token::Type::COMMA);
+    lexer.expect({Token::Type::COMMA, Token::Type::RBRACKET});
+    lexer.try_skip({Token::Type::COMMA});
   }
-  lexer.skip(Token::Type::RBRACKET);
+  lexer.skip({Token::Type::RBRACKET});
 
   atom->finish_parsing(lexer, "</list-atom>");
   return atom;

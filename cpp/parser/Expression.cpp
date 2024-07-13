@@ -72,9 +72,9 @@ void CondExpression::parse_test_body(Lexer &lexer) {
 void CondExpression::parse_if(Lexer &lexer) {
   Logger::log_with_indent("<cond-if>");
 
-  lexer.skip(Token::Type::IF);
+  lexer.skip({Token::Type::IF});
   this->tests.push_back(Expression::parse(lexer));
-  lexer.skip(Token::Type::FAT_RARROW);
+  lexer.skip({Token::Type::FAT_RARROW});
   this->parse_test_body(lexer);
 
   Logger::log_with_dedent("</cond-if>");
@@ -84,9 +84,9 @@ void CondExpression::parse_if(Lexer &lexer) {
 void CondExpression::parse_elif(Lexer &lexer) {
   Logger::log_with_indent("<cond-elif>");
 
-  lexer.skip(Token::Type::ELIF);
+  lexer.skip({Token::Type::ELIF});
   this->tests.push_back(Expression::parse(lexer));
-  lexer.skip(Token::Type::FAT_RARROW);
+  lexer.skip({Token::Type::FAT_RARROW});
   this->parse_test_body(lexer);
 
   Logger::log_with_dedent("<cond-elif/>");
@@ -106,8 +106,8 @@ void CondExpression::parse_elifs(Lexer &lexer) {
 void CondExpression::parse_else(Lexer &lexer) {
   Logger::log_with_indent("<cond-else>");
 
-  lexer.skip(Token::Type::ELSE);
-  lexer.skip(Token::Type::FAT_RARROW);
+  lexer.skip({Token::Type::ELSE});
+  lexer.skip({Token::Type::FAT_RARROW});
   this->parse_test_body(lexer);
 
   Logger::log_with_dedent("</cond-else>");
@@ -138,7 +138,7 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
   while (true) {
     expression->and_tests.push_back(AndTest::parse(lexer));
 
-    bool ignored_or = lexer.try_skip(Token::Type::OR);
+    bool ignored_or = lexer.try_skip({Token::Type::OR});
     if (!ignored_or)
       break;
   }

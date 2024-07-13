@@ -16,7 +16,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   std::unique_ptr<DefinitionStatement> definition = std::make_unique<DefinitionStatement>();
   definition->start_parsing(lexer, "<definition-statement>");
 
-  lexer.skip(Token::Type::DEF);
+  lexer.skip({Token::Type::DEF});
 
   if (lexer.peek()->type == Token::Type::MUT) {
     definition->is_mutable = true;
@@ -26,7 +26,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   }
 
   definition->name = lexer.skip_name();
-  lexer.skip(Token::Type::EQUALS);
+  lexer.skip({Token::Type::EQUALS});
   definition->constructor = Constructor::parse(lexer);
 
   definition->finish_parsing(lexer, "</definition-statement>");
@@ -51,9 +51,9 @@ std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
   std::unique_ptr<AssignmentStatement> assignment = std::make_unique<AssignmentStatement>();
   assignment->start_parsing(lexer, "<assignment-statement>");
 
-  lexer.skip(Token::Type::SET);
+  lexer.skip({Token::Type::SET});
   assignment->name = lexer.skip_name();
-  lexer.skip(Token::Type::EQUALS);
+  lexer.skip({Token::Type::EQUALS});
   assignment->constructor = Constructor::parse(lexer);
 
   assignment->finish_parsing(lexer, "</assignment-statement>");

@@ -16,9 +16,9 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
   std::unique_ptr<PrimarySubscription> subscription = std::make_unique<PrimarySubscription>();
   subscription->start_parsing(lexer, "<primary-subscription>");
 
-  lexer.skip(Token::Type::LBRACKET);
+  lexer.skip({Token::Type::LBRACKET});
   subscription->subscription = Expression::parse(lexer);
-  lexer.skip(Token::Type::RBRACKET);
+  lexer.skip({Token::Type::RBRACKET});
 
   subscription->finish_parsing(lexer, "</primary-subscription>");
   return subscription;
@@ -33,16 +33,16 @@ std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   std::unique_ptr<PrimaryArguments> arguments = std::make_unique<PrimaryArguments>();
   arguments->start_parsing(lexer, "<primary-arguments>");
 
-  lexer.skip(Token::Type::LPAREN);
+  lexer.skip({Token::Type::LPAREN});
   while (true) {
     arguments->arguments.push_back(Expression::parse(lexer));
 
     if (lexer.peek()->type == Token::Type::RPAREN)
       break;
     else
-      lexer.skip(Token::Type::COMMA);
+      lexer.skip({Token::Type::COMMA});
   }
-  lexer.skip(Token::Type::RPAREN);
+  lexer.skip({Token::Type::RPAREN});
 
   arguments->finish_parsing(lexer, "</primary-arguments>");
   return arguments;
