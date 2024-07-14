@@ -60,14 +60,14 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
 }
 
 llvm::Value *Factor::compile(Compiler &compiler) const {
-  // TODO: some prefix logic (this->prefixes)
   llvm::Value *result = this->primaries[0]->compile(compiler);
 
+  // TODO: some prefix logic (this->prefixes)
   for (size_t i = 1; i < this->primaries.size(); ++i) {
     llvm::Value *rhs = this->primaries[i]->compile(compiler);
-    this->operators[i]->lhs = result;
-    this->operators[i]->rhs = rhs;
-    result = this->operators[i]->compile(compiler);
+    this->operators[i - 1]->lhs = result;
+    this->operators[i - 1]->rhs = rhs;
+    result = this->operators[i - 1]->compile(compiler);
   }
 
   return result;

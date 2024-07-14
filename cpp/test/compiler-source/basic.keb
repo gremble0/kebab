@@ -1,5 +1,5 @@
 def v = int(
   def inner = string("hello")
-  def my-num = int(1 * 2)
+  def my-num = int(1 * 8 / 4)
   printf("hello\n")
 )
