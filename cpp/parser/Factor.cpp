@@ -1,6 +1,7 @@
 #include <cassert>
 #include <optional>
 
+#include "parser/AstNode.hpp"
 #include "parser/Factor.hpp"
 #include "parser/Primary.hpp"
 
@@ -59,10 +60,17 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
 }
 
 llvm::Value *Factor::compile(Compiler &compiler) const {
-  // TODO: some operator logic (this->operators)
   // TODO: some prefix logic (this->prefixes)
-  // for (std::unique_ptr<Primary> const &primary : this->primaries)
-  return primaries.at(0)->compile(compiler);
+  llvm::Value *result = this->primaries[0]->compile(compiler);
+
+  for (size_t i = 1; i < this->primaries.size(); ++i) {
+    llvm::Value *rhs = this->primaries[i]->compile(compiler);
+    this->operators[i]->lhs = result;
+    this->operators[i]->rhs = rhs;
+    result = this->operators[i]->compile(compiler);
+  }
+
+  return result;
 }
 
 std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
@@ -91,8 +99,12 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *FactorOperator::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function FactorOperator::compile");
+  switch (this->type) {
+  case MULT:
+    return compiler.builder.CreateMul(this->lhs, this->rhs);
+  case DIV:
+    return compiler.builder.CreateSDiv(this->lhs, this->rhs);
+  }
 }
 
 } // namespace Parser

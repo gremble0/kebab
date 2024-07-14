@@ -18,6 +18,8 @@ public:
     MULT,
     DIV,
   } type;
+  llvm::Value *lhs;
+  llvm::Value *rhs;
 
   static constexpr bool is_factor_operator(Token::Type type) {
     switch (type) {

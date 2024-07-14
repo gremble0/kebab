@@ -1,10 +1,5 @@
-;def a = int(
-;  def b = int(2)
-;  def c = string("hello")
-;  def d = string(c)
-;  4
-;)
-
-def v = void(
+def v = int(
+  def inner = string("hello")
+  def my-num = int(1 * 2)
   printf("hello\n")
 )
