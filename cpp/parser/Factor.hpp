@@ -69,6 +69,9 @@ public:
 };
 
 class Factor : public AstNode {
+private:
+  llvm::Value *compile_with_prefix(Compiler &compiler, size_t index) const;
+
 public:
   std::vector<std::optional<std::unique_ptr<FactorPrefix>>> prefixes;
   std::vector<std::unique_ptr<Primary>> primaries;

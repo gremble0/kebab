@@ -63,20 +63,20 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
   return factor;
 }
 
-llvm::Value *Factor::compile(Compiler &compiler) const {
-  llvm::Value *result = this->primaries[0]->compile(compiler);
-  if (this->prefixes[0].has_value()) {
-    this->prefixes[0]->get()->prefixed = result;
-    result = this->prefixes[0]->get()->compile(compiler);
+llvm::Value *Factor::compile_with_prefix(Compiler &compiler, size_t index) const {
+  llvm::Value *primary = this->primaries[index]->compile(compiler);
+  if (this->prefixes[index].has_value()) {
+    this->prefixes[index]->get()->prefixed = primary;
+    primary = this->prefixes[index]->get()->compile(compiler);
   }
+  return primary;
+}
+
+llvm::Value *Factor::compile(Compiler &compiler) const {
+  llvm::Value *result = this->compile_with_prefix(compiler, 0);
 
   for (size_t i = 0; i < this->operators.size(); ++i) {
-    llvm::Value *rhs = this->primaries[i + 1]->compile(compiler);
-    if (this->prefixes[i + 1].has_value()) {
-      this->prefixes[i + 1]->get()->prefixed = rhs;
-      rhs = this->prefixes[i + 1]->get()->compile(compiler);
-    }
-
+    llvm::Value *rhs = this->compile_with_prefix(compiler, i + 1);
     this->operators[i]->lhs = result;
     this->operators[i]->rhs = rhs;
     result = this->operators[i]->compile(compiler);
