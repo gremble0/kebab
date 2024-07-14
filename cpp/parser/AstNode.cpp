@@ -55,6 +55,7 @@ std::string AstNode::where() const {
   exit(1);
 }
 
+// TODO: variadic expected?
 [[noreturn]] void AstNode::type_error(const llvm::Type *expected, const llvm::Type *actual) const {
   std::string message;
   llvm::raw_string_ostream stream(message);

@@ -1,7 +1,6 @@
 #include <cassert>
 #include <optional>
 
-#include "parser/AstNode.hpp"
 #include "parser/Factor.hpp"
 #include "parser/Primary.hpp"
 
@@ -61,13 +60,12 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
 
 llvm::Value *Factor::compile(Compiler &compiler) const {
   llvm::Value *result = this->primaries[0]->compile(compiler);
-
   // TODO: some prefix logic (this->prefixes)
-  for (size_t i = 1; i < this->primaries.size(); ++i) {
-    llvm::Value *rhs = this->primaries[i]->compile(compiler);
-    this->operators[i - 1]->lhs = result;
-    this->operators[i - 1]->rhs = rhs;
-    result = this->operators[i - 1]->compile(compiler);
+  for (size_t i = 0; i < this->operators.size(); ++i) {
+    llvm::Value *rhs = this->primaries[i + 1]->compile(compiler);
+    this->operators[i]->lhs = result;
+    this->operators[i]->rhs = rhs;
+    result = this->operators[i]->compile(compiler);
   }
 
   return result;
@@ -99,11 +97,22 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *FactorOperator::compile(Compiler &compiler) const {
+  llvm::Type *lhs_type = this->lhs->getType();
+  if (!lhs_type->isIntegerTy() && !lhs_type->isFloatTy())
+    // TODO: make operator error (cursor is currently pointing a little weirdly, error could be
+    // better, and the type here is also allowed to be a float)
+    this->type_error(compiler.builder.getInt64Ty(), this->lhs->getType());
+
   switch (this->type) {
   case MULT:
     return compiler.builder.CreateMul(this->lhs, this->rhs);
-  case DIV:
-    return compiler.builder.CreateSDiv(this->lhs, this->rhs);
+
+  case DIV: {
+    if (lhs_type->isFloatTy())
+      return compiler.builder.CreateFDiv(this->lhs, this->rhs);
+    else
+      return compiler.builder.CreateSDiv(this->lhs, this->rhs);
+  }
   }
 }
 

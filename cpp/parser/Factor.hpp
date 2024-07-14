@@ -11,8 +11,7 @@
 namespace Kebab {
 namespace Parser {
 
-// TODO: Operator interface - is_operator(type)
-class FactorOperator : public AstNode /*, Operator */ {
+class FactorOperator : public AstNode {
 public:
   enum Type {
     MULT,
