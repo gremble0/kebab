@@ -12,10 +12,20 @@ namespace Kebab {
 namespace Parser {
 
 class FactorOperator : public AstNode {
+private:
+  std::string to_string() const {
+    if (this->type == MULT)
+      return "*";
+    else if (this->type == DIV)
+      return "/";
+
+    this->unreachable_error();
+  }
+
 public:
   enum Type {
-    MULT = '*',
-    DIV = '/',
+    MULT,
+    DIV,
   } type;
   llvm::Value *lhs;
   llvm::Value *rhs;

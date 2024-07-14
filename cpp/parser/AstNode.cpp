@@ -47,6 +47,14 @@ std::string AstNode::where() const {
   exit(1);
 }
 
+[[noreturn]] void AstNode::unreachable_error() const {
+  std::cerr << "unreachable-error: reached unreachable branch during compilation (if you're seeing "
+               "this there is a bug in the language implementation)"
+            << std::endl;
+
+  exit(1);
+}
+
 [[noreturn]] void AstNode::unrecognized_type_error(const std::string &type_name) const {
   std::string where = this->where();
   std::string labeled_message = "unrecognized-type-error: '" + type_name + '\'';

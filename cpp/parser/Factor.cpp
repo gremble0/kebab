@@ -100,19 +100,19 @@ llvm::Value *FactorOperator::compile(Compiler &compiler) const {
   llvm::Type *lhs_type = this->lhs->getType();
   if (!lhs_type->isIntegerTy() && !lhs_type->isFloatTy())
     this->operator_error({compiler.builder.getInt64Ty(), compiler.builder.getFloatTy()},
-                         this->lhs->getType(), std::string(1, this->type));
+                         this->lhs->getType(), this->to_string());
 
-  switch (this->type) {
-  case MULT:
+  if (this->type == MULT)
     return compiler.builder.CreateMul(this->lhs, this->rhs);
 
-  case DIV: {
+  if (this->type == DIV) {
     if (lhs_type->isFloatTy())
       return compiler.builder.CreateFDiv(this->lhs, this->rhs);
     else
       return compiler.builder.CreateSDiv(this->lhs, this->rhs);
   }
-  }
+
+  this->unreachable_error();
 }
 
 } // namespace Parser
