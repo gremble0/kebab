@@ -13,8 +13,8 @@ def but-probably-better-like-this = int(2 + 3)
 
 ; Some basic constructors
 def i = int(69 + 420)
-def l1 = list((int) => [1, 2, 3])
-def l2 = list((string) => ["123", "gg", "hhh"])
+def l1 = list((int) => [1, 2, 3]) ; list of three ints
+def l2 = list((string) => ["123", "gg", "hhh"]) ; list of three strings
 def add-one = fn((a : int) => int(a + 1)) ; function that takes an int and returns an int
 def b1 = bool(1 == -2) ; false
 def b2 = bool(1 ~= -2) ; true
@@ -40,9 +40,11 @@ def takes-fn = fn((param : list(fn(list(int)) => string)) => char('c'))
 
 ; A function that takes an int as a parameter and returns a function takes
 ; an int as a parameter that returns a list of ints
-def ret-fn-rets-list = fn((outer : int) => fn((inner : int) => list((int) => 
-  outer, inner
-)))
+def ret-fn-rets-list = fn((outer : int) =>
+  fn((inner : int) => list((int) => 
+    outer, inner
+  ))
+)
 
 ; A function that takes a function that takes an int and a string and returns
 ; a string that returns an int from the result of calling its parameter function
@@ -54,8 +56,6 @@ def ret-fn-rets-list = fn((outer : int) => fn((inner : int) => list((int) =>
 def takes-fn = fn((my-function : fn(int, string) => string) => int(
   my-function(4, "hello") ; Error here - my-function does not return an int
 ))
-
-; You get the point :)
 ```
 
 ## Constructors
@@ -67,6 +67,7 @@ int(def a = 2
 bool(true)
 string("hello-world")
 ```
+
 ### Lists
 List constructors must be parametrized to hold a certain type. This could be any type, including functions or more lists! For example:
 ```clj
@@ -99,7 +100,7 @@ def s = string("hello")
 ; list constructor, parametrized to be of type `string`. Here the list(...)
 ; is the constructor call, while the string inside the list constructor
 ; is a type declaration the list constructor uses to bind it to that type
-def b = list((string) => "hello", "world")
+def b = list((string) => ["hello", "world"])
 ```
 
 The strongest combination of constructors and type declarations are seen in functions. Let's analyze this function:
@@ -116,13 +117,13 @@ def my-function = fn((a : int, l : list(string)) => int(
 3. Then we parse the function body by calling another constructor - in this case the `int` constructor. This constructor also gives us the return type of the funciton, meaning this function must return an `int`.
 
 ## Mutability
-Variables are constant by default, but mutable if you add the `mut` qualifier. To change a mutable variable use a `set` statement.
+Variables are constant by default, but can be made mutable if you add the `mut` qualifier when defining it. To mutate a mutable variable use a `set` statement.
 ```clj
-; This is fine
+; This is fine since my-var is mutable
 def mut my-var = int(4)
 set my-var = int(6) ; my-var is now 6
 
-; This should error
+; This will error since my-const is constant
 def my-const = int(4) ; This is fine
 set my-const = int(6) ; Error here
 ```
@@ -139,7 +140,7 @@ def a = int(
 
 ```
 
-You can also define variables local to a branch. For example:
+You can also define variables local to a branch or do other calculations inside each branch. For example:
 ```clj
 ; c = [3, 6]
 def c = list((int) =>
@@ -149,48 +150,9 @@ def c = list((int) =>
     def w = int(6)
     [q, w]
   elif 1 == 2 =>
+    printf("hello, world\n")
     [q, 1]
   else =>
     [1, 2]
 )
-```
-
-## TODO:
-- Edge cases like this:
-```
-❯ ./kebab ../examples/recursion.keb
-../examples/recursion.keb:11:0
-        ^
-wrong-token-error: expected ')', got '<eof>'
-```
-- Better error reporting for missing constructors - probably better to just infer type tho
-```
-❯ ./kebab ../examples/functions.keb
-../examples/functions.keb:15:14
-def curried = curried-add(2)
-              ^
-illegal-token-error: 'name: "curried-add"'
-```
-- Add error messages for unsupported operators, e.g. adding a function, calling a string, etc.
-```
-❯ ./kebab ../examples/functions.keb
-Running stacktrace:
-./kebab(+0x73f9) [0x5c91e55a33f9]
-./kebab(+0x7608) [0x5c91e55a3608]
-./kebab(+0x5f16) [0x5c91e55a1f16]
-./kebab(+0x51bd) [0x5c91e55a11bd]
-./kebab(+0x5003) [0x5c91e55a1003]
-./kebab(+0x4df1) [0x5c91e55a0df1]
-./kebab(+0x6277) [0x5c91e55a2277]
-./kebab(+0x5f63) [0x5c91e55a1f63]
-./kebab(+0x65df) [0x5c91e55a25df]
-/usr/lib/libc.so.6(+0x25c88) [0x7f71af95cc88]
-/usr/lib/libc.so.6(__libc_start_main+0x8c) [0x7f71af95cd4c]
-./kebab(+0x2205) [0x5c91e559e205]
-ERROR_ASSERTION_FAIL: primaries.c:45: 0
-```
-
-- Segfault on invalid type conversion? (not 100% sure on reason)
-```
-def result = int(curried-add(10))
 ```
