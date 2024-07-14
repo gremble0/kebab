@@ -51,6 +51,7 @@ public:
     PLUS,
     MINUS,
   } type;
+  llvm::Value *prefixed;
 
   static constexpr bool is_factor_prefix(Token::Type type) {
     switch (type) {

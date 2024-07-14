@@ -33,8 +33,13 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
 }
 
 llvm::Value *FactorPrefix::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function FactorPrefix::compile");
+  switch (this->type) {
+  case MINUS:
+    return compiler.builder.CreateNeg(this->prefixed);
+
+  case PLUS:
+    return this->prefixed;
+  }
 }
 
 std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
@@ -60,9 +65,18 @@ std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
 
 llvm::Value *Factor::compile(Compiler &compiler) const {
   llvm::Value *result = this->primaries[0]->compile(compiler);
-  // TODO: some prefix logic (this->prefixes)
+  if (this->prefixes[0].has_value()) {
+    this->prefixes[0]->get()->prefixed = result;
+    result = this->prefixes[0]->get()->compile(compiler);
+  }
+
   for (size_t i = 0; i < this->operators.size(); ++i) {
     llvm::Value *rhs = this->primaries[i + 1]->compile(compiler);
+    if (this->prefixes[i + 1].has_value()) {
+      this->prefixes[i + 1]->get()->prefixed = rhs;
+      rhs = this->prefixes[i + 1]->get()->compile(compiler);
+    }
+
     this->operators[i]->lhs = result;
     this->operators[i]->rhs = rhs;
     result = this->operators[i]->compile(compiler);
@@ -102,17 +116,16 @@ llvm::Value *FactorOperator::compile(Compiler &compiler) const {
     this->operator_error({compiler.builder.getInt64Ty(), compiler.builder.getFloatTy()},
                          this->lhs->getType(), this->to_string());
 
-  if (this->type == MULT)
+  switch (this->type) {
+  case MULT:
     return compiler.builder.CreateMul(this->lhs, this->rhs);
 
-  if (this->type == DIV) {
+  case DIV:
     if (lhs_type->isFloatTy())
       return compiler.builder.CreateFDiv(this->lhs, this->rhs);
     else
       return compiler.builder.CreateSDiv(this->lhs, this->rhs);
   }
-
-  this->unreachable_error();
 }
 
 } // namespace Parser

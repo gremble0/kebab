@@ -177,6 +177,7 @@ std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
     break;
 
   default:
+    // TODO: these unreachables are not good
     parser_error(std::string("reached unreachable branch with token '") +
                      lexer.peek()->to_string_short() + '\'',
                  lexer);
