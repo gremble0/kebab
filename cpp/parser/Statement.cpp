@@ -39,7 +39,7 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   llvm::Type *actual_type = variable_value->getType();
 
   if (actual_type->getTypeID() != declared_type->getTypeID())
-    this->type_error(declared_type, actual_type);
+    this->type_error({declared_type}, actual_type);
 
   llvm::GlobalVariable *variable = compiler.create_global(
       this->name, static_cast<llvm::Constant *>(variable_value), actual_type);

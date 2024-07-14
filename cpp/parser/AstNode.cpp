@@ -1,3 +1,4 @@
+#include <initializer_list>
 #include <iostream>
 #include <string>
 
@@ -56,15 +57,29 @@ std::string AstNode::where() const {
 }
 
 // TODO: variadic expected?
-[[noreturn]] void AstNode::type_error(const llvm::Type *expected, const llvm::Type *actual) const {
+[[noreturn]] void AstNode::type_error(std::initializer_list<const llvm::Type *> expected,
+                                      const llvm::Type *actual) const {
   std::string message;
   llvm::raw_string_ostream stream(message);
   stream << this->where();
-  stream << "type-error: actual type '";
+  stream << "type-error: unexpected type '";
   actual->print(stream);
-  stream << "' does not match expected type '";
-  expected->print(stream);
-  stream << '\'';
+  stream << "' expected ";
+
+  int i = 0;
+  int size = expected.size();
+  for (const llvm::Type *type : expected) {
+    stream << '\'';
+    type->print(stream);
+    stream << '\'';
+    ++i;
+    if (i == size)
+      break;
+    else if (i == size - 1)
+      stream << " or ";
+    else
+      stream << ", ";
+  }
 
   std::cerr << message << std::endl;
 
