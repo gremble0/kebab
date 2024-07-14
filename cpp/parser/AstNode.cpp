@@ -86,6 +86,36 @@ std::string AstNode::where() const {
   exit(1);
 }
 
+[[noreturn]] void AstNode::operator_error(std::initializer_list<const llvm::Type *> supported,
+                                          const llvm::Type *actual,
+                                          const std::string &operator_) const {
+  std::string message;
+  llvm::raw_string_ostream stream(message);
+  stream << this->where();
+  stream << "operator-error: unsupported type '";
+  actual->print(stream);
+  stream << "' for operator '" << operator_ << "' supported types are ";
+
+  int i = 0;
+  int size = supported.size();
+  for (const llvm::Type *type : supported) {
+    stream << '\'';
+    type->print(stream);
+    stream << '\'';
+    ++i;
+    if (i == size)
+      break;
+    else if (i == size - 1)
+      stream << " and ";
+    else
+      stream << ", ";
+  }
+
+  std::cerr << message << std::endl;
+
+  exit(1);
+}
+
 void AstNode::start_parsing(Lexer &lexer, const std::string &node_name) {
   // maybe some #ifdef for logging (this would affect testing too)
   Logger::log_with_indent(node_name);

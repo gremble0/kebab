@@ -99,10 +99,8 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 llvm::Value *FactorOperator::compile(Compiler &compiler) const {
   llvm::Type *lhs_type = this->lhs->getType();
   if (!lhs_type->isIntegerTy() && !lhs_type->isFloatTy())
-    // TODO: make operator error (cursor is currently pointing a little weirdly, error could be
-    // better, and the type here is also allowed to be a float)
-    this->type_error({compiler.builder.getInt64Ty(), compiler.builder.getFloatTy()},
-                     this->lhs->getType());
+    this->operator_error({compiler.builder.getInt64Ty(), compiler.builder.getFloatTy()},
+                         this->lhs->getType(), std::string(1, this->type));
 
   switch (this->type) {
   case MULT:

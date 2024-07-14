@@ -31,6 +31,8 @@ protected:
   [[noreturn]] void unrecognized_type_error(const std::string &type_name) const;
   [[noreturn]] void type_error(std::initializer_list<const llvm::Type *> expected,
                                const llvm::Type *actual) const;
+  [[noreturn]] void operator_error(std::initializer_list<const llvm::Type *> supported,
+                                   const llvm::Type *actual, const std::string &operator_) const;
 
   void start_parsing(Lexer &lexer, const std::string &node_name);
   void finish_parsing(Lexer &lexer, const std::string &node_name);

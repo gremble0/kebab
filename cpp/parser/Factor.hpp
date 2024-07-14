@@ -14,8 +14,8 @@ namespace Parser {
 class FactorOperator : public AstNode {
 public:
   enum Type {
-    MULT,
-    DIV,
+    MULT = '*',
+    DIV = '/',
   } type;
   llvm::Value *lhs;
   llvm::Value *rhs;
