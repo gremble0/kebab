@@ -11,7 +11,7 @@ static void handle_argv(char **argv) {
   if (strcmp(argv[1], "--replace-expected") == 0)
     replace_expected();
   else
-    std::cerr << "Unrecognized flag: " + std::string(argv[1]) << std::endl;
+    std::cerr << "Unrecognized flag: " << std::string(argv[1]) << std::endl;
 }
 
 int main(int argc, char **argv) {

@@ -66,7 +66,7 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
 }
 
 [[noreturn]] void Compiler::error(const std::string &message) const {
-  std::cerr << "compiler-error: " + message << std::endl;
+  std::cerr << "compiler-error: " << message << std::endl;
 
   exit(1);
 }

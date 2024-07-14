@@ -26,7 +26,7 @@ Lexer::Lexer(const std::string &path) : path(path), stream(path), token() {
   std::string pretty_position = this->pretty_position();
   std::string labeled_message = "lexer-error: " + message;
 
-  std::cerr << pretty_position + labeled_message << std::endl;
+  std::cerr << pretty_position << labeled_message << std::endl;
 
   exit(1);
 }
