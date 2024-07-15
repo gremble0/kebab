@@ -121,14 +121,19 @@ std::optional<llvm::Value *> Compiler::get_value(const std::string &name) {
   // 2 function
   // 3 global
 
-  if (std::optional<llvm::Value *> local = this->get_local(name))
+  std::optional<llvm::Value *> local = this->get_local(name);
+  if (local.has_value())
     return local;
-  else if (std::optional<llvm::Value *> function = this->get_function(name))
+
+  std::optional<llvm::Value *> function = this->get_function(name);
+  if (function.has_value())
     return function;
-  else if (std::optional<llvm::Value *> global = this->get_global(name))
+
+  std::optional<llvm::Value *> global = this->get_global(name);
+  if (global.has_value())
     return global;
-  else
-    return std::nullopt;
+
+  return std::nullopt;
 }
 
 } // namespace Kebab
