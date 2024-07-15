@@ -4,11 +4,7 @@
 #include "parser/Expression.hpp"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/Function.h"
-#include "llvm/IR/GlobalVariable.h"
-#include "llvm/IR/Instruction.h"
 #include "llvm/IR/Instructions.h"
-#include "llvm/Support/Casting.h"
 
 namespace Kebab {
 namespace Parser {
@@ -99,28 +95,11 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *NameAtom::compile(Compiler &compiler) const {
-  // look up the variable in the currently compiling function
-  // llvm::Function *function_context = compiler.builder.GetInsertBlock()->getParent();
-  // for (llvm::BasicBlock &basic_block : *function_context)
-  //   for (llvm::Instruction &instruction : basic_block)
-  //     if (llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(&instruction))
-  //       if (local->getName() == this->name)
-  //         return compiler.builder.CreateLoad(local->getAllocatedType(), local);
-  //
-  // llvm::Value *value = compiler.module.getNamedValue(this->name);
-  // if (value == nullptr)
-  //   compiler.error(std::string("undefined identifier: '") + this->name + '\'');
-  //
-  // if (llvm::GlobalVariable *global = llvm::dyn_cast<llvm::GlobalVariable>(value)) {
-  //   return compiler.builder.CreateLoad(global->getValueType(), global);
-  // } else if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(value)) {
-  //   return function;
-  // }
-
-  if (std::optional<llvm::Value *> variable = compiler.get_variable(this->name))
-    return variable;
+  std::optional<llvm::Value *> variable = compiler.get_value(this->name);
+  if (variable.has_value())
+    return variable.value();
   else
-    this->unreachable_error();
+    compiler.error(std::string("undeclared identifier: '") + this->name + '\'');
 }
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {

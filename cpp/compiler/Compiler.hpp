@@ -35,9 +35,9 @@ private:
   void start_main();
   void stop_main();
 
-  std::optional<llvm::Value *> get_global(const std::string &name) const;
-  std::optional<llvm::Value *> get_local(const std::string &name) const;
-  std::optional<llvm::Function *> get_function(const std::string &name) const;
+  std::optional<llvm::LoadInst *> get_global(const std::string &name);
+  std::optional<llvm::LoadInst *> get_local(const std::string &name);
+  std::optional<llvm::Function *> get_function(const std::string &name);
 
 public:
   llvm::LLVMContext context;
@@ -54,7 +54,7 @@ public:
                                       llvm::Type *type);
   llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
 
-  std::optional<llvm::Value *> get_variable(const std::string &name) const;
+  std::optional<llvm::Value *> get_value(const std::string &name);
 };
 
 } // namespace Kebab

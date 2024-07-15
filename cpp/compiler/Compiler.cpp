@@ -1,4 +1,5 @@
 #include <iostream>
+#include <optional>
 #include <string>
 #include <system_error>
 #include <vector>
@@ -87,32 +88,36 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
   return local;
 }
 
-std::optional<llvm::Value *> Compiler::get_global(const std::string &name) const {
+std::optional<llvm::LoadInst *> Compiler::get_global(const std::string &name) {
   llvm::GlobalVariable *global = this->module.getGlobalVariable(name);
   if (global == nullptr)
-    return nullptr;
+    return std::nullopt;
   else
     return this->builder.CreateLoad(global->getValueType(), global);
 }
 
-std::optional<llvm::Value *> Compiler::get_local(const std::string &name) const {
+std::optional<llvm::LoadInst *> Compiler::get_local(const std::string &name) {
   llvm::Function *function_context = this->builder.GetInsertBlock()->getParent();
   for (llvm::BasicBlock &basic_block : *function_context)
-    for (llvm::Instruction &instruction : basic_block)
-      if (llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(&instruction))
-        if (local->getName() == name)
-          return this->builder.CreateLoad(local->getAllocatedType(), local);
+    for (llvm::Instruction &instruction : basic_block) {
+      llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(&instruction);
+      if (local != nullptr && local->getName() == name)
+        return this->builder.CreateLoad(local->getAllocatedType(), local);
+    }
 
-  return nullptr;
+  return std::nullopt;
 }
 
-std::optional<llvm::Function *> Compiler::get_function(const std::string &name) const {
-  return this->module.getFunction(name);
+std::optional<llvm::Function *> Compiler::get_function(const std::string &name) {
+  if (llvm::Function *function = this->module.getFunction(name))
+    return function;
+  else
+    return std::nullopt;
 }
 
-std::optional<llvm::Value *> Compiler::get_variable(const std::string &name) const {
+std::optional<llvm::Value *> Compiler::get_value(const std::string &name) {
   // Order of lookup is:
-  // 1 local
+  // 1 local (stack allocated in scope)
   // 2 function
   // 3 global
 
@@ -125,4 +130,5 @@ std::optional<llvm::Value *> Compiler::get_variable(const std::string &name) con
   else
     return std::nullopt;
 }
+
 } // namespace Kebab
