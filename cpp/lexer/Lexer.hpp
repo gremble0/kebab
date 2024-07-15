@@ -20,7 +20,7 @@ private:
   std::ifstream stream;
   size_t line_number = 0;
   size_t line_pos = 0;
-  std::shared_ptr<Token> token; // shared with callers of Lexer::peek()
+  std::unique_ptr<Token> token;
 
   void next_line();
   uint8_t peek(int offset) const;
@@ -58,7 +58,7 @@ private:
 public:
   explicit Lexer(const std::string &path);
 
-  std::shared_ptr<Token> peek() const { return this->token; }
+  const std::unique_ptr<Token> &peek() const { return this->token; }
 
   void advance();
   void expect(std::initializer_list<Token::Type> expected) const;
