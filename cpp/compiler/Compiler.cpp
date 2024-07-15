@@ -82,7 +82,7 @@ llvm::GlobalVariable *Compiler::create_global(const std::string &name, llvm::Con
 llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant *init,
                                          llvm::Type *type) {
   llvm::AllocaInst *local = this->builder.CreateAlloca(type, nullptr, name);
-  this->builder.CreateLoad(type, init, name);
+  this->builder.CreateStore(init, local);
 
   return local;
 }

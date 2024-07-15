@@ -2,6 +2,7 @@
 *.a
 *.out
 *.log
+out.ll
 !cpp/test/lexer-expected/*.log
 !cpp/test/parser-expected/*.log
 !cpp/test/compiler-expected/*.log
