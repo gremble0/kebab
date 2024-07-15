@@ -39,8 +39,7 @@ public:
   llvm::Module module;
   llvm::IRBuilder<> builder;
 
-  Compiler()
-      : context(), module(llvm::Module("kebab", context)), builder(llvm::IRBuilder<>(context)) {}
+  Compiler() : context(), module("kebab", context), builder(context) {}
 
   void compile(std::unique_ptr<Parser::RootNode> root);
   [[noreturn]] void error(const std::string &message) const;
@@ -48,6 +47,7 @@ public:
   // TODO: take type as param and compare with type of initializer
   llvm::GlobalVariable *create_global(const std::string &name, llvm::Constant *init,
                                       llvm::Type *type);
+  llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
 };
 
 } // namespace Kebab

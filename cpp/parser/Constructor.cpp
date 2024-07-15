@@ -62,8 +62,11 @@ std::unique_ptr<ListConstructor> ListConstructor::parse(Lexer &lexer) {
 }
 
 llvm::Value *ListConstructor::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function ListConstructor::compile");
+  for (size_t i = 0; i < this->body.size() - 1; ++i)
+    this->body[i]->compile(compiler);
+
+  // Return value of each constructor is the last statement (which is an expression)
+  return this->body.back()->compile(compiler);
 }
 
 std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
@@ -151,6 +154,7 @@ llvm::Value *PrimitiveConstructor::compile(Compiler &compiler) const {
   for (size_t i = 0; i < this->body.size() - 1; ++i)
     this->body[i]->compile(compiler);
 
+  // Return value of each constructor is the last statement (which is an expression)
   return this->body.back()->compile(compiler);
 }
 
