@@ -32,8 +32,18 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *TermOperator::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function TermOperator::compile");
+  llvm::Type *lhs_type = this->lhs->getType();
+  if (!lhs_type->isIntegerTy() && !lhs_type->isFloatTy())
+    this->operator_error({compiler.builder.getInt64Ty(), compiler.builder.getFloatTy()},
+                         this->lhs->getType(), this->to_string());
+
+  switch (this->type) {
+  case PLUS:
+    return compiler.builder.CreateAdd(this->lhs, this->rhs);
+
+  case MINUS:
+    return compiler.builder.CreateSub(this->lhs, this->rhs);
+  }
 }
 
 std::unique_ptr<Term> Term::parse(Lexer &lexer) {
@@ -54,9 +64,16 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
 }
 
 llvm::Value *Term::compile(Compiler &compiler) const {
-  // TODO: some operator logic (this->operators)
-  // for (std::unique_ptr<Factor> const &factor : this->factors)
-  return this->factors.at(0)->compile(compiler);
+  llvm::Value *result = this->factors[0]->compile(compiler);
+
+  for (size_t i = 0; i < this->operators.size(); ++i) {
+    llvm::Value *rhs = this->factors[i + 1]->compile(compiler);
+    this->operators[i]->lhs = result;
+    this->operators[i]->rhs = rhs;
+    result = this->operators[i]->compile(compiler);
+  }
+
+  return result;
 }
 
 } // namespace Parser

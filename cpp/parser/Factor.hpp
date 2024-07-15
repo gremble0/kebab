@@ -14,12 +14,12 @@ namespace Parser {
 class FactorOperator : public AstNode {
 private:
   std::string to_string() const {
-    if (this->type == MULT)
+    switch (this->type) {
+    case MULT:
       return "*";
-    else if (this->type == DIV)
+    case DIV:
       return "/";
-
-    this->unreachable_error();
+    }
   }
 
 public:

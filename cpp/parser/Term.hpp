@@ -12,11 +12,23 @@ namespace Parser {
 
 // this is a prefix?? dont remember should look into and maybe rename
 class TermOperator : AstNode {
+private:
+  std::string to_string() const {
+    switch (this->type) {
+    case PLUS:
+      return "+";
+    case MINUS:
+      return "-";
+    }
+  }
+
 public:
   enum Type {
     PLUS,
     MINUS,
   } type;
+  llvm::Value *lhs;
+  llvm::Value *rhs;
 
   static constexpr bool is_term_operator(Token::Type type) {
     switch (type) {
