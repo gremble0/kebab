@@ -36,13 +36,11 @@ std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
   arguments->start_parsing(lexer, "<primary-arguments>");
 
   lexer.skip({Token::Type::LPAREN});
-  while (true) {
+  while (lexer.peek()->type != Token::Type::RPAREN) {
     arguments->arguments.push_back(Expression::parse(lexer));
 
-    if (lexer.peek()->type == Token::Type::RPAREN)
-      break;
-    else
-      lexer.skip({Token::Type::COMMA});
+    lexer.expect({Token::Type::COMMA, Token::Type::RPAREN});
+    lexer.try_skip({Token::Type::COMMA});
   }
   lexer.skip({Token::Type::RPAREN});
 
