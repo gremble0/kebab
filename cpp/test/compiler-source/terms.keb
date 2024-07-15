@@ -1,0 +1,7 @@
+def i1 = int(1 + 2 + 3)
+def i2 = int(4 - 2 + 1)
+def i3 = int(i1 - i2 + 3)
+printf("hello\n")
+
+def f1 = float(3.5 - 1.2)
+def f2 = float(3.5 - 1.2 + 0.1)

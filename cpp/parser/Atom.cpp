@@ -95,11 +95,15 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *NameAtom::compile(Compiler &compiler) const {
-  llvm::GlobalValue *names_global = compiler.module.getNamedValue(this->name);
-  if (names_global == nullptr)
+  llvm::GlobalValue *names_global_ptr = compiler.module.getNamedValue(this->name);
+  if (names_global_ptr == nullptr)
     compiler.error(std::string("undefined identifier: '") + this->name + '\'');
 
-  return names_global;
+  //  TODO: load the proper type instead of hardcoded i64
+  llvm::Value *names_global_value =
+      compiler.builder.CreateLoad(compiler.builder.getInt64Ty(), names_global_ptr);
+
+  return names_global_value;
 }
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
