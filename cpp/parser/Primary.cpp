@@ -12,6 +12,8 @@
 namespace Kebab {
 namespace Parser {
 
+// TODO: errors on no argument func call - `def a = int(my-func())`
+
 std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
   std::unique_ptr<PrimarySubscription> subscription = std::make_unique<PrimarySubscription>();
   subscription->start_parsing(lexer, "<primary-subscription>");
