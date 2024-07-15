@@ -14,10 +14,10 @@ std::string Token::to_string_short() const {
     return std::to_string(std::get<float_t>(this->value));
 
   case Type::CHAR_LITERAL:
-    return std::to_string(std::get<uint8_t>(this->value));
+    return '\'' + std::to_string(std::get<uint8_t>(this->value)) + '\'';
 
   case Type::STRING_LITERAL:
-    return std::get<std::string>(this->value);
+    return '"' + std::get<std::string>(this->value) + '"';
 
   case Type::NAME:
     return std::get<std::string>(this->value);

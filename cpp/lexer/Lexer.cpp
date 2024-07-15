@@ -322,7 +322,7 @@ void Lexer::expect(std::initializer_list<Token::Type> expected) const {
   if (is_expected(expected))
     return;
 
-  std::string message = "unexpected token '" + this->token->to_string_short() + "' expected ";
+  std::string message = "unexpected token " + this->token->to_string_short() + " expected ";
 
   int i = 0;
   int size = expected.size();
