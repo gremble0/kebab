@@ -2,6 +2,7 @@
 #define KEBAB_COMPILER_HPP
 
 #include <memory>
+#include <optional>
 #include <string>
 
 // Disable unused parameter warnings for llvm headers
@@ -34,6 +35,10 @@ private:
   void start_main();
   void stop_main();
 
+  std::optional<llvm::Value *> get_global(const std::string &name) const;
+  std::optional<llvm::Value *> get_local(const std::string &name) const;
+  std::optional<llvm::Function *> get_function(const std::string &name) const;
+
 public:
   llvm::LLVMContext context;
   llvm::Module module;
@@ -48,6 +53,8 @@ public:
   llvm::GlobalVariable *create_global(const std::string &name, llvm::Constant *init,
                                       llvm::Type *type);
   llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
+
+  std::optional<llvm::Value *> get_variable(const std::string &name) const;
 };
 
 } // namespace Kebab

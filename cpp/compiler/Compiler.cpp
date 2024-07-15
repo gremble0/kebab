@@ -86,4 +86,43 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
 
   return local;
 }
+
+std::optional<llvm::Value *> Compiler::get_global(const std::string &name) const {
+  llvm::GlobalVariable *global = this->module.getGlobalVariable(name);
+  if (global == nullptr)
+    return nullptr;
+  else
+    return this->builder.CreateLoad(global->getValueType(), global);
+}
+
+std::optional<llvm::Value *> Compiler::get_local(const std::string &name) const {
+  llvm::Function *function_context = this->builder.GetInsertBlock()->getParent();
+  for (llvm::BasicBlock &basic_block : *function_context)
+    for (llvm::Instruction &instruction : basic_block)
+      if (llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(&instruction))
+        if (local->getName() == name)
+          return this->builder.CreateLoad(local->getAllocatedType(), local);
+
+  return nullptr;
+}
+
+std::optional<llvm::Function *> Compiler::get_function(const std::string &name) const {
+  return this->module.getFunction(name);
+}
+
+std::optional<llvm::Value *> Compiler::get_variable(const std::string &name) const {
+  // Order of lookup is:
+  // 1 local
+  // 2 function
+  // 3 global
+
+  if (std::optional<llvm::Value *> local = this->get_local(name))
+    return local;
+  else if (std::optional<llvm::Value *> function = this->get_function(name))
+    return function;
+  else if (std::optional<llvm::Value *> global = this->get_global(name))
+    return global;
+  else
+    return std::nullopt;
+}
 } // namespace Kebab
