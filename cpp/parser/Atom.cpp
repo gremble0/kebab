@@ -3,6 +3,7 @@
 #include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
 #include "llvm/IR/Constants.h"
+#include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Instructions.h"
 
@@ -95,15 +96,17 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *NameAtom::compile(Compiler &compiler) const {
-  llvm::GlobalValue *names_global_ptr = compiler.module.getNamedValue(this->name);
-  if (names_global_ptr == nullptr)
+  llvm::GlobalValue *global = compiler.module.getNamedValue(this->name);
+  if (global == nullptr)
     compiler.error(std::string("undefined identifier: '") + this->name + '\'');
 
-  //  TODO: load the proper type instead of hardcoded i64
-  llvm::Value *names_global_value =
-      compiler.builder.CreateLoad(compiler.builder.getInt64Ty(), names_global_ptr);
+  if (llvm::GlobalVariable *global_var = llvm::dyn_cast<llvm::GlobalVariable>(global)) {
+    return compiler.builder.CreateLoad(global_var->getValueType(), global_var);
+  } else if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(global)) {
+    return function;
+  }
 
-  return names_global_value;
+  this->unreachable_error();
 }
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {

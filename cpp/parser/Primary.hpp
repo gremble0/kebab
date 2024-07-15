@@ -12,6 +12,8 @@ namespace Parser {
 
 class PrimarySuffix : public AstNode {
 public:
+  llvm::Value *subscriptee;
+
   virtual ~PrimarySuffix() = default;
 
   static constexpr bool is_primary_suffix_opener(Token::Type type) {
@@ -24,7 +26,6 @@ public:
       return false;
     }
   }
-  llvm::Value *subscriptee;
 
   static std::unique_ptr<PrimarySuffix> parse(Lexer &lexer);
   virtual llvm::Value *compile(Compiler &compiler) const override = 0;
