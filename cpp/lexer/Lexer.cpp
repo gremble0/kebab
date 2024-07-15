@@ -327,7 +327,7 @@ void Lexer::expect(std::initializer_list<Token::Type> expected) const {
   int i = 0;
   int size = expected.size();
   for (const Token::Type &type : expected) {
-    message += '\'' + Token::type_to_string(type) + '\'';
+    message += Token::type_to_string(type);
     ++i;
     if (i == size)
       break;
