@@ -130,40 +130,39 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
 
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
   llvm::Function *function_context = compiler.builder.GetInsertBlock()->getParent();
-  llvm::BasicBlock *if_branch =
+
+  llvm::BasicBlock *branch =
       llvm::BasicBlock::Create(compiler.context, "if_branch", function_context);
-  llvm::BasicBlock *else_branch =
-      llvm::BasicBlock::Create(compiler.context, "else_branch", function_context);
   llvm::BasicBlock *merge_branch =
       llvm::BasicBlock::Create(compiler.context, "merge_branch", function_context);
 
-  llvm::Value *if_test = this->tests[0]->compile(compiler);
-  if (!if_test->getType()->isIntegerTy(1))
-    compiler.error("only booleans are allowed in if tests");
+  // if/elif branches (each branch branches to the merge branch if true, next elif branch if false)
+  size_t num_bodies = this->bodies.size();
+  for (size_t i = 0; i < num_bodies - 1; ++i) {
+    llvm::Value *test = this->tests[i]->compile(compiler);
+    if (!test->getType()->isIntegerTy(1))
+      compiler.error("only booleans are allowed in if tests");
 
-  // maybe unnecessary?
-  llvm::Value *test_is_true = compiler.builder.CreateICmpEQ(
-      if_test, llvm::ConstantInt::get(compiler.builder.getInt1Ty(), 1));
+    llvm::Value *test_is_true = compiler.builder.CreateICmpEQ(
+        test, llvm::ConstantInt::get(compiler.builder.getInt1Ty(), 1));
 
-  compiler.builder.CreateCondBr(test_is_true, if_branch, else_branch);
+    llvm::BasicBlock *next_branch =
+        llvm::BasicBlock::Create(compiler.context, "elif_branch", function_context);
+    compiler.builder.SetInsertPoint(branch);
 
-  // If branch
-  compiler.builder.SetInsertPoint(if_branch);
-  llvm::Value *if_return_value;
-  size_t i = 0;
-  while (i < this->bodies[0].size()) {
-    if_return_value = this->bodies[0][i]->compile(compiler);
-    ++i;
+    size_t num_statements_in_body = this->bodies[i].size();
+    for (size_t j = 0; j < num_statements_in_body; ++j) {
+      this->bodies[i][j]->compile(compiler);
+    }
+
+    compiler.builder.CreateCondBr(test_is_true, merge_branch, next_branch);
+    branch = next_branch;
   }
-  compiler.builder.CreateBr(merge_branch);
 
   // else branch
-  compiler.builder.SetInsertPoint(else_branch);
-  llvm::Value *else_return_value;
-  i = 0;
-  while (i < this->bodies[1].size()) {
-    else_return_value = this->bodies[1][i]->compile(compiler);
-    ++i;
+  compiler.builder.SetInsertPoint(branch);
+  for (size_t i = 0; i < this->bodies.back().size(); ++i) {
+    this->bodies.back()[i]->compile(compiler);
   }
   compiler.builder.CreateBr(merge_branch);
 
