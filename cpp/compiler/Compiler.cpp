@@ -103,7 +103,10 @@ llvm::Value *Compiler::create_sub(llvm::Value *lhs, llvm::Value *rhs) {
 }
 
 llvm::Value *Compiler::create_mul(llvm::Value *lhs, llvm::Value *rhs) {
-  return this->builder.CreateMul(lhs, rhs);
+  if (lhs->getType()->isDoubleTy())
+    return this->builder.CreateFMul(lhs, rhs);
+  else
+    return this->builder.CreateMul(lhs, rhs);
 }
 
 llvm::Value *Compiler::create_div(llvm::Value *lhs, llvm::Value *rhs) {

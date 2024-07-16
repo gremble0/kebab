@@ -1,7 +1,6 @@
 def i1 = int(1)
 def i2 = int(1 * 2 * 3)
-def i3 = float(1 * 2.5 * 3.1)
-def i4 = float(5.4 / 2.2)
-def i5 = int(-2 * 5)
+def i3 = int(-2 * 5)
 
-;def nonsense = string("hello" * "world")
+def f1 = float(1 * 2.5 * 3.1)
+def f2 = float(5.4 / 2.2)
