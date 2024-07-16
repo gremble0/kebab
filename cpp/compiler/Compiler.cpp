@@ -102,6 +102,17 @@ llvm::Value *Compiler::create_sub(llvm::Value *lhs, llvm::Value *rhs) {
     return this->builder.CreateSub(lhs, rhs);
 }
 
+llvm::Value *Compiler::create_mul(llvm::Value *lhs, llvm::Value *rhs) {
+  return this->builder.CreateMul(lhs, rhs);
+}
+
+llvm::Value *Compiler::create_div(llvm::Value *lhs, llvm::Value *rhs) {
+  if (lhs->getType()->isDoubleTy())
+    return this->builder.CreateFDiv(lhs, rhs);
+  else
+    return this->builder.CreateSDiv(lhs, rhs);
+}
+
 std::optional<llvm::LoadInst *> Compiler::get_global(const std::string &name) {
   llvm::GlobalVariable *global = this->module.getGlobalVariable(name);
   if (global == nullptr)

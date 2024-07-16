@@ -118,13 +118,10 @@ llvm::Value *FactorOperator::compile(Compiler &compiler) const {
 
   switch (this->type) {
   case MULT:
-    return compiler.builder.CreateMul(this->lhs, this->rhs);
+    return compiler.create_mul(this->lhs, this->rhs);
 
   case DIV:
-    if (lhs_type->isDoubleTy())
-      return compiler.builder.CreateFDiv(this->lhs, this->rhs);
-    else
-      return compiler.builder.CreateSDiv(this->lhs, this->rhs);
+    return compiler.create_div(this->lhs, this->rhs);
   }
 }
 

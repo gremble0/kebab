@@ -56,6 +56,8 @@ public:
 
   llvm::Value *create_add(llvm::Value *lhs, llvm::Value *rhs);
   llvm::Value *create_sub(llvm::Value *lhs, llvm::Value *rhs);
+  llvm::Value *create_mul(llvm::Value *lhs, llvm::Value *rhs);
+  llvm::Value *create_div(llvm::Value *lhs, llvm::Value *rhs);
 
   std::optional<llvm::Value *> get_value(const std::string &name);
 };
