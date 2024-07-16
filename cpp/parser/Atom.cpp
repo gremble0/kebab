@@ -34,7 +34,7 @@ std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *FloatAtom::compile(Compiler &compiler) const {
-  return llvm::ConstantFP::get(compiler.builder.getFloatTy(), this->f);
+  return llvm::ConstantFP::get(compiler.builder.getDoubleTy(), this->f);
 }
 
 std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {

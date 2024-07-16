@@ -11,7 +11,7 @@ std::string Token::to_string_short() const {
     return std::to_string(std::get<int64_t>(this->value));
 
   case Type::FLOAT_LITERAL:
-    return std::to_string(std::get<float_t>(this->value));
+    return std::to_string(std::get<double_t>(this->value));
 
   case Type::CHAR_LITERAL:
     return '\'' + std::to_string(std::get<uint8_t>(this->value)) + '\'';
@@ -36,7 +36,7 @@ std::string Token::to_string_verbose() const {
     break;
 
   case Type::FLOAT_LITERAL:
-    out += "float-literal: \"" + std::to_string(std::get<float_t>(this->value)) + '"';
+    out += "float-literal: \"" + std::to_string(std::get<double_t>(this->value)) + '"';
     break;
 
   case Type::CHAR_LITERAL:

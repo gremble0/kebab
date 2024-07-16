@@ -71,11 +71,11 @@ public:
     END_OF_FILE, // <end of file>
   } const type;
 
-  const std::variant<uint8_t, int64_t, float_t, std::string> value;
+  const std::variant<uint8_t, int64_t, double_t, std::string> value;
   const Span span;
 
   Token(Type type, Span span) : type(type), value(), span(span) {}
-  Token(Type type, Span span, std::variant<uint8_t, int64_t, float_t, std::string> value)
+  Token(Type type, Span span, std::variant<uint8_t, int64_t, double_t, std::string> value)
       : type(type), value(value), span(span) {}
   Token(Span span, const std::string &word)
       : type(this->determine_type(word)), value(this->determine_value(this->type, word)),
@@ -115,7 +115,7 @@ private:
       return Type::NAME;
   }
 
-  static std::variant<uint8_t, int64_t, float_t, std::string>
+  static std::variant<uint8_t, int64_t, double_t, std::string>
   determine_value(Type type, const std::string &word) {
     if (type == Type::NAME)
       return word;
