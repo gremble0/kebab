@@ -125,6 +125,9 @@ std::optional<llvm::LoadInst *> Compiler::get_global(const std::string &name) {
 }
 
 std::optional<llvm::LoadInst *> Compiler::get_local(const std::string &name) {
+  // Search each basicblock in the currently compiling functino for some binding with the given name
+  // NOTE: once we do branching and stuff this may give us bindings from other parts of the function
+  // that should be out of scope.
   llvm::Function *function_context = this->builder.GetInsertBlock()->getParent();
   for (llvm::BasicBlock &basic_block : *function_context)
     for (llvm::Instruction &instruction : basic_block) {
