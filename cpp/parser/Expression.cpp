@@ -129,35 +129,35 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
 }
 
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
-  llvm::Value *test = this->tests[0]->compile(compiler);
-  if (!test->getType()->isIntegerTy(1))
+  llvm::Value *if_test = this->tests[0]->compile(compiler);
+  if (!if_test->getType()->isIntegerTy(1))
     compiler.error("only booleans are allowed in if tests");
 
-  llvm::BasicBlock *if_branch = llvm::BasicBlock::Create(compiler.context);
+  llvm::Function *function_context = compiler.builder.GetInsertBlock()->getParent();
+  llvm::BasicBlock *if_branch =
+      llvm::BasicBlock::Create(compiler.context, "if_branch", function_context);
+  llvm::BasicBlock *else_branch =
+      llvm::BasicBlock::Create(compiler.context, "else_branch", function_context);
+  llvm::BasicBlock *merge_branch =
+      llvm::BasicBlock::Create(compiler.context, "merge_branch", function_context);
 
-  size_t if_branch_expressions = this->bodies[0].size();
-  llvm::Value *if_return_value;
-  for (size_t i = 0;; ++i) {
-    llvm::Value *expression = this->bodies[1][i]->compile(compiler);
-    if (i == if_branch_expressions - 1) {
-      if_return_value = expression;
-      break;
-    }
-  }
+  // maybe unnecessary?
+  llvm::Value *test_is_true = compiler.builder.CreateICmpEQ(
+      if_test, llvm::ConstantInt::get(compiler.builder.getInt1Ty(), 1));
 
-  llvm::BasicBlock *else_branch = llvm::BasicBlock::Create(compiler.context);
+  compiler.builder.CreateCondBr(test_is_true, if_branch, else_branch);
 
-  size_t size = this->bodies[1].size();
-  llvm::Value *else_return_value;
-  for (size_t i = 0;; ++i) {
-    llvm::Value *expression = this->bodies[1][i]->compile(compiler);
-    if (i == size - 1) {
-      else_return_value = expression;
-      break;
-    }
-  }
+  // If branch
+  compiler.builder.SetInsertPoint(if_branch);
+  compiler.builder.CreateBr(merge_branch);
 
-  return if_return_value;
+  // else branch
+  compiler.builder.SetInsertPoint(else_branch);
+  compiler.builder.CreateBr(merge_branch);
+
+  compiler.builder.SetInsertPoint(merge_branch);
+
+  return llvm::ConstantInt::get(compiler.builder.getInt64Ty(), 42);
 }
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
