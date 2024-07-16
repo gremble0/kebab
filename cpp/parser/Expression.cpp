@@ -129,10 +129,6 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
 }
 
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
-  llvm::Value *if_test = this->tests[0]->compile(compiler);
-  if (!if_test->getType()->isIntegerTy(1))
-    compiler.error("only booleans are allowed in if tests");
-
   llvm::Function *function_context = compiler.builder.GetInsertBlock()->getParent();
   llvm::BasicBlock *if_branch =
       llvm::BasicBlock::Create(compiler.context, "if_branch", function_context);
@@ -140,6 +136,10 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
       llvm::BasicBlock::Create(compiler.context, "else_branch", function_context);
   llvm::BasicBlock *merge_branch =
       llvm::BasicBlock::Create(compiler.context, "merge_branch", function_context);
+
+  llvm::Value *if_test = this->tests[0]->compile(compiler);
+  if (!if_test->getType()->isIntegerTy(1))
+    compiler.error("only booleans are allowed in if tests");
 
   // maybe unnecessary?
   llvm::Value *test_is_true = compiler.builder.CreateICmpEQ(
@@ -149,10 +149,22 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
 
   // If branch
   compiler.builder.SetInsertPoint(if_branch);
+  llvm::Value *if_return_value;
+  size_t i = 0;
+  while (i < this->bodies[0].size()) {
+    if_return_value = this->bodies[0][i]->compile(compiler);
+    ++i;
+  }
   compiler.builder.CreateBr(merge_branch);
 
   // else branch
   compiler.builder.SetInsertPoint(else_branch);
+  llvm::Value *else_return_value;
+  i = 0;
+  while (i < this->bodies[1].size()) {
+    else_return_value = this->bodies[1][i]->compile(compiler);
+    ++i;
+  }
   compiler.builder.CreateBr(merge_branch);
 
   compiler.builder.SetInsertPoint(merge_branch);
