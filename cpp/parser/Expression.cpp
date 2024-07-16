@@ -53,17 +53,19 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
 void CondExpression::parse_test_body(Lexer &lexer) {
   Logger::log_with_indent("<cond-test-body>");
 
-  std::vector<std::unique_ptr<Statement>> body_statements;
+  std::vector<std::unique_ptr<Statement>> body;
   while (true) {
     std::optional<std::unique_ptr<Statement>> statement = Statement::try_parse_statement(lexer);
-    if (statement == std::nullopt)
-      break;
+    if (statement.has_value())
+      body.push_back(std::move(statement.value()));
     else
-      body_statements.push_back(std::move(statement.value()));
+      break;
   }
 
-  if (!body_statements.back()->is_expression())
+  if (!body.back()->is_expression())
     this->parser_error("every branch in a cond expression must return a value", lexer);
+
+  this->bodies.push_back(std::move(body));
 
   Logger::log_with_dedent("</cond-test-body>");
 }
@@ -127,8 +129,35 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
 }
 
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function CondExpression::compile");
+  llvm::Value *test = this->tests[0]->compile(compiler);
+  if (!test->getType()->isIntegerTy(1))
+    compiler.error("only booleans are allowed in if tests");
+
+  llvm::BasicBlock *if_branch = llvm::BasicBlock::Create(compiler.context);
+
+  size_t if_branch_expressions = this->bodies[0].size();
+  llvm::Value *if_return_value;
+  for (size_t i = 0;; ++i) {
+    llvm::Value *expression = this->bodies[1][i]->compile(compiler);
+    if (i == if_branch_expressions - 1) {
+      if_return_value = expression;
+      break;
+    }
+  }
+
+  llvm::BasicBlock *else_branch = llvm::BasicBlock::Create(compiler.context);
+
+  size_t size = this->bodies[1].size();
+  llvm::Value *else_return_value;
+  for (size_t i = 0;; ++i) {
+    llvm::Value *expression = this->bodies[1][i]->compile(compiler);
+    if (i == size - 1) {
+      else_return_value = expression;
+      break;
+    }
+  }
+
+  return if_return_value;
 }
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {

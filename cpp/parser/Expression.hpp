@@ -38,6 +38,7 @@ public:
   static std::unique_ptr<CondExpression> parse(Lexer &lexer);
   llvm::Value *compile(Compiler &compiler) const override;
 };
+// TODO: CondBody or something (maybe CondTest)
 
 class NormalExpression : public Expression {
 public:
