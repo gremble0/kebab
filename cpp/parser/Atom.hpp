@@ -31,7 +31,7 @@ public:
 
 class FloatAtom : public Atom {
 public:
-  float_t f;
+  double_t f;
 
   static std::unique_ptr<FloatAtom> parse(Lexer &lexer);
   llvm::Value *compile(Compiler &compiler) const override;

@@ -112,8 +112,8 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 
 llvm::Value *FactorOperator::compile(Compiler &compiler) const {
   llvm::Type *lhs_type = this->lhs->getType();
-  if (!lhs_type->isIntegerTy() && !lhs_type->isFloatTy())
-    this->operator_error({compiler.builder.getInt64Ty(), compiler.builder.getFloatTy()},
+  if (!lhs_type->isIntegerTy() && !lhs_type->isDoubleTy())
+    this->operator_error({compiler.builder.getInt64Ty(), compiler.builder.getDoubleTy()},
                          this->lhs->getType(), this->to_string());
 
   switch (this->type) {
@@ -121,7 +121,7 @@ llvm::Value *FactorOperator::compile(Compiler &compiler) const {
     return compiler.builder.CreateMul(this->lhs, this->rhs);
 
   case DIV:
-    if (lhs_type->isFloatTy())
+    if (lhs_type->isDoubleTy())
       return compiler.builder.CreateFDiv(this->lhs, this->rhs);
     else
       return compiler.builder.CreateSDiv(this->lhs, this->rhs);

@@ -66,7 +66,7 @@ public:
   void skip(std::initializer_list<Token::Type> expected);
 
   int64_t skip_int();
-  float_t skip_float();
+  double_t skip_float();
   uint8_t skip_char();
   std::string skip_string();
   std::string skip_name();

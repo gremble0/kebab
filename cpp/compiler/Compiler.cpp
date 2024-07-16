@@ -89,14 +89,14 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
 }
 
 llvm::Value *Compiler::create_add(llvm::Value *lhs, llvm::Value *rhs) {
-  if (lhs->getType()->isFloatTy())
+  if (lhs->getType()->isDoubleTy())
     return this->builder.CreateFAdd(lhs, rhs);
   else
     return this->builder.CreateAdd(lhs, rhs);
 }
 
 llvm::Value *Compiler::create_sub(llvm::Value *lhs, llvm::Value *rhs) {
-  if (lhs->getType()->isFloatTy())
+  if (lhs->getType()->isDoubleTy())
     return this->builder.CreateFSub(lhs, rhs);
   else
     return this->builder.CreateSub(lhs, rhs);

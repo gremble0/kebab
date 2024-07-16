@@ -108,7 +108,7 @@ llvm::Type *PrimitiveType::get_llvm_type(llvm::IRBuilder<> &builder) const {
   if (this->name.compare("int") == 0)
     return builder.getInt64Ty();
   else if (this->name.compare("float") == 0)
-    return builder.getFloatTy();
+    return builder.getDoubleTy();
   else if (this->name.compare("char") == 0)
     return builder.getInt8Ty();
   else if (this->name.compare("string") == 0)
