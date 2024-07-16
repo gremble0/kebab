@@ -10,6 +10,7 @@
 #include "parser/Expression.hpp"
 #include "parser/Statement.hpp"
 #include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Constants.h"
 
 namespace Kebab {
 namespace Parser {
@@ -129,6 +130,7 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
 }
 
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
+  llvm::Value *return_value = nullptr;
   llvm::Function *function_context = compiler.builder.GetInsertBlock()->getParent();
 
   llvm::BasicBlock *branch =
@@ -136,7 +138,8 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
   llvm::BasicBlock *merge_branch =
       llvm::BasicBlock::Create(compiler.context, "merge_branch", function_context);
 
-  // if/elif branches (each branch branches to the merge branch if true, next elif branch if false)
+  // if/elif branches (each branch branches to the merge branch if true, next elif branch (or else
+  // branch for last elif) if false)
   size_t num_bodies = this->bodies.size();
   for (size_t i = 0; i < num_bodies - 1; ++i) {
     llvm::Value *test = this->tests[i]->compile(compiler);
@@ -150,10 +153,15 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
         llvm::BasicBlock::Create(compiler.context, "elif_branch", function_context);
     compiler.builder.SetInsertPoint(branch);
 
+    // Compile body except for return statement
     size_t num_statements_in_body = this->bodies[i].size();
-    for (size_t j = 0; j < num_statements_in_body; ++j) {
+    for (size_t j = 0; j < num_statements_in_body - 1; ++j)
       this->bodies[i][j]->compile(compiler);
-    }
+
+    // If its the first true test it is our return value
+    llvm::Value *current_return_value = this->bodies[i].back()->compile(compiler);
+    if (static_cast<llvm::ConstantInt *>(test_is_true)->isOne() && return_value == nullptr)
+      return_value = current_return_value;
 
     compiler.builder.CreateCondBr(test_is_true, merge_branch, next_branch);
     branch = next_branch;
@@ -161,14 +169,18 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
 
   // else branch
   compiler.builder.SetInsertPoint(branch);
-  for (size_t i = 0; i < this->bodies.back().size(); ++i) {
+  for (size_t i = 0; i < this->bodies.back().size() - 1; ++i)
     this->bodies.back()[i]->compile(compiler);
-  }
-  compiler.builder.CreateBr(merge_branch);
 
+  // If none of the tests were true this is our return value
+  llvm::Value *current_return_value = this->bodies.back().back()->compile(compiler);
+  if (return_value == nullptr)
+    return_value = current_return_value;
+
+  compiler.builder.CreateBr(merge_branch);
   compiler.builder.SetInsertPoint(merge_branch);
 
-  return llvm::ConstantInt::get(compiler.builder.getInt64Ty(), 42);
+  return return_value;
 }
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
