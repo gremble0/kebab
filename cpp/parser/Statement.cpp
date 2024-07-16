@@ -41,8 +41,8 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   if (actual_type->getTypeID() != declared_type->getTypeID())
     this->type_error({declared_type}, actual_type);
 
-  llvm::AllocaInst *local =
-      compiler.create_local(this->name, static_cast<llvm::Constant *>(variable_value), actual_type);
+  llvm::AllocaInst *local = compiler.create_local(
+      this->name, static_cast<llvm::Constant *>(variable_value), declared_type);
 
   return local;
 }

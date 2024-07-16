@@ -8,6 +8,7 @@
 #include "parser/RootNode.hpp"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constant.h"
+#include "llvm/IR/DataLayout.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Instructions.h"
@@ -82,8 +83,15 @@ llvm::GlobalVariable *Compiler::create_global(const std::string &name, llvm::Con
 
 llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant *init,
                                          llvm::Type *type) {
+  // Derive the alignment from the type
+  const llvm::DataLayout &dataLayout = this->module.getDataLayout();
+  llvm::Align alignment = dataLayout.getPrefTypeAlign(type);
+
   llvm::AllocaInst *local = this->builder.CreateAlloca(type, nullptr, name);
-  this->builder.CreateStore(init, local);
+  local->setAlignment(llvm::Align(alignment));
+
+  llvm::StoreInst *store = this->builder.CreateStore(init, local);
+  store->setAlignment(llvm::Align(alignment));
 
   return local;
 }
