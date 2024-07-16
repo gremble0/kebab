@@ -39,10 +39,10 @@ llvm::Value *TermOperator::compile(Compiler &compiler) const {
 
   switch (this->type) {
   case PLUS:
-    return compiler.builder.CreateAdd(this->lhs, this->rhs);
+    return compiler.create_add(this->lhs, this->rhs);
 
   case MINUS:
-    return compiler.builder.CreateSub(this->lhs, this->rhs);
+    return compiler.create_sub(this->lhs, this->rhs);
   }
 }
 

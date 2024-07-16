@@ -88,6 +88,20 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
   return local;
 }
 
+llvm::Value *Compiler::create_add(llvm::Value *lhs, llvm::Value *rhs) {
+  if (lhs->getType()->isFloatTy())
+    return this->builder.CreateFAdd(lhs, rhs);
+  else
+    return this->builder.CreateAdd(lhs, rhs);
+}
+
+llvm::Value *Compiler::create_sub(llvm::Value *lhs, llvm::Value *rhs) {
+  if (lhs->getType()->isFloatTy())
+    return this->builder.CreateFSub(lhs, rhs);
+  else
+    return this->builder.CreateSub(lhs, rhs);
+}
+
 std::optional<llvm::LoadInst *> Compiler::get_global(const std::string &name) {
   llvm::GlobalVariable *global = this->module.getGlobalVariable(name);
   if (global == nullptr)

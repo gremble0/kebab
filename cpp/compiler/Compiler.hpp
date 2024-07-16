@@ -54,6 +54,9 @@ public:
                                       llvm::Type *type);
   llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
 
+  llvm::Value *create_add(llvm::Value *lhs, llvm::Value *rhs);
+  llvm::Value *create_sub(llvm::Value *lhs, llvm::Value *rhs);
+
   std::optional<llvm::Value *> get_value(const std::string &name);
 };
 
