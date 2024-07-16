@@ -9,6 +9,7 @@
 #include "parser/Constructor.hpp"
 #include "parser/Expression.hpp"
 #include "parser/Statement.hpp"
+#include "llvm/IR/BasicBlock.h"
 
 namespace Kebab {
 namespace Parser {
