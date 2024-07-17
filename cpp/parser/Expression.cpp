@@ -11,6 +11,8 @@
 #include "parser/Statement.hpp"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constants.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/Value.h"
 
 namespace Kebab {
 namespace Parser {
@@ -130,7 +132,6 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
 }
 
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
-  llvm::Value *return_value = nullptr;
   llvm::Function *function_context = compiler.builder.GetInsertBlock()->getParent();
 
   llvm::BasicBlock *branch =
@@ -138,10 +139,15 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
   llvm::BasicBlock *merge_branch =
       llvm::BasicBlock::Create(compiler.context, "merge_branch", function_context);
 
+  compiler.builder.CreateBr(branch);
+
+  // Vector of possible incoming values to the phi node (the return value of the cond expression)
+  std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming_values;
+
   // if/elif branches (each branch branches to the merge branch if true, next elif branch (or else
   // branch for last elif) if false)
-  size_t num_bodies = this->bodies.size();
-  for (size_t i = 0; i < num_bodies - 1; ++i) {
+  size_t num_tests = this->tests.size();
+  for (size_t i = 0; i < num_tests; ++i) {
     llvm::Value *test = this->tests[i]->compile(compiler);
     if (!test->getType()->isIntegerTy(1))
       compiler.error("only booleans are allowed in if tests");
@@ -149,8 +155,10 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     llvm::Value *test_is_true = compiler.builder.CreateICmpEQ(
         test, llvm::ConstantInt::get(compiler.builder.getInt1Ty(), 1));
 
+    std::string branch_name = (i == num_tests - 1) ? "else_branch" : "elif_branch";
+
     llvm::BasicBlock *next_branch =
-        llvm::BasicBlock::Create(compiler.context, "elif_branch", function_context);
+        llvm::BasicBlock::Create(compiler.context, branch_name, function_context);
     compiler.builder.SetInsertPoint(branch);
 
     // Compile body except for return statement
@@ -158,12 +166,10 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     for (size_t j = 0; j < num_statements_in_body - 1; ++j)
       this->bodies[i][j]->compile(compiler);
 
-    // If its the first true test it is our return value
     llvm::Value *current_return_value = this->bodies[i].back()->compile(compiler);
-    if (static_cast<llvm::ConstantInt *>(test_is_true)->isOne() && return_value == nullptr)
-      return_value = current_return_value;
 
     compiler.builder.CreateCondBr(test_is_true, merge_branch, next_branch);
+    incoming_values.push_back({current_return_value, branch});
     branch = next_branch;
   }
 
@@ -172,15 +178,18 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
   for (size_t i = 0; i < this->bodies.back().size() - 1; ++i)
     this->bodies.back()[i]->compile(compiler);
 
-  // If none of the tests were true this is our return value
-  llvm::Value *current_return_value = this->bodies.back().back()->compile(compiler);
-  if (return_value == nullptr)
-    return_value = current_return_value;
+  llvm::Value *else_return_value = this->bodies.back().back()->compile(compiler);
+  incoming_values.push_back({else_return_value, branch});
 
   compiler.builder.CreateBr(merge_branch);
   compiler.builder.SetInsertPoint(merge_branch);
 
-  return return_value;
+  llvm::PHINode *phi =
+      compiler.builder.CreatePHI(else_return_value->getType(), incoming_values.size());
+  for (const auto &incoming : incoming_values)
+    phi->addIncoming(incoming.first, incoming.second);
+
+  return phi;
 }
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
