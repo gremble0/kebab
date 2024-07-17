@@ -146,7 +146,7 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
   llvm::BasicBlock *branch = compiler.create_basic_block(current_function, "if_branch");
   llvm::BasicBlock *merge_branch = compiler.create_basic_block(current_function, "merge_branch");
 
-  compiler.builder.CreateBr(branch);
+  compiler.create_branch(branch);
 
   // Vector of possible incoming values to the phi node (the return value of the cond expression)
   std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming_values;
@@ -170,7 +170,7 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     // Compile body except for return statement
     llvm::Value *current_return_value = compile_branch_body(compiler, this->bodies[i]);
 
-    compiler.builder.CreateCondBr(test_is_true, merge_branch, next_branch);
+    compiler.create_cond_branch(test_is_true, merge_branch, next_branch);
     incoming_values.push_back({current_return_value, branch});
     branch = next_branch;
   }
@@ -180,7 +180,7 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
   llvm::Value *else_return_value = compile_branch_body(compiler, this->bodies.back());
   incoming_values.push_back({else_return_value, branch});
 
-  compiler.builder.CreateBr(merge_branch);
+  compiler.create_branch(merge_branch);
   compiler.builder.SetInsertPoint(merge_branch);
 
   return compiler.create_phi(else_return_value->getType(), incoming_values);

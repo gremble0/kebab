@@ -61,9 +61,12 @@ public:
   llvm::Value *create_mul(llvm::Value *lhs, llvm::Value *rhs);
   llvm::Value *create_div(llvm::Value *lhs, llvm::Value *rhs);
 
+  llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
+  llvm::BranchInst *create_branch(llvm::BasicBlock *destination);
+  llvm::BranchInst *create_cond_branch(llvm::Value *condition, llvm::BasicBlock *true_destination,
+                                       llvm::BasicBlock *false_destination);
   llvm::PHINode *create_phi(llvm::Type *type,
                             std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming);
-  llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
 
   std::optional<llvm::Value *> get_value(const std::string &name);
   llvm::Function *get_current_function() const;

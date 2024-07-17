@@ -128,6 +128,16 @@ llvm::Value *Compiler::create_div(llvm::Value *lhs, llvm::Value *rhs) {
 llvm::BasicBlock *Compiler::create_basic_block(llvm::Function *parent, const std::string &name) {
   return llvm::BasicBlock::Create(this->context, name, parent);
 }
+llvm::BranchInst *Compiler::create_branch(llvm::BasicBlock *destination) {
+  return this->builder.CreateBr(destination);
+}
+
+llvm::BranchInst *Compiler::create_cond_branch(llvm::Value *condition,
+                                               llvm::BasicBlock *true_destination,
+                                               llvm::BasicBlock *false_destination) {
+
+  return this->builder.CreateCondBr(condition, true_destination, false_destination);
+}
 
 llvm::PHINode *
 Compiler::create_phi(llvm::Type *type,
