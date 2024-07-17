@@ -124,6 +124,16 @@ llvm::Value *Compiler::create_div(llvm::Value *lhs, llvm::Value *rhs) {
     return this->builder.CreateSDiv(lhs, rhs);
 }
 
+llvm::PHINode *
+Compiler::create_phi(llvm::Type *type,
+                     std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming) {
+  llvm::PHINode *phi = this->builder.CreatePHI(type, incoming.size());
+  for (const std::pair<llvm::Value *, llvm::BasicBlock *> &i : incoming)
+    phi->addIncoming(i.first, i.second);
+
+  return phi;
+}
+
 std::optional<llvm::LoadInst *> Compiler::get_global(const std::string &name) {
   llvm::GlobalVariable *global = this->module.getGlobalVariable(name);
   if (global == nullptr)
@@ -133,11 +143,13 @@ std::optional<llvm::LoadInst *> Compiler::get_global(const std::string &name) {
 }
 
 std::optional<llvm::LoadInst *> Compiler::get_local(const std::string &name) {
-  // Search each basicblock in the currently compiling functino for some binding with the given name
+  // Search each basicblock in the currently compiling function for some binding with the given name
   // NOTE: once we do branching and stuff this may give us bindings from other parts of the function
   // that should be out of scope.
-  llvm::Function *function_context = this->builder.GetInsertBlock()->getParent();
-  for (llvm::BasicBlock &basic_block : *function_context)
+  llvm::BasicBlock *current_block = this->builder.GetInsertBlock();
+  llvm::Function *current_function = current_block->getParent();
+
+  for (llvm::BasicBlock &basic_block : *current_function)
     for (llvm::Instruction &instruction : basic_block) {
       llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(&instruction);
       if (local != nullptr && local->getName() == name)

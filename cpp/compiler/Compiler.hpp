@@ -9,6 +9,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
+#include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constant.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/GlobalVariable.h"
@@ -16,6 +17,7 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
+#include "llvm/IR/Value.h"
 
 #pragma clang diagnostic pop
 
@@ -58,6 +60,9 @@ public:
   llvm::Value *create_sub(llvm::Value *lhs, llvm::Value *rhs);
   llvm::Value *create_mul(llvm::Value *lhs, llvm::Value *rhs);
   llvm::Value *create_div(llvm::Value *lhs, llvm::Value *rhs);
+
+  llvm::PHINode *create_phi(llvm::Type *type,
+                            std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming);
 
   std::optional<llvm::Value *> get_value(const std::string &name);
 };

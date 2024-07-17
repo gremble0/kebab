@@ -131,6 +131,15 @@ std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
   return expression;
 }
 
+// Compile the body of the branch and ensure local variables are scoped correctly
+static llvm::Value *compile_branch_body(Compiler &compiler,
+                                        const std::vector<std::unique_ptr<Statement>> &body) {
+  for (size_t j = 0; j < body.size() - 1; ++j)
+    body[j]->compile(compiler);
+
+  return body.back()->compile(compiler);
+}
+
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
   llvm::Function *function_context = compiler.builder.GetInsertBlock()->getParent();
 
@@ -162,11 +171,7 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     compiler.builder.SetInsertPoint(branch);
 
     // Compile body except for return statement
-    size_t num_statements_in_body = this->bodies[i].size();
-    for (size_t j = 0; j < num_statements_in_body - 1; ++j)
-      this->bodies[i][j]->compile(compiler);
-
-    llvm::Value *current_return_value = this->bodies[i].back()->compile(compiler);
+    llvm::Value *current_return_value = compile_branch_body(compiler, this->bodies[i]);
 
     compiler.builder.CreateCondBr(test_is_true, merge_branch, next_branch);
     incoming_values.push_back({current_return_value, branch});
@@ -175,21 +180,13 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
 
   // else branch
   compiler.builder.SetInsertPoint(branch);
-  for (size_t i = 0; i < this->bodies.back().size() - 1; ++i)
-    this->bodies.back()[i]->compile(compiler);
-
-  llvm::Value *else_return_value = this->bodies.back().back()->compile(compiler);
+  llvm::Value *else_return_value = compile_branch_body(compiler, this->bodies.back());
   incoming_values.push_back({else_return_value, branch});
 
   compiler.builder.CreateBr(merge_branch);
   compiler.builder.SetInsertPoint(merge_branch);
 
-  llvm::PHINode *phi =
-      compiler.builder.CreatePHI(else_return_value->getType(), incoming_values.size());
-  for (const auto &incoming : incoming_values)
-    phi->addIncoming(incoming.first, incoming.second);
-
-  return phi;
+  return compiler.create_phi(else_return_value->getType(), incoming_values);
 }
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
