@@ -85,8 +85,13 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
 }
 
 llvm::FunctionType *FunctionType::get_llvm_type(llvm::IRBuilder<> &builder) const {
-  // TODO:
-  assert(false && "unimplemented function FunctionType::get_llvm_type");
+  llvm::Type *llvm_return_type = this->return_type->get_llvm_type(builder);
+  std::vector<llvm::Type *> llvm_parameter_types;
+  for (const auto &parameter_type : this->parameter_types)
+    llvm_parameter_types.push_back(parameter_type->get_llvm_type(builder));
+
+  // TODO: varargs
+  return llvm::FunctionType::get(llvm_return_type, llvm_parameter_types, false);
 }
 
 llvm::Value *FunctionType::compile(Compiler &compiler) const {
