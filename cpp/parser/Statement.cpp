@@ -6,8 +6,10 @@
 #include "lexer/Token.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/Statement.hpp"
+#include "llvm/IR/Function.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Instructions.h"
+#include "llvm/Support/Casting.h"
 
 namespace Kebab {
 namespace Parser {
@@ -38,13 +40,17 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler.builder);
   llvm::Type *actual_type = variable_value->getType();
 
-  if (actual_type->getTypeID() != declared_type->getTypeID())
+  // Types are interned so pointer comparison is sufficient
+  if (variable_value->getType() == declared_type)
     this->type_error({declared_type}, actual_type);
 
-  llvm::AllocaInst *local = compiler.create_local(
-      this->name, static_cast<llvm::Constant *>(variable_value), declared_type);
-
-  return local;
+  if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(variable_value)) {
+    function->setName(this->name);
+    return variable_value;
+  } else {
+    return compiler.create_local(this->name, static_cast<llvm::Constant *>(variable_value),
+                                 declared_type);
+  }
 }
 
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {

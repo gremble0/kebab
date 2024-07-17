@@ -130,7 +130,6 @@ std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
 
 llvm::Value *FunctionConstructor::compile(Compiler &compiler) const {
   llvm::FunctionType *prototype = this->type->get_llvm_type(compiler.builder);
-
   return llvm::Function::Create(prototype, llvm::Function::ExternalLinkage, "", compiler.module);
 }
 

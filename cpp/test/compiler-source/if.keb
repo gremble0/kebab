@@ -1,0 +1,13 @@
+def i1 = int(
+  if false => 
+    def local = int(420)
+    local + 1
+  elif true =>
+    def local1 = int(1024)
+    local1 + 2
+  else => 
+    def local2 = int(69)
+    local2 + 42
+)
+
+def i2 = int(printf("%ld\n", i1))
