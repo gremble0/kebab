@@ -10,6 +10,7 @@
 #include "llvm/IR/Constant.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Function.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Type.h"
@@ -124,6 +125,10 @@ llvm::Value *Compiler::create_div(llvm::Value *lhs, llvm::Value *rhs) {
     return this->builder.CreateSDiv(lhs, rhs);
 }
 
+llvm::BasicBlock *Compiler::create_basic_block(llvm::Function *parent, const std::string &name) {
+  return llvm::BasicBlock::Create(this->context, name, parent);
+}
+
 llvm::PHINode *
 Compiler::create_phi(llvm::Type *type,
                      std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming) {
@@ -146,8 +151,7 @@ std::optional<llvm::LoadInst *> Compiler::get_local(const std::string &name) {
   // Search each basicblock in the currently compiling function for some binding with the given name
   // NOTE: once we do branching and stuff this may give us bindings from other parts of the function
   // that should be out of scope.
-  llvm::BasicBlock *current_block = this->builder.GetInsertBlock();
-  llvm::Function *current_function = current_block->getParent();
+  llvm::Function *current_function = this->get_current_function();
 
   for (llvm::BasicBlock &basic_block : *current_function)
     for (llvm::Instruction &instruction : basic_block) {
@@ -159,7 +163,7 @@ std::optional<llvm::LoadInst *> Compiler::get_local(const std::string &name) {
   return std::nullopt;
 }
 
-std::optional<llvm::Function *> Compiler::get_function(const std::string &name) {
+std::optional<llvm::Function *> Compiler::get_function(const std::string &name) const {
   if (llvm::Function *function = this->module.getFunction(name))
     return function;
   else
@@ -185,6 +189,10 @@ std::optional<llvm::Value *> Compiler::get_value(const std::string &name) {
     return global;
 
   return std::nullopt;
+}
+
+llvm::Function *Compiler::get_current_function() const {
+  return this->builder.GetInsertBlock()->getParent();
 }
 
 } // namespace Kebab

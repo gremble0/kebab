@@ -39,7 +39,7 @@ private:
 
   std::optional<llvm::LoadInst *> get_global(const std::string &name);
   std::optional<llvm::LoadInst *> get_local(const std::string &name);
-  std::optional<llvm::Function *> get_function(const std::string &name);
+  std::optional<llvm::Function *> get_function(const std::string &name) const;
 
 public:
   llvm::LLVMContext context;
@@ -63,8 +63,10 @@ public:
 
   llvm::PHINode *create_phi(llvm::Type *type,
                             std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming);
+  llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
 
   std::optional<llvm::Value *> get_value(const std::string &name);
+  llvm::Function *get_current_function() const;
 };
 
 } // namespace Kebab

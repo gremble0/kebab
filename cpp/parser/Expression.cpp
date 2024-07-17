@@ -141,12 +141,10 @@ static llvm::Value *compile_branch_body(Compiler &compiler,
 }
 
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
-  llvm::Function *function_context = compiler.builder.GetInsertBlock()->getParent();
+  llvm::Function *current_function = compiler.get_current_function();
 
-  llvm::BasicBlock *branch =
-      llvm::BasicBlock::Create(compiler.context, "if_branch", function_context);
-  llvm::BasicBlock *merge_branch =
-      llvm::BasicBlock::Create(compiler.context, "merge_branch", function_context);
+  llvm::BasicBlock *branch = compiler.create_basic_block(current_function, "if_branch");
+  llvm::BasicBlock *merge_branch = compiler.create_basic_block(current_function, "merge_branch");
 
   compiler.builder.CreateBr(branch);
 
@@ -166,8 +164,7 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
 
     std::string branch_name = (i == num_tests - 1) ? "else_branch" : "elif_branch";
 
-    llvm::BasicBlock *next_branch =
-        llvm::BasicBlock::Create(compiler.context, branch_name, function_context);
+    llvm::BasicBlock *next_branch = compiler.create_basic_block(current_function, branch_name);
     compiler.builder.SetInsertPoint(branch);
 
     // Compile body except for return statement
