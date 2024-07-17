@@ -111,11 +111,6 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *FactorOperator::compile(Compiler &compiler) const {
-  llvm::Type *lhs_type = this->lhs->getType();
-  if (!lhs_type->isIntegerTy() && !lhs_type->isDoubleTy())
-    this->operator_error({compiler.builder.getInt64Ty(), compiler.builder.getDoubleTy()},
-                         this->lhs->getType(), this->to_string());
-
   switch (this->type) {
   case MULT:
     return compiler.create_mul(this->lhs, this->rhs);

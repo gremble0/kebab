@@ -98,31 +98,43 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
 }
 
 llvm::Value *Compiler::create_add(llvm::Value *lhs, llvm::Value *rhs) {
-  if (lhs->getType()->isDoubleTy())
+  llvm::Type *lhs_type = lhs->getType();
+  if (lhs_type->isDoubleTy())
     return this->builder.CreateFAdd(lhs, rhs);
-  else
+  else if (lhs_type->isIntegerTy())
     return this->builder.CreateAdd(lhs, rhs);
+  else
+    this->error("unsupported type `TODO: print type` for addition");
 }
 
 llvm::Value *Compiler::create_sub(llvm::Value *lhs, llvm::Value *rhs) {
-  if (lhs->getType()->isDoubleTy())
+  llvm::Type *lhs_type = lhs->getType();
+  if (lhs_type->isDoubleTy())
     return this->builder.CreateFSub(lhs, rhs);
-  else
+  else if (lhs_type->isIntegerTy())
     return this->builder.CreateSub(lhs, rhs);
+  else
+    this->error("unsupported type `TODO: print type` for subtraction");
 }
 
 llvm::Value *Compiler::create_mul(llvm::Value *lhs, llvm::Value *rhs) {
-  if (lhs->getType()->isDoubleTy())
+  llvm::Type *lhs_type = lhs->getType();
+  if (lhs_type->isDoubleTy())
     return this->builder.CreateFMul(lhs, rhs);
-  else
+  else if (lhs_type->isIntegerTy())
     return this->builder.CreateMul(lhs, rhs);
+  else
+    this->error("unsupported type `TODO: print type` for subtraction");
 }
 
 llvm::Value *Compiler::create_div(llvm::Value *lhs, llvm::Value *rhs) {
-  if (lhs->getType()->isDoubleTy())
+  llvm::Type *lhs_type = lhs->getType();
+  if (lhs_type->isDoubleTy())
     return this->builder.CreateFDiv(lhs, rhs);
-  else
+  else if (lhs_type->isIntegerTy())
     return this->builder.CreateSDiv(lhs, rhs);
+  else
+    this->error("unsupported type `TODO: print type` for subtraction");
 }
 
 llvm::BasicBlock *Compiler::create_basic_block(llvm::Function *parent, const std::string &name) {

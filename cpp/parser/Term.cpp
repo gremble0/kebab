@@ -32,11 +32,6 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *TermOperator::compile(Compiler &compiler) const {
-  llvm::Type *lhs_type = this->lhs->getType();
-  if (!lhs_type->isIntegerTy() && !lhs_type->isDoubleTy())
-    this->operator_error({compiler.builder.getInt64Ty(), compiler.builder.getDoubleTy()},
-                         this->lhs->getType(), this->to_string());
-
   switch (this->type) {
   case PLUS:
     return compiler.create_add(this->lhs, this->rhs);
