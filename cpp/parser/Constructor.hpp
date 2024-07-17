@@ -48,6 +48,7 @@ class FunctionParameter : public AstNode {
 public:
   std::string name;
   // This type is shared with the type of the function the parameter belongs to (FunctionType obj)
+  // TODO: const & to maybe not need shared
   std::shared_ptr<Type> type;
 
   static std::unique_ptr<FunctionParameter> parse(Lexer &lexer);

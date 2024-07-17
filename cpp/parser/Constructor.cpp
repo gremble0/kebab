@@ -1,10 +1,13 @@
 #include <cassert>
 #include <memory>
+#include <vector>
 
 #include "lexer/Lexer.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/Statement.hpp"
 #include "parser/Type.hpp"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Function.h"
 
 namespace Kebab {
 namespace Parser {
@@ -126,8 +129,9 @@ std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
 }
 
 llvm::Value *FunctionConstructor::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function FunctionConstructor::compile");
+  llvm::FunctionType *prototype = this->type->get_llvm_type(compiler.builder);
+
+  return llvm::Function::Create(prototype, llvm::Function::ExternalLinkage, "", compiler.module);
 }
 
 void PrimitiveConstructor::parse_type(Lexer &lexer) { this->type = PrimitiveType::parse(lexer); }

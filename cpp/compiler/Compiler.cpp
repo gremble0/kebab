@@ -98,6 +98,8 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
 }
 
 llvm::Value *Compiler::create_add(llvm::Value *lhs, llvm::Value *rhs) {
+  // TODO: general function for type checking maybe, also check rhs somehow - currently we could end
+  // up doing pointer arithmetic on accident
   llvm::Type *lhs_type = lhs->getType();
   if (lhs_type->isDoubleTy())
     return this->builder.CreateFAdd(lhs, rhs);
