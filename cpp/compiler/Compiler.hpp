@@ -14,6 +14,7 @@
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constant.h"
 #include "llvm/IR/Constants.h"
+#include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/IRBuilder.h"
@@ -53,6 +54,18 @@ public:
 
   void compile(std::unique_ptr<Parser::RootNode> root);
   [[noreturn]] void error(const std::string &message) const;
+
+  llvm::IntegerType *get_int_type() { return this->builder.getInt64Ty(); }
+
+  llvm::Type *get_float_type() { return this->builder.getDoubleTy(); }
+
+  llvm::IntegerType *get_char_type() { return this->builder.getInt8Ty(); }
+
+  llvm::PointerType *get_string_type() { return this->builder.getInt8Ty()->getPointerTo(); }
+
+  llvm::IntegerType *get_bool_type() { return this->builder.getInt1Ty(); }
+
+  llvm::Type *get_void_type() { return this->builder.getVoidTy(); }
 
   llvm::ConstantInt *create_int(int64_t i) {
     return llvm::ConstantInt::get(this->builder.getInt64Ty(), i);

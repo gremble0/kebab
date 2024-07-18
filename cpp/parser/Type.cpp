@@ -1,4 +1,5 @@
 #include "parser/Type.hpp"
+#include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/IRBuilder.h"
@@ -45,7 +46,7 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   return type;
 }
 
-llvm::ScalableVectorType *ListType::get_llvm_type(llvm::IRBuilder<> &builder) const {
+llvm::ScalableVectorType *ListType::get_llvm_type(Compiler &compiler) const {
   // TODO:
   assert(false && "unimplemented function ListType::get_llvm_type");
 }
@@ -84,11 +85,11 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
   return type;
 }
 
-llvm::FunctionType *FunctionType::get_llvm_type(llvm::IRBuilder<> &builder) const {
-  llvm::Type *llvm_return_type = this->return_type->get_llvm_type(builder);
+llvm::FunctionType *FunctionType::get_llvm_type(Compiler &compiler) const {
+  llvm::Type *llvm_return_type = this->return_type->get_llvm_type(compiler);
   std::vector<llvm::Type *> llvm_parameter_types;
   for (const auto &parameter_type : this->parameter_types)
-    llvm_parameter_types.push_back(parameter_type->get_llvm_type(builder));
+    llvm_parameter_types.push_back(parameter_type->get_llvm_type(compiler));
 
   // TODO: varargs (currently hardcoded to false)
   return llvm::FunctionType::get(llvm_return_type, llvm_parameter_types, false);
@@ -109,19 +110,19 @@ std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
   return type;
 }
 
-llvm::Type *PrimitiveType::get_llvm_type(llvm::IRBuilder<> &builder) const {
+llvm::Type *PrimitiveType::get_llvm_type(Compiler &compiler) const {
   if (this->name.compare("int") == 0)
-    return builder.getInt64Ty();
+    return compiler.get_int_type();
   else if (this->name.compare("float") == 0)
-    return builder.getDoubleTy();
+    return compiler.get_float_type();
   else if (this->name.compare("char") == 0)
-    return builder.getInt8Ty();
+    return compiler.get_char_type();
   else if (this->name.compare("string") == 0)
-    return builder.getInt8Ty()->getPointerTo();
+    return compiler.get_string_type();
   else if (this->name.compare("bool") == 0)
-    return builder.getInt1Ty();
+    return compiler.get_bool_type();
   else if (this->name.compare("void") == 0)
-    return builder.getVoidTy();
+    return compiler.get_void_type();
 
   this->unrecognized_type_error(this->name);
 }

@@ -23,7 +23,7 @@ public:
   static std::unique_ptr<Type> parse(Lexer &lexer);
   virtual llvm::Value *compile(Compiler &compiler) const override = 0;
   // TODO: i dont like taking this param
-  virtual llvm::Type *get_llvm_type(llvm::IRBuilder<> &builder) const = 0;
+  virtual llvm::Type *get_llvm_type(Compiler &compiler) const = 0;
 };
 
 class ListType : public Type {
@@ -33,7 +33,7 @@ public:
   static std::unique_ptr<ListType> parse(Lexer &lexer);
   llvm::Value *compile(Compiler &compiler) const override;
   // ScalableVectorType may be right here? will look into
-  llvm::ScalableVectorType *get_llvm_type(llvm::IRBuilder<> &builder) const override;
+  llvm::ScalableVectorType *get_llvm_type(Compiler &compiler) const override;
 };
 
 class FunctionType : public Type {
@@ -50,7 +50,7 @@ public:
   static std::unique_ptr<FunctionType> parse(Lexer &lexer);
   llvm::Value *compile(Compiler &compiler) const override;
   // FunctionType is surely the right type here?
-  llvm::FunctionType *get_llvm_type(llvm::IRBuilder<> &builder) const override;
+  llvm::FunctionType *get_llvm_type(Compiler &compiler) const override;
 };
 
 class PrimitiveType : public Type {
@@ -59,7 +59,7 @@ public:
 
   static std::unique_ptr<PrimitiveType> parse(Lexer &lexer);
   llvm::Value *compile(Compiler &compiler) const override;
-  llvm::Type *get_llvm_type(llvm::IRBuilder<> &builder) const override;
+  llvm::Type *get_llvm_type(Compiler &compiler) const override;
 };
 
 } // namespace Parser
