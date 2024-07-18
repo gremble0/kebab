@@ -25,7 +25,7 @@ llvm::Value *NotTest::compile(Compiler &compiler) const {
   llvm::Value *comparison = this->comparison->compile(compiler);
 
   if (this->is_negated)
-    return compiler.builder.CreateNot(comparison);
+    return compiler.create_not(comparison);
   else
     return comparison;
 }

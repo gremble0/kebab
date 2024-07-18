@@ -35,7 +35,7 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
 llvm::Value *FactorPrefix::compile(Compiler &compiler) const {
   switch (this->type) {
   case MINUS:
-    return compiler.builder.CreateNeg(this->prefixed);
+    return compiler.create_neg(this->prefixed);
 
   case PLUS:
     return this->prefixed;

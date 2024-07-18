@@ -98,6 +98,11 @@ public:
                                       llvm::Type *type);
   llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
 
+  llvm::Value *create_neg(llvm::Value *v) {
+    // TODO: type check - if not int or bool error
+    return this->builder.CreateNeg(v);
+  }
+
   llvm::Value *create_add(llvm::Value *lhs, llvm::Value *rhs);
   llvm::Value *create_sub(llvm::Value *lhs, llvm::Value *rhs);
   llvm::Value *create_mul(llvm::Value *lhs, llvm::Value *rhs);
@@ -117,6 +122,8 @@ public:
   llvm::Value *create_or(llvm::Value *lhs, llvm::Value *rhs) {
     return this->builder.CreateOr(lhs, rhs);
   }
+
+  llvm::Value *create_not(llvm::Value *v) { return this->builder.CreateNot(v); }
 
   llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
   llvm::BranchInst *create_branch(llvm::BasicBlock *destination);
