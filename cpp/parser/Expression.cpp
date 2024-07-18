@@ -141,6 +141,7 @@ static llvm::Value *compile_branch_body(Compiler &compiler,
   return body.back()->compile(compiler);
 }
 
+// TODO: this whole function kinda stinks
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
   llvm::Function *current_function = compiler.get_current_function();
 
@@ -160,13 +161,12 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     if (!test->getType()->isIntegerTy(1))
       compiler.error("only booleans are allowed in if tests");
 
-    llvm::Value *test_is_true = compiler.builder.CreateICmpEQ(
-        test, llvm::ConstantInt::get(compiler.builder.getInt1Ty(), 1));
+    llvm::Value *test_is_true = compiler.create_eq(test, compiler.create_bool(true));
 
     std::string branch_name = (i == num_tests - 1) ? "else_branch" : "elif_branch";
 
     llvm::BasicBlock *next_branch = compiler.create_basic_block(current_function, branch_name);
-    compiler.builder.SetInsertPoint(branch);
+    compiler.set_insert_point(branch);
 
     // Compile body except for return statement
     llvm::Value *current_return_value = compile_branch_body(compiler, this->bodies[i]);
@@ -177,12 +177,12 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
   }
 
   // else branch
-  compiler.builder.SetInsertPoint(branch);
+  compiler.set_insert_point(branch);
   llvm::Value *else_return_value = compile_branch_body(compiler, this->bodies.back());
   incoming_values.push_back({else_return_value, branch});
 
   compiler.create_branch(merge_branch);
-  compiler.builder.SetInsertPoint(merge_branch);
+  compiler.set_insert_point(merge_branch);
 
   return compiler.create_phi(else_return_value->getType(), incoming_values);
 }
@@ -209,7 +209,7 @@ llvm::Value *NormalExpression::compile(Compiler &compiler) const {
 
   for (size_t i = 1; i < and_tests.size(); ++i) {
     llvm::Value *rhs = this->and_tests[i]->compile(compiler);
-    result = compiler.builder.CreateOr(result, rhs);
+    result = compiler.create_or(result, rhs);
   }
 
   return result;

@@ -68,6 +68,9 @@ public:
 
   llvm::Type *get_void_type() { return this->builder.getVoidTy(); }
 
+  std::optional<llvm::Value *> get_value(const std::string &name);
+  llvm::Function *get_current_function() const;
+
   llvm::ConstantInt *create_int(int64_t i) {
     return llvm::ConstantInt::get(this->builder.getInt64Ty(), i);
   }
@@ -111,6 +114,10 @@ public:
     return this->builder.CreateAnd(lhs, rhs);
   }
 
+  llvm::Value *create_or(llvm::Value *lhs, llvm::Value *rhs) {
+    return this->builder.CreateOr(lhs, rhs);
+  }
+
   llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
   llvm::BranchInst *create_branch(llvm::BasicBlock *destination);
   llvm::BranchInst *create_cond_branch(llvm::Value *condition, llvm::BasicBlock *true_destination,
@@ -118,8 +125,7 @@ public:
   llvm::PHINode *create_phi(llvm::Type *type,
                             std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming);
 
-  std::optional<llvm::Value *> get_value(const std::string &name);
-  llvm::Function *get_current_function() const;
+  void set_insert_point(llvm::BasicBlock *block) { this->builder.SetInsertPoint(block); }
 };
 
 } // namespace Kebab
