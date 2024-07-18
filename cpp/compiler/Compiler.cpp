@@ -173,30 +173,24 @@ std::optional<llvm::LoadInst *> Compiler::get_global(const std::string &name) {
 }
 
 std::optional<llvm::LoadInst *> Compiler::get_local(const std::string &name) {
-  // Search each basicblock in the currently compiling function for some binding with the given name
-  // NOTE: for shadowed names/names that exist in several branches this will just return the first
-  // one it finds which is wrong. This means shadowing or having several variables with the same
-  // names should not be done until this is fixed
   llvm::Function *current_function = this->get_current_function();
-  llvm::ValueSymbolTable *symbol_table = current_function->getValueSymbolTable();
-  if (symbol_table == nullptr)
-    return std::nullopt;
+  llvm::ValueSymbolTable *symbolTable = current_function->getValueSymbolTable();
 
-  llvm::Value *value = symbol_table->lookup(name);
-  std::cout << value->getType()->getTypeID() << " " << name << std::endl;
+  // Lookup the variable by name in the symbol table
+  llvm::Value *value = symbolTable->lookup(name);
+
   if (value == nullptr)
     return std::nullopt;
-  else
-    return this->builder.CreateLoad(value->getType(), value);
 
-  // for (llvm::BasicBlock &basic_block : *current_function)
-  //   for (llvm::Instruction &instruction : basic_block) {
-  //     llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(&instruction);
-  //     if (local != nullptr && local->getName() == name)
-  //       return this->builder.CreateLoad(local->getAllocatedType(), local);
-  //   }
-  //
-  // return std::nullopt;
+  // Check if the value is an AllocaInst or Argument
+  if (llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(value)) {
+    return this->builder.CreateLoad(local->getAllocatedType(), local);
+  } else if (llvm::Argument *arg = llvm::dyn_cast<llvm::Argument>(value)) {
+    return this->builder.CreateLoad(arg->getType(), arg);
+  }
+
+  // Unknown value - cant generate load instruction so return nullopt
+  return std::nullopt;
 }
 
 std::optional<llvm::Function *> Compiler::get_function(const std::string &name) const {

@@ -7,5 +7,13 @@ def local-addition = fn(() => int(
 
 def function-consumer = fn(() => int(
   def one = int(one-factory())
-  ;one
+  one
 ))
+
+def takes-parameter = fn((n : int) => int(0))
+
+def uses-parameter = fn((n : int) => int(n))
+
+def two = int(one-factory() + one-factory())
+
+def i = int(printf("%ld\n", two))
