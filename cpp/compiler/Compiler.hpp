@@ -61,6 +61,13 @@ public:
   llvm::Value *create_mul(llvm::Value *lhs, llvm::Value *rhs);
   llvm::Value *create_div(llvm::Value *lhs, llvm::Value *rhs);
 
+  llvm::Value *create_lt(llvm::Value *lhs, llvm::Value *rhs);
+  llvm::Value *create_le(llvm::Value *lhs, llvm::Value *rhs);
+  llvm::Value *create_eq(llvm::Value *lhs, llvm::Value *rhs);
+  llvm::Value *create_neq(llvm::Value *lhs, llvm::Value *rhs);
+  llvm::Value *create_gt(llvm::Value *lhs, llvm::Value *rhs);
+  llvm::Value *create_ge(llvm::Value *lhs, llvm::Value *rhs);
+
   llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
   llvm::BranchInst *create_branch(llvm::BasicBlock *destination);
   llvm::BranchInst *create_cond_branch(llvm::Value *condition, llvm::BasicBlock *true_destination,

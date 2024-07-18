@@ -130,7 +130,7 @@ llvm::Value *Compiler::create_mul(llvm::Value *lhs, llvm::Value *rhs) {
   else if (lhs_type->isIntegerTy())
     return this->builder.CreateMul(lhs, rhs);
   else
-    this->error("unsupported type `TODO: print type` for subtraction");
+    this->error("unsupported type `TODO: print type` for multiplication");
 }
 
 llvm::Value *Compiler::create_div(llvm::Value *lhs, llvm::Value *rhs) {
@@ -140,7 +140,67 @@ llvm::Value *Compiler::create_div(llvm::Value *lhs, llvm::Value *rhs) {
   else if (lhs_type->isIntegerTy())
     return this->builder.CreateSDiv(lhs, rhs);
   else
-    this->error("unsupported type `TODO: print type` for subtraction");
+    this->error("unsupported type `TODO: print type` for division");
+}
+
+llvm::Value *Compiler::create_lt(llvm::Value *lhs, llvm::Value *rhs) {
+  llvm::Type *lhs_type = lhs->getType();
+  if (lhs_type->isDoubleTy())
+    return this->builder.CreateFCmpULT(lhs, rhs);
+  else if (lhs_type->isIntegerTy())
+    return this->builder.CreateICmpULT(lhs, rhs);
+  else
+    this->error("unsupported type `TODO: print type` for < operator");
+}
+
+llvm::Value *Compiler::create_le(llvm::Value *lhs, llvm::Value *rhs) {
+  llvm::Type *lhs_type = lhs->getType();
+  if (lhs_type->isDoubleTy())
+    return this->builder.CreateFCmpULE(lhs, rhs);
+  else if (lhs_type->isIntegerTy())
+    return this->builder.CreateICmpULE(lhs, rhs);
+  else
+    this->error("unsupported type `TODO: print type` for <= operator");
+}
+
+llvm::Value *Compiler::create_eq(llvm::Value *lhs, llvm::Value *rhs) {
+  llvm::Type *lhs_type = lhs->getType();
+  if (lhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUEQ(lhs, rhs);
+  else if (lhs_type->isIntegerTy())
+    return this->builder.CreateICmpEQ(lhs, rhs);
+  else
+    this->error("unsupported type `TODO: print type` for == operator");
+}
+
+llvm::Value *Compiler::create_neq(llvm::Value *lhs, llvm::Value *rhs) {
+  llvm::Type *lhs_type = lhs->getType();
+  if (lhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUNE(lhs, rhs);
+  else if (lhs_type->isIntegerTy())
+    return this->builder.CreateICmpNE(lhs, rhs);
+  else
+    this->error("unsupported type `TODO: print type` for ~= operator");
+}
+
+llvm::Value *Compiler::create_gt(llvm::Value *lhs, llvm::Value *rhs) {
+  llvm::Type *lhs_type = lhs->getType();
+  if (lhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUGT(lhs, rhs);
+  else if (lhs_type->isIntegerTy())
+    return this->builder.CreateICmpUGT(lhs, rhs);
+  else
+    this->error("unsupported type `TODO: print type` for > operator");
+}
+
+llvm::Value *Compiler::create_ge(llvm::Value *lhs, llvm::Value *rhs) {
+  llvm::Type *lhs_type = lhs->getType();
+  if (lhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUGE(lhs, rhs);
+  else if (lhs_type->isIntegerTy())
+    return this->builder.CreateICmpUGE(lhs, rhs);
+  else
+    this->error("unsupported type `TODO: print type` for >= operator");
 }
 
 llvm::BasicBlock *Compiler::create_basic_block(llvm::Function *parent, const std::string &name) {
