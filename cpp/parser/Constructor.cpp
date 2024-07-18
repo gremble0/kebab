@@ -130,7 +130,20 @@ std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
 
 llvm::Value *FunctionConstructor::compile(Compiler &compiler) const {
   llvm::FunctionType *prototype = this->type->get_llvm_type(compiler.builder);
-  return llvm::Function::Create(prototype, llvm::Function::ExternalLinkage, "", compiler.module);
+  llvm::Function *function =
+      llvm::Function::Create(prototype, llvm::Function::ExternalLinkage, "", compiler.module);
+
+  // Make entry for new function and save the current insert block so we can return to it after
+  // we're done compiling the current function
+  llvm::BasicBlock *entry = compiler.create_basic_block(function, "entry");
+  llvm::BasicBlock *return_block = compiler.builder.GetInsertBlock();
+
+  compiler.builder.SetInsertPoint(entry);
+  // this->body->compile(compiler);
+  compiler.builder.CreateRet(llvm::ConstantInt::get(compiler.context, llvm::APInt(32, 69)));
+  compiler.builder.SetInsertPoint(return_block);
+
+  return function;
 }
 
 void PrimitiveConstructor::parse_type(Lexer &lexer) { this->type = PrimitiveType::parse(lexer); }
