@@ -53,8 +53,7 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
   for (std::unique_ptr<Expression> const &argument : this->arguments)
     arguments_compiled.push_back(argument->compile(compiler));
 
-  return compiler.builder.CreateCall(static_cast<llvm::Function *>(this->subscriptee),
-                                     arguments_compiled);
+  return compiler.create_call(static_cast<llvm::Function *>(this->subscriptee), arguments_compiled);
 }
 
 std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {

@@ -132,6 +132,10 @@ public:
   llvm::PHINode *create_phi(llvm::Type *type,
                             std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming);
 
+  llvm::CallInst *create_call(llvm::Function *function, std::vector<llvm::Value *> arguments) {
+    return this->builder.CreateCall(function, arguments);
+  }
+
   void set_insert_point(llvm::BasicBlock *block) { this->builder.SetInsertPoint(block); }
 };
 
