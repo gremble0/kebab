@@ -25,8 +25,14 @@ std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
 }
 
 llvm::Value *AndTest::compile(Compiler &compiler) const {
-  // for (std::unique_ptr<NotTest> const &not_test : this->not_tests)
-  return not_tests.at(0)->compile(compiler);
+  llvm::Value *result = this->not_tests.front()->compile(compiler);
+
+  for (size_t i = 1; i < this->not_tests.size(); ++i) {
+    llvm::Value *rhs = this->not_tests[i]->compile(compiler);
+    result = compiler.builder.CreateAnd(result, rhs);
+  }
+
+  return result;
 }
 
 } // namespace Parser

@@ -1,0 +1,6 @@
+def b1 = bool(true and true)
+def b2 = bool(true and true and true)
+def b3 = bool(true and true and false)
+def b4 = bool(true and false and false)
+def b5 = bool(false and false and false)
+def b6 = bool(false and true and true)
