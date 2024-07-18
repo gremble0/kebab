@@ -1,6 +1,8 @@
 #ifndef KEBAB_COMPILER_HPP
 #define KEBAB_COMPILER_HPP
 
+#include <cmath>
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <string>
@@ -11,6 +13,7 @@
 
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constant.h"
+#include "llvm/IR/Constants.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/IRBuilder.h"
@@ -29,6 +32,10 @@ class RootNode;
 
 class Compiler {
 private:
+  llvm::LLVMContext context;
+  llvm::Module module;
+  llvm::IRBuilder<> builder;
+
   void save_module(const std::string &path) const;
 
   void load_printf();
@@ -42,16 +49,31 @@ private:
   std::optional<llvm::Function *> get_function(const std::string &name) const;
 
 public:
-  llvm::LLVMContext context;
-  llvm::Module module;
-  llvm::IRBuilder<> builder;
-
   Compiler() : context(), module("kebab", context), builder(context) {}
 
   void compile(std::unique_ptr<Parser::RootNode> root);
   [[noreturn]] void error(const std::string &message) const;
 
-  // TODO: take type as param and compare with type of initializer
+  llvm::ConstantInt *create_int(int64_t i) {
+    return llvm::ConstantInt::get(this->builder.getInt64Ty(), i);
+  }
+
+  llvm::Constant *create_float(double_t f) {
+    return llvm::ConstantFP::get(this->builder.getDoubleTy(), f);
+  }
+
+  llvm::ConstantInt *create_char(uint8_t c) {
+    return llvm::ConstantInt::get(this->builder.getInt8Ty(), c);
+  }
+
+  llvm::Constant *create_string(const std::string &s) {
+    return this->builder.CreateGlobalStringPtr(s);
+  }
+
+  llvm::Constant *create_bool(bool b) {
+    return llvm::ConstantInt::get(this->builder.getInt1Ty(), b);
+  }
+
   llvm::GlobalVariable *create_global(const std::string &name, llvm::Constant *init,
                                       llvm::Type *type);
   llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
@@ -67,6 +89,10 @@ public:
   llvm::Value *create_neq(llvm::Value *lhs, llvm::Value *rhs);
   llvm::Value *create_gt(llvm::Value *lhs, llvm::Value *rhs);
   llvm::Value *create_ge(llvm::Value *lhs, llvm::Value *rhs);
+
+  llvm::Value *create_and(llvm::Value *lhs, llvm::Value *rhs) {
+    return this->builder.CreateAnd(lhs, rhs);
+  }
 
   llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
   llvm::BranchInst *create_branch(llvm::BasicBlock *destination);

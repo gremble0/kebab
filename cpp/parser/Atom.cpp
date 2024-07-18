@@ -19,9 +19,7 @@ std::unique_ptr<IntAtom> IntAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *IntAtom::compile(Compiler &compiler) const {
-  return llvm::ConstantInt::get(compiler.builder.getInt64Ty(), this->i);
-}
+llvm::Value *IntAtom::compile(Compiler &compiler) const { return compiler.create_int(this->i); }
 
 std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
   std::unique_ptr<FloatAtom> atom = std::make_unique<FloatAtom>();
@@ -33,9 +31,7 @@ std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *FloatAtom::compile(Compiler &compiler) const {
-  return llvm::ConstantFP::get(compiler.builder.getDoubleTy(), this->f);
-}
+llvm::Value *FloatAtom::compile(Compiler &compiler) const { return compiler.create_float(this->f); }
 
 std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
   std::unique_ptr<CharAtom> atom = std::make_unique<CharAtom>();
@@ -47,9 +43,7 @@ std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *CharAtom::compile(Compiler &compiler) const {
-  return llvm::ConstantInt::get(compiler.builder.getInt8Ty(), this->c);
-}
+llvm::Value *CharAtom::compile(Compiler &compiler) const { return compiler.create_char(this->c); }
 
 std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
   std::unique_ptr<StringAtom> atom = std::make_unique<StringAtom>();
@@ -62,7 +56,7 @@ std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *StringAtom::compile(Compiler &compiler) const {
-  return compiler.builder.CreateGlobalStringPtr(this->s);
+  return compiler.create_string(this->s);
 }
 
 std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
@@ -80,9 +74,7 @@ std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *BoolAtom::compile(Compiler &compiler) const {
-  return llvm::ConstantInt::get(compiler.builder.getInt1Ty(), this->b);
-}
+llvm::Value *BoolAtom::compile(Compiler &compiler) const { return compiler.create_bool(this->b); }
 
 std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
   std::unique_ptr<NameAtom> atom = std::make_unique<NameAtom>();

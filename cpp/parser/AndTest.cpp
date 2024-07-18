@@ -29,7 +29,7 @@ llvm::Value *AndTest::compile(Compiler &compiler) const {
 
   for (size_t i = 1; i < this->not_tests.size(); ++i) {
     llvm::Value *rhs = this->not_tests[i]->compile(compiler);
-    result = compiler.builder.CreateAnd(result, rhs);
+    result = compiler.create_and(result, rhs);
   }
 
   return result;

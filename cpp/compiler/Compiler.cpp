@@ -81,6 +81,7 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
 
 llvm::GlobalVariable *Compiler::create_global(const std::string &name, llvm::Constant *init,
                                               llvm::Type *type) {
+  // TODO: type checking here maybe
   // this->module takes ownership of this object
   return new llvm::GlobalVariable(this->module, type, false, llvm::GlobalValue::ExternalLinkage,
                                   init, name);
