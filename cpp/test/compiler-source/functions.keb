@@ -1,1 +1,11 @@
-def one-factory = fn((a : string, b : int) => int(1))
+def one-factory = fn(() => int(1))
+
+def local-addition = fn(() => int(
+  def n = int(68)
+  n + 1
+))
+
+def function-consumer = fn(() => int(
+  def one = int(one-factory())
+  ;one
+))

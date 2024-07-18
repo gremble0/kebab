@@ -151,6 +151,11 @@ void PrimitiveConstructor::parse_body(Lexer &lexer) {
   lexer.skip({Token::Type::LPAREN});
   while (lexer.peek()->type != Token::Type::RPAREN)
     this->body.push_back(Statement::parse(lexer));
+
+  if (!this->body.back()->is_expression())
+    this->parser_error("missing return, last statement in each function must be an expression",
+                       lexer);
+
   lexer.skip({Token::Type::RPAREN});
 }
 

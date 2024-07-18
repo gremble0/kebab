@@ -37,17 +37,17 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 
 llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   llvm::Value *variable_value = this->constructor->compile(compiler);
-  llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler.builder);
-  llvm::Type *actual_type = variable_value->getType();
-
-  // Types are interned so pointer comparison is sufficient
-  if (variable_value->getType() == declared_type)
-    this->type_error({declared_type}, actual_type);
 
   if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(variable_value)) {
     function->setName(this->name);
     return variable_value;
   } else {
+    llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler.builder);
+    llvm::Type *actual_type = variable_value->getType();
+    // Types are interned so pointer comparison is sufficient
+    if (actual_type != declared_type)
+      this->type_error({declared_type}, actual_type);
+
     return compiler.create_local(this->name, static_cast<llvm::Constant *>(variable_value),
                                  declared_type);
   }
