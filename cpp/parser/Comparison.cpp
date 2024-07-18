@@ -50,8 +50,20 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function ComparisonOperator::compile");
+  switch (this->type) {
+  case LT:
+    return compiler.create_lt(this->lhs, this->rhs);
+  case LE:
+    return compiler.create_le(this->lhs, this->rhs);
+  case EQ:
+    return compiler.create_eq(this->lhs, this->rhs);
+  case NEQ:
+    return compiler.create_neq(this->lhs, this->rhs);
+  case GT:
+    return compiler.create_gt(this->lhs, this->rhs);
+  case GE:
+    return compiler.create_ge(this->lhs, this->rhs);
+  }
 }
 
 std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
@@ -72,9 +84,16 @@ std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
 }
 
 llvm::Value *Comparison::compile(Compiler &compiler) const {
-  // TODO: some operator logic (this->operators)
-  // for (std::unique_ptr<Term> const &term : this->terms)
-  return this->terms.at(0)->compile(compiler);
+  llvm::Value *result = this->terms[0]->compile(compiler);
+
+  for (size_t i = 0; i < this->operators.size(); ++i) {
+    llvm::Value *rhs = this->terms[i + 1]->compile(compiler);
+    this->operators[i]->lhs = result;
+    this->operators[i]->rhs = rhs;
+    result = this->operators[i]->compile(compiler);
+  }
+
+  return result;
 }
 
 } // namespace Parser

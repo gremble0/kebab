@@ -22,6 +22,8 @@ public:
     GT,  // >
     GE,  // >=
   } type;
+  llvm::Value *lhs;
+  llvm::Value *rhs;
 
   static constexpr bool is_comparison_operator(Token::Type type) {
     switch (type) {
