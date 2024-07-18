@@ -168,6 +168,7 @@ Compiler::create_phi(llvm::Type *type,
 }
 
 std::optional<llvm::Value *> Compiler::get_global(const std::string &name) {
+  // Could use ValueSymbolTable, but that is what getGlobalVariable does anyways
   llvm::GlobalVariable *global = this->module.getGlobalVariable(name);
   if (global == nullptr)
     return std::nullopt;

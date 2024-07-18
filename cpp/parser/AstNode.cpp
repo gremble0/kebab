@@ -21,9 +21,6 @@ std::string AstNode::getnline(const std::string &path, size_t line_number) {
       return "<reached unexpected end of file>";
   }
 
-  // unnecessary?
-  stream.close();
-
   return out;
 }
 
@@ -64,7 +61,6 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-// TODO: variadic expected?
 [[noreturn]] void AstNode::type_error(std::initializer_list<const llvm::Type *> expected,
                                       const llvm::Type *actual) const {
   std::string message;

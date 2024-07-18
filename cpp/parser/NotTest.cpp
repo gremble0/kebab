@@ -22,8 +22,12 @@ std::unique_ptr<NotTest> NotTest::parse(Lexer &lexer) {
 }
 
 llvm::Value *NotTest::compile(Compiler &compiler) const {
-  // TODO: some not logic (this->is_negated)
-  return this->comparison->compile(compiler);
+  llvm::Value *comparison = this->comparison->compile(compiler);
+
+  if (this->is_negated)
+    return compiler.builder.CreateNot(comparison);
+  else
+    return comparison;
 }
 
 } // namespace Parser
