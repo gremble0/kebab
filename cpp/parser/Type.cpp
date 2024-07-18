@@ -90,7 +90,7 @@ llvm::FunctionType *FunctionType::get_llvm_type(llvm::IRBuilder<> &builder) cons
   for (const auto &parameter_type : this->parameter_types)
     llvm_parameter_types.push_back(parameter_type->get_llvm_type(builder));
 
-  // TODO: varargs
+  // TODO: varargs (currently hardcoded to false)
   return llvm::FunctionType::get(llvm_return_type, llvm_parameter_types, false);
 }
 

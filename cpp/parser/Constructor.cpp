@@ -133,6 +133,10 @@ llvm::Value *FunctionConstructor::compile(Compiler &compiler) const {
   llvm::Function *function =
       llvm::Function::Create(prototype, llvm::Function::ExternalLinkage, "", compiler.module);
 
+  size_t arg_size = function->arg_size();
+  for (size_t i = 0; i < arg_size; ++i)
+    function->getArg(i)->setName(this->parameters[i]->name);
+
   // Make entry for new function and save the current insert block so we can return to it after
   // we're done compiling the current function
   llvm::BasicBlock *entry = compiler.create_basic_block(function, "entry");

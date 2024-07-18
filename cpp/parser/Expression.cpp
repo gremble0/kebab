@@ -66,7 +66,8 @@ void CondExpression::parse_test_body(Lexer &lexer) {
   }
 
   if (!body.back()->is_expression())
-    this->parser_error("every branch in a cond expression must return a value", lexer);
+    this->parser_error("missing return, last statement in each cond branch must be an expression",
+                       lexer);
 
   this->bodies.push_back(std::move(body));
 

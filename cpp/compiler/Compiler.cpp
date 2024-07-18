@@ -173,8 +173,9 @@ std::optional<llvm::LoadInst *> Compiler::get_global(const std::string &name) {
 
 std::optional<llvm::LoadInst *> Compiler::get_local(const std::string &name) {
   // Search each basicblock in the currently compiling function for some binding with the given name
-  // NOTE: once we do branching and stuff this may give us bindings from other parts of the function
-  // that should be out of scope.
+  // NOTE: for shadowed names/names that exist in several branches this will just return the first
+  // one it finds which is wrong. This means shadowing or having several variables with the same
+  // names should not be done until this is fixed
   llvm::Function *current_function = this->get_current_function();
 
   for (llvm::BasicBlock &basic_block : *current_function)
