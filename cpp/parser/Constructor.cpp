@@ -111,7 +111,7 @@ void FunctionConstructor::parse_type(Lexer &lexer) {
 
 void FunctionConstructor::parse_body(Lexer &lexer) {
   lexer.skip({Token::Type::FAT_RARROW});
-  std::unique_ptr<Constructor> body = Constructor::parse(lexer);
+  this->body = Constructor::parse(lexer);
   this->type->return_type = body->get_type();
 
   lexer.skip({Token::Type::RPAREN});
@@ -136,12 +136,11 @@ llvm::Value *FunctionConstructor::compile(Compiler &compiler) const {
   // Make entry for new function and save the current insert block so we can return to it after
   // we're done compiling the current function
   llvm::BasicBlock *entry = compiler.create_basic_block(function, "entry");
-  llvm::BasicBlock *return_block = compiler.builder.GetInsertBlock();
+  llvm::BasicBlock *previous_block = compiler.builder.GetInsertBlock();
 
   compiler.builder.SetInsertPoint(entry);
-  // this->body->compile(compiler);
-  compiler.builder.CreateRet(llvm::ConstantInt::get(compiler.context, llvm::APInt(32, 69)));
-  compiler.builder.SetInsertPoint(return_block);
+  compiler.builder.CreateRet(this->body->compile(compiler));
+  compiler.builder.SetInsertPoint(previous_block);
 
   return function;
 }
