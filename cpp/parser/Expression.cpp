@@ -205,8 +205,14 @@ std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
 }
 
 llvm::Value *NormalExpression::compile(Compiler &compiler) const {
-  // for (std::unique_ptr<AndTest> const &and_test : this->and_tests)
-  return this->and_tests.at(0)->compile(compiler);
+  llvm::Value *result = this->and_tests.front()->compile(compiler);
+
+  for (size_t i = 1; i < and_tests.size(); ++i) {
+    llvm::Value *rhs = this->and_tests[i]->compile(compiler);
+    result = compiler.builder.CreateOr(result, rhs);
+  }
+
+  return result;
 }
 
 std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
