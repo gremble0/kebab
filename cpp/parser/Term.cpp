@@ -59,7 +59,7 @@ std::unique_ptr<Term> Term::parse(Lexer &lexer) {
 }
 
 llvm::Value *Term::compile(Compiler &compiler) const {
-  llvm::Value *result = this->factors[0]->compile(compiler);
+  llvm::Value *result = this->factors.front()->compile(compiler);
 
   for (size_t i = 0; i < this->operators.size(); ++i) {
     llvm::Value *rhs = this->factors[i + 1]->compile(compiler);

@@ -84,7 +84,7 @@ std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
 }
 
 llvm::Value *Comparison::compile(Compiler &compiler) const {
-  llvm::Value *result = this->terms[0]->compile(compiler);
+  llvm::Value *result = this->terms.front()->compile(compiler);
 
   for (size_t i = 0; i < this->operators.size(); ++i) {
     llvm::Value *rhs = this->terms[i + 1]->compile(compiler);
