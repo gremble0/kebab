@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Compiler.hpp"
+#include "parser/Constructor.hpp"
 #include "parser/RootNode.hpp"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constant.h"
@@ -79,6 +80,23 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   exit(1);
 }
 
+llvm::Function *Compiler::create_function(llvm::FunctionType *type, const std::string &name,
+                                          const std::unique_ptr<Parser::Constructor> &body) {
+  llvm::Function *function =
+      llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->module);
+
+  // Make entry for new function and save the current insert block so we can return to it after
+  // we're done compiling the current function
+  llvm::BasicBlock *entry = this->create_basic_block(function, "entry");
+  llvm::BasicBlock *previous_block = this->builder.GetInsertBlock();
+
+  this->builder.SetInsertPoint(entry);
+  this->builder.CreateRet(body->compile(*this));
+  this->builder.SetInsertPoint(previous_block);
+
+  return function;
+}
+
 llvm::GlobalVariable *Compiler::create_global(const std::string &name, llvm::Constant *init,
                                               llvm::Type *type) {
   // TODO: type checking here maybe
@@ -103,8 +121,8 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
 }
 
 llvm::Value *Compiler::create_add(llvm::Value *lhs, llvm::Value *rhs) {
-  // TODO: general function for type checking maybe, also check rhs somehow - currently we could end
-  // up doing pointer arithmetic on accident
+  // TODO: general function for type checking maybe, also check rhs somehow - currently we could
+  // end up doing pointer arithmetic on accident
   llvm::Type *lhs_type = lhs->getType();
   if (lhs_type->isDoubleTy())
     return this->builder.CreateFAdd(lhs, rhs);
@@ -240,8 +258,8 @@ std::optional<llvm::Value *> Compiler::get_global(const std::string &name) {
 std::optional<llvm::Value *> Compiler::get_local(const std::string &name) {
   // This will only search from top to bottom meaning if there are shadowed variable names or
   // variables with same names in different branches it will only return the first occurance since
-  // they will compile down to having different names (e.g. local, local1, local2, etc.). This could
-  // maybe be fixed by making the parser also add these suffixes to duplicate variables
+  // they will compile down to having different names (e.g. local, local1, local2, etc.). This
+  // could maybe be fixed by making the parser also add these suffixes to duplicate variables
   llvm::Function *current_function = this->get_current_function();
   llvm::ValueSymbolTable *symbolTable = current_function->getValueSymbolTable();
 

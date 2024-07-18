@@ -29,7 +29,8 @@ namespace Kebab {
 // Can't unclude RootNode due to circular imports so have to declare independently
 namespace Parser {
 class RootNode;
-}
+class Constructor;
+} // namespace Parser
 
 class Compiler {
 private:
@@ -86,6 +87,9 @@ public:
   llvm::Constant *create_bool(bool b) {
     return llvm::ConstantInt::get(this->builder.getInt1Ty(), b);
   }
+
+  llvm::Function *create_function(llvm::FunctionType *type, const std::string &name,
+                                  const std::unique_ptr<Parser::Constructor> &body);
 
   llvm::GlobalVariable *create_global(const std::string &name, llvm::Constant *init,
                                       llvm::Type *type);
