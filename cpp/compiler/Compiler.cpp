@@ -27,7 +27,10 @@ void Compiler::save_module(const std::string &path) const {
 }
 
 void Compiler::load_printf() {
-  llvm::IntegerType *return_type = this->builder.getInt32Ty();
+  // printfs real return type is int32 however we just say that it is int64 to make it easier to
+  // deal with since the rest of the language uses 64 bit integers. This may cause some issues
+  // however I have not encountered any yet so I will keep it as is until I need to change it
+  llvm::IntegerType *return_type = this->builder.getInt64Ty();
   llvm::PointerType *format_type = this->builder.getInt8Ty()->getPointerTo();
   llvm::FunctionType *function_type = llvm::FunctionType::get(return_type, format_type, true);
 
@@ -164,7 +167,7 @@ Compiler::create_phi(llvm::Type *type,
   return phi;
 }
 
-std::optional<llvm::LoadInst *> Compiler::get_global(const std::string &name) {
+std::optional<llvm::Value *> Compiler::get_global(const std::string &name) {
   llvm::GlobalVariable *global = this->module.getGlobalVariable(name);
   if (global == nullptr)
     return std::nullopt;
@@ -172,22 +175,23 @@ std::optional<llvm::LoadInst *> Compiler::get_global(const std::string &name) {
     return this->builder.CreateLoad(global->getValueType(), global);
 }
 
-std::optional<llvm::LoadInst *> Compiler::get_local(const std::string &name) {
+std::optional<llvm::Value *> Compiler::get_local(const std::string &name) {
+  // This will only search from top to bottom meaning if there are shadowed variable names or
+  // variables with same names in different branches it will only return the first occurance since
+  // they will compile down to having different names (e.g. local, local1, local2, etc.). This could
+  // maybe be fixed by making the parser also add these suffixes to duplicate variables
   llvm::Function *current_function = this->get_current_function();
   llvm::ValueSymbolTable *symbolTable = current_function->getValueSymbolTable();
 
-  // Lookup the variable by name in the symbol table
   llvm::Value *value = symbolTable->lookup(name);
 
   if (value == nullptr)
     return std::nullopt;
 
-  // Check if the value is an AllocaInst or Argument
-  if (llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(value)) {
+  if (llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(value))
     return this->builder.CreateLoad(local->getAllocatedType(), local);
-  } else if (llvm::Argument *arg = llvm::dyn_cast<llvm::Argument>(value)) {
-    return this->builder.CreateLoad(arg->getType(), arg);
-  }
+  else if (llvm::Argument *arg = llvm::dyn_cast<llvm::Argument>(value))
+    return arg;
 
   // Unknown value - cant generate load instruction so return nullopt
   return std::nullopt;

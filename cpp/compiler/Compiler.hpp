@@ -37,8 +37,8 @@ private:
   void start_main();
   void stop_main();
 
-  std::optional<llvm::LoadInst *> get_global(const std::string &name);
-  std::optional<llvm::LoadInst *> get_local(const std::string &name);
+  std::optional<llvm::Value *> get_global(const std::string &name);
+  std::optional<llvm::Value *> get_local(const std::string &name);
   std::optional<llvm::Function *> get_function(const std::string &name) const;
 
 public:
