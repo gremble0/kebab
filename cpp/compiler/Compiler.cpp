@@ -255,16 +255,11 @@ std::optional<llvm::Value *> Compiler::get_global(const std::string &name) {
     return this->builder.CreateLoad(global->getValueType(), global);
 }
 
-std::optional<llvm::Value *> Compiler::get_local(const std::string &name) {
-  // This will only search from top to bottom meaning if there are shadowed variable names or
-  // variables with same names in different branches it will only return the first occurance since
-  // they will compile down to having different names (e.g. local, local1, local2, etc.). This
-  // could maybe be fixed by making the parser also add these suffixes to duplicate variables
-  llvm::Function *current_function = this->get_current_function();
-  llvm::ValueSymbolTable *symbolTable = current_function->getValueSymbolTable();
+std::optional<llvm::Value *> Compiler::get_branch_local(const std::string &name) {
+  llvm::BasicBlock *current_block = this->builder.GetInsertBlock();
+  llvm::ValueSymbolTable *symbolTable = current_block->getValueSymbolTable();
 
   llvm::Value *value = symbolTable->lookup(name);
-
   if (value == nullptr)
     return std::nullopt;
 
@@ -277,6 +272,39 @@ std::optional<llvm::Value *> Compiler::get_local(const std::string &name) {
   return std::nullopt;
 }
 
+std::optional<llvm::Value *> Compiler::get_function_local(const std::string &name) {
+  llvm::Function *current_function = this->get_current_function();
+  llvm::ValueSymbolTable *symbolTable = current_function->getValueSymbolTable();
+
+  llvm::Value *value = symbolTable->lookup(name);
+  if (value == nullptr)
+    return std::nullopt;
+
+  if (llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(value))
+    return this->builder.CreateLoad(local->getAllocatedType(), local);
+  else if (llvm::Argument *arg = llvm::dyn_cast<llvm::Argument>(value))
+    return arg;
+
+  // Unknown value - cant generate load instruction so return nullopt
+  return std::nullopt;
+}
+
+std::optional<llvm::Value *> Compiler::get_local(const std::string &name) {
+  // This will only search from top to bottom meaning if there are shadowed variable names or
+  // variables with same names in different branches it will only return the first occurance since
+  // they will compile down to having different names (e.g. local, local1, local2, etc.). This
+  // could maybe be fixed by making the parser also add these suffixes to duplicate variables
+  std::optional<llvm::Value *> branch_local = this->get_branch_local(name);
+  if (branch_local.has_value())
+    return branch_local;
+
+  std::optional<llvm::Value *> function_local = this->get_function_local(name);
+  if (function_local.has_value())
+    return function_local;
+
+  return std::nullopt;
+}
+
 std::optional<llvm::Function *> Compiler::get_function(const std::string &name) const {
   if (llvm::Function *function = this->module.getFunction(name))
     return function;
@@ -286,7 +314,9 @@ std::optional<llvm::Function *> Compiler::get_function(const std::string &name) 
 
 std::optional<llvm::Value *> Compiler::get_value(const std::string &name) {
   // Order of lookup is:
-  // 1 local (stack allocated in scope)
+  // 1 local
+  //   1.1 local to current scope (e.g. if branch)
+  //   1.2 local to current function (e.g. argument or other variable in fuction scope)
   // 2 function
   // 3 global
 

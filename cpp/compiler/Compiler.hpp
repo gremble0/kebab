@@ -47,6 +47,8 @@ private:
   void stop_main();
 
   std::optional<llvm::Value *> get_global(const std::string &name);
+  std::optional<llvm::Value *> get_branch_local(const std::string &name);
+  std::optional<llvm::Value *> get_function_local(const std::string &name);
   std::optional<llvm::Value *> get_local(const std::string &name);
   std::optional<llvm::Function *> get_function(const std::string &name) const;
 
