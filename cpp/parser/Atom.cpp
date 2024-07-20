@@ -85,13 +85,7 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
   return atom;
 }
 
-llvm::Value *NameAtom::compile(Compiler &compiler) const {
-  std::optional<llvm::Value *> variable = compiler.get_value(this->name);
-  if (variable.has_value())
-    return variable.value();
-  else
-    compiler.error(std::string("undeclared identifier: '") + this->name + '\'');
-}
+llvm::Value *NameAtom::compile(Compiler &compiler) const { return compiler.get_value(this->name); }
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
   std::unique_ptr<InnerExpressionAtom> atom = std::make_unique<InnerExpressionAtom>();

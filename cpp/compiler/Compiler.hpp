@@ -67,7 +67,7 @@ public:
 
   llvm::Type *get_void_type() { return this->builder.getVoidTy(); }
 
-  std::optional<llvm::Value *> get_value(const std::string &name);
+  llvm::Value *get_value(const std::string &name);
   llvm::Function *get_current_function() const;
 
   llvm::ConstantInt *create_int(int64_t i) {

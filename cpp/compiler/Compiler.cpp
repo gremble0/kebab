@@ -245,8 +245,12 @@ Compiler::create_phi(llvm::Type *type,
   return phi;
 }
 
-std::optional<llvm::Value *> Compiler::get_value(const std::string &name) {
-  return this->current_scope->lookup(name);
+llvm::Value *Compiler::get_value(const std::string &name) {
+  std::optional<llvm::Value *> value = this->current_scope->lookup(name);
+  if (!value.has_value())
+    this->error(std::string("undeclared identifier: '") + name + '\'');
+
+  return value.value();
 }
 
 llvm::Function *Compiler::get_current_function() const {
