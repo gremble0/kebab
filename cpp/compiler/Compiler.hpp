@@ -25,6 +25,8 @@
 
 #pragma clang diagnostic pop
 
+#include "Scope.hpp"
+
 namespace Kebab {
 // Can't unclude RootNode due to circular imports so have to declare independently
 namespace Parser {
@@ -37,6 +39,7 @@ private:
   llvm::LLVMContext context;
   llvm::Module module;
   llvm::IRBuilder<> builder;
+  std::shared_ptr<Scope> current_scope;
 
   void save_module(const std::string &path) const;
 
@@ -53,7 +56,9 @@ private:
   std::optional<llvm::Function *> get_function(const std::string &name) const;
 
 public:
-  Compiler() : context(), module("kebab", context), builder(context) {}
+  Compiler()
+      : context(), module("kebab", context), builder(context),
+        current_scope(std::make_shared<Scope>()) {}
 
   void compile(std::unique_ptr<Parser::RootNode> root);
   [[noreturn]] void error(const std::string &message) const;

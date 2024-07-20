@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <string>
 #include <system_error>
@@ -41,6 +42,8 @@ void Compiler::load_printf() {
 void Compiler::load_globals() { this->load_printf(); }
 
 void Compiler::start_main() {
+  this->current_scope = std::make_shared<Scope>(this->current_scope);
+
   llvm::IntegerType *return_type = this->builder.getInt32Ty();
   llvm::Type *argc_type = this->builder.getInt32Ty();
   llvm::Type *argv_type = this->builder.getInt8Ty()->getPointerTo()->getPointerTo();
@@ -82,6 +85,10 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
 
 llvm::Function *Compiler::create_function(llvm::FunctionType *type, const std::string &name,
                                           const std::unique_ptr<Parser::Constructor> &body) {
+  // Make new scope for this function, but return to previous scope after its done compiling
+  std::shared_ptr<Scope> previous_scope = this->current_scope;
+  this->current_scope = std::make_shared<Scope>(this->current_scope);
+
   llvm::Function *function =
       llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->module);
 
@@ -93,6 +100,8 @@ llvm::Function *Compiler::create_function(llvm::FunctionType *type, const std::s
   this->builder.SetInsertPoint(entry);
   this->builder.CreateRet(body->compile(*this));
   this->builder.SetInsertPoint(previous_block);
+
+  this->current_scope = previous_scope;
 
   return function;
 }
