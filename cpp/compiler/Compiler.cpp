@@ -41,38 +41,11 @@ void Compiler::load_printf() {
 
 void Compiler::load_globals() { this->load_printf(); }
 
-void Compiler::start_main() {
-  this->current_scope = std::make_shared<Scope>(this->current_scope);
-
-  llvm::IntegerType *return_type = this->builder.getInt32Ty();
-  llvm::Type *argc_type = this->builder.getInt32Ty();
-  llvm::Type *argv_type = this->builder.getInt8Ty()->getPointerTo()->getPointerTo();
-  std::vector<llvm::Type *> param_types = {argc_type, argv_type};
-
-  llvm::FunctionType *prototype = llvm::FunctionType::get(return_type, param_types, false);
-  llvm::Function *main =
-      llvm::Function::Create(prototype, llvm::Function::ExternalLinkage, "main", this->module);
-
-  llvm::BasicBlock *body = llvm::BasicBlock::Create(this->context, "entry", main);
-  this->builder.SetInsertPoint(body);
-}
-
-void Compiler::stop_main() {
-  // Return 0 as a 32 bit integer
-  llvm::Value *return_value = this->builder.getInt32(0);
-  auto return_value_i32 =
-      this->builder.CreateIntCast(return_value, this->builder.getInt32Ty(), true);
-
-  this->builder.CreateRet(return_value_i32);
-}
-
 void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   this->load_globals();
-  this->start_main();
 
   root->compile(*this);
 
-  this->stop_main();
   this->save_module("./out.ll");
 }
 
@@ -328,6 +301,7 @@ std::optional<llvm::Value *> Compiler::get_value(const std::string &name) {
   //   1.2 local to current function (e.g. argument or other variable in fuction scope)
   // 2 function
   // 3 global
+  // return (*this->current_scope)[name];
 
   std::optional<llvm::Value *> local = this->get_local(name);
   if (local.has_value())

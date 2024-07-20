@@ -46,9 +46,6 @@ private:
   void load_printf();
   void load_globals();
 
-  void start_main();
-  void stop_main();
-
   std::optional<llvm::Value *> get_global(const std::string &name);
   std::optional<llvm::Value *> get_branch_local(const std::string &name);
   std::optional<llvm::Value *> get_function_local(const std::string &name);
