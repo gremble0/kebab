@@ -7,7 +7,7 @@ LLVM_CXXFLAGS := $(shell $(LLVM_CONFIG) --cxxflags)
 
 INCLUDES := -I..
 
-OBJS := Compiler.o
+OBJS := Compiler.o Scope.o
 
 all: $(OBJS)
 
