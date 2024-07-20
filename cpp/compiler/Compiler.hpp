@@ -32,6 +32,7 @@ namespace Kebab {
 namespace Parser {
 class RootNode;
 class Constructor;
+class FunctionParameter;
 } // namespace Parser
 
 class Compiler {
@@ -89,8 +90,10 @@ public:
     return llvm::ConstantInt::get(this->builder.getInt1Ty(), b);
   }
 
-  llvm::Function *define_function(llvm::FunctionType *type, const std::string &name,
-                                  const std::unique_ptr<Parser::Constructor> &body);
+  llvm::Function *
+  define_function(llvm::FunctionType *type, const std::string &name,
+                  const std::unique_ptr<Parser::Constructor> &body,
+                  const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
 
   llvm::Function *declare_function(llvm::FunctionType *type, const std::string &name);
 

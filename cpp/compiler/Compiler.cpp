@@ -8,6 +8,7 @@
 #include "Compiler.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/RootNode.hpp"
+#include "llvm/IR/Argument.h"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constant.h"
 #include "llvm/IR/DataLayout.h"
@@ -65,14 +66,23 @@ llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::
   return function;
 }
 
-llvm::Function *Compiler::define_function(llvm::FunctionType *type, const std::string &name,
-                                          const std::unique_ptr<Parser::Constructor> &body) {
-  // Make new scope for this function, but return to previous scope after its done compiling
+llvm::Function *Compiler::define_function(
+    llvm::FunctionType *type, const std::string &name,
+    const std::unique_ptr<Parser::Constructor> &body,
+    const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
+  // Make new scope for this function, then return to previous scope after its done compiling
   std::shared_ptr<Scope> previous_scope = this->current_scope;
   this->current_scope = std::make_shared<Scope>(this->current_scope);
 
   llvm::Function *function =
       llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->module);
+
+  // Set parameter names
+  for (size_t i = 0, size = parameters.size(); i < size; ++i) {
+    llvm::Argument *argument = function->getArg(i);
+    argument->setName(parameters[i]->name);
+    this->current_scope->put(parameters[i]->name, argument);
+  }
 
   // Make entry for new function and save the current insert block so we can return to it after
   // we're done compiling the current function

@@ -84,10 +84,7 @@ std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
   return parameter;
 }
 
-llvm::Value *FunctionParameter::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function FunctionParameter::compile");
-}
+llvm::Value *FunctionParameter::compile(Compiler &compiler) const { unreachable_error(); }
 
 void FunctionConstructor::parse_type(Lexer &lexer) {
   lexer.skip({Token::Type::FN});
@@ -129,12 +126,11 @@ std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
 }
 
 llvm::Value *FunctionConstructor::compile(Compiler &compiler) const {
+  // NOTE: parameters of function are inferred by the prototype, however we still have to set their
+  // names which is done by FunctionParameter::compile
   llvm::FunctionType *prototype = this->type->get_llvm_type(compiler);
-  llvm::Function *function = compiler.define_function(prototype, this->name, this->body);
-
-  size_t arg_size = function->arg_size();
-  for (size_t i = 0; i < arg_size; ++i)
-    function->getArg(i)->setName(this->parameters[i]->name);
+  llvm::Function *function =
+      compiler.define_function(prototype, this->name, this->body, this->parameters);
 
   return function;
 }
