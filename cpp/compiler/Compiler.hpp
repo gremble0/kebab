@@ -46,12 +46,6 @@ private:
   void load_printf();
   void load_globals();
 
-  std::optional<llvm::Value *> get_global(const std::string &name);
-  std::optional<llvm::Value *> get_branch_local(const std::string &name);
-  std::optional<llvm::Value *> get_function_local(const std::string &name);
-  std::optional<llvm::Value *> get_local(const std::string &name);
-  std::optional<llvm::Function *> get_function(const std::string &name) const;
-
 public:
   Compiler()
       : context(), module("kebab", context), builder(context),
@@ -95,11 +89,13 @@ public:
     return llvm::ConstantInt::get(this->builder.getInt1Ty(), b);
   }
 
+  // Define a function with some body
   llvm::Function *create_function(llvm::FunctionType *type, const std::string &name,
                                   const std::unique_ptr<Parser::Constructor> &body);
 
-  llvm::GlobalVariable *create_global(const std::string &name, llvm::Constant *init,
-                                      llvm::Type *type);
+  // Declare a function without defining its body
+  llvm::Function *create_function(llvm::FunctionType *type, const std::string &name);
+
   llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
 
   llvm::Value *create_neg(llvm::Value *v) {

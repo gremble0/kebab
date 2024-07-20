@@ -36,7 +36,7 @@ void Compiler::load_printf() {
   llvm::PointerType *format_type = this->builder.getInt8Ty()->getPointerTo();
   llvm::FunctionType *function_type = llvm::FunctionType::get(return_type, format_type, true);
 
-  this->module.getOrInsertFunction("printf", function_type);
+  this->create_function(function_type, "printf");
 }
 
 void Compiler::load_globals() { this->load_printf(); }
@@ -54,6 +54,14 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   std::cerr << "compiler-error: " << message << std::endl;
 
   exit(1);
+}
+
+llvm::Function *Compiler::create_function(llvm::FunctionType *type, const std::string &name) {
+  llvm::Function *function =
+      llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->module);
+  (*this->current_scope)[name] = function;
+
+  return function;
 }
 
 llvm::Function *Compiler::create_function(llvm::FunctionType *type, const std::string &name,
@@ -79,14 +87,6 @@ llvm::Function *Compiler::create_function(llvm::FunctionType *type, const std::s
   return function;
 }
 
-llvm::GlobalVariable *Compiler::create_global(const std::string &name, llvm::Constant *init,
-                                              llvm::Type *type) {
-  // TODO: type checking here maybe
-  // this->module takes ownership of this object
-  return new llvm::GlobalVariable(this->module, type, false, llvm::GlobalValue::ExternalLinkage,
-                                  init, name);
-}
-
 llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant *init,
                                          llvm::Type *type) {
   // Derive the alignment from the type
@@ -98,6 +98,8 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
 
   llvm::StoreInst *store = this->builder.CreateStore(init, local);
   store->setAlignment(llvm::Align(alignment));
+
+  (*this->current_scope)[name] = local;
 
   return local;
 }
@@ -228,72 +230,6 @@ Compiler::create_phi(llvm::Type *type,
   return phi;
 }
 
-std::optional<llvm::Value *> Compiler::get_global(const std::string &name) {
-  // Could use ValueSymbolTable, but that is what getGlobalVariable does anyways
-  llvm::GlobalVariable *global = this->module.getGlobalVariable(name);
-  if (global == nullptr)
-    return std::nullopt;
-  else
-    return this->builder.CreateLoad(global->getValueType(), global);
-}
-
-std::optional<llvm::Value *> Compiler::get_branch_local(const std::string &name) {
-  llvm::BasicBlock *current_block = this->builder.GetInsertBlock();
-  llvm::ValueSymbolTable *symbolTable = current_block->getValueSymbolTable();
-
-  llvm::Value *value = symbolTable->lookup(name);
-  if (value == nullptr)
-    return std::nullopt;
-
-  if (llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(value))
-    return this->builder.CreateLoad(local->getAllocatedType(), local);
-  else if (llvm::Argument *arg = llvm::dyn_cast<llvm::Argument>(value))
-    return arg;
-
-  // Unknown value - cant generate load instruction so return nullopt
-  return std::nullopt;
-}
-
-std::optional<llvm::Value *> Compiler::get_function_local(const std::string &name) {
-  llvm::Function *current_function = this->get_current_function();
-  llvm::ValueSymbolTable *symbolTable = current_function->getValueSymbolTable();
-
-  llvm::Value *value = symbolTable->lookup(name);
-  if (value == nullptr)
-    return std::nullopt;
-
-  if (llvm::AllocaInst *local = llvm::dyn_cast<llvm::AllocaInst>(value))
-    return this->builder.CreateLoad(local->getAllocatedType(), local);
-  else if (llvm::Argument *arg = llvm::dyn_cast<llvm::Argument>(value))
-    return arg;
-
-  // Unknown value - cant generate load instruction so return nullopt
-  return std::nullopt;
-}
-
-std::optional<llvm::Value *> Compiler::get_local(const std::string &name) {
-  // This will only search from top to bottom meaning if there are shadowed variable names or
-  // variables with same names in different branches it will only return the first occurance since
-  // they will compile down to having different names (e.g. local, local1, local2, etc.). This
-  // could maybe be fixed by making the parser also add these suffixes to duplicate variables
-  std::optional<llvm::Value *> branch_local = this->get_branch_local(name);
-  if (branch_local.has_value())
-    return branch_local;
-
-  std::optional<llvm::Value *> function_local = this->get_function_local(name);
-  if (function_local.has_value())
-    return function_local;
-
-  return std::nullopt;
-}
-
-std::optional<llvm::Function *> Compiler::get_function(const std::string &name) const {
-  if (llvm::Function *function = this->module.getFunction(name))
-    return function;
-  else
-    return std::nullopt;
-}
-
 std::optional<llvm::Value *> Compiler::get_value(const std::string &name) {
   // Order of lookup is:
   // 1 local
@@ -301,21 +237,7 @@ std::optional<llvm::Value *> Compiler::get_value(const std::string &name) {
   //   1.2 local to current function (e.g. argument or other variable in fuction scope)
   // 2 function
   // 3 global
-  // return (*this->current_scope)[name];
-
-  std::optional<llvm::Value *> local = this->get_local(name);
-  if (local.has_value())
-    return local;
-
-  std::optional<llvm::Value *> function = this->get_function(name);
-  if (function.has_value())
-    return function;
-
-  std::optional<llvm::Value *> global = this->get_global(name);
-  if (global.has_value())
-    return global;
-
-  return std::nullopt;
+  return (*this->current_scope)[name];
 }
 
 llvm::Function *Compiler::get_current_function() const {

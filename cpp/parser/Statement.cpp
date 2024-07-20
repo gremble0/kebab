@@ -38,6 +38,7 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   llvm::Value *variable_value = this->constructor->compile(compiler);
 
+  // meh
   if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(variable_value)) {
     function->setName(this->name);
     return variable_value;
