@@ -5,7 +5,6 @@
 #include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
 #include "parser/Primary.hpp"
-#include "llvm/ADT/ArrayRef.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Value.h"
 
