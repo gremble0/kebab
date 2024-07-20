@@ -130,7 +130,7 @@ std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
 
 llvm::Value *FunctionConstructor::compile(Compiler &compiler) const {
   llvm::FunctionType *prototype = this->type->get_llvm_type(compiler);
-  llvm::Function *function = compiler.define_function(prototype, "", this->body);
+  llvm::Function *function = compiler.define_function(prototype, this->name, this->body);
 
   size_t arg_size = function->arg_size();
   for (size_t i = 0; i < arg_size; ++i)

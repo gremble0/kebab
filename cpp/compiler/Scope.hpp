@@ -13,5 +13,6 @@ public:
   Scope() = default;
   Scope(std::shared_ptr<Scope> parent) : parent(parent) {}
 
-  llvm::Value *&operator[](const std::string &key);
+  std::optional<llvm::Value *> lookup(const std::string &key);
+  void put(const std::string &key, llvm::Value *value);
 };

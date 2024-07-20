@@ -21,6 +21,8 @@ protected:
   virtual void parse_body(Lexer &lexer) = 0;
 
 public:
+  std::string name;
+
   virtual ~Constructor() = default;
 
   static std::unique_ptr<Constructor> parse(Lexer &lexer);

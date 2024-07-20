@@ -36,11 +36,12 @@ std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
 }
 
 llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
+  // TODO: can use this more in constructor::compile methods, but this is still kinda shit
+  this->constructor->name = this->name;
   llvm::Value *variable_value = this->constructor->compile(compiler);
 
   // meh
   if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(variable_value)) {
-    function->setName(this->name);
     return variable_value;
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
@@ -49,6 +50,7 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
     if (actual_type != declared_type)
       this->type_error({declared_type}, actual_type);
 
+    // Can be done further down in ast?
     return compiler.create_local(this->name, static_cast<llvm::Constant *>(variable_value),
                                  declared_type);
   }

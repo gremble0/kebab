@@ -45,9 +45,7 @@ void Compiler::load_globals() { this->load_printf(); }
 
 void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   this->load_globals();
-
   root->compile(*this);
-
   this->save_module("./out.ll");
 }
 
@@ -61,7 +59,8 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
 llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::string &name) {
   llvm::Function *function =
       llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->module);
-  (*this->current_scope)[name] = function;
+
+  this->current_scope->put(name, function);
 
   return function;
 }
@@ -87,7 +86,7 @@ llvm::Function *Compiler::define_function(llvm::FunctionType *type, const std::s
   this->current_scope = previous_scope;
   // Previous scope now has this function in scope - this allows for first order functions since no
   // parent scopes can't see this binding
-  (*this->current_scope)[name] = function;
+  this->current_scope->put(name, function);
 
   return function;
 }
@@ -104,7 +103,7 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
   llvm::StoreInst *store = this->builder.CreateStore(init, local);
   store->setAlignment(llvm::Align(alignment));
 
-  (*this->current_scope)[name] = local;
+  this->current_scope->put(name, local);
 
   return local;
 }
@@ -214,6 +213,7 @@ llvm::Value *Compiler::create_ge(llvm::Value *lhs, llvm::Value *rhs) {
 llvm::BasicBlock *Compiler::create_basic_block(llvm::Function *parent, const std::string &name) {
   return llvm::BasicBlock::Create(this->context, name, parent);
 }
+
 llvm::BranchInst *Compiler::create_branch(llvm::BasicBlock *destination) {
   return this->builder.CreateBr(destination);
 }
@@ -236,17 +236,7 @@ Compiler::create_phi(llvm::Type *type,
 }
 
 std::optional<llvm::Value *> Compiler::get_value(const std::string &name) {
-  // Order of lookup is:
-  // 1 local
-  //   1.1 local to current scope (e.g. if branch)
-  //   1.2 local to current function (e.g. argument or other variable in fuction scope)
-  // 2 function
-  // 3 global
-  llvm::Value *value = (*this->current_scope)[name];
-  if (value == nullptr)
-    return std::nullopt;
-  else
-    return value;
+  return this->current_scope->lookup(name);
 }
 
 llvm::Function *Compiler::get_current_function() const {
