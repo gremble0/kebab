@@ -29,14 +29,16 @@ void Compiler::save_module(const std::string &path) const {
 }
 
 void Compiler::load_printf() {
-  // printfs real return type is int32 however we just say that it is int64 to make it easier to
+  // `printfs` real return type is int32 however we just say that it is int64 to make it easier to
   // deal with since the rest of the language uses 64 bit integers. This may cause some issues
   // however I have not encountered any yet so I will keep it as is until I need to change it
+  //
+  // The signature of this function is `i64 printf(i8 *, ...)`
   llvm::IntegerType *return_type = this->builder.getInt64Ty();
   llvm::PointerType *format_type = this->builder.getInt8Ty()->getPointerTo();
-  llvm::FunctionType *function_type = llvm::FunctionType::get(return_type, format_type, true);
+  llvm::FunctionType *prototype = llvm::FunctionType::get(return_type, format_type, true);
 
-  this->create_function(function_type, "printf");
+  this->declare_function(prototype, "printf");
 }
 
 void Compiler::load_globals() { this->load_printf(); }
@@ -56,7 +58,7 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   exit(1);
 }
 
-llvm::Function *Compiler::create_function(llvm::FunctionType *type, const std::string &name) {
+llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::string &name) {
   llvm::Function *function =
       llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->module);
   (*this->current_scope)[name] = function;
@@ -64,7 +66,7 @@ llvm::Function *Compiler::create_function(llvm::FunctionType *type, const std::s
   return function;
 }
 
-llvm::Function *Compiler::create_function(llvm::FunctionType *type, const std::string &name,
+llvm::Function *Compiler::define_function(llvm::FunctionType *type, const std::string &name,
                                           const std::unique_ptr<Parser::Constructor> &body) {
   // Make new scope for this function, but return to previous scope after its done compiling
   std::shared_ptr<Scope> previous_scope = this->current_scope;
@@ -83,6 +85,9 @@ llvm::Function *Compiler::create_function(llvm::FunctionType *type, const std::s
   this->builder.SetInsertPoint(previous_block);
 
   this->current_scope = previous_scope;
+  // Previous scope now has this function in scope - this allows for first order functions since no
+  // parent scopes can't see this binding
+  (*this->current_scope)[name] = function;
 
   return function;
 }
@@ -237,7 +242,11 @@ std::optional<llvm::Value *> Compiler::get_value(const std::string &name) {
   //   1.2 local to current function (e.g. argument or other variable in fuction scope)
   // 2 function
   // 3 global
-  return (*this->current_scope)[name];
+  llvm::Value *value = (*this->current_scope)[name];
+  if (value == nullptr)
+    return std::nullopt;
+  else
+    return value;
 }
 
 llvm::Function *Compiler::get_current_function() const {

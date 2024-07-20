@@ -89,12 +89,10 @@ public:
     return llvm::ConstantInt::get(this->builder.getInt1Ty(), b);
   }
 
-  // Define a function with some body
-  llvm::Function *create_function(llvm::FunctionType *type, const std::string &name,
+  llvm::Function *define_function(llvm::FunctionType *type, const std::string &name,
                                   const std::unique_ptr<Parser::Constructor> &body);
 
-  // Declare a function without defining its body
-  llvm::Function *create_function(llvm::FunctionType *type, const std::string &name);
+  llvm::Function *declare_function(llvm::FunctionType *type, const std::string &name);
 
   llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
 
