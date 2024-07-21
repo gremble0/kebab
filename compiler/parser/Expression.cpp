@@ -148,6 +148,8 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
   llvm::BasicBlock *branch = compiler.create_basic_block(current_function, "if_branch");
   llvm::BasicBlock *merge_branch = compiler.create_basic_block(current_function, "merge_branch");
 
+  // llvm does not allow 2 labels in a row so we need to make a branch here in case there are no
+  // preceding instructions in the function
   compiler.create_branch(branch);
 
   // Vector of possible incoming values to the phi node (the return value of the cond expression)

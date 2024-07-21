@@ -50,13 +50,6 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
   this->save_module("./out.ll");
 }
 
-[[noreturn]] void Compiler::error(const std::string &message) const {
-  // TODO: better tracing
-  std::cerr << "compiler-error: " << message << std::endl;
-
-  exit(1);
-}
-
 llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::string &name) {
   llvm::Function *function =
       llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->module);
@@ -243,24 +236,12 @@ llvm::BranchInst *Compiler::create_cond_branch(llvm::Value *condition,
 
 llvm::PHINode *
 Compiler::create_phi(llvm::Type *type,
-                     std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming) {
+                     const std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> &incoming) {
   llvm::PHINode *phi = this->builder.CreatePHI(type, incoming.size());
   for (const std::pair<llvm::Value *, llvm::BasicBlock *> &i : incoming)
     phi->addIncoming(i.first, i.second);
 
   return phi;
-}
-
-llvm::Value *Compiler::get_value(const std::string &name) {
-  std::optional<llvm::Value *> value = this->current_scope->lookup(name);
-  if (!value.has_value())
-    this->error(std::string("undeclared identifier: '") + name + '\'');
-
-  return value.value();
-}
-
-llvm::Function *Compiler::get_current_function() const {
-  return this->builder.GetInsertBlock()->getParent();
 }
 
 } // namespace Kebab

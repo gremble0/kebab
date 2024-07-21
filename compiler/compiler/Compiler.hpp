@@ -54,8 +54,8 @@ public:
         current_scope(std::make_shared<Scope>()) {}
 
   void compile(std::unique_ptr<Parser::RootNode> root);
-  [[noreturn]] void error(const std::string &message) const;
 
+  /// Type getters
   llvm::IntegerType *get_int_type() { return this->builder.getInt64Ty(); }
 
   llvm::Type *get_float_type() { return this->builder.getDoubleTy(); }
@@ -68,9 +68,16 @@ public:
 
   llvm::Type *get_void_type() { return this->builder.getVoidTy(); }
 
-  llvm::Value *get_value(const std::string &name);
-  llvm::Function *get_current_function() const;
+  /// Variable lookups
+  std::optional<llvm::Value *> get_value(const std::string &name) const {
+    return this->current_scope->lookup(name);
+  }
 
+  llvm::Function *get_current_function() const {
+    return this->builder.GetInsertBlock()->getParent();
+  }
+
+  /// Constructors for primitive literals
   llvm::ConstantInt *create_int(int64_t i) {
     return llvm::ConstantInt::get(this->builder.getInt64Ty(), i);
   }
@@ -91,57 +98,59 @@ public:
     return llvm::ConstantInt::get(this->builder.getInt1Ty(), b);
   }
 
+  /// Constructors for more complicated instructions
   llvm::Function *
   define_function(llvm::FunctionType *type, const std::string &name,
                   const std::unique_ptr<Parser::Constructor> &body,
                   const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
-
   llvm::Function *declare_function(llvm::FunctionType *type, const std::string &name);
-
   llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
 
+  llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
+
+  llvm::BranchInst *create_branch(llvm::BasicBlock *destination);
+  llvm::BranchInst *create_cond_branch(llvm::Value *condition, llvm::BasicBlock *true_destination,
+                                       llvm::BasicBlock *false_destination);
+  llvm::PHINode *
+  create_phi(llvm::Type *type,
+             const std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> &incoming);
+
+  llvm::CallInst *create_call(llvm::Function *function, std::vector<llvm::Value *> arguments) {
+    return this->builder.CreateCall(function, arguments);
+  }
+
+  /// Unary boolean operators
   llvm::Value *create_neg(llvm::Value *v) {
     // TODO: type check - if not int or bool error
     return this->builder.CreateNeg(v);
   }
 
+  /// Binary mathematical operators
   std::optional<llvm::Value *> create_add(llvm::Value *lhs, llvm::Value *rhs);
   std::optional<llvm::Value *> create_sub(llvm::Value *lhs, llvm::Value *rhs);
   std::optional<llvm::Value *> create_mul(llvm::Value *lhs, llvm::Value *rhs);
   std::optional<llvm::Value *> create_div(llvm::Value *lhs, llvm::Value *rhs);
 
+  /// Binary comparison operators
   std::optional<llvm::Value *> create_lt(llvm::Value *lhs, llvm::Value *rhs);
   std::optional<llvm::Value *> create_le(llvm::Value *lhs, llvm::Value *rhs);
   std::optional<llvm::Value *> create_eq(llvm::Value *lhs, llvm::Value *rhs);
   std::optional<llvm::Value *> create_neq(llvm::Value *lhs, llvm::Value *rhs);
   std::optional<llvm::Value *> create_gt(llvm::Value *lhs, llvm::Value *rhs);
   std::optional<llvm::Value *> create_ge(llvm::Value *lhs, llvm::Value *rhs);
-
   llvm::Value *create_and(llvm::Value *lhs, llvm::Value *rhs) {
     return this->builder.CreateAnd(lhs, rhs);
   }
-
   llvm::Value *create_or(llvm::Value *lhs, llvm::Value *rhs) {
     return this->builder.CreateOr(lhs, rhs);
   }
-
   llvm::Value *create_not(llvm::Value *v) { return this->builder.CreateNot(v); }
 
-  llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
-  llvm::BranchInst *create_branch(llvm::BasicBlock *destination);
-  llvm::BranchInst *create_cond_branch(llvm::Value *condition, llvm::BasicBlock *true_destination,
-                                       llvm::BasicBlock *false_destination);
-  llvm::PHINode *create_phi(llvm::Type *type,
-                            std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> incoming);
-
-  llvm::CallInst *create_call(llvm::Function *function, std::vector<llvm::Value *> arguments) {
-    return this->builder.CreateCall(function, arguments);
-  }
-
+  /// Setter wrappers
   void set_insert_point(llvm::BasicBlock *block) { this->builder.SetInsertPoint(block); }
 
+  /// Scope wrappers
   void start_scope() { this->current_scope = std::make_shared<Scope>(this->current_scope); }
-
   void end_scope() {
     if (this->current_scope->parent.has_value())
       this->current_scope = this->current_scope->parent.value();
