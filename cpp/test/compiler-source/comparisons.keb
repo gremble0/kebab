@@ -1,23 +1,27 @@
-def b1 = bool(1 < 2)
-def b2 = bool(1 <= 2)
-def b3 = bool(1 == 2)
-def b4 = bool(1 ~= 2)
-def b5 = bool(1 > 2)
-def b6 = bool(1 >= 2)
+def main = fn(() => int(
+  def b1 = bool(1 < 2)
+  def b2 = bool(1 <= 2)
+  def b3 = bool(1 == 2)
+  def b4 = bool(1 ~= 2)
+  def b5 = bool(1 > 2)
+  def b6 = bool(1 >= 2)
+  
+  def b7 = bool(1.6 < 1.2)
+  def b8 = bool(1.6 <= 1.2)
+  def b9 = bool(1.6 == 1.2)
+  def b10 = bool(1.6 ~= 1.2)
+  def b11 = bool(1.6 > 1.2)
+  def b12 = bool(1.6 >= 1.2)
+  
+  def i1 = int(2)
+  def i2 = int(5)
+  
+  def b13 = bool(i1 < i2)
+  
+  def f1 = float(2.5)
+  def f2 = float(2.2)
+  
+  def b14 = bool(f1 < f2)
 
-def b7 = bool(1.6 < 1.2)
-def b8 = bool(1.6 <= 1.2)
-def b9 = bool(1.6 == 1.2)
-def b10 = bool(1.6 ~= 1.2)
-def b11 = bool(1.6 > 1.2)
-def b12 = bool(1.6 >= 1.2)
-
-def i1 = int(2)
-def i2 = int(5)
-
-def b13 = bool(i1 < i2)
-
-def f1 = float(2.5)
-def f2 = float(2.2)
-
-def b14 = bool(f1 < f2)
+  0
+))

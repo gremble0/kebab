@@ -1,13 +1,15 @@
-def i1 = int(
-  if false => 
-    def local = int(420)
-    local + 1
-  elif true =>
-    def local = int(1024)
-    local + 2
-  else => 
-    def local = int(69)
-    local + 42
-)
-
-def i2 = int(printf("%ld\n", i1))
+def main = fn(() => int(
+  def i1 = int(
+    if false => 
+      def local = int(420)
+      local + 1
+    elif true =>
+      def local = int(1024)
+      local + 2
+    else => 
+      def local = int(69)
+      local + 42
+  )
+  def i2 = int(printf("%ld\n", i1))
+  0
+))

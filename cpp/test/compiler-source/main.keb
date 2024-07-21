@@ -1,3 +1,5 @@
-def main = fn(() => int(
-  printf("hello\n")
+def main = fn((argc : int) => int(
+  printf("hello %ld\n", argc)
+
+  0
 ))

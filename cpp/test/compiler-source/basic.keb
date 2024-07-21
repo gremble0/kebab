@@ -1,5 +1,9 @@
-def v = int(
-  def inner = string("hello")
-  def my-num = int(1 * 8 / 4)
-  printf("hello\n")
-)
+def main = fn(() => int(
+  def v = int(
+    def inner = string("hello")
+    def my-num = int(1 * 8 / 4)
+    printf("hello\n")
+    123
+  )
+  0
+))

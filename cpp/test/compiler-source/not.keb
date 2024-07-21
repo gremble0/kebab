@@ -1,3 +1,7 @@
-def b1 = bool(~true)
-def b2 = bool(~true)
-def b3 = bool(~false)
+def main = fn(() => int(
+  def b1 = bool(~true)
+  def b2 = bool(~true)
+  def b3 = bool(~false)
+
+  0
+))

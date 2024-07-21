@@ -14,6 +14,9 @@ def takes-parameter = fn((n : int) => int(0))
 
 def uses-parameter = fn((n : int) => int(n))
 
-def two = int(one-factory() + one-factory())
+def main = fn(() => int(
+  def two = int(one-factory() + one-factory())
+  def i = int(printf("%ld\n", two + two))
 
-def i = int(printf("%ld\n", two))
+  0
+))

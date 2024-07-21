@@ -1,6 +1,10 @@
-def b1 = bool(true or true)
-def b2 = bool(true or true or true)
-def b3 = bool(true or true or false)
-def b4 = bool(true or false or false)
-def b5 = bool(false or false or false)
-def b6 = bool(false or true or true)
+def main = fn(() => int(
+  def b1 = bool(true or true)
+  def b2 = bool(true or true or true)
+  def b3 = bool(true or true or false)
+  def b4 = bool(true or false or false)
+  def b5 = bool(false or false or false)
+  def b6 = bool(false or true or true)
+  
+  0
+))
