@@ -1,6 +1,7 @@
 #ifndef KEBAB_COMPILER_HPP
 #define KEBAB_COMPILER_HPP
 
+#include <cassert>
 #include <cmath>
 #include <cstdint>
 #include <memory>
@@ -138,6 +139,15 @@ public:
   }
 
   void set_insert_point(llvm::BasicBlock *block) { this->builder.SetInsertPoint(block); }
+
+  void start_scope() { this->current_scope = std::make_shared<Scope>(this->current_scope); }
+
+  void end_scope() {
+    if (this->current_scope->parent.has_value())
+      this->current_scope = this->current_scope->parent.value();
+    else
+      assert(false && "cannot end global scope (missing opening start_scope() call)");
+  }
 };
 
 } // namespace Kebab

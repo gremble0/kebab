@@ -6,10 +6,10 @@
 
 class Scope {
 private:
-  std::optional<std::shared_ptr<Scope>> parent;
   std::unordered_map<std::string, llvm::Value *> map;
 
 public:
+  std::optional<std::shared_ptr<Scope>> parent;
   Scope() = default;
   Scope(std::shared_ptr<Scope> parent) : parent(parent) {}
 

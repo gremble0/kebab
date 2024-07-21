@@ -10,7 +10,6 @@
 #include "parser/Expression.hpp"
 #include "parser/Statement.hpp"
 #include "llvm/IR/BasicBlock.h"
-#include "llvm/IR/Constants.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Value.h"
 
@@ -168,8 +167,9 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     llvm::BasicBlock *next_branch = compiler.create_basic_block(current_function, branch_name);
     compiler.set_insert_point(branch);
 
-    // Compile body except for return statement
+    compiler.start_scope();
     llvm::Value *current_return_value = compile_branch_body(compiler, this->bodies[i]);
+    compiler.end_scope();
 
     compiler.create_cond_branch(test_is_true, merge_branch, next_branch);
     incoming_values.push_back({current_return_value, branch});
@@ -178,7 +178,9 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
 
   // else branch
   compiler.set_insert_point(branch);
+  compiler.start_scope();
   llvm::Value *else_return_value = compile_branch_body(compiler, this->bodies.back());
+  compiler.end_scope();
   incoming_values.push_back({else_return_value, branch});
 
   compiler.create_branch(merge_branch);
