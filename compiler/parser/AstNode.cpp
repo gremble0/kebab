@@ -61,6 +61,15 @@ std::string AstNode::where() const {
   exit(1);
 }
 
+[[noreturn]] void AstNode::name_error(const std::string &name) const {
+  std::string where = this->where();
+  std::string labeled_message = "name-error: '" + name + '\'';
+
+  std::cerr << where << labeled_message << std::endl;
+
+  exit(1);
+}
+
 [[noreturn]] void AstNode::type_error(std::initializer_list<const llvm::Type *> expected,
                                       const llvm::Type *actual) const {
   std::string message;
