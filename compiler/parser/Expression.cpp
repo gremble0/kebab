@@ -3,6 +3,7 @@
 #include <optional>
 #include <vector>
 
+#include "compiler/Compiler.hpp"
 #include "lexer/Token.hpp"
 #include "logging/Logger.hpp"
 #include "parser/AndTest.hpp"
@@ -140,12 +141,18 @@ static llvm::Value *compile_branch_body(Compiler &compiler,
   return body.back()->compile(compiler);
 }
 
+llvm::Value *CondExpression::compile_branch(Compiler &compiler, size_t index) const {}
+
 // TODO: this whole function kinda stinks
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
+  for (size_t i = 0, size = this->tests.size(); i < size; ++i) {
+    this->compile_branch(compiler, i);
+  }
+
   llvm::Function *current_function = compiler.get_current_function();
 
   llvm::BasicBlock *branch = compiler.create_basic_block(current_function, "if_branch");
-  llvm::BasicBlock *merge_branch = compiler.create_basic_block(current_function, "merge_branch");
+  this->merge_branch = compiler.create_basic_block(current_function, "merge_branch");
 
   compiler.create_branch(branch);
 

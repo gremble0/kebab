@@ -3,9 +3,9 @@
 *.out
 *.log
 out.ll
-!cpp/test/lexer-expected/*.log
-!cpp/test/parser-expected/*.log
-!cpp/test/compiler-expected/*.log
+!compiler/test/lexer-expected/*.log
+!compiler/test/parser-expected/*.log
+!compiler/test/compiler-expected/*.log
 kebab
 test_all
 compile_commands.json
