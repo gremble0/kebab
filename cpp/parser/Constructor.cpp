@@ -65,11 +65,15 @@ std::unique_ptr<ListConstructor> ListConstructor::parse(Lexer &lexer) {
 }
 
 llvm::Value *ListConstructor::compile(Compiler &compiler) const {
+  compiler.start_scope();
   for (size_t i = 0; i < this->body.size() - 1; ++i)
     this->body[i]->compile(compiler);
 
   // Return value of each constructor is the last statement (which is an expression)
-  return this->body.back()->compile(compiler);
+  llvm::Value *return_value = this->body.back()->compile(compiler);
+  compiler.end_scope();
+
+  return return_value;
 }
 
 std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
@@ -161,11 +165,15 @@ std::unique_ptr<PrimitiveConstructor> PrimitiveConstructor::parse(Lexer &lexer) 
 }
 
 llvm::Value *PrimitiveConstructor::compile(Compiler &compiler) const {
+  compiler.start_scope();
   for (size_t i = 0; i < this->body.size() - 1; ++i)
     this->body[i]->compile(compiler);
 
   // Return value of each constructor is the last statement (which is an expression)
-  return this->body.back()->compile(compiler);
+  llvm::Value *return_value = this->body.back()->compile(compiler);
+  compiler.end_scope();
+
+  return return_value;
 }
 
 } // namespace Parser
