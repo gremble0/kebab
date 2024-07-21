@@ -1,4 +1,3 @@
-#include <iostream>
 #include <memory>
 #include <optional>
 #include <string>
@@ -63,9 +62,7 @@ llvm::Function *Compiler::define_function(
     llvm::FunctionType *type, const std::string &name,
     const std::unique_ptr<Parser::Constructor> &body,
     const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
-  // Make new scope for this function, then return to previous scope after its done compiling
-  std::shared_ptr<Scope> previous_scope = this->current_scope;
-  this->current_scope = std::make_shared<Scope>(this->current_scope);
+  this->start_scope();
 
   llvm::Function *function =
       llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->module);
@@ -86,7 +83,7 @@ llvm::Function *Compiler::define_function(
   this->builder.CreateRet(body->compile(*this));
   this->builder.SetInsertPoint(previous_block);
 
-  this->current_scope = previous_scope;
+  this->end_scope();
   // Previous scope now has this function in scope - this allows for first order functions since no
   // parent scopes can't see this binding
   this->current_scope->put(name, function);

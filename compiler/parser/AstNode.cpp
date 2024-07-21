@@ -54,7 +54,7 @@ std::string AstNode::where() const {
 
 [[noreturn]] void AstNode::unrecognized_type_error(const std::string &type_name) const {
   std::string where = this->where();
-  std::string labeled_message = "unrecognized-type-error: '" + type_name + '\'';
+  std::string labeled_message = "type-error: unrecognized type '" + type_name + '\'';
 
   std::cerr << where << labeled_message << std::endl;
 
@@ -63,7 +63,7 @@ std::string AstNode::where() const {
 
 [[noreturn]] void AstNode::name_error(const std::string &name) const {
   std::string where = this->where();
-  std::string labeled_message = "name-error: '" + name + '\'';
+  std::string labeled_message = "name-error: undeclared identifier '" + name + '\'';
 
   std::cerr << where << labeled_message << std::endl;
 
