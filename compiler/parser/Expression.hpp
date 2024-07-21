@@ -7,7 +7,6 @@
 #include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/AstNode.hpp"
-#include "llvm/IR/BasicBlock.h"
 
 namespace Kebab {
 namespace Parser {
@@ -25,16 +24,12 @@ public:
 
 class CondExpression : public Expression {
 private:
-  llvm::BasicBlock *merge_branch;
-
   void parse_test_body(Lexer &lexer);
 
   void parse_if(Lexer &lexer);
   void parse_elif(Lexer &lexer);
   void parse_elifs(Lexer &lexer);
   void parse_else(Lexer &lexer);
-
-  llvm::Value *compile_branch(Compiler &compiler, size_t index) const;
 
 public:
   std::vector<std::unique_ptr<Expression>> tests;
