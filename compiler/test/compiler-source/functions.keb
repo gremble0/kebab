@@ -14,6 +14,13 @@ def takes-parameter = fn((n : int) => int(0))
 
 def uses-parameter = fn((n : int) => int(n))
 
+def has-local-fn = fn(() => int(
+  ; this function is not visible from other functions
+  def local-fn = fn(() => int(2))
+
+  local-fn()
+))
+
 def main = fn(() => int(
   def two = int(one-factory() + one-factory())
   def i = int(printf("%ld\n", two + two))
