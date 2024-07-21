@@ -50,20 +50,37 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
+  std::optional<llvm::Value *> operation;
+
   switch (this->type) {
   case LT:
-    return compiler.create_lt(this->lhs, this->rhs);
+    operation = compiler.create_lt(this->lhs, this->rhs);
+    break;
+
   case LE:
-    return compiler.create_le(this->lhs, this->rhs);
+    operation = compiler.create_le(this->lhs, this->rhs);
+    break;
+
   case EQ:
-    return compiler.create_eq(this->lhs, this->rhs);
+    operation = compiler.create_eq(this->lhs, this->rhs);
+    break;
+
   case NEQ:
-    return compiler.create_neq(this->lhs, this->rhs);
+    operation = compiler.create_neq(this->lhs, this->rhs);
+    break;
   case GT:
-    return compiler.create_gt(this->lhs, this->rhs);
+    operation = compiler.create_gt(this->lhs, this->rhs);
+    break;
   case GE:
-    return compiler.create_ge(this->lhs, this->rhs);
+    operation = compiler.create_ge(this->lhs, this->rhs);
+    break;
   }
+
+  if (operation.has_value())
+    return operation.value();
+  else
+    this->operator_error({compiler.get_int_type(), compiler.get_float_type()}, this->lhs->getType(),
+                         this->to_string());
 }
 
 std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {

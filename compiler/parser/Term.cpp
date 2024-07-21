@@ -32,13 +32,23 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *TermOperator::compile(Compiler &compiler) const {
+  std::optional<llvm::Value *> operation;
+
   switch (this->type) {
   case PLUS:
-    return compiler.create_add(this->lhs, this->rhs);
+    operation = compiler.create_add(this->lhs, this->rhs);
+    break;
 
   case MINUS:
-    return compiler.create_sub(this->lhs, this->rhs);
+    operation = compiler.create_sub(this->lhs, this->rhs);
+    break;
   }
+
+  if (operation.has_value())
+    return operation.value();
+  else
+    this->operator_error({compiler.get_int_type(), compiler.get_float_type()}, this->lhs->getType(),
+                         this->to_string());
 }
 
 std::unique_ptr<Term> Term::parse(Lexer &lexer) {

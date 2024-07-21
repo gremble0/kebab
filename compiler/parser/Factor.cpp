@@ -111,13 +111,22 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *FactorOperator::compile(Compiler &compiler) const {
+  std::optional<llvm::Value *> operation;
   switch (this->type) {
   case MULT:
-    return compiler.create_mul(this->lhs, this->rhs);
+    operation = compiler.create_mul(this->lhs, this->rhs);
+    break;
 
   case DIV:
-    return compiler.create_div(this->lhs, this->rhs);
+    operation = compiler.create_div(this->lhs, this->rhs);
+    break;
   }
+
+  if (operation.has_value())
+    return operation.value();
+  else
+    this->operator_error({compiler.get_int_type(), compiler.get_float_type()}, this->lhs->getType(),
+                         this->to_string());
 }
 
 } // namespace Parser

@@ -13,6 +13,24 @@ namespace Kebab {
 namespace Parser {
 
 class ComparisonOperator : public AstNode {
+private:
+  std::string to_string() const {
+    switch (this->type) {
+    case LT:
+      return "<";
+    case LE:
+      return "<=";
+    case EQ:
+      return "==";
+    case NEQ:
+      return "~=";
+    case GT:
+      return ">";
+    case GE:
+      return ">=";
+    }
+  }
+
 public:
   enum Type {
     LT,  // <

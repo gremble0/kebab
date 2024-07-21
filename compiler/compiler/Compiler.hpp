@@ -105,17 +105,17 @@ public:
     return this->builder.CreateNeg(v);
   }
 
-  llvm::Value *create_add(llvm::Value *lhs, llvm::Value *rhs);
-  llvm::Value *create_sub(llvm::Value *lhs, llvm::Value *rhs);
-  llvm::Value *create_mul(llvm::Value *lhs, llvm::Value *rhs);
-  llvm::Value *create_div(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_add(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_sub(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_mul(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_div(llvm::Value *lhs, llvm::Value *rhs);
 
-  llvm::Value *create_lt(llvm::Value *lhs, llvm::Value *rhs);
-  llvm::Value *create_le(llvm::Value *lhs, llvm::Value *rhs);
-  llvm::Value *create_eq(llvm::Value *lhs, llvm::Value *rhs);
-  llvm::Value *create_neq(llvm::Value *lhs, llvm::Value *rhs);
-  llvm::Value *create_gt(llvm::Value *lhs, llvm::Value *rhs);
-  llvm::Value *create_ge(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_lt(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_le(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_eq(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_neq(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_gt(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_ge(llvm::Value *lhs, llvm::Value *rhs);
 
   llvm::Value *create_and(llvm::Value *lhs, llvm::Value *rhs) {
     return this->builder.CreateAnd(lhs, rhs);

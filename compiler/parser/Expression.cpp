@@ -158,10 +158,12 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
   size_t num_tests = this->tests.size();
   for (size_t i = 0; i < num_tests; ++i) {
     llvm::Value *test = this->tests[i]->compile(compiler);
-    if (!test->getType()->isIntegerTy(1))
-      compiler.error("only booleans are allowed in if tests");
 
-    llvm::Value *test_is_true = compiler.create_eq(test, compiler.create_bool(true));
+    std::optional<llvm::Value *> test_is_true =
+        compiler.create_eq(test, compiler.create_bool(true));
+    if (!test_is_true.has_value())
+      // This error should maybe be different
+      this->operator_error({compiler.get_bool_type()}, test->getType(), "truthy");
 
     std::string branch_name = (i == num_tests - 1) ? "else_branch" : "elif_branch";
 
@@ -172,7 +174,7 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     llvm::Value *current_return_value = compile_branch_body(compiler, this->bodies[i]);
     compiler.end_scope();
 
-    compiler.create_cond_branch(test_is_true, merge_branch, next_branch);
+    compiler.create_cond_branch(test_is_true.value(), merge_branch, next_branch);
     incoming_values.push_back({current_return_value, branch});
     branch = next_branch;
   }
