@@ -113,7 +113,10 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
   llvm::StoreInst *store = this->builder.CreateStore(init, local);
   store->setAlignment(llvm::Align(alignment));
 
-  this->current_scope->put(name, local);
+  llvm::LoadInst *load = this->builder.CreateLoad(type, local);
+  store->setAlignment(llvm::Align(alignment));
+
+  this->current_scope->put(name, load);
 
   return local;
 }
