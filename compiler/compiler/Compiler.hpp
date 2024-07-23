@@ -68,15 +68,6 @@ public:
 
   llvm::Type *get_void_type() { return this->builder.getVoidTy(); }
 
-  /// Variable lookups
-  std::optional<llvm::Value *> get_value(const std::string &name) const {
-    return this->current_scope->lookup(name);
-  }
-
-  llvm::Function *get_current_function() const {
-    return this->builder.GetInsertBlock()->getParent();
-  }
-
   /// Constructors for primitive literals
   llvm::ConstantInt *create_int(int64_t i) {
     return llvm::ConstantInt::get(this->builder.getInt64Ty(), i);
@@ -144,13 +135,22 @@ public:
   /// Setter wrappers
   void set_insert_point(llvm::BasicBlock *block) { this->builder.SetInsertPoint(block); }
 
-  /// Scope wrappers
+  /// Scope wrappers and lookups
+  std::optional<llvm::Value *> get_value(const std::string &name) const {
+    return this->current_scope->lookup(name);
+  }
+
   void start_scope() { this->current_scope = std::make_shared<Scope>(this->current_scope); }
+
   void end_scope() {
     if (this->current_scope->parent.has_value())
       this->current_scope = this->current_scope->parent.value();
     else
       assert(false && "cannot end global scope (missing opening start_scope() call)");
+  }
+
+  llvm::Function *get_current_function() const {
+    return this->builder.GetInsertBlock()->getParent();
   }
 };
 
