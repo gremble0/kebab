@@ -120,10 +120,7 @@ public:
   }
 
   /// Unary boolean operators
-  llvm::Value *create_neg(llvm::Value *v) {
-    // TODO: type check - if not int or bool error
-    return this->builder.CreateNeg(v);
-  }
+  std::optional<llvm::Value *> create_neg(llvm::Value *v);
 
   /// Binary mathematical operators
   std::optional<llvm::Value *> create_add(llvm::Value *lhs, llvm::Value *rhs);

@@ -33,13 +33,20 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
 }
 
 llvm::Value *FactorPrefix::compile(Compiler &compiler) const {
+  std::optional<llvm::Value *> operation;
+
   switch (this->type) {
   case MINUS:
-    return compiler.create_neg(this->prefixed);
+    operation = compiler.create_neg(this->prefixed);
 
   case PLUS:
-    return this->prefixed;
+    operation = this->prefixed;
   }
+
+  if (operation.has_value())
+    return operation.value();
+  else
+    this->operator_error({compiler.get_int_type()}, this->prefixed->getType(), "~");
 }
 
 std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {

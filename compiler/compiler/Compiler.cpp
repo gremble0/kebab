@@ -111,6 +111,13 @@ llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant
   return local;
 }
 
+std::optional<llvm::Value *> Compiler::create_neg(llvm::Value *v) {
+  if (v->getType()->isIntegerTy())
+    return this->builder.CreateNeg(v);
+  else
+    return std::nullopt;
+}
+
 std::optional<llvm::Value *> Compiler::create_add(llvm::Value *lhs, llvm::Value *rhs) {
   // TODO: general function for type checking maybe, also check rhs somehow - currently we could
   // end up doing pointer arithmetic on accident
