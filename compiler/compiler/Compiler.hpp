@@ -137,13 +137,9 @@ public:
   std::optional<llvm::Value *> create_ge(llvm::Value *lhs, llvm::Value *rhs);  // x >= y
 
   /// Binary logical operators
-  llvm::Value *create_and(llvm::Value *lhs, llvm::Value *rhs) { // x and y
-    return this->builder.CreateAnd(lhs, rhs);
-  }
-  llvm::Value *create_or(llvm::Value *lhs, llvm::Value *rhs) { // x or y
-    return this->builder.CreateOr(lhs, rhs);
-  }
-  llvm::Value *create_not(llvm::Value *v) { return this->builder.CreateNot(v); } // ~x
+  std::optional<llvm::Value *> create_and(llvm::Value *lhs, llvm::Value *rhs); // x and y
+  std::optional<llvm::Value *> create_or(llvm::Value *lhs, llvm::Value *rhs);  // x or y
+  std::optional<llvm::Value *> create_not(llvm::Value *v);                     // ~x
 
   /// Setter wrappers
   void set_insert_point(llvm::BasicBlock *block) { this->builder.SetInsertPoint(block); }

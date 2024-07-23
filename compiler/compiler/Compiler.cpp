@@ -223,6 +223,31 @@ std::optional<llvm::Value *> Compiler::create_ge(llvm::Value *lhs, llvm::Value *
     return std::nullopt;
 }
 
+std::optional<llvm::Value *> Compiler::create_and(llvm::Value *lhs, llvm::Value *rhs) {
+  llvm::Type *lhs_type = lhs->getType();
+  // && rhs_type->isIntegerTy(1)
+  if (lhs_type->isIntegerTy(1))
+    this->builder.CreateAnd(lhs, rhs);
+  else
+    return std::nullopt;
+}
+
+std::optional<llvm::Value *> Compiler::create_or(llvm::Value *lhs, llvm::Value *rhs) {
+  llvm::Type *lhs_type = lhs->getType();
+  // && rhs_type->isIntegerTy(1)
+  if (lhs_type->isIntegerTy(1))
+    this->builder.CreateOr(lhs, rhs);
+  else
+    return std::nullopt;
+}
+
+std::optional<llvm::Value *> Compiler::create_not(llvm::Value *v) {
+  if (v->getType()->isIntegerTy(1))
+    this->builder.CreateNot(v);
+  else
+    return std::nullopt;
+}
+
 llvm::BasicBlock *Compiler::create_basic_block(llvm::Function *parent, const std::string &name) {
   return llvm::BasicBlock::Create(this->context, name, parent);
 }
