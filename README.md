@@ -14,17 +14,24 @@ def but-probably-better-like-this = int(2 + 3)
 
 ; Some basic constructors
 def i = int(69 + 420)
-def l1 = list((int) => [1, 2, 3]) ; list of three ints
-def l2 = list((string) => ["123", "gg", "hhh"]) ; list of three strings
-def add-one = fn((a : int) => int(a + 1)) ; function that takes an int and returns an int
-def b1 = bool(1 == -2) ; false
-def b2 = bool(1 ~= -2) ; true
+def l1 = list((int) => [1, 2, 3])
+def l2 = list((string) => ["123", "gg", "hhh"])
+def add-one = fn((a : int) => int(a + 1))
+def b1 = bool(1 == -2)
+def b2 = bool(1 ~= -2)
 
-; Nested statements inside constructors. The constructor returns on the first
-; expression (in this case `2 + nested` which evaluates to 7).
-def nested-example = int(def nested = int(5)
-                         2 + nested)
+; Nested statements inside constructors. The constructor returns the last expression
+def nested-example = int(
+  def nested = int(5)
+  2 + nested
+)
 
+; Functions are first class citizens and can be made local to some constructor.
+; Here `local-fn` is only visible from inside the int constructor for `nested-example2`
+def nested-example2 = int(
+  def local-fn = fn(() => int(42))
+  local-fn()
+)
 ```
 
 ## Building from source
@@ -75,16 +82,24 @@ make
 Then you should end up with the `kebab` executable. This can be used to interpret kebab (`.keb`) files with its own runtime.
 
 ## Typing
-Kebab is a strongly typed language. You can define types for everything, including the types for parameters, return values, lists, etc. These types are enforced at runtime and there is no `any` type. You can (and must) apply these types for every parameter and variable, through either specifying a variables constructor, or its type (more on constructors vs. type declarations later). Just to showcase some the language's advanced typing features here are some slightly absurd function definitions. 
+Kebab is a statically and strongly typed language. You define types for everything, including the types for parameters, return values, lists, etc. These types are enforced at runtime/compiletime and there is no `any` type. You can (and must) apply these types for every parameter and variable, through either specifying a variables constructor, or its type (more on constructors vs. type declarations later). Just to showcase some the language's advanced typing features here are some slightly absurd function definitions. 
 
 ```clj
-; A function that returns a function that takes an int as a parameter and
-; returns an int
-def ret-fn = fn((outer : int) => fn((inner : int) => int(outer + inner)))
+; Functions can return other functions
+def ret-fn = fn((outer : int) => fn(
+  (inner : int) =>
+    int(outer + inner)
+))
 
-; A function that takes a function that takes a list of ints and returns
-;a string as a parameter and returns a char
-def takes-fn = fn((param : list(fn(list(int)) => string)) => char('c'))
+; Functions can take functions as parameters
+def takes-fn = fn((fn-param : fn((int) => string)) => string(
+  fn-param(42)
+))
+
+; Functions can take lists of functions as parameters
+def takes-fn = fn((fn-params : list(fn(int) => string)) => string(
+  fn-params[0](42)
+))
 
 ; A function that takes an int as a parameter and returns a function takes
 ; an int as a parameter that returns a list of ints
@@ -108,34 +123,43 @@ def takes-fn = fn((my-function : fn(int, string) => string) => int(
 
 ## Constructors
 ### Primitives
-Primitive constructors allows for any number of statements, including local `def` bindings and other functions with side effects, but will return the last expression in its body (implicit return). Some primitive constructors are `char`, `bool`, `int` and `string`. You can use them like this:
+Primitive constructors follow this pattern:
+```
+type(<constructor-body>)
+```
+Where the constructor body is any sequence of statements where the last one must be an expression (the return value of the constructor). Some primitive constructors are `char`, `bool`, `int` and `string`. Here are some examples
 ```clj
-int(def a = 2
-    a + 2)
+int(
+  def a = 2
+  a + 2
+)
 bool(true)
 string("hello-world")
 ```
 
 ### Lists
-List constructors must be parametrized to hold a certain type. This could be any type, including functions or more lists! For example:
+List constructors follow this pattern:
+```
+list((<type>) => <constructor-body>)
+```
+Here are some examples
 ```clj
-; Simple list of string
-list((string) => ...)
+list((string) => ["hello", ",", "world"])
 
-; A list of other lists of strings
-list((list(string)) => ...)
+list((list(string)) => [
+  ["hello", "world"],
+  ["this", "is", "kebab"], ; Trailing commas are allowed ;)
+])
 
-; A list of functions that takes an int as a parameter and returns a string.
 list((fn(int) => string) => ...)
 ```
-Following the parametrized type of the list should be a `=>` following a comma separated list of the contents of the list. Lists do not support nested statements (maybe they could).
 
 ### Functions
 Function constructors follow this pattern:
 ```
 fn((<parameters>) => <constructor>)
 ```
-Where the list of parameters is a comma separated list where each element should look like `<name> : <type>`. NOTE: The space before the `:` is very important here, as if you were to omit it, it would be included as a part of the name of the parameter which would cause a syntax error. The constructor in the functions body could be any other constructor.
+Where the list of parameters is a comma separated list where each element should look like `<name> : <type>`. NOTE: The space before the `:` is very important here, as if you were to omit it, it would be included as a part of the name of the parameter which would cause a syntax error. The constructor in the functions body could be any other constructor, including another function constructor.
 
 ## Constructors vs. type declarations
 There are two ways through which kebab gets information about types. The first is through constructor calls. These are some examples of constructor type inference.
