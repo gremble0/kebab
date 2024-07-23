@@ -46,6 +46,16 @@ public:
 };
 
 class FactorPrefix : public AstNode {
+private:
+  std::string to_string() const {
+    switch (this->type) {
+    case PLUS:
+      return "*";
+    case MINUS:
+      return "/";
+    }
+  }
+
 public:
   enum Type {
     PLUS,

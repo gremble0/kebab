@@ -119,29 +119,31 @@ public:
     return this->builder.CreateCall(function, arguments);
   }
 
-  /// Unary boolean operators
-  std::optional<llvm::Value *> create_neg(llvm::Value *v);
+  /// Unary mathematical operators
+  std::optional<llvm::Value *> create_neg(llvm::Value *v); // -x
 
   /// Binary mathematical operators
-  std::optional<llvm::Value *> create_add(llvm::Value *lhs, llvm::Value *rhs);
-  std::optional<llvm::Value *> create_sub(llvm::Value *lhs, llvm::Value *rhs);
-  std::optional<llvm::Value *> create_mul(llvm::Value *lhs, llvm::Value *rhs);
-  std::optional<llvm::Value *> create_div(llvm::Value *lhs, llvm::Value *rhs);
+  std::optional<llvm::Value *> create_add(llvm::Value *lhs, llvm::Value *rhs); // x + y
+  std::optional<llvm::Value *> create_sub(llvm::Value *lhs, llvm::Value *rhs); // x - y
+  std::optional<llvm::Value *> create_mul(llvm::Value *lhs, llvm::Value *rhs); // x * y
+  std::optional<llvm::Value *> create_div(llvm::Value *lhs, llvm::Value *rhs); // x / y
 
   /// Binary comparison operators
-  std::optional<llvm::Value *> create_lt(llvm::Value *lhs, llvm::Value *rhs);
-  std::optional<llvm::Value *> create_le(llvm::Value *lhs, llvm::Value *rhs);
-  std::optional<llvm::Value *> create_eq(llvm::Value *lhs, llvm::Value *rhs);
-  std::optional<llvm::Value *> create_neq(llvm::Value *lhs, llvm::Value *rhs);
-  std::optional<llvm::Value *> create_gt(llvm::Value *lhs, llvm::Value *rhs);
-  std::optional<llvm::Value *> create_ge(llvm::Value *lhs, llvm::Value *rhs);
-  llvm::Value *create_and(llvm::Value *lhs, llvm::Value *rhs) {
+  std::optional<llvm::Value *> create_lt(llvm::Value *lhs, llvm::Value *rhs);  // x < y
+  std::optional<llvm::Value *> create_le(llvm::Value *lhs, llvm::Value *rhs);  // x <= y
+  std::optional<llvm::Value *> create_eq(llvm::Value *lhs, llvm::Value *rhs);  // x == y
+  std::optional<llvm::Value *> create_neq(llvm::Value *lhs, llvm::Value *rhs); // x ~= y
+  std::optional<llvm::Value *> create_gt(llvm::Value *lhs, llvm::Value *rhs);  // x > y
+  std::optional<llvm::Value *> create_ge(llvm::Value *lhs, llvm::Value *rhs);  // x >= y
+
+  /// Binary logical operators
+  llvm::Value *create_and(llvm::Value *lhs, llvm::Value *rhs) { // x and y
     return this->builder.CreateAnd(lhs, rhs);
   }
-  llvm::Value *create_or(llvm::Value *lhs, llvm::Value *rhs) {
+  llvm::Value *create_or(llvm::Value *lhs, llvm::Value *rhs) { // x or y
     return this->builder.CreateOr(lhs, rhs);
   }
-  llvm::Value *create_not(llvm::Value *v) { return this->builder.CreateNot(v); }
+  llvm::Value *create_not(llvm::Value *v) { return this->builder.CreateNot(v); } // ~x
 
   /// Setter wrappers
   void set_insert_point(llvm::BasicBlock *block) { this->builder.SetInsertPoint(block); }
