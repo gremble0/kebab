@@ -1,4 +1,5 @@
 #include <memory>
+#include <optional>
 
 #include "lexer/Lexer.hpp"
 #include "parser/AndTest.hpp"
@@ -29,7 +30,11 @@ llvm::Value *AndTest::compile(Compiler &compiler) const {
 
   for (size_t i = 1; i < this->not_tests.size(); ++i) {
     llvm::Value *rhs = this->not_tests[i]->compile(compiler);
-    result = compiler.create_and(result, rhs);
+    std::optional<llvm::Value *> operation = compiler.create_and(result, rhs);
+    if (operation.has_value())
+      result = operation.value();
+    else
+      this->operator_error({compiler.get_bool_type()}, result->getType(), "and");
   }
 
   return result;
