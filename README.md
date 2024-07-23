@@ -86,8 +86,7 @@ Kebab is a statically and strongly typed language. You define types for everythi
 
 ```clj
 ; Functions can return other functions
-def ret-fn = fn((outer : int) => fn(
-  (inner : int) =>
+def ret-fn = fn((outer : int) => fn((inner : int) =>
     int(outer + inner)
 ))
 
@@ -103,19 +102,14 @@ def takes-fn = fn((fn-params : list(fn(int) => string)) => string(
 
 ; A function that takes an int as a parameter and returns a function takes
 ; an int as a parameter that returns a list of ints
-def ret-fn-rets-list = fn((outer : int) =>
-  fn((inner : int) => list((int) => 
-    outer, inner
-  ))
-)
+def ret-fn-rets-list = fn((outer : int) => fn((inner : int) => list((int) => 
+  [outer, inner]
+)))
 
-; A function that takes a function that takes an int and a string and returns
-; a string that returns an int from the result of calling its parameter function
-;
-; BUT: hold on:
-; we see from the type declaration of the my-function parameter that this function
-; returns a string, and through the int constructor of the takes-fn function we
-; see that we should return an int. Therefore we can infer that this is a type error.
+; In this signature we can see that `my-function` takes an int and a string as a parameter
+; and returns a string. But from the constructor of `takes-fn` we can see that the function
+; is supposed to return an int. Therefore returning the result of calling my-function is
+; a type error since its return value of `string` is not the right type (`int`) for the function
 def takes-fn = fn((my-function : fn(int, string) => string) => int(
   my-function(4, "hello") ; Error here - my-function does not return an int
 ))
@@ -151,7 +145,10 @@ list((list(string)) => [
   ["this", "is", "kebab"], ; Trailing commas are allowed ;)
 ])
 
-list((fn(int) => string) => ...)
+list((fn(int) => string) => [
+  fn((a : int) => int(a)),
+  fn((s : string) => string(s)),
+])
 ```
 
 ### Functions
