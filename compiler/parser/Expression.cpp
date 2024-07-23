@@ -216,7 +216,11 @@ llvm::Value *NormalExpression::compile(Compiler &compiler) const {
 
   for (size_t i = 1; i < and_tests.size(); ++i) {
     llvm::Value *rhs = this->and_tests[i]->compile(compiler);
-    result = compiler.create_or(result, rhs);
+    std::optional<llvm::Value *> operation = compiler.create_or(result, rhs);
+    if (operation.has_value())
+      result = operation.value();
+    else
+      this->operator_error({compiler.get_bool_type()}, result->getType(), "or");
   }
 
   return result;
