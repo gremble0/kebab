@@ -1,4 +1,5 @@
 # Kebab
+## Introduction
 Kebab is a strongly typed primarily functional programming language that is currently under development. Here is how it looks:
 
 ```clj
@@ -25,6 +26,53 @@ def nested-example = int(def nested = int(5)
                          2 + nested)
 
 ```
+
+## Building from source
+The language consists of two main components an interpreter in C and a compiler using the LLVM compiler toolchain in C++. Before you try to build either of these you will need to initialize the git submodules:
+```sh
+git submodule update --init
+```
+
+### Building the compiler
+To build the compiler you will first need to build llvm from source, note that this which will take a while. After initializing llvm as a submodule change your working directory into that submodule:
+```sh
+cd lib/llvm-project
+```
+Then follow [LLVM's instructions for building from source](https://llvm.org/docs/GettingStarted.html#getting-the-source-code-and-building-llvm)
+
+Then simply run make from within the `/compiler/` directory:
+```sh
+cd compiler
+make
+```
+Then you should end up with the `kebab` executable. This can be used to compile kebab (`.keb`) files into IR (`.ll` files).
+
+If you want to run the tests you will also need to build googletest from source. After initializing googletest as a submodule change your working directory into that submodule:
+```sh
+cd lib/googletest
+```
+Then follow [GoogleTest's instructions for building from source](https://github.com/google/googletest/tree/main/googletest#readme)
+
+Then simply run make from within the `/compiler/test/` directory, and run the `run_tests` executable.
+```sh
+cd compiler/test
+make
+./run_tests
+```
+
+### Building the interpreter
+To build the intepreter you will first need to build nonstdlib from source. After initializing nonstdlib as a submodule change your working directory into the `src` directory under that submodule and run make:
+```sh
+cd lib/nonstdlib/src
+make
+```
+
+Then simply run `make` from the `interpreter` directory:
+```sh
+cd interpreter
+make
+```
+Then you should end up with the `kebab` executable. This can be used to interpret kebab (`.keb`) files with its own runtime.
 
 ## Typing
 Kebab is a strongly typed language. You can define types for everything, including the types for parameters, return values, lists, etc. These types are enforced at runtime and there is no `any` type. You can (and must) apply these types for every parameter and variable, through either specifying a variables constructor, or its type (more on constructors vs. type declarations later). Just to showcase some the language's advanced typing features here are some slightly absurd function definitions. 
