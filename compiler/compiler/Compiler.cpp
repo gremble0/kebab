@@ -263,25 +263,25 @@ std::optional<llvm::Value *> Compiler::create_and(llvm::Value *lhs, llvm::Value 
   llvm::Type *lhs_type = lhs->getType();
   llvm::Type *rhs_type = rhs->getType();
   if (lhs_type->isIntegerTy(1) && rhs_type->isIntegerTy(1))
-    this->builder.CreateAnd(lhs, rhs);
-
-  return std::nullopt;
+    return this->builder.CreateAnd(lhs, rhs);
+  else
+    return std::nullopt;
 }
 
 std::optional<llvm::Value *> Compiler::create_or(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
   llvm::Type *rhs_type = rhs->getType();
   if (lhs_type->isIntegerTy(1) && rhs_type->isIntegerTy(1))
-    this->builder.CreateOr(lhs, rhs);
-
-  return std::nullopt;
+    return this->builder.CreateOr(lhs, rhs);
+  else
+    return std::nullopt;
 }
 
 std::optional<llvm::Value *> Compiler::create_not(llvm::Value *v) {
   if (v->getType()->isIntegerTy(1))
-    this->builder.CreateNot(v);
-
-  return std::nullopt;
+    return this->builder.CreateNot(v);
+  else
+    return std::nullopt;
 }
 
 llvm::BasicBlock *Compiler::create_basic_block(llvm::Function *parent, const std::string &name) {
