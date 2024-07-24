@@ -220,7 +220,7 @@ llvm::Value *NormalExpression::compile(Compiler &compiler) const {
     if (operation.has_value())
       result = operation.value();
     else
-      this->operator_error({compiler.get_bool_type()}, result->getType(), "or");
+      this->operator_error({compiler.get_bool_type()}, result->getType(), rhs->getType(), "or");
   }
 
   return result;

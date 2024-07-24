@@ -48,7 +48,7 @@ llvm::Value *TermOperator::compile(Compiler &compiler) const {
     return operation.value();
   else
     this->operator_error({compiler.get_int_type(), compiler.get_float_type()}, this->lhs->getType(),
-                         this->to_string());
+                         this->rhs->getType(), this->to_string());
 }
 
 std::unique_ptr<Term> Term::parse(Lexer &lexer) {

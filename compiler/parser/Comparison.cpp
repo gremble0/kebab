@@ -1,4 +1,6 @@
 #include <cassert>
+#include <initializer_list>
+#include <vector>
 
 #include "lexer/Lexer.hpp"
 #include "parser/Comparison.hpp"
@@ -51,6 +53,8 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
 
 llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
   std::optional<llvm::Value *> operation;
+  std::vector<const llvm::Type *> supported_types = {compiler.get_int_type(),
+                                                     compiler.get_float_type()};
 
   switch (this->type) {
   case LT:
@@ -63,14 +67,17 @@ llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
 
   case EQ:
     operation = compiler.create_eq(this->lhs, this->rhs);
+    supported_types.push_back(compiler.get_bool_type());
     break;
 
   case NEQ:
     operation = compiler.create_neq(this->lhs, this->rhs);
     break;
+
   case GT:
     operation = compiler.create_gt(this->lhs, this->rhs);
     break;
+
   case GE:
     operation = compiler.create_ge(this->lhs, this->rhs);
     break;
@@ -79,7 +86,7 @@ llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
   if (operation.has_value())
     return operation.value();
   else
-    this->operator_error({compiler.get_int_type(), compiler.get_float_type()}, this->lhs->getType(),
+    this->operator_error(supported_types, this->lhs->getType(), this->rhs->getType(),
                          this->to_string());
 }
 
