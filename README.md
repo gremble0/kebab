@@ -41,7 +41,7 @@ git submodule update --init
 ```
 
 ### Building the compiler
-To build the compiler you will first need to build llvm from source, note that this which will take a while. After initializing llvm as a submodule change your working directory into that submodule:
+To build the compiler you will first need to build llvm from source (this will take a while). After initializing llvm as a submodule change your working directory into that submodule:
 ```sh
 cd lib/llvm-project
 ```
