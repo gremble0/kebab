@@ -135,9 +135,10 @@ std::optional<llvm::Value *> Compiler::create_add(llvm::Value *lhs, llvm::Value 
 
 std::optional<llvm::Value *> Compiler::create_sub(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  if (lhs_type->isDoubleTy())
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
     return this->builder.CreateFSub(lhs, rhs);
-  else if (lhs_type->isIntegerTy())
+  else if (lhs_type->isIntegerTy(64) && rhs_type->isIntegerTy(64))
     return this->builder.CreateSub(lhs, rhs);
   else
     return std::nullopt;
@@ -145,9 +146,10 @@ std::optional<llvm::Value *> Compiler::create_sub(llvm::Value *lhs, llvm::Value 
 
 std::optional<llvm::Value *> Compiler::create_mul(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  if (lhs_type->isDoubleTy())
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
     return this->builder.CreateFMul(lhs, rhs);
-  else if (lhs_type->isIntegerTy())
+  else if (lhs_type->isIntegerTy(64) && rhs_type->isIntegerTy(64))
     return this->builder.CreateMul(lhs, rhs);
   else
     return std::nullopt;
@@ -155,9 +157,10 @@ std::optional<llvm::Value *> Compiler::create_mul(llvm::Value *lhs, llvm::Value 
 
 std::optional<llvm::Value *> Compiler::create_div(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  if (lhs_type->isDoubleTy())
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
     return this->builder.CreateFDiv(lhs, rhs);
-  else if (lhs_type->isIntegerTy())
+  else if (lhs_type->isIntegerTy(64) && rhs_type->isIntegerTy(64))
     return this->builder.CreateSDiv(lhs, rhs);
   else
     return std::nullopt;
@@ -165,9 +168,10 @@ std::optional<llvm::Value *> Compiler::create_div(llvm::Value *lhs, llvm::Value 
 
 std::optional<llvm::Value *> Compiler::create_lt(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  if (lhs_type->isDoubleTy())
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
     return this->builder.CreateFCmpULT(lhs, rhs);
-  else if (lhs_type->isIntegerTy())
+  else if (lhs_type->isIntegerTy(64) && rhs_type->isIntegerTy(64))
     return this->builder.CreateICmpULT(lhs, rhs);
   else
     return std::nullopt;
@@ -175,9 +179,10 @@ std::optional<llvm::Value *> Compiler::create_lt(llvm::Value *lhs, llvm::Value *
 
 std::optional<llvm::Value *> Compiler::create_le(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  if (lhs_type->isDoubleTy())
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
     return this->builder.CreateFCmpULE(lhs, rhs);
-  else if (lhs_type->isIntegerTy())
+  else if (lhs_type->isIntegerTy(64) && rhs_type->isIntegerTy(64))
     return this->builder.CreateICmpULE(lhs, rhs);
   else
     return std::nullopt;
@@ -185,9 +190,11 @@ std::optional<llvm::Value *> Compiler::create_le(llvm::Value *lhs, llvm::Value *
 
 std::optional<llvm::Value *> Compiler::create_eq(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  if (lhs_type->isDoubleTy())
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
     return this->builder.CreateFCmpUEQ(lhs, rhs);
-  else if (lhs_type->isIntegerTy())
+  // == is allowed for both ints and bools (i1/i64) so no need to specify bitwidth
+  else if (lhs_type->isIntegerTy() && rhs_type->isIntegerTy())
     return this->builder.CreateICmpEQ(lhs, rhs);
   else
     return std::nullopt;
@@ -195,9 +202,11 @@ std::optional<llvm::Value *> Compiler::create_eq(llvm::Value *lhs, llvm::Value *
 
 std::optional<llvm::Value *> Compiler::create_neq(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  if (lhs_type->isDoubleTy())
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
     return this->builder.CreateFCmpUNE(lhs, rhs);
-  else if (lhs_type->isIntegerTy())
+  // ~= is allowed for both ints and bools (i1/i64) so no need to specify bitwidth
+  else if (lhs_type->isIntegerTy() && rhs_type->isIntegerTy())
     return this->builder.CreateICmpNE(lhs, rhs);
   else
     return std::nullopt;
@@ -205,9 +214,10 @@ std::optional<llvm::Value *> Compiler::create_neq(llvm::Value *lhs, llvm::Value 
 
 std::optional<llvm::Value *> Compiler::create_gt(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  if (lhs_type->isDoubleTy())
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
     return this->builder.CreateFCmpUGT(lhs, rhs);
-  else if (lhs_type->isIntegerTy())
+  else if (lhs_type->isIntegerTy(64) && rhs_type->isIntegerTy(64))
     return this->builder.CreateICmpUGT(lhs, rhs);
   else
     return std::nullopt;
@@ -215,9 +225,10 @@ std::optional<llvm::Value *> Compiler::create_gt(llvm::Value *lhs, llvm::Value *
 
 std::optional<llvm::Value *> Compiler::create_ge(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  if (lhs_type->isDoubleTy())
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
     return this->builder.CreateFCmpUGE(lhs, rhs);
-  else if (lhs_type->isIntegerTy())
+  else if (lhs_type->isIntegerTy(64) && rhs_type->isIntegerTy(64))
     return this->builder.CreateICmpUGE(lhs, rhs);
   else
     return std::nullopt;
@@ -225,27 +236,27 @@ std::optional<llvm::Value *> Compiler::create_ge(llvm::Value *lhs, llvm::Value *
 
 std::optional<llvm::Value *> Compiler::create_and(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  // && rhs_type->isIntegerTy(1)
-  if (lhs_type->isIntegerTy(1))
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isIntegerTy(1) && rhs_type->isIntegerTy(1))
     this->builder.CreateAnd(lhs, rhs);
-  else
-    return std::nullopt;
+
+  return std::nullopt;
 }
 
 std::optional<llvm::Value *> Compiler::create_or(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
-  // && rhs_type->isIntegerTy(1)
-  if (lhs_type->isIntegerTy(1))
+  llvm::Type *rhs_type = rhs->getType();
+  if (lhs_type->isIntegerTy(1) && rhs_type->isIntegerTy(1))
     this->builder.CreateOr(lhs, rhs);
-  else
-    return std::nullopt;
+
+  return std::nullopt;
 }
 
 std::optional<llvm::Value *> Compiler::create_not(llvm::Value *v) {
   if (v->getType()->isIntegerTy(1))
     this->builder.CreateNot(v);
-  else
-    return std::nullopt;
+
+  return std::nullopt;
 }
 
 llvm::BasicBlock *Compiler::create_basic_block(llvm::Function *parent, const std::string &name) {

@@ -164,8 +164,8 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     std::optional<llvm::Value *> test_is_true =
         compiler.create_eq(test, compiler.create_bool(true));
     if (!test_is_true.has_value())
-      // This error should maybe be different
-      this->operator_error({compiler.get_bool_type()}, test->getType(), "truthy");
+      // TODO: This error should maybe be different
+      this->operator_error({compiler.get_bool_type()}, test->getType(), "bool");
 
     std::string branch_name = (i == num_tests - 1) ? "else_branch" : "elif_branch";
 
