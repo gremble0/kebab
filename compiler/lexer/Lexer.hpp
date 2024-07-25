@@ -60,6 +60,7 @@ public:
 
   const std::unique_ptr<Token> &peek() const { return this->token; }
 
+  bool finished() const { return this->token->type == Token::Type::END_OF_FILE; };
   void advance();
   void expect(std::initializer_list<Token::Type> expected) const;
   bool try_skip(std::initializer_list<Token::Type> expected);
