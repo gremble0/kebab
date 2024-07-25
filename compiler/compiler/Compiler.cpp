@@ -4,7 +4,7 @@
 #include <system_error>
 #include <vector>
 
-#include "Compiler.hpp"
+#include "compiler/Compiler.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/RootNode.hpp"
 #include "llvm/IR/Argument.h"
@@ -35,8 +35,8 @@ void Compiler::load_printf() {
   // however I have not encountered any yet so I will keep it as is until I need to change it
   //
   // The signature of this function is `i64 printf(i8 *, ...)`
-  llvm::IntegerType *return_type = this->builder.getInt64Ty();
-  llvm::PointerType *format_type = this->builder.getInt8Ty()->getPointerTo();
+  llvm::IntegerType *return_type = this->get_int_type();
+  llvm::PointerType *format_type = this->get_string_type();
   llvm::FunctionType *prototype = llvm::FunctionType::get(return_type, format_type, true);
 
   this->declare_function(prototype, "printf");
@@ -84,9 +84,9 @@ llvm::Function *Compiler::define_function(
   llvm::BasicBlock *entry = this->create_basic_block(function, "entry");
   llvm::BasicBlock *previous_block = this->builder.GetInsertBlock();
 
-  this->builder.SetInsertPoint(entry);
+  this->set_insert_point(entry);
   this->builder.CreateRet(body->compile(*this));
-  this->builder.SetInsertPoint(previous_block);
+  this->set_insert_point(previous_block);
 
   this->end_scope();
   // Previous scope now has this function in scope - this allows for first order functions since no
