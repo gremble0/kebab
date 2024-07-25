@@ -8,7 +8,7 @@ LEXEROBJS := ../lexer/*.o
 PARSEROBJS := ../parser/*.o
 COMPILEROBJS := ../compiler/*.o
 SRCOBJS := $(LEXEROBJS) $(PARSEROBJS) $(COMPILEROBJS)
-TESTOBJS := main.o LexerTest.o ParserTest.o Files.o
+TESTOBJS := main.o LexerTest.o ParserTest.o CompilerTest.o Files.o
 
 LLVM_DIR := ../../lib/llvm-project
 LLVM_CONFIG := $(LLVM_DIR)/build/bin/llvm-config

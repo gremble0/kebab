@@ -50,7 +50,6 @@ static void replace_one_parser_expected(const std::string &basename) {
   ASSERT_NO_FATAL_FAILURE({
     Logger::silence();
     Lexer lexer(source_path);
-    std::unique_ptr<Parser::RootNode> root = Parser::RootNode::parse(lexer);
   });
 
   std::ofstream log_file(expected_path);
@@ -58,6 +57,21 @@ static void replace_one_parser_expected(const std::string &basename) {
 
   Lexer lexer(source_path);
   std::unique_ptr<Parser::RootNode> root = Parser::RootNode::parse(lexer);
+}
+
+static void replace_one_compiler_expected(const std::string &basename) {
+  std::string source_path = "compiler-source/" + basename + ".keb";
+  std::string expected_path = "compiler-expected/" + basename + ".ll";
+
+  ASSERT_NO_FATAL_FAILURE({
+    Logger::silence();
+    Lexer lexer(source_path);
+  });
+
+  Lexer lexer(source_path);
+  std::unique_ptr<Parser::RootNode> root = Parser::RootNode::parse(lexer);
+  Compiler compiler;
+  compiler.compile(std::move(root), expected_path);
 }
 
 // NOTE: These don't run on all the files because some of them are expected to fail and therefore do
@@ -86,9 +100,38 @@ static void replace_parser_expected() {
   std::cout << "Replaced expected parser output" << std::endl;
 }
 
+static void replace_compiler_expected() {
+  std::cout << "1" << std::endl;
+  replace_one_compiler_expected("and");
+  std::cout << "2" << std::endl;
+  replace_one_compiler_expected("basic");
+  std::cout << "3" << std::endl;
+  replace_one_compiler_expected("comparisons");
+  std::cout << "4" << std::endl;
+  replace_one_compiler_expected("factors");
+  std::cout << "5" << std::endl;
+  replace_one_compiler_expected("functions");
+  std::cout << "6" << std::endl;
+  replace_one_compiler_expected("if");
+  std::cout << "7" << std::endl;
+  replace_one_compiler_expected("main");
+  std::cout << "8" << std::endl;
+  replace_one_compiler_expected("not");
+  std::cout << "9" << std::endl;
+  replace_one_compiler_expected("or-and");
+  std::cout << "10" << std::endl;
+  replace_one_compiler_expected("or");
+  std::cout << "11" << std::endl;
+  replace_one_compiler_expected("terms");
+  std::cout << "12" << std::endl;
+
+  std::cout << "Replaced expected compiler output" << std::endl;
+}
+
 void replace_expected() {
   replace_lexer_expected();
   replace_parser_expected();
+  replace_compiler_expected();
 }
 
 } // namespace Test
