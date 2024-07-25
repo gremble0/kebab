@@ -34,7 +34,27 @@ TEST(CompilerTest, InitializesCorrectly) {
   ASSERT_NO_FATAL_FAILURE({ Compiler compiler; });
 }
 
-TEST(CompilerTest, CompilesAndKeb) { ASSERT_EXPECTED_COMPILATION("basic"); }
+TEST(CompilerTest, CompilesAndKeb) { ASSERT_EXPECTED_COMPILATION("and"); }
+
+TEST(CompilerTest, CompilesBasicKeb) { ASSERT_EXPECTED_COMPILATION("basic"); }
+
+TEST(CompilerTest, CompilesComparisonsKeb) { ASSERT_EXPECTED_COMPILATION("comparisons"); }
+
+TEST(CompilerTest, CompilesFactorsKeb) { ASSERT_EXPECTED_COMPILATION("factors"); }
+
+TEST(CompilerTest, CompilesFunctionsKeb) { ASSERT_EXPECTED_COMPILATION("functions"); }
+
+TEST(CompilerTest, CompilesIfKeb) { ASSERT_EXPECTED_COMPILATION("if"); }
+
+TEST(CompilerTest, CompilesMainKeb) { ASSERT_EXPECTED_COMPILATION("main"); }
+
+TEST(CompilerTest, CompilesNotKeb) { ASSERT_EXPECTED_COMPILATION("not"); }
+
+TEST(CompilerTest, CompilesOrAndKeb) { ASSERT_EXPECTED_COMPILATION("or-and"); }
+
+TEST(CompilerTest, CompilesOrKeb) { ASSERT_EXPECTED_COMPILATION("or"); }
+
+TEST(CompilerTest, CompilesTermsKeb) { ASSERT_EXPECTED_COMPILATION("terms"); }
 
 } // namespace Test
 } // namespace Kebab

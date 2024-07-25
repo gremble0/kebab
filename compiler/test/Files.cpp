@@ -101,29 +101,17 @@ static void replace_parser_expected() {
 }
 
 static void replace_compiler_expected() {
-  std::cout << "1" << std::endl;
   replace_one_compiler_expected("and");
-  std::cout << "2" << std::endl;
   replace_one_compiler_expected("basic");
-  std::cout << "3" << std::endl;
   replace_one_compiler_expected("comparisons");
-  std::cout << "4" << std::endl;
   replace_one_compiler_expected("factors");
-  std::cout << "5" << std::endl;
   replace_one_compiler_expected("functions");
-  std::cout << "6" << std::endl;
   replace_one_compiler_expected("if");
-  std::cout << "7" << std::endl;
   replace_one_compiler_expected("main");
-  std::cout << "8" << std::endl;
   replace_one_compiler_expected("not");
-  std::cout << "9" << std::endl;
   replace_one_compiler_expected("or-and");
-  std::cout << "10" << std::endl;
   replace_one_compiler_expected("or");
-  std::cout << "11" << std::endl;
   replace_one_compiler_expected("terms");
-  std::cout << "12" << std::endl;
 
   std::cout << "Replaced expected compiler output" << std::endl;
 }
