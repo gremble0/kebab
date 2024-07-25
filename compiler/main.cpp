@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
   std::unique_ptr<Parser::RootNode> root = Parser::RootNode::parse(lexer);
 
   Compiler compiler;
-  compiler.compile(std::move(root));
+  compiler.compile(std::move(root), "out.ll");
 
   return 0;
 }

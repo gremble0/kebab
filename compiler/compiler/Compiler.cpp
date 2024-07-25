@@ -43,10 +43,10 @@ void Compiler::load_printf() {
 
 void Compiler::load_globals() { this->load_printf(); }
 
-void Compiler::compile(std::unique_ptr<Parser::RootNode> root) {
+void Compiler::compile(std::unique_ptr<Parser::RootNode> root, const std::string &output_path) {
   this->load_globals();
   root->compile(*this);
-  this->save_module("./out.ll");
+  this->save_module(output_path);
 }
 
 llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::string &name) {

@@ -53,7 +53,7 @@ public:
       : context(), module("kebab", context), builder(context),
         current_scope(std::make_shared<Scope>()) {}
 
-  void compile(std::unique_ptr<Parser::RootNode> root);
+  void compile(std::unique_ptr<Parser::RootNode> root, const std::string &output_path);
 
   /// Type getters
   llvm::IntegerType *get_int_type() { return this->builder.getInt64Ty(); }
