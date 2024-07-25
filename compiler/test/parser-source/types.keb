@@ -1,12 +1,12 @@
-def f1 = fn(() => void())
+def f1 = fn(() => int(0))
 def f2 = fn((inner-fn : fn(int, int) => int) => int(inner-fn(1, 2)))
 
-def l1 = list((list(fn() => void)) => [
-  [ fn(() => void(print("hello"))) ],
-  [ fn(() => void(print("world"))) ],
+def l1 = list((list(fn() => int)) => [
+  [ fn(() => int(print("hello"))) ],
+  [ fn(() => int(print("world"))) ],
 ])
-def l2 = list((fn(string) => fn(int) => void) => [
-  fn((s : string) => void()),
-  fn((s : string) => void()),
-  fn((s : string) => void()),
+def l2 = list((fn(string) => fn(int) => int) => [
+  fn((s : string) => int(0)),
+  fn((s : string) => int(0)),
+  fn((s : string) => int(0)),
 ])

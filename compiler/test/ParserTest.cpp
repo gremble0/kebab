@@ -5,7 +5,6 @@
 #include "Files.hpp"
 #include "lexer/Lexer.hpp"
 #include "logging/Logger.hpp"
-#include "parser/AstNode.hpp"
 #include "parser/RootNode.hpp"
 #include "gtest/gtest.h"
 

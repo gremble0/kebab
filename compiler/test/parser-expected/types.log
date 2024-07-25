@@ -9,12 +9,31 @@
    <token "(" [1, 12] - [1, 13]>
    <token ")" [1, 13] - [1, 14]>
    <token "=>" [1, 15] - [1, 17]>
-   <token name: "void" [1, 18] - [1, 22]>
+   <token name: "int" [1, 18] - [1, 21]>
    <primitive-constructor>
     <primitive-type>
-     <token "(" [1, 22] - [1, 23]>
+     <token "(" [1, 21] - [1, 22]>
     </primitive-type>
-    <token ")" [1, 23] - [1, 24]>
+    <token int-literal: "0" [1, 22] - [1, 23]>
+    <expression-statement>
+     <normal-expression>
+      <and-test>
+       <not-test>
+        <comparison>
+         <term>
+          <factor>
+           <primary>
+            <int-atom>
+             <token ")" [1, 23] - [1, 24]>
+            </int-atom>
+           </primary>
+          </factor>
+         </term>
+        </comparison>
+       </not-test>
+      </and-test>
+     </normal-expression>
+    </expression-statement>
     <token ")" [1, 24] - [1, 25]>
    </primitive-constructor>
    <token "def" [2, 0] - [2, 3]>
@@ -133,15 +152,15 @@
      <token "(" [4, 22] - [4, 23]>
      <token ")" [4, 23] - [4, 24]>
      <token "=>" [4, 25] - [4, 27]>
-     <token name: "void" [4, 28] - [4, 32]>
+     <token name: "int" [4, 28] - [4, 31]>
      <primitive-type>
-      <token ")" [4, 32] - [4, 33]>
+      <token ")" [4, 31] - [4, 32]>
      </primitive-type>
     </function-type>
-    <token ")" [4, 33] - [4, 34]>
+    <token ")" [4, 32] - [4, 33]>
    </list-type>
-   <token "=>" [4, 35] - [4, 37]>
-   <token "[" [4, 38] - [4, 39]>
+   <token "=>" [4, 34] - [4, 36]>
+   <token "[" [4, 37] - [4, 38]>
    <expression-statement>
     <normal-expression>
      <and-test>
@@ -167,12 +186,12 @@
                       <token "(" [5, 7] - [5, 8]>
                       <token ")" [5, 8] - [5, 9]>
                       <token "=>" [5, 10] - [5, 12]>
-                      <token name: "void" [5, 13] - [5, 17]>
+                      <token name: "int" [5, 13] - [5, 16]>
                       <primitive-constructor>
                        <primitive-type>
-                        <token "(" [5, 17] - [5, 18]>
+                        <token "(" [5, 16] - [5, 17]>
                        </primitive-type>
-                       <token name: "print" [5, 18] - [5, 23]>
+                       <token name: "print" [5, 17] - [5, 22]>
                        <expression-statement>
                         <normal-expression>
                          <and-test>
@@ -182,10 +201,10 @@
                              <factor>
                               <primary>
                                <name-atom>
-                                <token "(" [5, 23] - [5, 24]>
+                                <token "(" [5, 22] - [5, 23]>
                                </name-atom>
                                <primary-arguments>
-                                <token string-literal: "hello" [5, 24] - [5, 31]>
+                                <token string-literal: "hello" [5, 23] - [5, 30]>
                                 <normal-expression>
                                  <and-test>
                                   <not-test>
@@ -194,7 +213,7 @@
                                      <factor>
                                       <primary>
                                        <string-atom>
-                                        <token ")" [5, 31] - [5, 32]>
+                                        <token ")" [5, 30] - [5, 31]>
                                        </string-atom>
                                       </primary>
                                      </factor>
@@ -203,7 +222,7 @@
                                   </not-test>
                                  </and-test>
                                 </normal-expression>
-                                <token ")" [5, 32] - [5, 33]>
+                                <token ")" [5, 31] - [5, 32]>
                                </primary-arguments>
                               </primary>
                              </factor>
@@ -213,12 +232,12 @@
                          </and-test>
                         </normal-expression>
                        </expression-statement>
-                       <token ")" [5, 33] - [5, 34]>
+                       <token ")" [5, 32] - [5, 33]>
                       </primitive-constructor>
-                      <token "]" [5, 35] - [5, 36]>
+                      <token "]" [5, 34] - [5, 35]>
                      </function-constructor>
                     </function-expression>
-                    <token "," [5, 36] - [5, 37]>
+                    <token "," [5, 35] - [5, 36]>
                    </list-atom>
                   </primary>
                  </factor>
@@ -243,12 +262,12 @@
                       <token "(" [6, 7] - [6, 8]>
                       <token ")" [6, 8] - [6, 9]>
                       <token "=>" [6, 10] - [6, 12]>
-                      <token name: "void" [6, 13] - [6, 17]>
+                      <token name: "int" [6, 13] - [6, 16]>
                       <primitive-constructor>
                        <primitive-type>
-                        <token "(" [6, 17] - [6, 18]>
+                        <token "(" [6, 16] - [6, 17]>
                        </primitive-type>
-                       <token name: "print" [6, 18] - [6, 23]>
+                       <token name: "print" [6, 17] - [6, 22]>
                        <expression-statement>
                         <normal-expression>
                          <and-test>
@@ -258,10 +277,10 @@
                              <factor>
                               <primary>
                                <name-atom>
-                                <token "(" [6, 23] - [6, 24]>
+                                <token "(" [6, 22] - [6, 23]>
                                </name-atom>
                                <primary-arguments>
-                                <token string-literal: "world" [6, 24] - [6, 31]>
+                                <token string-literal: "world" [6, 23] - [6, 30]>
                                 <normal-expression>
                                  <and-test>
                                   <not-test>
@@ -270,7 +289,7 @@
                                      <factor>
                                       <primary>
                                        <string-atom>
-                                        <token ")" [6, 31] - [6, 32]>
+                                        <token ")" [6, 30] - [6, 31]>
                                        </string-atom>
                                       </primary>
                                      </factor>
@@ -279,7 +298,7 @@
                                   </not-test>
                                  </and-test>
                                 </normal-expression>
-                                <token ")" [6, 32] - [6, 33]>
+                                <token ")" [6, 31] - [6, 32]>
                                </primary-arguments>
                               </primary>
                              </factor>
@@ -289,12 +308,12 @@
                          </and-test>
                         </normal-expression>
                        </expression-statement>
-                       <token ")" [6, 33] - [6, 34]>
+                       <token ")" [6, 32] - [6, 33]>
                       </primitive-constructor>
-                      <token "]" [6, 35] - [6, 36]>
+                      <token "]" [6, 34] - [6, 35]>
                      </function-constructor>
                     </function-expression>
-                    <token "," [6, 36] - [6, 37]>
+                    <token "," [6, 35] - [6, 36]>
                    </list-atom>
                   </primary>
                  </factor>
@@ -340,14 +359,14 @@
       <token ")" [8, 35] - [8, 36]>
      </primitive-type>
      <token "=>" [8, 37] - [8, 39]>
-     <token name: "void" [8, 40] - [8, 44]>
+     <token name: "int" [8, 40] - [8, 43]>
      <primitive-type>
-      <token ")" [8, 44] - [8, 45]>
+      <token ")" [8, 43] - [8, 44]>
      </primitive-type>
     </function-type>
    </function-type>
-   <token "=>" [8, 46] - [8, 48]>
-   <token "[" [8, 49] - [8, 50]>
+   <token "=>" [8, 45] - [8, 47]>
+   <token "[" [8, 48] - [8, 49]>
    <expression-statement>
     <normal-expression>
      <and-test>
@@ -371,12 +390,31 @@
                </primitive-type>
               </function-parameter>
               <token "=>" [9, 18] - [9, 20]>
-              <token name: "void" [9, 21] - [9, 25]>
+              <token name: "int" [9, 21] - [9, 24]>
               <primitive-constructor>
                <primitive-type>
-                <token "(" [9, 25] - [9, 26]>
+                <token "(" [9, 24] - [9, 25]>
                </primitive-type>
-               <token ")" [9, 26] - [9, 27]>
+               <token int-literal: "0" [9, 25] - [9, 26]>
+               <expression-statement>
+                <normal-expression>
+                 <and-test>
+                  <not-test>
+                   <comparison>
+                    <term>
+                     <factor>
+                      <primary>
+                       <int-atom>
+                        <token ")" [9, 26] - [9, 27]>
+                       </int-atom>
+                      </primary>
+                     </factor>
+                    </term>
+                   </comparison>
+                  </not-test>
+                 </and-test>
+                </normal-expression>
+               </expression-statement>
                <token ")" [9, 27] - [9, 28]>
               </primitive-constructor>
               <token "," [9, 28] - [9, 29]>
@@ -396,12 +434,31 @@
                </primitive-type>
               </function-parameter>
               <token "=>" [10, 18] - [10, 20]>
-              <token name: "void" [10, 21] - [10, 25]>
+              <token name: "int" [10, 21] - [10, 24]>
               <primitive-constructor>
                <primitive-type>
-                <token "(" [10, 25] - [10, 26]>
+                <token "(" [10, 24] - [10, 25]>
                </primitive-type>
-               <token ")" [10, 26] - [10, 27]>
+               <token int-literal: "0" [10, 25] - [10, 26]>
+               <expression-statement>
+                <normal-expression>
+                 <and-test>
+                  <not-test>
+                   <comparison>
+                    <term>
+                     <factor>
+                      <primary>
+                       <int-atom>
+                        <token ")" [10, 26] - [10, 27]>
+                       </int-atom>
+                      </primary>
+                     </factor>
+                    </term>
+                   </comparison>
+                  </not-test>
+                 </and-test>
+                </normal-expression>
+               </expression-statement>
                <token ")" [10, 27] - [10, 28]>
               </primitive-constructor>
               <token "," [10, 28] - [10, 29]>
@@ -421,12 +478,31 @@
                </primitive-type>
               </function-parameter>
               <token "=>" [11, 18] - [11, 20]>
-              <token name: "void" [11, 21] - [11, 25]>
+              <token name: "int" [11, 21] - [11, 24]>
               <primitive-constructor>
                <primitive-type>
-                <token "(" [11, 25] - [11, 26]>
+                <token "(" [11, 24] - [11, 25]>
                </primitive-type>
-               <token ")" [11, 26] - [11, 27]>
+               <token int-literal: "0" [11, 25] - [11, 26]>
+               <expression-statement>
+                <normal-expression>
+                 <and-test>
+                  <not-test>
+                   <comparison>
+                    <term>
+                     <factor>
+                      <primary>
+                       <int-atom>
+                        <token ")" [11, 26] - [11, 27]>
+                       </int-atom>
+                      </primary>
+                     </factor>
+                    </term>
+                   </comparison>
+                  </not-test>
+                 </and-test>
+                </normal-expression>
+               </expression-statement>
                <token ")" [11, 27] - [11, 28]>
               </primitive-constructor>
               <token "," [11, 28] - [11, 29]>
