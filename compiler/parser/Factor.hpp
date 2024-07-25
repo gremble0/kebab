@@ -15,15 +15,15 @@ class FactorOperator : public AstNode {
 private:
   std::string to_string() const {
     switch (this->type) {
-    case MULT:
+    case Type::MULT:
       return "*";
-    case DIV:
+    case Type::DIV:
       return "/";
     }
   }
 
 public:
-  enum Type {
+  enum class Type {
     MULT,
     DIV,
   } type;
@@ -32,8 +32,8 @@ public:
 
   static constexpr bool is_factor_operator(Token::Type type) {
     switch (type) {
-    case Token::DIV:
-    case Token::MULT:
+    case Token::Type::DIV:
+    case Token::Type::MULT:
       return true;
 
     default:
@@ -49,15 +49,15 @@ class FactorPrefix : public AstNode {
 private:
   std::string to_string() const {
     switch (this->type) {
-    case PLUS:
+    case Type::PLUS:
       return "*";
-    case MINUS:
+    case Type::MINUS:
       return "/";
     }
   }
 
 public:
-  enum Type {
+  enum class Type {
     PLUS,
     MINUS,
   } type;
@@ -65,8 +65,8 @@ public:
 
   static constexpr bool is_factor_prefix(Token::Type type) {
     switch (type) {
-    case Token::PLUS:
-    case Token::MINUS:
+    case Token::Type::PLUS:
+    case Token::Type::MINUS:
       return true;
 
     default:

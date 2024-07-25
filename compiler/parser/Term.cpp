@@ -35,11 +35,11 @@ llvm::Value *TermOperator::compile(Compiler &compiler) const {
   std::optional<llvm::Value *> operation;
 
   switch (this->type) {
-  case PLUS:
+  case Type::PLUS:
     operation = compiler.create_add(this->lhs, this->rhs);
     break;
 
-  case MINUS:
+  case Type::MINUS:
     operation = compiler.create_sub(this->lhs, this->rhs);
     break;
   }

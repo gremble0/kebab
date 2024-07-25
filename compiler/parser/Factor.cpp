@@ -36,10 +36,10 @@ llvm::Value *FactorPrefix::compile(Compiler &compiler) const {
   std::optional<llvm::Value *> operation;
 
   switch (this->type) {
-  case PLUS:
+  case Type::PLUS:
     operation = this->prefixed;
 
-  case MINUS:
+  case Type::MINUS:
     operation = compiler.create_neg(this->prefixed);
   }
 
@@ -120,11 +120,11 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 llvm::Value *FactorOperator::compile(Compiler &compiler) const {
   std::optional<llvm::Value *> operation;
   switch (this->type) {
-  case MULT:
+  case Type::MULT:
     operation = compiler.create_mul(this->lhs, this->rhs);
     break;
 
-  case DIV:
+  case Type::DIV:
     operation = compiler.create_div(this->lhs, this->rhs);
     break;
   }

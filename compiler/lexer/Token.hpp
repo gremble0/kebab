@@ -13,7 +13,7 @@ namespace Kebab {
 
 class Token {
 public:
-  enum Type {
+  enum class Type {
     // Keywords
     DEF,  // def
     SET,  // set

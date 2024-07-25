@@ -16,23 +16,23 @@ class ComparisonOperator : public AstNode {
 private:
   std::string to_string() const {
     switch (this->type) {
-    case LT:
+    case Type::LT:
       return "<";
-    case LE:
+    case Type::LE:
       return "<=";
-    case EQ:
+    case Type::EQ:
       return "==";
-    case NEQ:
+    case Type::NEQ:
       return "~=";
-    case GT:
+    case Type::GT:
       return ">";
-    case GE:
+    case Type::GE:
       return ">=";
     }
   }
 
 public:
-  enum Type {
+  enum class Type {
     LT,  // <
     LE,  // <=
     EQ,  // ==

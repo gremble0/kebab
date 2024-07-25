@@ -15,15 +15,15 @@ class TermOperator : AstNode {
 private:
   std::string to_string() const {
     switch (this->type) {
-    case PLUS:
+    case Type::PLUS:
       return "+";
-    case MINUS:
+    case Type::MINUS:
       return "-";
     }
   }
 
 public:
-  enum Type {
+  enum class Type {
     PLUS,
     MINUS,
   } type;
@@ -32,8 +32,8 @@ public:
 
   static constexpr bool is_term_operator(Token::Type type) {
     switch (type) {
-    case Token::PLUS:
-    case Token::MINUS:
+    case Token::Type::PLUS:
+    case Token::Type::MINUS:
       return true;
 
     default:

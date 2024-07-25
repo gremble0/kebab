@@ -18,8 +18,8 @@ public:
 
   static constexpr bool is_primary_suffix_opener(Token::Type type) {
     switch (type) {
-    case Token::LBRACKET:
-    case Token::LPAREN:
+    case Token::Type::LBRACKET:
+    case Token::Type::LPAREN:
       return true;
 
     default:

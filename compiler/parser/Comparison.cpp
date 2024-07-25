@@ -57,28 +57,28 @@ llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
                                                      compiler.get_float_type()};
 
   switch (this->type) {
-  case LT:
+  case Type::LT:
     operation = compiler.create_lt(this->lhs, this->rhs);
     break;
 
-  case LE:
+  case Type::LE:
     operation = compiler.create_le(this->lhs, this->rhs);
     break;
 
-  case EQ:
+  case Type::EQ:
     operation = compiler.create_eq(this->lhs, this->rhs);
     supported_types.push_back(compiler.get_bool_type());
     break;
 
-  case NEQ:
+  case Type::NEQ:
     operation = compiler.create_neq(this->lhs, this->rhs);
     break;
 
-  case GT:
+  case Type::GT:
     operation = compiler.create_gt(this->lhs, this->rhs);
     break;
 
-  case GE:
+  case Type::GE:
     operation = compiler.create_ge(this->lhs, this->rhs);
     break;
   }
