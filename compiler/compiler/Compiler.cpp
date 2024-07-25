@@ -14,6 +14,7 @@
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/GlobalVariable.h"
+#include "llvm/IR/Instruction.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
@@ -129,10 +130,15 @@ std::optional<llvm::Value *> Compiler::create_add(llvm::Value *lhs, llvm::Value 
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
     return std::nullopt;
 
-  if (lhs_type->isDoubleTy() || rhs_type->isDoubleTy())
-    // If either lhs or rhs is a float the result is floating point addition
+  if (lhs_type->isDoubleTy())
+    // If lhs is a float do straightforward floating point addition
     return this->builder.CreateFAdd(lhs, rhs);
-  else
+  else if (rhs_type->isDoubleTy()) {
+    // If lhs is not a float but rhs is we need to cast lhs to a float before we can add
+    llvm::Value *lhs_float =
+        this->builder.CreateCast(llvm::Instruction::SIToFP, lhs, this->get_float_type());
+    return this->builder.CreateFAdd(lhs_float, rhs);
+  } else
     // If neither lhs nor rhs are floats they are both ints (verified by guard clause above)
     return this->builder.CreateAdd(lhs, rhs);
 }
@@ -145,7 +151,7 @@ std::optional<llvm::Value *> Compiler::create_sub(llvm::Value *lhs, llvm::Value 
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
     return std::nullopt;
 
-  if (lhs_type->isDoubleTy() || rhs_type->isDoubleTy())
+  if (lhs_type->isDoubleTy())
     return this->builder.CreateFSub(lhs, rhs);
   else
     return this->builder.CreateSub(lhs, rhs);
