@@ -22,7 +22,6 @@ public:
 
   static std::unique_ptr<Type> parse(Lexer &lexer);
   virtual llvm::Value *compile(Compiler &compiler) const override = 0;
-  // TODO: i dont like taking this param
   virtual llvm::Type *get_llvm_type(Compiler &compiler) const = 0;
 };
 

@@ -62,7 +62,6 @@ std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
   std::unique_ptr<BoolAtom> atom = std::make_unique<BoolAtom>();
   atom->start_parsing(lexer, "<bool-atom>");
 
-  // TODO: make bool token contain inner bool to not have to do this
   if (lexer.peek()->type == Token::Type::TRUE)
     atom->b = true;
   else if (lexer.peek()->type == Token::Type::FALSE)

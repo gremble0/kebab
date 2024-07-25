@@ -21,7 +21,6 @@ Lexer::Lexer(const std::string &path) : path(path), stream(path), token() {
   this->advance();
 }
 
-// TODO: dont label as lexer-error since can be from parser, maybe make separate error handler class
 [[noreturn]] void Lexer::error(const std::string &message) const {
   std::string pretty_position = this->pretty_position();
   std::string labeled_message = "lexer-error: " + message;

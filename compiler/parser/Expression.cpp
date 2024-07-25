@@ -74,8 +74,6 @@ void CondExpression::parse_test_body(Lexer &lexer) {
   Logger::log_with_dedent("</cond-test-body>");
 }
 
-// TODO: maybe branches should be a class
-// TODO: maybe class
 void CondExpression::parse_if(Lexer &lexer) {
   Logger::log_with_indent("<cond-if>");
 
@@ -87,7 +85,6 @@ void CondExpression::parse_if(Lexer &lexer) {
   Logger::log_with_dedent("</cond-if>");
 }
 
-// TODO: maybe class
 void CondExpression::parse_elif(Lexer &lexer) {
   Logger::log_with_indent("<cond-elif>");
 
@@ -99,7 +96,6 @@ void CondExpression::parse_elif(Lexer &lexer) {
   Logger::log_with_dedent("<cond-elif/>");
 }
 
-// TODO: maybe class
 void CondExpression::parse_elifs(Lexer &lexer) {
   Logger::log_with_indent("<cond-elifs>");
 
@@ -109,7 +105,6 @@ void CondExpression::parse_elifs(Lexer &lexer) {
   Logger::log_with_dedent("</cond-elifs>");
 }
 
-// TODO: maybe class
 void CondExpression::parse_else(Lexer &lexer) {
   Logger::log_with_indent("<cond-else>");
 
@@ -164,7 +159,6 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     std::optional<llvm::Value *> test_is_true =
         compiler.create_eq(test, compiler.create_bool(true));
     if (!test_is_true.has_value())
-      // TODO: This error should maybe be different
       this->operator_error({compiler.get_bool_type()}, test->getType(), "bool");
 
     std::string branch_name = (i == num_tests - 1) ? "else_branch" : "elif_branch";
