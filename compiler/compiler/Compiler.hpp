@@ -41,7 +41,7 @@ private:
   llvm::LLVMContext context;
   llvm::Module module;
   llvm::IRBuilder<> builder;
-  std::shared_ptr<Scope> current_scope;
+  std::shared_ptr<Scope> current_scope = std::make_shared<Scope>();
 
   void save_module(const std::string &path) const;
 
@@ -49,12 +49,9 @@ private:
   void load_globals();
 
   llvm::Value *int_to_float(llvm::Value *i);
-  // llvm::Value *float_to_int(llvm::Value *f);
 
 public:
-  Compiler()
-      : context(), module("kebab", context), builder(context),
-        current_scope(std::make_shared<Scope>()) {}
+  Compiler() : module("kebab", context), builder(context) {}
 
   void compile(std::unique_ptr<Parser::RootNode> root, const std::string &output_path);
 
@@ -95,7 +92,7 @@ public:
   /// Constructors for more complicated instructions
   llvm::Function *
   define_function(llvm::FunctionType *type, const std::string &name,
-                  const std::unique_ptr<Parser::Constructor> &body,
+                  const Parser::Constructor &body,
                   const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
   llvm::Function *declare_function(llvm::FunctionType *type, const std::string &name);
   llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
@@ -109,7 +106,8 @@ public:
   create_phi(llvm::Type *type,
              const std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> &incoming);
 
-  llvm::CallInst *create_call(llvm::Function *function, std::vector<llvm::Value *> arguments) {
+  llvm::CallInst *create_call(llvm::Function *function,
+                              const std::vector<llvm::Value *> &arguments) {
     return this->builder.CreateCall(function, arguments);
   }
 
@@ -145,12 +143,7 @@ public:
 
   void start_scope() { this->current_scope = std::make_shared<Scope>(this->current_scope); }
 
-  void end_scope() {
-    if (this->current_scope->parent.has_value())
-      this->current_scope = this->current_scope->parent.value();
-    else
-      assert(false && "cannot end global scope (missing opening start_scope() call)");
-  }
+  void end_scope() { this->current_scope = this->current_scope->parent_or(this->current_scope); }
 
   llvm::Function *get_current_function() const {
     return this->builder.GetInsertBlock()->getParent();

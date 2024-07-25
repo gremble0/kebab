@@ -64,8 +64,7 @@ llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::
 }
 
 llvm::Function *Compiler::define_function(
-    llvm::FunctionType *type, const std::string &name,
-    const std::unique_ptr<Parser::Constructor> &body,
+    llvm::FunctionType *type, const std::string &name, const Parser::Constructor &body,
     const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
   this->start_scope();
 
@@ -85,7 +84,7 @@ llvm::Function *Compiler::define_function(
   llvm::BasicBlock *previous_block = this->builder.GetInsertBlock();
 
   this->set_insert_point(entry);
-  this->builder.CreateRet(body->compile(*this));
+  this->builder.CreateRet(body.compile(*this));
   this->set_insert_point(previous_block);
 
   this->end_scope();
@@ -125,8 +124,8 @@ std::optional<llvm::Value *> Compiler::create_neg(llvm::Value *v) {
 }
 
 std::optional<llvm::Value *> Compiler::create_add(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
 
   // Only floats and ints can be added. We could raise error here but we don't have tracing
   // information so its better if the caller (AstNode) does it
@@ -146,8 +145,8 @@ std::optional<llvm::Value *> Compiler::create_add(llvm::Value *lhs, llvm::Value 
 }
 
 std::optional<llvm::Value *> Compiler::create_sub(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
 
   if ((!lhs_type->isDoubleTy() && !lhs_type->isIntegerTy(64)) ||
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
@@ -162,8 +161,8 @@ std::optional<llvm::Value *> Compiler::create_sub(llvm::Value *lhs, llvm::Value 
 }
 
 std::optional<llvm::Value *> Compiler::create_mul(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
 
   if ((!lhs_type->isDoubleTy() && !lhs_type->isIntegerTy(64)) ||
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
@@ -178,8 +177,8 @@ std::optional<llvm::Value *> Compiler::create_mul(llvm::Value *lhs, llvm::Value 
 }
 
 std::optional<llvm::Value *> Compiler::create_div(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
 
   if ((!lhs_type->isDoubleTy() && !lhs_type->isIntegerTy(64)) ||
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
@@ -194,8 +193,8 @@ std::optional<llvm::Value *> Compiler::create_div(llvm::Value *lhs, llvm::Value 
 }
 
 std::optional<llvm::Value *> Compiler::create_lt(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
 
   if ((!lhs_type->isDoubleTy() && !lhs_type->isIntegerTy(64)) ||
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
@@ -210,8 +209,8 @@ std::optional<llvm::Value *> Compiler::create_lt(llvm::Value *lhs, llvm::Value *
 }
 
 std::optional<llvm::Value *> Compiler::create_le(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
 
   if ((!lhs_type->isDoubleTy() && !lhs_type->isIntegerTy(64)) ||
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
@@ -226,8 +225,8 @@ std::optional<llvm::Value *> Compiler::create_le(llvm::Value *lhs, llvm::Value *
 }
 
 std::optional<llvm::Value *> Compiler::create_eq(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
 
   // == is allowed for bools
   if (lhs_type->isIntegerTy(1) && rhs_type->isIntegerTy(1))
@@ -246,8 +245,8 @@ std::optional<llvm::Value *> Compiler::create_eq(llvm::Value *lhs, llvm::Value *
 }
 
 std::optional<llvm::Value *> Compiler::create_neq(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
 
   if (lhs_type->isIntegerTy(1) && rhs_type->isIntegerTy(1))
     return this->builder.CreateICmpNE(lhs, rhs);
@@ -265,8 +264,8 @@ std::optional<llvm::Value *> Compiler::create_neq(llvm::Value *lhs, llvm::Value 
 }
 
 std::optional<llvm::Value *> Compiler::create_gt(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
 
   if ((!lhs_type->isDoubleTy() && !lhs_type->isIntegerTy(64)) ||
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
@@ -281,8 +280,8 @@ std::optional<llvm::Value *> Compiler::create_gt(llvm::Value *lhs, llvm::Value *
 }
 
 std::optional<llvm::Value *> Compiler::create_ge(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
 
   if ((!lhs_type->isDoubleTy() && !lhs_type->isIntegerTy(64)) ||
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
@@ -297,8 +296,8 @@ std::optional<llvm::Value *> Compiler::create_ge(llvm::Value *lhs, llvm::Value *
 }
 
 std::optional<llvm::Value *> Compiler::create_and(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
   if (lhs_type->isIntegerTy(1) && rhs_type->isIntegerTy(1))
     return this->builder.CreateAnd(lhs, rhs);
   else
@@ -306,8 +305,8 @@ std::optional<llvm::Value *> Compiler::create_and(llvm::Value *lhs, llvm::Value 
 }
 
 std::optional<llvm::Value *> Compiler::create_or(llvm::Value *lhs, llvm::Value *rhs) {
-  llvm::Type *lhs_type = lhs->getType();
-  llvm::Type *rhs_type = rhs->getType();
+  const llvm::Type *lhs_type = lhs->getType();
+  const llvm::Type *rhs_type = rhs->getType();
   if (lhs_type->isIntegerTy(1) && rhs_type->isIntegerTy(1))
     return this->builder.CreateOr(lhs, rhs);
   else
@@ -340,8 +339,8 @@ llvm::PHINode *
 Compiler::create_phi(llvm::Type *type,
                      const std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> &incoming) {
   llvm::PHINode *phi = this->builder.CreatePHI(type, incoming.size());
-  for (const std::pair<llvm::Value *, llvm::BasicBlock *> &i : incoming)
-    phi->addIncoming(i.first, i.second);
+  for (const auto &[value, branch] : incoming)
+    phi->addIncoming(value, branch);
 
   return phi;
 }

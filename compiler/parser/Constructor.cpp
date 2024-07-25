@@ -134,7 +134,7 @@ llvm::Value *FunctionConstructor::compile(Compiler &compiler) const {
   // names which is done by FunctionParameter::compile
   llvm::FunctionType *prototype = this->type->get_llvm_type(compiler);
   llvm::Function *function =
-      compiler.define_function(prototype, this->name, this->body, this->parameters);
+      compiler.define_function(prototype, this->name, *this->body, this->parameters);
 
   return function;
 }
