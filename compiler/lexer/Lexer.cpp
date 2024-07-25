@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cctype>
 #include <cstdint>
 #include <cstdio>
@@ -13,7 +14,7 @@
 
 namespace Kebab {
 
-Lexer::Lexer(const std::string &path) : path(path), stream(path), token() {
+Lexer::Lexer(const std::string &path) : path(path), stream(path) {
   if (!stream.is_open())
     this->error("could not open file " + path);
 
@@ -61,8 +62,7 @@ uint8_t Lexer::read_maybe_escaped_char() {
   uint8_t output;
 
   if (peeked == '\\') {
-    uint8_t escaped = this->peek(1);
-    if (escaped == 'n')
+    if (uint8_t escaped = this->peek(1); escaped == 'n')
       output = '\n';
     else
       output = escaped;
@@ -106,8 +106,8 @@ void Lexer::handle_number() {
     else
       this->token = std::make_unique<Token>(Token::Type::INT_LITERAL, span,
                                             std::stoi(&this->line[start.col]));
-  } catch (std::out_of_range &e) {
-    this->error("number out of range");
+  } catch (std::out_of_range &) {
+    this->error(std::string("number out of range"));
   }
 }
 
@@ -311,11 +311,8 @@ std::string Lexer::skip_string() { return skip_value<std::string, Token::Type::S
 std::string Lexer::skip_name() { return skip_value<std::string, Token::Type::NAME>(); }
 
 bool Lexer::is_expected(std::initializer_list<Token::Type> expected) const {
-  for (const Token::Type &type : expected)
-    if (this->token->type == type)
-      return true;
-
-  return false;
+  return std::ranges::any_of(expected,
+                             [this](const Token::Type &type) { return this->token->type == type; });
 }
 
 void Lexer::expect(std::initializer_list<Token::Type> expected) const {

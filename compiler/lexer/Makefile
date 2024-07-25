@@ -1,7 +1,7 @@
 CC := clang++
 CFLAGS := -Wall -Wextra -g -std=c++20
 
-OBJS := Lexer.o Token.o
+OBJS := Lexer.o Token.o Span.o
 
 INCLUDES := -I..
 

@@ -7,21 +7,23 @@
 namespace Kebab {
 
 struct Position {
-  size_t line, col;
+  size_t line;
+  size_t col;
+
   Position() : line(0), col(0) {}
   Position(size_t line, size_t col) : line(line), col(col) {}
 
-  std::string to_string() const {
-    return '[' + std::to_string(line) + ", " + std::to_string(col) + ']';
-  }
+  std::string to_string() const;
 };
 
 struct Span {
-  Position start, end;
-  Span() : start(), end() {}
+  Position start;
+  Position end;
+
+  Span() {}
   Span(Position start, Position end) : start(start), end(end) {}
 
-  std::string to_string() const { return this->start.to_string() + " - " + this->end.to_string(); }
+  std::string to_string() const;
 };
 
 } // namespace Kebab

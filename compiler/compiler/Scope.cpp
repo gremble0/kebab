@@ -19,4 +19,4 @@ std::optional<llvm::Value *> Scope::lookup(const std::string &key) {
   }
 }
 
-void Scope::put(const std::string &key, llvm::Value *value) { this->map.emplace(key, value); }
+void Scope::put(const std::string &key, llvm::Value *value) { this->map.try_emplace(key, value); }

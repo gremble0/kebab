@@ -11,7 +11,7 @@ private:
 
 public:
   Scope() = default;
-  Scope(std::shared_ptr<Scope> parent) : parent(parent) {}
+  explicit Scope(std::shared_ptr<Scope> parent) : parent(parent) {}
 
   std::shared_ptr<Scope> parent_or(std::shared_ptr<Scope> alternative) const {
     return this->parent.value_or(alternative);

@@ -1,4 +1,6 @@
+#include <cmath>
 #include <cstdint>
+#include <format>
 #include <string>
 
 #include "lexer/Token.hpp"
@@ -14,10 +16,10 @@ std::string Token::to_string_short() const {
     return std::to_string(std::get<double_t>(this->value));
 
   case Type::CHAR_LITERAL:
-    return '\'' + std::to_string(std::get<uint8_t>(this->value)) + '\'';
+    return std::format("'{}'", std::to_string(std::get<uint8_t>(this->value)));
 
   case Type::STRING_LITERAL:
-    return '"' + std::get<std::string>(this->value) + '"';
+    return std::format("\"{}\"", std::get<std::string>(this->value));
 
   case Type::NAME:
     return std::get<std::string>(this->value);
@@ -32,31 +34,31 @@ std::string Token::to_string_verbose() const {
 
   switch (this->type) {
   case Type::INT_LITERAL:
-    out += "int-literal: \"" + std::to_string(std::get<int64_t>(this->value)) + '"';
+    out += std::format("int-literal: \"{}\"", std::to_string(std::get<int64_t>(this->value)));
     break;
 
   case Type::FLOAT_LITERAL:
-    out += "float-literal: \"" + std::to_string(std::get<double_t>(this->value)) + '"';
+    out += std::format("float-literal: \"{}\"", std::to_string(std::get<double_t>(this->value)));
     break;
 
   case Type::CHAR_LITERAL:
-    out += "char-literal: '" + std::to_string(std::get<uint8_t>(this->value)) + '\'';
+    out += std::format("char-literal: '{}'", std::to_string(std::get<uint8_t>(this->value)));
     break;
 
   case Type::STRING_LITERAL:
-    out += "string-literal: \"" + std::get<std::string>(this->value) + '"';
+    out += std::format("string-literal: \"{}\"", std::get<std::string>(this->value));
     break;
 
   case Type::NAME:
-    out += "name: \"" + std::get<std::string>(this->value) + '"';
+    out += std::format("name: \"{}\"", std::get<std::string>(this->value));
     break;
 
   default:
-    out += '"' + Token::type_to_string(this->type) + '"';
+    out += std::format("\"{}\"", Token::type_to_string(this->type));
     break;
   }
 
-  out += ' ' + this->span.to_string() + '>';
+  out += std::format(" {}>", this->span.to_string());
   return out;
 }
 
