@@ -2,10 +2,10 @@
 *.a
 *.out
 *.log
-out.ll
+*.ll
 !compiler/test/lexer-expected/*.log
 !compiler/test/parser-expected/*.log
-!compiler/test/compiler-expected/*.log
+!compiler/test/compiler-expected/*.ll
 kebab
 test_all
 compile_commands.json
