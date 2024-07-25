@@ -69,16 +69,17 @@ public:
 
     // Special
     END_OF_FILE, // <end of file>
-  } const type;
+  };
+  const Type type;
 
   const std::variant<uint8_t, int64_t, double_t, std::string> value;
   const Span span;
 
-  Token(Type type, Span span) : type(type), value(), span(span) {}
-  Token(Type type, Span span, std::variant<uint8_t, int64_t, double_t, std::string> value)
+  Token(Type type, const Span &span) : type(type), span(span) {}
+  Token(Type type, const Span &span, std::variant<uint8_t, int64_t, double_t, std::string> value)
       : type(type), value(value), span(span) {}
-  Token(Span span, const std::string &word)
-      : type(this->determine_type(word)), value(this->determine_value(this->type, word)),
+  Token(const Span &span, const std::string &word)
+      : type(Token::determine_type(word)), value(Token::determine_value(this->type, word)),
         span(span) {}
 
   std::string to_string_short() const;
@@ -86,7 +87,7 @@ public:
   static std::string type_to_string(Type type);
 
 private:
-  static constexpr Type determine_type(const std::string &word) {
+  static constexpr Type determine_type(std::string_view word) {
     if (word == "def")
       return Type::DEF;
     else if (word == "set")

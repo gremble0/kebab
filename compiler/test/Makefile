@@ -7,7 +7,8 @@ INCLUDES := -I../../lib/googletest/googletest/include/ -I..
 LEXEROBJS := ../lexer/*.o
 PARSEROBJS := ../parser/*.o
 COMPILEROBJS := ../compiler/*.o
-SRCOBJS := $(LEXEROBJS) $(PARSEROBJS) $(COMPILEROBJS)
+LOGGINGOBJS := ../logging/*.o
+SRCOBJS := $(LEXEROBJS) $(PARSEROBJS) $(COMPILEROBJS) $(LOGGINGOBJS)
 TESTOBJS := main.o LexerTest.o ParserTest.o CompilerTest.o Files.o
 
 LLVM_DIR := ../../lib/llvm-project
