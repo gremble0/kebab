@@ -48,6 +48,9 @@ private:
   void load_printf();
   void load_globals();
 
+  llvm::Value *int_to_float(llvm::Value *i);
+  // llvm::Value *float_to_int(llvm::Value *f);
+
 public:
   Compiler()
       : context(), module("kebab", context), builder(context),

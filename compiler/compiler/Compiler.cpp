@@ -44,6 +44,10 @@ void Compiler::load_printf() {
 
 void Compiler::load_globals() { this->load_printf(); }
 
+llvm::Value *Compiler::int_to_float(llvm::Value *i) {
+  return this->builder.CreateCast(llvm::Instruction::SIToFP, i, this->get_float_type());
+}
+
 void Compiler::compile(std::unique_ptr<Parser::RootNode> root, const std::string &output_path) {
   this->load_globals();
   root->compile(*this);
@@ -133,12 +137,10 @@ std::optional<llvm::Value *> Compiler::create_add(llvm::Value *lhs, llvm::Value 
   if (lhs_type->isDoubleTy())
     // If lhs is a float do straightforward floating point addition
     return this->builder.CreateFAdd(lhs, rhs);
-  else if (rhs_type->isDoubleTy()) {
+  else if (rhs_type->isDoubleTy())
     // If lhs is not a float but rhs is we need to cast lhs to a float before we can add
-    llvm::Value *lhs_float =
-        this->builder.CreateCast(llvm::Instruction::SIToFP, lhs, this->get_float_type());
-    return this->builder.CreateFAdd(lhs_float, rhs);
-  } else
+    return this->builder.CreateFAdd(this->int_to_float(lhs), rhs);
+  else
     // If neither lhs nor rhs are floats they are both ints (verified by guard clause above)
     return this->builder.CreateAdd(lhs, rhs);
 }
@@ -153,6 +155,8 @@ std::optional<llvm::Value *> Compiler::create_sub(llvm::Value *lhs, llvm::Value 
 
   if (lhs_type->isDoubleTy())
     return this->builder.CreateFSub(lhs, rhs);
+  else if (rhs_type->isDoubleTy())
+    return this->builder.CreateFSub(this->int_to_float(lhs), rhs);
   else
     return this->builder.CreateSub(lhs, rhs);
 }
@@ -165,8 +169,10 @@ std::optional<llvm::Value *> Compiler::create_mul(llvm::Value *lhs, llvm::Value 
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
     return std::nullopt;
 
-  if (lhs_type->isDoubleTy() || rhs_type->isDoubleTy())
+  if (lhs_type->isDoubleTy())
     return this->builder.CreateFMul(lhs, rhs);
+  else if (rhs_type->isDoubleTy())
+    return this->builder.CreateFMul(this->int_to_float(lhs), rhs);
   else
     return this->builder.CreateMul(lhs, rhs);
 }
@@ -179,8 +185,10 @@ std::optional<llvm::Value *> Compiler::create_div(llvm::Value *lhs, llvm::Value 
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
     return std::nullopt;
 
-  if (lhs_type->isDoubleTy() || rhs_type->isDoubleTy())
+  if (lhs_type->isDoubleTy())
     return this->builder.CreateFDiv(lhs, rhs);
+  else if (rhs_type->isDoubleTy())
+    return this->builder.CreateFDiv(this->int_to_float(lhs), rhs);
   else
     return this->builder.CreateSDiv(lhs, rhs);
 }
@@ -193,8 +201,10 @@ std::optional<llvm::Value *> Compiler::create_lt(llvm::Value *lhs, llvm::Value *
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
     return std::nullopt;
 
-  if (lhs_type->isDoubleTy() || rhs_type->isDoubleTy())
+  if (lhs_type->isDoubleTy())
     return this->builder.CreateFCmpULT(lhs, rhs);
+  else if (rhs_type->isDoubleTy())
+    return this->builder.CreateFCmpULT(this->int_to_float(lhs), rhs);
   else
     return this->builder.CreateICmpULT(lhs, rhs);
 }
@@ -207,8 +217,10 @@ std::optional<llvm::Value *> Compiler::create_le(llvm::Value *lhs, llvm::Value *
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
     return std::nullopt;
 
-  if (lhs_type->isDoubleTy() || rhs_type->isDoubleTy())
+  if (lhs_type->isDoubleTy())
     return this->builder.CreateFCmpULE(lhs, rhs);
+  else if (rhs_type->isDoubleTy())
+    return this->builder.CreateFCmpULE(this->int_to_float(lhs), rhs);
   else
     return this->builder.CreateICmpULE(lhs, rhs);
 }
@@ -225,8 +237,10 @@ std::optional<llvm::Value *> Compiler::create_eq(llvm::Value *lhs, llvm::Value *
       (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
     return std::nullopt;
 
-  if (lhs_type->isDoubleTy() || rhs_type->isDoubleTy())
+  if (lhs_type->isDoubleTy())
     return this->builder.CreateFCmpUEQ(lhs, rhs);
+  else if (rhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUEQ(this->int_to_float(lhs), rhs);
   else
     return this->builder.CreateICmpEQ(lhs, rhs);
 }
@@ -234,35 +248,52 @@ std::optional<llvm::Value *> Compiler::create_eq(llvm::Value *lhs, llvm::Value *
 std::optional<llvm::Value *> Compiler::create_neq(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
   llvm::Type *rhs_type = rhs->getType();
-  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
-    return this->builder.CreateFCmpUNE(lhs, rhs);
-  // ~= is allowed for both ints and bools (i1/i64) so no need to specify bitwidth
-  else if (lhs_type->isIntegerTy() && rhs_type->isIntegerTy())
+
+  if (lhs_type->isIntegerTy(1) && rhs_type->isIntegerTy(1))
     return this->builder.CreateICmpNE(lhs, rhs);
-  else
+
+  if ((!lhs_type->isDoubleTy() && !lhs_type->isIntegerTy(64)) ||
+      (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
     return std::nullopt;
+
+  if (lhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUNE(lhs, rhs);
+  else if (rhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUNE(this->int_to_float(lhs), rhs);
+  else
+    return this->builder.CreateICmpNE(lhs, rhs);
 }
 
 std::optional<llvm::Value *> Compiler::create_gt(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
   llvm::Type *rhs_type = rhs->getType();
-  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
-    return this->builder.CreateFCmpUGT(lhs, rhs);
-  else if (lhs_type->isIntegerTy(64) && rhs_type->isIntegerTy(64))
-    return this->builder.CreateICmpUGT(lhs, rhs);
-  else
+
+  if ((!lhs_type->isDoubleTy() && !lhs_type->isIntegerTy(64)) ||
+      (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
     return std::nullopt;
+
+  if (lhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUGT(lhs, rhs);
+  else if (rhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUGT(this->int_to_float(lhs), rhs);
+  else
+    return this->builder.CreateICmpSGT(lhs, rhs);
 }
 
 std::optional<llvm::Value *> Compiler::create_ge(llvm::Value *lhs, llvm::Value *rhs) {
   llvm::Type *lhs_type = lhs->getType();
   llvm::Type *rhs_type = rhs->getType();
-  if (lhs_type->isDoubleTy() && rhs_type->isDoubleTy())
-    return this->builder.CreateFCmpUGE(lhs, rhs);
-  else if (lhs_type->isIntegerTy(64) && rhs_type->isIntegerTy(64))
-    return this->builder.CreateICmpUGE(lhs, rhs);
-  else
+
+  if ((!lhs_type->isDoubleTy() && !lhs_type->isIntegerTy(64)) ||
+      (!rhs_type->isDoubleTy() && !rhs_type->isIntegerTy(64)))
     return std::nullopt;
+
+  if (lhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUGE(lhs, rhs);
+  else if (rhs_type->isDoubleTy())
+    return this->builder.CreateFCmpUGE(this->int_to_float(lhs), rhs);
+  else
+    return this->builder.CreateICmpSGE(lhs, rhs);
 }
 
 std::optional<llvm::Value *> Compiler::create_and(llvm::Value *lhs, llvm::Value *rhs) {
