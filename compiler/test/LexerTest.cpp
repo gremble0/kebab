@@ -7,6 +7,15 @@
 
 namespace Kebab::Test {
 
+static void lex_file(const std::string &log_path, const std::string &source_path) {
+  std::ofstream log_file(log_path);
+  Logger::set_stream(log_file);
+
+  Lexer lexer(source_path);
+  while (lexer.peek()->type != Token::Type::END_OF_FILE)
+    lexer.advance();
+}
+
 static void ASSERT_EXPECTED_LEXING(const std::string &basename) {
   std::string source_path = "lexer-source/" + basename + ".keb";
   std::string log_path = "lexer-logs/" + basename + ".log";
@@ -17,14 +26,7 @@ static void ASSERT_EXPECTED_LEXING(const std::string &basename) {
     Lexer lexer(source_path);
   });
 
-  {
-    std::ofstream log_file(log_path);
-    Logger::set_stream(log_file);
-
-    Lexer lexer(source_path);
-    while (lexer.peek()->type != Token::Type::END_OF_FILE)
-      lexer.advance();
-  }
+  lex_file(log_path, source_path);
 
   std::ifstream expected_file(expected_path);
   std::ifstream log_file(log_path);

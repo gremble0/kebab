@@ -9,6 +9,13 @@
 
 namespace Kebab::Test {
 
+static void compile_file(const std::string &log_path, const std::string &source_path) {
+  Lexer lexer(source_path);
+  auto root = Parser::RootNode::parse(lexer);
+  Compiler compiler;
+  compiler.compile(std::move(root), log_path);
+}
+
 static void ASSERT_EXPECTED_COMPILATION(const std::string &basename) {
   std::string source_path = "compiler-source/" + basename + ".keb";
   std::string log_path = "compiler-logs/" + basename + ".ll";
@@ -18,10 +25,7 @@ static void ASSERT_EXPECTED_COMPILATION(const std::string &basename) {
 
   ASSERT_NO_FATAL_FAILURE({ Lexer lexer(source_path); });
 
-  Lexer lexer(source_path);
-  std::unique_ptr<Parser::RootNode> root = Parser::RootNode::parse(lexer);
-  Compiler compiler;
-  compiler.compile(std::move(root), log_path);
+  compile_file(log_path, source_path);
 
   std::ifstream expected_file(expected_path);
   std::ifstream log_file(log_path);

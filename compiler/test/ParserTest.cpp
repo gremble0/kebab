@@ -1,5 +1,4 @@
 #include <fstream>
-#include <memory>
 #include <string>
 
 #include "Files.hpp"
@@ -9,6 +8,14 @@
 #include "gtest/gtest.h"
 
 namespace Kebab::Test {
+
+static void parse_file(const std::string &log_path, const std::string &source_path) {
+  std::ofstream log_file(log_path);
+  Logger::set_stream(log_file);
+
+  Lexer lexer(source_path);
+  auto root = Parser::RootNode::parse(lexer);
+}
 
 static void ASSERT_EXPECTED_PARSING(const std::string &basename) {
   std::string source_path = "parser-source/" + basename + ".keb";
@@ -20,13 +27,7 @@ static void ASSERT_EXPECTED_PARSING(const std::string &basename) {
     Lexer lexer(source_path);
   });
 
-  {
-    std::ofstream log_file(log_path);
-    Logger::set_stream(log_file);
-
-    Lexer lexer(source_path);
-    std::unique_ptr<Parser::RootNode> root = Parser::RootNode::parse(lexer);
-  }
+  parse_file(log_path, source_path);
 
   std::ifstream expected_file(expected_path);
   std::ifstream log_file(log_path);
