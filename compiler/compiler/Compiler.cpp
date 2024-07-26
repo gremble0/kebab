@@ -95,24 +95,44 @@ llvm::Function *Compiler::define_function(
   return function;
 }
 
-llvm::AllocaInst *Compiler::create_local(const std::string &name, llvm::Constant *init,
-                                         llvm::Type *type) {
-  // Derive the alignment from the type
-  const llvm::DataLayout &dataLayout = this->module.getDataLayout();
-  llvm::Align alignment = dataLayout.getPrefTypeAlign(type);
+llvm::Align Compiler::get_alignment(llvm::Type *type) const {
+  const llvm::DataLayout &layout = this->module.getDataLayout();
+  return layout.getPrefTypeAlign(type);
+}
 
+llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constant *init,
+                                          llvm::Type *type) {
+  llvm::Align alignment = this->get_alignment(type);
   llvm::AllocaInst *local = this->builder.CreateAlloca(type, nullptr, name);
-  local->setAlignment(llvm::Align(alignment));
+  local->setAlignment(alignment);
 
   llvm::StoreInst *store = this->builder.CreateStore(init, local);
-  store->setAlignment(llvm::Align(alignment));
+  store->setAlignment(alignment);
 
+  return local;
+}
+
+llvm::AllocaInst *Compiler::create_immutable(const std::string &name, llvm::Constant *init,
+                                             llvm::Type *type) {
+  llvm::AllocaInst *local = this->create_alloca(name, init, type);
   llvm::LoadInst *load = this->builder.CreateLoad(type, local);
-  store->setAlignment(llvm::Align(alignment));
+  load->setAlignment(this->get_alignment(type));
 
   this->current_scope->put(name, load);
 
   return local;
+}
+
+std::optional<llvm::AllocaInst *> Compiler::create_mutable(const std::string &name,
+                                                           llvm::Constant *init, llvm::Type *type) {
+  llvm::AllocaInst *local = this->create_alloca(name, init, type);
+  llvm::LoadInst *load = this->builder.CreateLoad(type, local);
+  load->setAlignment(this->get_alignment(type));
+
+  if (this->current_scope->put(name, load, true))
+    return local;
+  else
+    return std::nullopt;
 }
 
 std::optional<llvm::Value *> Compiler::create_neg(llvm::Value *v) {

@@ -51,6 +51,10 @@ private:
 
   llvm::Value *int_to_float(llvm::Value *i);
 
+  llvm::AllocaInst *create_alloca(const std::string &name, llvm::Constant *init, llvm::Type *type);
+
+  llvm::Align get_alignment(llvm::Type *type) const;
+
 public:
   Compiler() : module("kebab", context), builder(context) {}
 
@@ -96,7 +100,10 @@ public:
                   const Parser::Constructor &body,
                   const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
   llvm::Function *declare_function(llvm::FunctionType *type, const std::string &name);
-  llvm::AllocaInst *create_local(const std::string &name, llvm::Constant *init, llvm::Type *type);
+  llvm::AllocaInst *create_immutable(const std::string &name, llvm::Constant *init,
+                                     llvm::Type *type);
+  std::optional<llvm::AllocaInst *> create_mutable(const std::string &name, llvm::Constant *init,
+                                                   llvm::Type *type);
 
   llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
 
