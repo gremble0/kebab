@@ -1,0 +1,8 @@
+def returns-one-factory = fn(() => fn(() => int(1)))
+
+def main = fn(() => int(
+  def one-factory = fn(() => int(returns-one-factory()()))
+  printf("%ld\n", one-factory())
+
+  0
+))

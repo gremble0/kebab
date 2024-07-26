@@ -85,6 +85,10 @@ std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
 
 llvm::FunctionType *FunctionType::get_llvm_type(Compiler &compiler) const {
   llvm::Type *llvm_return_type = this->return_type->get_llvm_type(compiler);
+  // Function declarations cannot declare return types as function types directly, only as pointers
+  if (llvm_return_type->isFunctionTy())
+    llvm_return_type = llvm_return_type->getPointerTo();
+
   std::vector<llvm::Type *> llvm_parameter_types;
   for (const auto &parameter_type : this->parameter_types)
     llvm_parameter_types.push_back(parameter_type->get_llvm_type(compiler));
