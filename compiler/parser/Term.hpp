@@ -10,7 +10,7 @@
 namespace Kebab::Parser {
 
 // this is a prefix?? dont remember should look into and maybe rename
-class TermOperator : AstNode {
+class TermOperator : public AstNode {
 private:
   std::string to_string() const {
     switch (this->type) {
@@ -25,7 +25,8 @@ public:
   enum class Type {
     PLUS,
     MINUS,
-  } type;
+  };
+  Type type;
   llvm::Value *lhs;
   llvm::Value *rhs;
 
@@ -41,7 +42,7 @@ public:
   }
 
   static std::unique_ptr<TermOperator> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
 };
 
 class Term : public AstNode {
@@ -50,9 +51,9 @@ public:
   std::vector<std::unique_ptr<TermOperator>> operators;
 
   static std::unique_ptr<Term> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
 };
 
-} // namespace Kebab
+} // namespace Kebab::Parser
 
 #endif

@@ -35,7 +35,7 @@ public:
   std::vector<std::vector<std::unique_ptr<Statement>>> bodies;
 
   static std::unique_ptr<CondExpression> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
 };
 
 class NormalExpression : public Expression {
@@ -43,7 +43,7 @@ public:
   std::vector<std::unique_ptr<AndTest>> and_tests;
 
   static std::unique_ptr<NormalExpression> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
 };
 
 class FunctionExpression : public Expression {
@@ -51,7 +51,7 @@ public:
   std::unique_ptr<FunctionConstructor> function;
 
   static std::unique_ptr<FunctionExpression> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
 };
 
 } // namespace Kebab::Parser

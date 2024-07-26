@@ -42,7 +42,7 @@ public:
   }
 
   static std::unique_ptr<FactorOperator> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
 };
 
 class FactorPrefix : public AstNode {
@@ -76,7 +76,7 @@ public:
   }
 
   static std::unique_ptr<FactorPrefix> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
 };
 
 class Factor : public AstNode {
@@ -89,7 +89,7 @@ public:
   std::vector<std::unique_ptr<FactorOperator>> operators;
 
   static std::unique_ptr<Factor> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
 };
 
 } // namespace Kebab::Parser

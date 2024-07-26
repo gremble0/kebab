@@ -44,7 +44,7 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
     return function;
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
-    llvm::Type *actual_type = variable_value->getType();
+    const llvm::Type *actual_type = variable_value->getType();
     // Types are interned so pointer comparison is sufficient
     if (actual_type != declared_type)
       this->type_error({declared_type}, actual_type);
@@ -86,7 +86,7 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
     return function;
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
-    llvm::Type *actual_type = variable_value->getType();
+    const llvm::Type *actual_type = variable_value->getType();
     if (actual_type != declared_type)
       this->type_error({declared_type}, actual_type);
 

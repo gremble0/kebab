@@ -29,9 +29,9 @@ public:
   std::unique_ptr<Type> content_type;
 
   static std::unique_ptr<ListType> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
   // ScalableVectorType may be right here? will look into
-  llvm::ScalableVectorType *get_llvm_type(Compiler &compiler) const override;
+  llvm::ScalableVectorType *get_llvm_type(Compiler &compiler) const final;
 };
 
 class FunctionType : public Type {
@@ -46,9 +46,9 @@ public:
   std::shared_ptr<Type> return_type;
 
   static std::unique_ptr<FunctionType> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
   // FunctionType is surely the right type here?
-  llvm::FunctionType *get_llvm_type(Compiler &compiler) const override;
+  llvm::FunctionType *get_llvm_type(Compiler &compiler) const final;
 };
 
 class PrimitiveType : public Type {
@@ -56,8 +56,8 @@ public:
   std::string name;
 
   static std::unique_ptr<PrimitiveType> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
-  llvm::Type *get_llvm_type(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
+  llvm::Type *get_llvm_type(Compiler &compiler) const final;
 };
 
 } // namespace Kebab::Parser

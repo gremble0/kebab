@@ -14,11 +14,11 @@ class Constructor; // Cant include Constructor.hpp because of recursive includes
 
 class Statement : public AstNode {
 public:
-  virtual ~Statement() = default;
+  ~Statement() override = default;
 
   static std::unique_ptr<Statement> parse(Lexer &lexer);
   static std::optional<std::unique_ptr<Statement>> try_parse_statement(Lexer &lexer);
-  virtual llvm::Value *compile(Compiler &compiler) const override = 0;
+  llvm::Value *compile(Compiler &compiler) const override = 0;
   virtual bool is_expression() const = 0;
 };
 
@@ -29,8 +29,8 @@ public:
   std::unique_ptr<Constructor> constructor;
 
   static std::unique_ptr<DefinitionStatement> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
-  bool is_expression() const override { return false; }
+  llvm::Value *compile(Compiler &compiler) const final;
+  bool is_expression() const final { return false; }
 };
 
 class AssignmentStatement : public Statement {
@@ -39,8 +39,8 @@ public:
   std::unique_ptr<Constructor> constructor;
 
   static std::unique_ptr<AssignmentStatement> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
-  bool is_expression() const override { return false; }
+  llvm::Value *compile(Compiler &compiler) const final;
+  bool is_expression() const final { return false; }
 };
 
 class ExpressionStatement : public Statement {
@@ -48,8 +48,8 @@ public:
   std::unique_ptr<Expression> expression;
 
   static std::unique_ptr<ExpressionStatement> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
-  bool is_expression() const override { return true; }
+  llvm::Value *compile(Compiler &compiler) const final;
+  bool is_expression() const final { return true; }
 };
 
 } // namespace Kebab::Parser

@@ -16,7 +16,7 @@ public:
   std::vector<std::unique_ptr<Statement>> statements;
 
   static std::unique_ptr<RootNode> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
 };
 
 } // namespace Kebab::Parser

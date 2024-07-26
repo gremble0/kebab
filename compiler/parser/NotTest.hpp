@@ -13,7 +13,7 @@ public:
   std::unique_ptr<Comparison> comparison;
 
   static std::unique_ptr<NotTest> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override;
+  llvm::Value *compile(Compiler &compiler) const final;
 };
 
 } // namespace Kebab::Parser
