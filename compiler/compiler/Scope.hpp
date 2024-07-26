@@ -6,7 +6,15 @@
 
 class Scope {
 private:
-  std::unordered_map<std::string, llvm::Value *> map;
+  struct Binding {
+    bool is_mutable;
+    llvm::Value *value;
+
+    // Binding() : is_mutable(false), value(nullptr) {}
+    // Binding(bool is_mutable, llvm::Value *value) : is_mutable(is_mutable), value(value) {}
+  };
+
+  std::unordered_map<std::string, Binding> map;
   std::optional<std::shared_ptr<Scope>> parent;
 
 public:
@@ -18,5 +26,5 @@ public:
   }
 
   std::optional<llvm::Value *> lookup(const std::string &key);
-  void put(const std::string &key, llvm::Value *value);
+  bool put(const std::string &key, llvm::Value *value, bool is_mutable = false);
 };

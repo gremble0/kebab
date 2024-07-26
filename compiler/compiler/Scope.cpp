@@ -8,15 +8,29 @@ std::optional<llvm::Value *> Scope::lookup(const std::string &key) {
   // 1. we have found the value -> return it
   // 2. we have not found the value, but we have a parent -> look in parent
   // 3. we have not found the value and we dont have a parent -> return nullopt
-  llvm::Value *value = this->map[key];
-  if (value == nullptr) {
+  const Binding &binding = this->map[key];
+  if (binding.value == nullptr) {
     if (this->parent.has_value())
       return this->parent->get()->lookup(key);
     else
       return std::nullopt;
   } else {
-    return value;
+    return binding.value;
   }
 }
 
-void Scope::put(const std::string &key, llvm::Value *value) { this->map[key] = value; }
+/**
+ * @return true if successful insertion, false if attempt to override immutable value caused
+ * insertion to fail
+ */
+bool Scope::put(const std::string &key, llvm::Value *value, bool is_mutable) {
+  if (this->map.contains(key)) {
+    if (!this->map[key].is_mutable)
+      return false;
+    else
+      this->map[key].value = value;
+  }
+
+  this->map[key] = {is_mutable, value};
+  return true;
+}
