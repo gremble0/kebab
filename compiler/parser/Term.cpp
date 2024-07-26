@@ -8,7 +8,7 @@
 namespace Kebab::Parser {
 
 std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
-  std::unique_ptr<TermOperator> operator_ = std::make_unique<TermOperator>();
+  auto operator_ = std::make_unique<TermOperator>();
   operator_->start_parsing(lexer, "<term-operator>");
 
   switch (lexer.peek()->type) {
@@ -53,7 +53,7 @@ llvm::Value *TermOperator::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Term> Term::parse(Lexer &lexer) {
-  std::unique_ptr<Term> term = std::make_unique<Term>();
+  auto term = std::make_unique<Term>();
   term->start_parsing(lexer, "<term>");
 
   while (true) {

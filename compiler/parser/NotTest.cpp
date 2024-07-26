@@ -7,7 +7,7 @@
 namespace Kebab::Parser {
 
 std::unique_ptr<NotTest> NotTest::parse(Lexer &lexer) {
-  std::unique_ptr<NotTest> not_test = std::make_unique<NotTest>();
+  auto not_test = std::make_unique<NotTest>();
   not_test->start_parsing(lexer, "<not-test>");
 
   if (bool skipped_not = lexer.try_skip({Token::Type::NOT}))

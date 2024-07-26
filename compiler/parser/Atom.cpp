@@ -9,7 +9,7 @@
 namespace Kebab::Parser {
 
 std::unique_ptr<IntAtom> IntAtom::parse(Lexer &lexer) {
-  std::unique_ptr<IntAtom> atom = std::make_unique<IntAtom>();
+  auto atom = std::make_unique<IntAtom>();
   atom->start_parsing(lexer, "<int-atom>");
 
   atom->i = lexer.skip_int();
@@ -21,7 +21,7 @@ std::unique_ptr<IntAtom> IntAtom::parse(Lexer &lexer) {
 llvm::Value *IntAtom::compile(Compiler &compiler) const { return compiler.create_int(this->i); }
 
 std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
-  std::unique_ptr<FloatAtom> atom = std::make_unique<FloatAtom>();
+  auto atom = std::make_unique<FloatAtom>();
   atom->start_parsing(lexer, "<float-atom>");
 
   atom->f = lexer.skip_float();
@@ -33,7 +33,7 @@ std::unique_ptr<FloatAtom> FloatAtom::parse(Lexer &lexer) {
 llvm::Value *FloatAtom::compile(Compiler &compiler) const { return compiler.create_float(this->f); }
 
 std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
-  std::unique_ptr<CharAtom> atom = std::make_unique<CharAtom>();
+  auto atom = std::make_unique<CharAtom>();
   atom->start_parsing(lexer, "<char-atom>");
 
   atom->c = lexer.skip_char();
@@ -45,7 +45,7 @@ std::unique_ptr<CharAtom> CharAtom::parse(Lexer &lexer) {
 llvm::Value *CharAtom::compile(Compiler &compiler) const { return compiler.create_char(this->c); }
 
 std::unique_ptr<StringAtom> StringAtom::parse(Lexer &lexer) {
-  std::unique_ptr<StringAtom> atom = std::make_unique<StringAtom>();
+  auto atom = std::make_unique<StringAtom>();
   atom->start_parsing(lexer, "<string-atom>");
 
   atom->s = lexer.skip_string();
@@ -59,7 +59,7 @@ llvm::Value *StringAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
-  std::unique_ptr<BoolAtom> atom = std::make_unique<BoolAtom>();
+  auto atom = std::make_unique<BoolAtom>();
   atom->start_parsing(lexer, "<bool-atom>");
 
   if (lexer.peek()->type == Token::Type::TRUE)
@@ -75,7 +75,7 @@ std::unique_ptr<BoolAtom> BoolAtom::parse(Lexer &lexer) {
 llvm::Value *BoolAtom::compile(Compiler &compiler) const { return compiler.create_bool(this->b); }
 
 std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
-  std::unique_ptr<NameAtom> atom = std::make_unique<NameAtom>();
+  auto atom = std::make_unique<NameAtom>();
   atom->start_parsing(lexer, "<name-atom>");
 
   atom->name = lexer.skip_name();
@@ -93,7 +93,7 @@ llvm::Value *NameAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
-  std::unique_ptr<InnerExpressionAtom> atom = std::make_unique<InnerExpressionAtom>();
+  auto atom = std::make_unique<InnerExpressionAtom>();
   atom->start_parsing(lexer, "<inner-expression-atom>");
 
   lexer.skip({Token::Type::LPAREN});
@@ -109,7 +109,7 @@ llvm::Value *InnerExpressionAtom::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
-  std::unique_ptr<ListAtom> atom = std::make_unique<ListAtom>();
+  auto atom = std::make_unique<ListAtom>();
   atom->start_parsing(lexer, "<list-atom>");
 
   lexer.skip({Token::Type::LBRACKET});

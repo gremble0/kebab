@@ -14,7 +14,7 @@
 namespace Kebab::Parser {
 
 std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
-  std::unique_ptr<DefinitionStatement> definition = std::make_unique<DefinitionStatement>();
+  auto definition = std::make_unique<DefinitionStatement>();
   definition->start_parsing(lexer, "<definition-statement>");
 
   lexer.skip({Token::Type::DEF});
@@ -40,7 +40,7 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   llvm::Value *variable_value = this->constructor->compile(compiler);
 
   // meh
-  if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(variable_value)) {
+  if (auto *function = llvm::dyn_cast<llvm::Function>(variable_value)) {
     return function;
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
@@ -65,7 +65,7 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
-  std::unique_ptr<AssignmentStatement> assignment = std::make_unique<AssignmentStatement>();
+  auto assignment = std::make_unique<AssignmentStatement>();
   assignment->start_parsing(lexer, "<assignment-statement>");
 
   lexer.skip({Token::Type::SET});
@@ -82,7 +82,7 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
   this->constructor->name = this->name;
   llvm::Value *variable_value = this->constructor->compile(compiler);
 
-  if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(variable_value)) {
+  if (auto *function = llvm::dyn_cast<llvm::Function>(variable_value)) {
     return function;
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
@@ -103,7 +103,7 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
-  std::unique_ptr<ExpressionStatement> expression = std::make_unique<ExpressionStatement>();
+  auto expression = std::make_unique<ExpressionStatement>();
   expression->start_parsing(lexer, "<expression-statement>");
 
   expression->expression = Expression::parse(lexer);

@@ -117,7 +117,7 @@ void CondExpression::parse_else(Lexer &lexer) {
 }
 
 std::unique_ptr<CondExpression> CondExpression::parse(Lexer &lexer) {
-  std::unique_ptr<CondExpression> expression = std::make_unique<CondExpression>();
+  auto expression = std::make_unique<CondExpression>();
   expression->start_parsing(lexer, "<cond-expression>");
 
   expression->parse_if(lexer);
@@ -190,7 +190,7 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<NormalExpression> NormalExpression::parse(Lexer &lexer) {
-  std::unique_ptr<NormalExpression> expression = std::make_unique<NormalExpression>();
+  auto expression = std::make_unique<NormalExpression>();
   expression->start_parsing(lexer, "<normal-expression>");
 
   // Keep parsing and tests until we have no longer ignored an `or` token
@@ -222,7 +222,7 @@ llvm::Value *NormalExpression::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
-  std::unique_ptr<FunctionExpression> expression = std::make_unique<FunctionExpression>();
+  auto expression = std::make_unique<FunctionExpression>();
   expression->start_parsing(lexer, "<function-expression>");
 
   expression->function = FunctionConstructor::parse(lexer);

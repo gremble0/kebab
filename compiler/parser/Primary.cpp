@@ -1,5 +1,4 @@
 #include <cassert>
-#include <iostream>
 #include <vector>
 
 #include "lexer/Token.hpp"
@@ -7,18 +6,15 @@
 #include "parser/Expression.hpp"
 #include "parser/Primary.hpp"
 #include "parser/Statement.hpp"
-#include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Function.h"
-#include "llvm/IR/User.h"
 #include "llvm/IR/Value.h"
 #include "llvm/Support/Casting.h"
-#include "llvm/Support/raw_ostream.h"
 
 namespace Kebab::Parser {
 
 std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
-  std::unique_ptr<PrimarySubscription> subscription = std::make_unique<PrimarySubscription>();
+  auto subscription = std::make_unique<PrimarySubscription>();
   subscription->start_parsing(lexer, "<primary-subscription>");
 
   lexer.skip({Token::Type::LBRACKET});
@@ -35,7 +31,7 @@ llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
-  std::unique_ptr<PrimaryArguments> arguments = std::make_unique<PrimaryArguments>();
+  auto arguments = std::make_unique<PrimaryArguments>();
   arguments->start_parsing(lexer, "<primary-arguments>");
 
   lexer.skip({Token::Type::LPAREN});
@@ -56,7 +52,7 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
   for (const std::unique_ptr<Expression> &argument : this->arguments)
     arguments_compiled.push_back(argument->compile(compiler));
 
-  if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(this->subscriptee))
+  if (auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee))
     return compiler.create_call(function, arguments_compiled);
   else
     this->uncallable_error(this->subscriptee->getType());
@@ -84,7 +80,7 @@ std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
 }
 
 std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
-  std::unique_ptr<Primary> primary = std::make_unique<Primary>();
+  auto primary = std::make_unique<Primary>();
   primary->start_parsing(lexer, "<primary>");
 
   primary->atom = Atom::parse(lexer);

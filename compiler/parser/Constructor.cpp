@@ -54,7 +54,7 @@ void ListConstructor::parse_body(Lexer &lexer) {
 }
 
 std::unique_ptr<ListConstructor> ListConstructor::parse(Lexer &lexer) {
-  std::unique_ptr<ListConstructor> constructor = std::make_unique<ListConstructor>();
+  auto constructor = std::make_unique<ListConstructor>();
   constructor->start_parsing(lexer, "<list-constructor>");
 
   constructor->parse_type(lexer);
@@ -77,7 +77,7 @@ llvm::Value *ListConstructor::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
-  std::unique_ptr<FunctionParameter> parameter = std::make_unique<FunctionParameter>();
+  auto parameter = std::make_unique<FunctionParameter>();
   parameter->start_parsing(lexer, "<function-parameter>");
 
   parameter->name = lexer.skip_name();
@@ -119,7 +119,7 @@ void FunctionConstructor::parse_body(Lexer &lexer) {
 }
 
 std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
-  std::unique_ptr<FunctionConstructor> constructor = std::make_unique<FunctionConstructor>();
+  auto constructor = std::make_unique<FunctionConstructor>();
   constructor->start_parsing(lexer, "<function-constructor>");
 
   constructor->parse_type(lexer);
@@ -154,7 +154,7 @@ void PrimitiveConstructor::parse_body(Lexer &lexer) {
 }
 
 std::unique_ptr<PrimitiveConstructor> PrimitiveConstructor::parse(Lexer &lexer) {
-  std::unique_ptr<PrimitiveConstructor> constructor = std::make_unique<PrimitiveConstructor>();
+  auto constructor = std::make_unique<PrimitiveConstructor>();
   constructor->start_parsing(lexer, "<primitive-constructor>");
 
   constructor->parse_type(lexer);

@@ -32,7 +32,7 @@ std::unique_ptr<Type> Type::parse(Lexer &lexer) {
 }
 
 std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
-  std::unique_ptr<ListType> type = std::make_unique<ListType>();
+  auto type = std::make_unique<ListType>();
   type->start_parsing(lexer, "<list-type>");
 
   lexer.skip({Token::Type::LIST});
@@ -66,7 +66,7 @@ void FunctionType::parse_parameter_types(Lexer &lexer) {
 void FunctionType::parse_return_type(Lexer &lexer) { this->return_type = Type::parse(lexer); }
 
 std::unique_ptr<FunctionType> FunctionType::parse(Lexer &lexer) {
-  std::unique_ptr<FunctionType> type = std::make_unique<FunctionType>();
+  auto type = std::make_unique<FunctionType>();
   type->start_parsing(lexer, "<function-type>");
 
   lexer.skip({Token::Type::FN});
@@ -103,7 +103,7 @@ llvm::Value *FunctionType::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
-  std::unique_ptr<PrimitiveType> type = std::make_unique<PrimitiveType>();
+  auto type = std::make_unique<PrimitiveType>();
   type->start_parsing(lexer, "<primitive-type>");
 
   type->name = lexer.skip_name();

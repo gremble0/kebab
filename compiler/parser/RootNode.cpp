@@ -4,7 +4,7 @@
 namespace Kebab::Parser {
 
 std::unique_ptr<RootNode> RootNode::parse(Lexer &lexer) {
-  std::unique_ptr<RootNode> root_node = std::make_unique<RootNode>();
+  auto root_node = std::make_unique<RootNode>();
   root_node->start_parsing(lexer, "<root>");
 
   while (!lexer.finished())

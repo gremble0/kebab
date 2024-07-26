@@ -11,7 +11,7 @@
 namespace Kebab::Parser {
 
 std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
-  std::unique_ptr<ComparisonOperator> operator_ = std::make_unique<ComparisonOperator>();
+  auto operator_ = std::make_unique<ComparisonOperator>();
   operator_->start_parsing(lexer, "<comparison-operator>");
 
   switch (lexer.peek()->type) {
@@ -93,7 +93,7 @@ llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {
-  std::unique_ptr<Comparison> comparison = std::make_unique<Comparison>();
+  auto comparison = std::make_unique<Comparison>();
   comparison->start_parsing(lexer, "<comparison>");
 
   while (true) {

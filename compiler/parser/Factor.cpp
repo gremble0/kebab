@@ -9,7 +9,7 @@
 namespace Kebab::Parser {
 
 std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
-  std::unique_ptr<FactorPrefix> prefix = std::make_unique<FactorPrefix>();
+  auto prefix = std::make_unique<FactorPrefix>();
   prefix->start_parsing(lexer, "<factor-prefix>");
 
   switch (lexer.peek()->type) {
@@ -51,7 +51,7 @@ llvm::Value *FactorPrefix::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
-  std::unique_ptr<Factor> factor = std::make_unique<Factor>();
+  auto factor = std::make_unique<Factor>();
   factor->start_parsing(lexer, "<factor>");
 
   while (true) {
@@ -94,7 +94,7 @@ llvm::Value *Factor::compile(Compiler &compiler) const {
 }
 
 std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
-  std::unique_ptr<FactorOperator> operator_ = std::make_unique<FactorOperator>();
+  auto operator_ = std::make_unique<FactorOperator>();
   operator_->start_parsing(lexer, "<factor-operator>");
 
   switch (lexer.peek()->type) {
