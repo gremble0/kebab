@@ -100,8 +100,8 @@ public:
                   const Parser::Constructor &body,
                   const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
   llvm::Function *declare_function(llvm::FunctionType *type, const std::string &name);
-  llvm::AllocaInst *create_immutable(const std::string &name, llvm::Constant *init,
-                                     llvm::Type *type);
+  std::optional<llvm::AllocaInst *> create_immutable(const std::string &name, llvm::Constant *init,
+                                                     llvm::Type *type);
   std::optional<llvm::AllocaInst *> create_mutable(const std::string &name, llvm::Constant *init,
                                                    llvm::Type *type);
 

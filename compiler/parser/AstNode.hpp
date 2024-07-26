@@ -26,6 +26,7 @@ protected:
   [[noreturn]] void unreachable_error() const;
   [[noreturn]] void uncallable_error(const llvm::Type *callee) const;
   [[noreturn]] void immutable_assignment_error(const std::string &name) const;
+  [[noreturn]] void reassignment_error(const std::string &name) const;
   [[noreturn]] void unrecognized_type_error(const std::string &type_name) const;
   [[noreturn]] void name_error(const std::string &name) const;
   [[noreturn]] void type_error(std::initializer_list<const llvm::Type *> expected,

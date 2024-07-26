@@ -112,15 +112,16 @@ llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constan
   return local;
 }
 
-llvm::AllocaInst *Compiler::create_immutable(const std::string &name, llvm::Constant *init,
-                                             llvm::Type *type) {
+std::optional<llvm::AllocaInst *>
+Compiler::create_immutable(const std::string &name, llvm::Constant *init, llvm::Type *type) {
   llvm::AllocaInst *local = this->create_alloca(name, init, type);
   llvm::LoadInst *load = this->builder.CreateLoad(type, local);
   load->setAlignment(this->get_alignment(type));
 
-  this->current_scope->put(name, load);
-
-  return local;
+  if (this->current_scope->put(name, load))
+    return local;
+  else
+    return std::nullopt;
 }
 
 std::optional<llvm::AllocaInst *> Compiler::create_mutable(const std::string &name,

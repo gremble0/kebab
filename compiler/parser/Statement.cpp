@@ -49,13 +49,18 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
     if (actual_type != declared_type)
       this->type_error({declared_type}, actual_type);
 
+    std::optional<llvm::AllocaInst *> local;
     if (this->is_mutable)
-      return compiler
-          .create_mutable(this->name, static_cast<llvm::Constant *>(variable_value), declared_type)
-          .value();
+      local = compiler.create_mutable(this->name, static_cast<llvm::Constant *>(variable_value),
+                                      declared_type);
     else
-      return compiler.create_immutable(this->name, static_cast<llvm::Constant *>(variable_value),
-                                       declared_type);
+      local = compiler.create_immutable(this->name, static_cast<llvm::Constant *>(variable_value),
+                                        declared_type);
+
+    if (local.has_value())
+      return local.value();
+    else
+      this->reassignment_error(this->name);
   }
 }
 
