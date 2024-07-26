@@ -11,12 +11,12 @@ static inline std::mutex mutex;
 static inline size_t indent_depth = 0;
 
 void set_stream(std::ostream &new_stream) {
-  std::lock_guard<std::mutex> lock(mutex);
+  std::scoped_lock lock{mutex};
   stream = &new_stream;
 }
 
 void silence() {
-  std::lock_guard<std::mutex> lock(mutex);
+  std::scoped_lock lock{mutex};
   stream = &null_stream;
 }
 

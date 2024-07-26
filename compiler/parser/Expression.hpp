@@ -15,10 +15,10 @@ class FunctionConstructor;
 
 class Expression : public AstNode {
 public:
-  virtual ~Expression() = default;
+  ~Expression() override = default;
 
   static std::unique_ptr<Expression> parse(Lexer &lexer);
-  virtual llvm::Value *compile(Compiler &compiler) const override = 0;
+  llvm::Value *compile(Compiler &compiler) const override = 0;
 };
 
 class CondExpression : public Expression {

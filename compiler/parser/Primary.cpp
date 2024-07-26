@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 #include <vector>
 
@@ -94,10 +95,10 @@ std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
 llvm::Value *Primary::compile(Compiler &compiler) const {
   llvm::Value *result = this->atom->compile(compiler);
 
-  for (size_t i = 0, size = this->suffixes.size(); i < size; ++i) {
-    this->suffixes[i]->subscriptee = result;
-    result = this->suffixes[i]->compile(compiler);
-  }
+  std::ranges::for_each(this->suffixes, [&result, &compiler](auto &suffix) {
+    suffix->subscriptee = result;
+    result = suffix->compile(compiler);
+  });
 
   return result;
 }

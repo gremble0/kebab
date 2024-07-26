@@ -22,10 +22,10 @@ protected:
 public:
   std::string name;
 
-  virtual ~Constructor() = default;
+  ~Constructor() override = default;
 
   static std::unique_ptr<Constructor> parse(Lexer &lexer);
-  virtual llvm::Value *compile(Compiler &compiler) const override = 0;
+  llvm::Value *compile(Compiler &compiler) const override = 0;
   // This pointer can be shared between instances of subclasses of the Constructor class and the
   // caller of this function (likely during compilation)
   virtual std::shared_ptr<Type> get_type() const = 0;

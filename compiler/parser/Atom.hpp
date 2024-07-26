@@ -14,7 +14,7 @@ class Expression;
 
 class Atom : public AstNode {
 public:
-  virtual ~Atom() = default;
+  ~Atom() override = default;
 
   static std::unique_ptr<Atom> parse(Lexer &lexer);
   virtual llvm::Value *compile(Compiler &compiler) const override = 0;
