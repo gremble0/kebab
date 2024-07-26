@@ -90,6 +90,9 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
     if (actual_type != declared_type)
       this->type_error({declared_type}, actual_type);
 
+    if (!compiler.get_value(this->name).has_value())
+      this->assign_nonexisting_error(this->name);
+
     std::optional<llvm::Value *> result = compiler.create_mutable(
         this->name, static_cast<llvm::Constant *>(variable_value), declared_type);
     if (result.has_value())
