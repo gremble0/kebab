@@ -1,0 +1,6 @@
+def main = fn(() => int(
+  def local = int(2)
+  def local = int(3)
+
+  0
+))
