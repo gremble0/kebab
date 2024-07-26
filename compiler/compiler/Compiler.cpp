@@ -26,7 +26,7 @@ namespace Kebab {
 void Compiler::save_module(const std::string &path) const {
   std::error_code error_code;
   llvm::raw_fd_stream fd(path, error_code);
-  this->module.print(fd, nullptr);
+  this->mod.print(fd, nullptr);
 }
 
 void Compiler::load_printf() {
@@ -56,7 +56,7 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root, const std::string
 
 llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::string &name) {
   llvm::Function *function =
-      llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->module);
+      llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->mod);
 
   this->current_scope->put(name, function);
 
@@ -69,7 +69,7 @@ llvm::Function *Compiler::define_function(
   this->start_scope();
 
   llvm::Function *function =
-      llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->module);
+      llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->mod);
 
   // Set parameter names
   for (size_t i = 0, size = parameters.size(); i < size; ++i) {
@@ -96,7 +96,7 @@ llvm::Function *Compiler::define_function(
 }
 
 llvm::Align Compiler::get_alignment(llvm::Type *type) const {
-  const llvm::DataLayout &layout = this->module.getDataLayout();
+  const llvm::DataLayout &layout = this->mod.getDataLayout();
   return layout.getPrefTypeAlign(type);
 }
 

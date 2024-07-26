@@ -76,7 +76,8 @@ public:
   const Span span;
 
   Token(Type type, const Span &span) : type(type), span(span) {}
-  Token(Type type, const Span &span, std::variant<uint8_t, int64_t, double_t, std::string> value)
+  Token(Type type, const Span &span,
+        const std::variant<uint8_t, int64_t, double_t, std::string> &value)
       : type(type), value(value), span(span) {}
   Token(const Span &span, const std::string &word)
       : type(Token::determine_type(word)), value(Token::determine_value(this->type, word)),

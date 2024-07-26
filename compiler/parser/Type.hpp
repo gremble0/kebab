@@ -17,10 +17,10 @@ protected:
   Type() = default;
 
 public:
-  virtual ~Type() = default;
+  ~Type() override = default;
 
   static std::unique_ptr<Type> parse(Lexer &lexer);
-  virtual llvm::Value *compile(Compiler &compiler) const override = 0;
+  llvm::Value *compile(Compiler &compiler) const override = 0;
   virtual llvm::Type *get_llvm_type(Compiler &compiler) const = 0;
 };
 

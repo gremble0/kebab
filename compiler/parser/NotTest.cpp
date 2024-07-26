@@ -22,18 +22,18 @@ std::unique_ptr<NotTest> NotTest::parse(Lexer &lexer) {
 }
 
 llvm::Value *NotTest::compile(Compiler &compiler) const {
-  llvm::Value *comparison = this->comparison->compile(compiler);
+  llvm::Value *comparison_compiled = this->comparison->compile(compiler);
   std::optional<llvm::Value *> operation;
 
   if (this->is_negated)
-    operation = compiler.create_not(comparison);
+    operation = compiler.create_not(comparison_compiled);
   else
-    operation = comparison;
+    operation = comparison_compiled;
 
   if (operation.has_value())
     return operation.value();
   else
-    this->operator_error({compiler.get_bool_type()}, comparison->getType(), "~");
+    this->operator_error({compiler.get_bool_type()}, comparison_compiled->getType(), "~");
 }
 
 } // namespace Kebab::Parser

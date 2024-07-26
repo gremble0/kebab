@@ -40,7 +40,7 @@ namespace Kebab {
 class Compiler {
 private:
   llvm::LLVMContext context;
-  llvm::Module module;
+  llvm::Module mod; // `module` is a reserved word as of c++20 so cannot use that
   llvm::IRBuilder<> builder;
   std::shared_ptr<Scope> current_scope = std::make_shared<Scope>();
 
@@ -56,7 +56,7 @@ private:
   llvm::Align get_alignment(llvm::Type *type) const;
 
 public:
-  Compiler() : module("kebab", context), builder(context) {}
+  Compiler() : mod("kebab", context), builder(context) {}
 
   void compile(std::unique_ptr<Parser::RootNode> root, const std::string &output_path);
 
