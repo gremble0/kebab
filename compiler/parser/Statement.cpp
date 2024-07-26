@@ -41,7 +41,7 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
 
   // meh
   if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(variable_value)) {
-    return variable_value;
+    return function;
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
     llvm::Type *actual_type = variable_value->getType();
@@ -49,7 +49,6 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
     if (actual_type != declared_type)
       this->type_error({declared_type}, actual_type);
 
-    // Can be done further down in ast?
     return compiler.create_local(this->name, static_cast<llvm::Constant *>(variable_value),
                                  declared_type);
   }
@@ -69,8 +68,21 @@ std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
 }
 
 llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function AssignmentStatement::compile");
+  // TODO: check if is mutable
+  this->constructor->name = this->name;
+  llvm::Value *variable_value = this->constructor->compile(compiler);
+
+  if (llvm::Function *function = llvm::dyn_cast<llvm::Function>(variable_value)) {
+    return function;
+  } else {
+    llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
+    llvm::Type *actual_type = variable_value->getType();
+    if (actual_type != declared_type)
+      this->type_error({declared_type}, actual_type);
+
+    return compiler.create_local(this->name, static_cast<llvm::Constant *>(variable_value),
+                                 declared_type);
+  }
 }
 
 std::unique_ptr<ExpressionStatement> ExpressionStatement::parse(Lexer &lexer) {
