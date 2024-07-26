@@ -48,12 +48,12 @@ string_t *rt_value_to_string(const rt_value_t *v) {
     break;
 
   case TYPE_INT: {
-    size_t int_slen = snprintf(NULL, 0, "%ld", v->int_value);
+    size_t int_slen = snprintf(NULL, 0, "%ld", v->int_value) + 1;
     char int_s[int_slen];
     snprintf(int_s, int_slen, "%ld", v->int_value);
 
     string_append_c(s, '(');
-    string_append(s, &(string_t){int_s, int_slen});
+    string_append(s, &string_of(int_s));
     string_append_c(s, ')');
     break;
   }
