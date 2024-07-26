@@ -9,19 +9,20 @@ namespace Kebab {
 
 std::string Token::to_string_short() const {
   switch (this->type) {
-  case Type::INT_LITERAL:
+    using enum Type;
+  case INT_LITERAL:
     return std::to_string(std::get<int64_t>(this->value));
 
-  case Type::FLOAT_LITERAL:
+  case FLOAT_LITERAL:
     return std::to_string(std::get<double_t>(this->value));
 
-  case Type::CHAR_LITERAL:
+  case CHAR_LITERAL:
     return std::format("'{}'", std::to_string(std::get<uint8_t>(this->value)));
 
-  case Type::STRING_LITERAL:
+  case STRING_LITERAL:
     return std::format("\"{}\"", std::get<std::string>(this->value));
 
-  case Type::NAME:
+  case NAME:
     return std::get<std::string>(this->value);
 
   default:
@@ -33,23 +34,24 @@ std::string Token::to_string_verbose() const {
   std::string out = "<token ";
 
   switch (this->type) {
-  case Type::INT_LITERAL:
+    using enum Type;
+  case INT_LITERAL:
     out += std::format("int-literal: \"{}\"", std::to_string(std::get<int64_t>(this->value)));
     break;
 
-  case Type::FLOAT_LITERAL:
+  case FLOAT_LITERAL:
     out += std::format("float-literal: \"{}\"", std::to_string(std::get<double_t>(this->value)));
     break;
 
-  case Type::CHAR_LITERAL:
+  case CHAR_LITERAL:
     out += std::format("char-literal: '{}'", std::to_string(std::get<uint8_t>(this->value)));
     break;
 
-  case Type::STRING_LITERAL:
+  case STRING_LITERAL:
     out += std::format("string-literal: \"{}\"", std::get<std::string>(this->value));
     break;
 
-  case Type::NAME:
+  case NAME:
     out += std::format("name: \"{}\"", std::get<std::string>(this->value));
     break;
 
@@ -64,81 +66,82 @@ std::string Token::to_string_verbose() const {
 
 std::string Token::type_to_string(Type type) {
   switch (type) {
-  case Type::DEF:
+    using enum Type;
+  case DEF:
     return "def";
-  case Type::SET:
+  case SET:
     return "set";
-  case Type::MUT:
+  case MUT:
     return "mut";
-  case Type::NIL:
+  case NIL:
     return "nil";
-  case Type::IF:
+  case IF:
     return "if";
-  case Type::ELIF:
+  case ELIF:
     return "elif";
-  case Type::ELSE:
+  case ELSE:
     return "else";
-  case Type::FN:
+  case FN:
     return "fn";
-  case Type::LIST:
+  case LIST:
     return "list";
-  case Type::TRUE:
+  case TRUE:
     return "true";
-  case Type::FALSE:
+  case FALSE:
     return "false";
-  case Type::AND:
+  case AND:
     return "and";
-  case Type::OR:
+  case OR:
     return "or";
-  case Type::COLON:
+  case COLON:
     return ":";
-  case Type::EQUALS:
+  case EQUALS:
     return "=";
-  case Type::COMMA:
+  case COMMA:
     return ",";
-  case Type::LPAREN:
+  case LPAREN:
     return "(";
-  case Type::RPAREN:
+  case RPAREN:
     return ")";
-  case Type::LBRACKET:
+  case LBRACKET:
     return "[";
-  case Type::RBRACKET:
+  case RBRACKET:
     return "]";
-  case Type::FAT_RARROW:
+  case FAT_RARROW:
     return "=>";
-  case Type::PLUS:
+  case PLUS:
     return "+";
-  case Type::MINUS:
+  case MINUS:
     return "-";
-  case Type::MULT:
+  case MULT:
     return "*";
-  case Type::DIV:
+  case DIV:
     return "/";
-  case Type::NOT:
+  case NOT:
     return "~";
-  case Type::LT:
+  case LT:
     return "<";
-  case Type::LE:
+  case LE:
     return "<=";
-  case Type::EQ:
+  case EQ:
     return "==";
-  case Type::NEQ:
+  case NEQ:
     return "~=";
-  case Type::GT:
+  case GT:
     return ">";
-  case Type::GE:
+  case GE:
     return ">=";
-  case Type::INT_LITERAL:
+  case INT_LITERAL:
     return "<int-literal>";
-  case Type::FLOAT_LITERAL:
+  case FLOAT_LITERAL:
     return "<float-literal>";
-  case Type::CHAR_LITERAL:
+  case CHAR_LITERAL:
     return "<char-literal>";
-  case Type::STRING_LITERAL:
+  case STRING_LITERAL:
     return "<string-literal>";
-  case Type::NAME:
+  case NAME:
     return "<name>";
-  case Type::END_OF_FILE:
+  case END_OF_FILE:
     return "<end of file>";
   }
 }

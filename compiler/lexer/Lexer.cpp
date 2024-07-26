@@ -211,19 +211,20 @@ void Lexer::handle_equals() {
   Token::Type type;
 
   switch (this->peek(1)) {
+    using enum Token::Type;
   case '>':
     this->line_pos += 2;
-    type = Token::Type::FAT_RARROW;
+    type = FAT_RARROW;
     break;
 
   case '=':
     this->line_pos += 2;
-    type = Token::Type::EQ;
+    type = EQ;
     break;
 
   default:
     ++this->line_pos;
-    type = Token::Type::EQUALS;
+    type = EQUALS;
     break;
   }
 

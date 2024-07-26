@@ -120,34 +120,35 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
   std::unique_ptr<Statement> statement;
 
   switch (lexer.peek()->type) {
-  case Token::Type::DEF:
+    using enum Token::Type;
+  case DEF:
     statement = DefinitionStatement::parse(lexer);
     break;
 
-  case Token::Type::SET:
+  case SET:
     statement = AssignmentStatement::parse(lexer);
     break;
 
-  case Token::Type::INT_LITERAL:
-  case Token::Type::FLOAT_LITERAL:
-  case Token::Type::CHAR_LITERAL:
-  case Token::Type::STRING_LITERAL:
-  case Token::Type::NAME:
+  case INT_LITERAL:
+  case FLOAT_LITERAL:
+  case CHAR_LITERAL:
+  case STRING_LITERAL:
+  case NAME:
   // Cond expressions (if/elif/else)
-  case Token::Type::IF:
+  case IF:
   // Factor prefixes
-  case Token::Type::PLUS:
-  case Token::Type::MINUS:
-  case Token::Type::MULT:
-  case Token::Type::DIV:
-  case Token::Type::NOT:
+  case PLUS:
+  case MINUS:
+  case MULT:
+  case DIV:
+  case NOT:
   // Booleans
-  case Token::Type::TRUE:
-  case Token::Type::FALSE:
+  case TRUE:
+  case FALSE:
   // Inner expression wrapped in parens, e.g. `(1 + 2)`
-  case Token::Type::LPAREN:
+  case LPAREN:
   // Lists e.g. `[x, y, z]`
-  case Token::Type::LBRACKET:
+  case LBRACKET:
     statement = ExpressionStatement::parse(lexer);
     break;
 

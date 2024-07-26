@@ -133,36 +133,37 @@ std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
   std::unique_ptr<Atom> atom;
 
   switch (lexer.peek()->type) {
-  case Token::Type::INT_LITERAL:
+    using enum Token::Type;
+  case INT_LITERAL:
     atom = IntAtom::parse(lexer);
     break;
 
-  case Token::Type::FLOAT_LITERAL:
+  case FLOAT_LITERAL:
     atom = FloatAtom::parse(lexer);
     break;
 
-  case Token::Type::CHAR_LITERAL:
+  case CHAR_LITERAL:
     atom = CharAtom::parse(lexer);
     break;
 
-  case Token::Type::STRING_LITERAL:
+  case STRING_LITERAL:
     atom = StringAtom::parse(lexer);
     break;
 
-  case Token::Type::TRUE:
-  case Token::Type::FALSE:
+  case TRUE:
+  case FALSE:
     atom = BoolAtom::parse(lexer);
     break;
 
-  case Token::Type::NAME:
+  case NAME:
     atom = NameAtom::parse(lexer);
     break;
 
-  case Token::Type::LPAREN:
+  case LPAREN:
     atom = InnerExpressionAtom::parse(lexer);
     break;
 
-  case Token::Type::LBRACKET:
+  case LBRACKET:
     atom = ListAtom::parse(lexer);
     break;
 

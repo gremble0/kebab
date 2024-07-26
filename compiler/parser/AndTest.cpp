@@ -17,8 +17,7 @@ std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
   while (true) {
     and_test->not_tests.push_back(NotTest::parse(lexer));
 
-    bool skipped_and = lexer.try_skip({Token::Type::AND});
-    if (!skipped_and)
+    if (bool skipped_and = lexer.try_skip({Token::Type::AND}); !skipped_and)
       break;
   }
 

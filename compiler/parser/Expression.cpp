@@ -20,28 +20,29 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
   std::unique_ptr<Expression> expression;
 
   switch (lexer.peek()->type) {
-  case Token::Type::IF:
+    using enum Token::Type;
+  case IF:
     expression = CondExpression::parse(lexer);
     break;
 
-  case Token::Type::INT_LITERAL:
-  case Token::Type::FLOAT_LITERAL:
-  case Token::Type::CHAR_LITERAL:
-  case Token::Type::STRING_LITERAL:
-  case Token::Type::NAME:
-  case Token::Type::PLUS:
-  case Token::Type::MINUS:
-  case Token::Type::MULT:
-  case Token::Type::DIV:
-  case Token::Type::NOT:
-  case Token::Type::TRUE:
-  case Token::Type::FALSE:
-  case Token::Type::LPAREN:
-  case Token::Type::LBRACKET:
+  case INT_LITERAL:
+  case FLOAT_LITERAL:
+  case CHAR_LITERAL:
+  case STRING_LITERAL:
+  case NAME:
+  case PLUS:
+  case MINUS:
+  case MULT:
+  case DIV:
+  case NOT:
+  case TRUE:
+  case FALSE:
+  case LPAREN:
+  case LBRACKET:
     expression = NormalExpression::parse(lexer);
     break;
 
-  case Token::Type::FN:
+  case FN:
     expression = FunctionExpression::parse(lexer);
     break;
 

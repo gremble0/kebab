@@ -15,27 +15,28 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
   operator_->start_parsing(lexer, "<comparison-operator>");
 
   switch (lexer.peek()->type) {
-  case Token::Type::LT:
+    using enum Token::Type;
+  case LT:
     operator_->type = ComparisonOperator::Type::LT;
     break;
 
-  case Token::Type::LE:
+  case LE:
     operator_->type = ComparisonOperator::Type::LE;
     break;
 
-  case Token::Type::EQ:
+  case EQ:
     operator_->type = ComparisonOperator::Type::EQ;
     break;
 
-  case Token::Type::NEQ:
+  case NEQ:
     operator_->type = ComparisonOperator::Type::NEQ;
     break;
 
-  case Token::Type::GT:
+  case GT:
     operator_->type = ComparisonOperator::Type::GT;
     break;
 
-  case Token::Type::GE:
+  case GE:
     operator_->type = ComparisonOperator::Type::GE;
     break;
 

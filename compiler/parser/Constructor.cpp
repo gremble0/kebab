@@ -15,15 +15,16 @@ std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
   std::unique_ptr<Constructor> constructor;
 
   switch (lexer.peek()->type) {
-  case Token::Type::FN:
+    using enum Token::Type;
+  case FN:
     constructor = FunctionConstructor::parse(lexer);
     break;
 
-  case Token::Type::LIST:
+  case LIST:
     constructor = ListConstructor::parse(lexer);
     break;
 
-  case Token::Type::NAME:
+  case NAME:
     constructor = PrimitiveConstructor::parse(lexer);
     break;
 

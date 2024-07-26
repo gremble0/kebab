@@ -88,32 +88,33 @@ public:
 
 private:
   static constexpr Type determine_type(std::string_view word) {
+    using enum Type;
     if (word == "def")
-      return Type::DEF;
+      return DEF;
     else if (word == "set")
-      return Type::SET;
+      return SET;
     else if (word == "mut")
-      return Type::MUT;
+      return MUT;
     else if (word == "if")
-      return Type::IF;
+      return IF;
     else if (word == "elif")
-      return Type::ELIF;
+      return ELIF;
     else if (word == "else")
-      return Type::ELSE;
+      return ELSE;
     else if (word == "fn")
-      return Type::FN;
+      return FN;
     else if (word == "list")
-      return Type::LIST;
+      return LIST;
     else if (word == "true")
-      return Type::TRUE;
+      return TRUE;
     else if (word == "false")
-      return Type::FALSE;
+      return FALSE;
     else if (word == "and")
-      return Type::AND;
+      return AND;
     else if (word == "or")
-      return Type::OR;
+      return OR;
     else
-      return Type::NAME;
+      return NAME;
   }
 
   static std::variant<uint8_t, int64_t, double_t, std::string>

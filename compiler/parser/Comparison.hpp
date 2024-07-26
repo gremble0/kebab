@@ -15,17 +15,18 @@ class ComparisonOperator : public AstNode {
 private:
   std::string to_string() const {
     switch (this->type) {
-    case Type::LT:
+      using enum Type;
+    case LT:
       return "<";
-    case Type::LE:
+    case LE:
       return "<=";
-    case Type::EQ:
+    case EQ:
       return "==";
-    case Type::NEQ:
+    case NEQ:
       return "~=";
-    case Type::GT:
+    case GT:
       return ">";
-    case Type::GE:
+    case GE:
       return ">=";
     }
   }
@@ -44,12 +45,13 @@ public:
 
   static constexpr bool is_comparison_operator(Token::Type type) {
     switch (type) {
-    case Token::Type::LT:
-    case Token::Type::LE:
-    case Token::Type::EQ:
-    case Token::Type::NEQ:
-    case Token::Type::GT:
-    case Token::Type::GE:
+      using enum Token::Type;
+    case LT:
+    case LE:
+    case EQ:
+    case NEQ:
+    case GT:
+    case GE:
       return true;
 
     default:
