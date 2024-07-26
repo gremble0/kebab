@@ -39,7 +39,8 @@ public:
     NEQ, // ~=
     GT,  // >
     GE,  // >=
-  } type;
+  };
+  Type type;
   llvm::Value *lhs;
   llvm::Value *rhs;
 

@@ -25,7 +25,8 @@ public:
   enum class Type {
     MULT,
     DIV,
-  } type;
+  };
+  Type type;
   llvm::Value *lhs;
   llvm::Value *rhs;
 
@@ -59,7 +60,8 @@ public:
   enum class Type {
     PLUS,
     MINUS,
-  } type;
+  };
+  Type type;
   llvm::Value *prefixed;
 
   static constexpr bool is_factor_prefix(Token::Type type) {
