@@ -9,9 +9,6 @@ private:
   struct Binding {
     bool is_mutable;
     llvm::Value *value;
-
-    // Binding() : is_mutable(false), value(nullptr) {}
-    // Binding(bool is_mutable, llvm::Value *value) : is_mutable(is_mutable), value(value) {}
   };
 
   std::unordered_map<std::string, Binding> map;

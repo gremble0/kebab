@@ -20,7 +20,7 @@ struct Span {
   Position start;
   Position end;
 
-  Span() {}
+  Span() = default;
   Span(Position start, Position end) : start(start), end(end) {}
 
   std::string to_string() const;
