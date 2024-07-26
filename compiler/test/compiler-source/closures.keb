@@ -1,0 +1,10 @@
+def main = fn(() => int(
+  def local-var = int(69)
+  def local-fn = fn(() => int(
+    def inner-var = int(42)
+    inner-var + 420
+  ))
+  def local-fn-called = int(local-fn())
+
+  0
+))
