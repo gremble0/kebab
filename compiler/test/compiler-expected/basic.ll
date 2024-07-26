@@ -13,10 +13,10 @@ entry:
   %0 = load ptr, ptr %inner, align 8
   %my-num = alloca i64, align 8
   store i64 2, ptr %my-num, align 8
-  %1 = load i64, ptr %my-num, align 4
+  %1 = load i64, ptr %my-num, align 8
   %2 = call i64 (ptr, ...) @printf(ptr @1)
   %v = alloca i64, align 8
   store i64 123, ptr %v, align 8
-  %3 = load i64, ptr %v, align 4
+  %3 = load i64, ptr %v, align 8
   ret i64 0
 }

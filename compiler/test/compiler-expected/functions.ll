@@ -14,7 +14,7 @@ define i64 @local-addition() {
 entry:
   %n = alloca i64, align 8
   store i64 68, ptr %n, align 8
-  %0 = load i64, ptr %n, align 4
+  %0 = load i64, ptr %n, align 8
   %1 = add i64 %0, 1
   ret i64 %1
 }
@@ -24,7 +24,7 @@ entry:
   %0 = call i64 @one-factory()
   %one = alloca i64, align 8
   store i64 %0, ptr %one, align 8
-  %1 = load i64, ptr %one, align 4
+  %1 = load i64, ptr %one, align 8
   ret i64 %1
 }
 
@@ -56,11 +56,11 @@ entry:
   %2 = add i64 %0, %1
   %two = alloca i64, align 8
   store i64 %2, ptr %two, align 8
-  %3 = load i64, ptr %two, align 4
+  %3 = load i64, ptr %two, align 8
   %4 = add i64 %3, %3
   %5 = call i64 (ptr, ...) @printf(ptr @0, i64 %4)
   %i = alloca i64, align 8
   store i64 %5, ptr %i, align 8
-  %6 = load i64, ptr %i, align 4
+  %6 = load i64, ptr %i, align 8
   ret i64 0
 }

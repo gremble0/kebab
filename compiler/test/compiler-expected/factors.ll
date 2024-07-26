@@ -7,13 +7,13 @@ define i64 @main() {
 entry:
   %i1 = alloca i64, align 8
   store i64 1, ptr %i1, align 8
-  %0 = load i64, ptr %i1, align 4
+  %0 = load i64, ptr %i1, align 8
   %i2 = alloca i64, align 8
   store i64 6, ptr %i2, align 8
-  %1 = load i64, ptr %i2, align 4
+  %1 = load i64, ptr %i2, align 8
   %i3 = alloca i64, align 8
   store i64 -10, ptr %i3, align 8
-  %2 = load i64, ptr %i3, align 4
+  %2 = load i64, ptr %i3, align 8
   %f1 = alloca double, align 8
   store double 7.750000e+00, ptr %f1, align 8
   %3 = load double, ptr %f1, align 8
