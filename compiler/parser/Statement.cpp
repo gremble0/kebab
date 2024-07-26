@@ -11,8 +11,7 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/Support/Casting.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<DefinitionStatement> DefinitionStatement::parse(Lexer &lexer) {
   std::unique_ptr<DefinitionStatement> definition = std::make_unique<DefinitionStatement>();
@@ -156,5 +155,4 @@ std::optional<std::unique_ptr<Statement>> Statement::try_parse_statement(Lexer &
   }
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

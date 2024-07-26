@@ -8,8 +8,7 @@
 #include "lexer/Lexer.hpp"
 #include "parser/AstNode.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 class Expression;
 
@@ -85,7 +84,6 @@ public:
   llvm::Value *compile(Compiler &compiler) const override;
 };
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser
 
 #endif

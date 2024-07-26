@@ -5,8 +5,7 @@
 #include <mutex>
 #include <ostream>
 
-namespace Kebab {
-namespace Logger {
+namespace Kebab::Logger {
 
 static inline std::ostream null_stream(0);
 static inline std::ostream *stream = &std::cout;
@@ -20,7 +19,6 @@ void log(const std::string &message);
 void log_with_indent(const std::string &message);
 void log_with_dedent(const std::string &message);
 
-} // namespace Logger
-} // namespace Kebab
+} // namespace Kebab::Logger
 
 #endif

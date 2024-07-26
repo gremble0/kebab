@@ -8,8 +8,7 @@
 #include "parser/AstNode.hpp"
 #include "parser/Primary.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 class FactorOperator : public AstNode {
 private:
@@ -91,7 +90,6 @@ public:
   llvm::Value *compile(Compiler &compiler) const override;
 };
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser
 
 #endif

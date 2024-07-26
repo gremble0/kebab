@@ -7,8 +7,7 @@
 #include "parser/AstNode.hpp"
 #include "parser/Factor.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 // this is a prefix?? dont remember should look into and maybe rename
 class TermOperator : AstNode {
@@ -54,7 +53,6 @@ public:
   llvm::Value *compile(Compiler &compiler) const override;
 };
 
-} // namespace Parser
 } // namespace Kebab
 
 #endif

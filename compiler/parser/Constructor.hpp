@@ -10,8 +10,7 @@
 #include "parser/Statement.hpp"
 #include "parser/Type.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 class Constructor : public AstNode {
 protected:
@@ -86,7 +85,6 @@ public:
   std::shared_ptr<Type> get_type() const override { return this->type; }
 };
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser
 
 #endif

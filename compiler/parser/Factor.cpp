@@ -4,8 +4,7 @@
 #include "parser/Factor.hpp"
 #include "parser/Primary.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
   std::unique_ptr<FactorPrefix> prefix = std::make_unique<FactorPrefix>();
@@ -136,5 +135,4 @@ llvm::Value *FactorOperator::compile(Compiler &compiler) const {
                          this->to_string());
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

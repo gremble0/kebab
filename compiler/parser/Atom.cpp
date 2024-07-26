@@ -5,8 +5,7 @@
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Instructions.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<IntAtom> IntAtom::parse(Lexer &lexer) {
   std::unique_ptr<IntAtom> atom = std::make_unique<IntAtom>();
@@ -176,5 +175,4 @@ std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
   return atom;
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

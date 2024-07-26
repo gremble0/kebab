@@ -1,8 +1,7 @@
 #include "parser/RootNode.hpp"
 #include "parser/Statement.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<RootNode> RootNode::parse(Lexer &lexer) {
   std::unique_ptr<RootNode> root_node = std::make_unique<RootNode>();
@@ -23,5 +22,4 @@ llvm::Value *RootNode::compile(Compiler &compiler) const {
   return nullptr;
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

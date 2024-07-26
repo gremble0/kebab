@@ -3,8 +3,7 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Term.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
   std::unique_ptr<TermOperator> operator_ = std::make_unique<TermOperator>();
@@ -81,5 +80,4 @@ llvm::Value *Term::compile(Compiler &compiler) const {
   return result;
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

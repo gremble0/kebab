@@ -2,11 +2,9 @@
 #include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
 #include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Type.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<Type> Type::parse(Lexer &lexer) {
   std::unique_ptr<Type> type;
@@ -132,5 +130,4 @@ llvm::Value *PrimitiveType::compile(Compiler &compiler) const {
   assert(false && "unimplemented function PrimitiveType::compile");
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

@@ -6,8 +6,7 @@
 #include "parser/Comparison.hpp"
 #include "parser/Term.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
   std::unique_ptr<ComparisonOperator> operator_ = std::make_unique<ComparisonOperator>();
@@ -120,5 +119,4 @@ llvm::Value *Comparison::compile(Compiler &compiler) const {
   return result;
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

@@ -14,8 +14,7 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Value.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
   std::unique_ptr<Expression> expression;
@@ -235,5 +234,4 @@ llvm::Value *FunctionExpression::compile(Compiler &compiler) const {
   assert(false && "unimplemented function FunctionExpression::compile");
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

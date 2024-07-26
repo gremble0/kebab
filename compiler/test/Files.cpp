@@ -9,8 +9,7 @@
 #include "parser/RootNode.hpp"
 #include "test/Files.hpp"
 
-namespace Kebab {
-namespace Test {
+namespace Kebab::Test {
 
 void ASSERT_FILES_EQ(std::ifstream &f1, std::ifstream &f2) {
   while (!f1.eof() && !f2.eof()) {
@@ -122,5 +121,4 @@ void replace_expected() {
   replace_compiler_expected();
 }
 
-} // namespace Test
-} // namespace Kebab
+} // namespace Kebab::Test

@@ -5,8 +5,7 @@
 #include "parser/AstNode.hpp"
 #include "parser/Comparison.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 class NotTest : public AstNode {
 public:
@@ -17,7 +16,6 @@ public:
   llvm::Value *compile(Compiler &compiler) const override;
 };
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser
 
 #endif

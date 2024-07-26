@@ -2,8 +2,7 @@
 #include "lexer/Lexer.hpp"
 #include "parser/Comparison.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<NotTest> NotTest::parse(Lexer &lexer) {
   std::unique_ptr<NotTest> not_test = std::make_unique<NotTest>();
@@ -36,5 +35,4 @@ llvm::Value *NotTest::compile(Compiler &compiler) const {
     this->operator_error({compiler.get_bool_type()}, comparison->getType(), "~");
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

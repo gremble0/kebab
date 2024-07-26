@@ -8,8 +8,7 @@
 #include "parser/Expression.hpp"
 #include "llvm/IR/Value.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 class Constructor; // Cant include Constructor.hpp because of recursive includes
 
@@ -53,7 +52,6 @@ public:
   bool is_expression() const override { return true; }
 };
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser
 
 #endif

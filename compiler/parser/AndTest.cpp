@@ -5,11 +5,10 @@
 #include "parser/AndTest.hpp"
 #include "parser/NotTest.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<AndTest> AndTest::parse(Lexer &lexer) {
-  std::unique_ptr<AndTest> and_test = std::make_unique<AndTest>();
+  auto and_test = std::make_unique<AndTest>();
   and_test->start_parsing(lexer, "<and-test>");
 
   // Keep parsing and tests until we have no longer ignored an `and` token
@@ -40,5 +39,4 @@ llvm::Value *AndTest::compile(Compiler &compiler) const {
   return result;
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

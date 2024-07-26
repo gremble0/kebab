@@ -9,8 +9,7 @@
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Function.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
   std::unique_ptr<Constructor> constructor;
@@ -176,5 +175,4 @@ llvm::Value *PrimitiveConstructor::compile(Compiler &compiler) const {
   return return_value;
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

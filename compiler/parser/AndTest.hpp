@@ -8,8 +8,7 @@
 #include "parser/AstNode.hpp"
 #include "parser/NotTest.hpp"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 class AndTest : public AstNode {
 public:
@@ -19,7 +18,6 @@ public:
   llvm::Value *compile(Compiler &compiler) const override;
 };
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser
 
 #endif

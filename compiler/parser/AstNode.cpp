@@ -8,8 +8,7 @@
 #include "llvm/IR/Type.h"
 #include "llvm/Support/raw_ostream.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::string AstNode::getnline(const std::string &path, size_t line_number) {
   std::ifstream stream(path);
@@ -175,5 +174,4 @@ void AstNode::finish_parsing(Lexer &lexer, const std::string &node_name) {
   this->span.end = lexer.position();
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

@@ -1,7 +1,6 @@
 #include "logging/Logger.hpp"
 
-namespace Kebab {
-namespace Logger {
+namespace Kebab::Logger {
 
 void set_stream(std::ostream &new_stream) {
   std::lock_guard<std::mutex> lock(mutex);
@@ -28,5 +27,4 @@ void log_with_dedent(const std::string &message) {
   log(message);
 }
 
-} // namespace Logger
-} // namespace Kebab
+} // namespace Kebab::Logger

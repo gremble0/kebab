@@ -5,8 +5,7 @@
 #include "test/Files.hpp"
 #include "gtest/gtest.h"
 
-namespace Kebab {
-namespace Test {
+namespace Kebab::Test {
 
 static void ASSERT_EXPECTED_LEXING(const std::string &basename) {
   std::string source_path = "lexer-source/" + basename + ".keb";
@@ -72,5 +71,4 @@ TEST(LexerTest, ErrorsWhenIllegalToken) {
   ASSERT_DEATH({ ASSERT_EXPECTED_LEXING("illegal"); }, "illegal token");
 }
 
-} // namespace Test
-} // namespace Kebab
+} // namespace Kebab::Test

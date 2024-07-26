@@ -8,8 +8,7 @@
 #include "lexer/Lexer.hpp"
 #include "llvm/IR/Value.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 class AstNode {
 private:
@@ -47,7 +46,6 @@ public:
   virtual llvm::Value *compile(Compiler &compiler) const = 0;
 };
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser
 
 #endif

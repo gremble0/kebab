@@ -8,8 +8,7 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Value.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
   std::unique_ptr<PrimarySubscription> subscription = std::make_unique<PrimarySubscription>();
@@ -98,5 +97,4 @@ llvm::Value *Primary::compile(Compiler &compiler) const {
   return atom_compiled;
 }
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser

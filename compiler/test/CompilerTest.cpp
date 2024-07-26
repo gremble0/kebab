@@ -7,8 +7,7 @@
 #include "parser/RootNode.hpp"
 #include "gtest/gtest.h"
 
-namespace Kebab {
-namespace Test {
+namespace Kebab::Test {
 
 static void ASSERT_EXPECTED_COMPILATION(const std::string &basename) {
   std::string source_path = "compiler-source/" + basename + ".keb";
@@ -56,5 +55,4 @@ TEST(CompilerTest, CompilesOrKeb) { ASSERT_EXPECTED_COMPILATION("or"); }
 
 TEST(CompilerTest, CompilesTermsKeb) { ASSERT_EXPECTED_COMPILATION("terms"); }
 
-} // namespace Test
-} // namespace Kebab
+} // namespace Kebab::Test

@@ -9,8 +9,7 @@
 #include "parser/Statement.hpp"
 #include "llvm/IR/Value.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 class RootNode : public AstNode {
 public:
@@ -20,7 +19,6 @@ public:
   llvm::Value *compile(Compiler &compiler) const override;
 };
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser
 
 #endif

@@ -10,8 +10,7 @@
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Type.h"
 
-namespace Kebab {
-namespace Parser {
+namespace Kebab::Parser {
 
 class Type : public AstNode {
 protected:
@@ -61,7 +60,6 @@ public:
   llvm::Type *get_llvm_type(Compiler &compiler) const override;
 };
 
-} // namespace Parser
-} // namespace Kebab
+} // namespace Kebab::Parser
 
 #endif

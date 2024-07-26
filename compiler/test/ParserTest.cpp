@@ -8,8 +8,7 @@
 #include "parser/RootNode.hpp"
 #include "gtest/gtest.h"
 
-namespace Kebab {
-namespace Test {
+namespace Kebab::Test {
 
 static void ASSERT_EXPECTED_PARSING(const std::string &basename) {
   std::string source_path = "parser-source/" + basename + ".keb";
@@ -66,5 +65,4 @@ TEST(ParserTest, ErrorsWithGoodMessageWhenUnexpectedToken) {
       { ASSERT_EXPECTED_PARSING("unexpected"); }, "unexpected token \\( expected , or \\)");
 }
 
-} // namespace Test
-} // namespace Kebab
+} // namespace Kebab::Test
