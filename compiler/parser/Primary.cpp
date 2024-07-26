@@ -75,9 +75,9 @@ std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
     break;
 
   default:
-    parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.peek()->to_string_short(),
-                 lexer);
+    AstNode::parser_error(std::string("reached unreachable branch with token: ") +
+                              lexer.peek()->to_string_short(),
+                          lexer);
   }
 
   return suffix;

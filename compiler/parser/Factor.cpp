@@ -22,9 +22,9 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
     break;
 
   default:
-    parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.peek()->to_string_short(),
-                 lexer);
+    AstNode::parser_error(std::string("reached unreachable branch with token: ") +
+                              lexer.peek()->to_string_short(),
+                          lexer);
   }
 
   lexer.advance();
@@ -107,9 +107,9 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
     break;
 
   default:
-    parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.peek()->to_string_short(),
-                 lexer);
+    AstNode::parser_error(std::string("reached unreachable branch with token: ") +
+                              lexer.peek()->to_string_short(),
+                          lexer);
   }
 
   lexer.advance();

@@ -153,7 +153,8 @@ std::unique_ptr<Statement> Statement::parse(Lexer &lexer) {
     break;
 
   default:
-    parser_error(std::string("unexpected token '") + lexer.peek()->to_string_short() + '\'', lexer);
+    AstNode::parser_error(
+        std::string("unexpected token '") + lexer.peek()->to_string_short() + '\'', lexer);
   }
 
   return statement;

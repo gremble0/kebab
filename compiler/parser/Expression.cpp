@@ -47,7 +47,8 @@ std::unique_ptr<Expression> Expression::parse(Lexer &lexer) {
     break;
 
   default:
-    parser_error(std::string("unexpected token '") + lexer.peek()->to_string_short() + '\'', lexer);
+    AstNode::parser_error(
+        std::string("unexpected token '") + lexer.peek()->to_string_short() + '\'', lexer);
   }
 
   return expression;
@@ -66,8 +67,8 @@ void CondExpression::parse_test_body(Lexer &lexer) {
   }
 
   if (!body.back()->is_expression())
-    this->parser_error("missing return, last statement in each cond branch must be an expression",
-                       lexer);
+    AstNode::parser_error(
+        "missing return, last statement in each cond branch must be an expression", lexer);
 
   this->bodies.push_back(std::move(body));
 

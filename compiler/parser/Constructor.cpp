@@ -29,8 +29,8 @@ std::unique_ptr<Constructor> Constructor::parse(Lexer &lexer) {
     break;
 
   default:
-    parser_error("unexpected token '" + lexer.peek()->to_string_short() + "' expected some type",
-                 lexer);
+    AstNode::parser_error(
+        "unexpected token '" + lexer.peek()->to_string_short() + "' expected some type", lexer);
   }
 
   return constructor;
@@ -147,8 +147,8 @@ void PrimitiveConstructor::parse_body(Lexer &lexer) {
     this->body.push_back(Statement::parse(lexer));
 
   if (!this->body.back()->is_expression())
-    this->parser_error("missing return, last statement in each function must be an expression",
-                       lexer);
+    AstNode::parser_error("missing return, last statement in each function must be an expression",
+                          lexer);
 
   lexer.skip({Token::Type::RPAREN});
 }

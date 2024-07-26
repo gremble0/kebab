@@ -42,9 +42,9 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
 
   default:
     // TODO: bad
-    parser_error(std::string("reached unreachable branch with token: ") +
-                     lexer.peek()->to_string_short(),
-                 lexer);
+    AstNode::parser_error(std::string("reached unreachable branch with token: ") +
+                              lexer.peek()->to_string_short(),
+                          lexer);
   }
 
   lexer.advance();
