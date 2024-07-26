@@ -1,6 +1,8 @@
 #include <cassert>
 
 #include "lexer/Lexer.hpp"
+#include "parser/Expression.hpp"
+#include "parser/Statement.hpp"
 #include "parser/Term.hpp"
 
 namespace Kebab::Parser {

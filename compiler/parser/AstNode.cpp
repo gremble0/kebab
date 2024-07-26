@@ -1,3 +1,4 @@
+#include <format>
 #include <initializer_list>
 #include <iostream>
 #include <string>
@@ -25,8 +26,9 @@ std::string AstNode::getnline(const std::string &path, size_t line_number) {
 }
 
 std::string AstNode::where() const {
-  std::string file_coordinates = this->path + ':' + std::to_string(this->span.start.line) + ':' +
-                                 std::to_string(this->span.start.col) + '\n';
+  std::string file_coordinates =
+      std::format("{}:{}:{}\n", this->path, std::to_string(this->span.start.line),
+                  std::to_string(this->span.start.col));
   std::string line = this->getnline(this->path, this->span.start.line) + '\n';
   std::string line_cursor =
       this->span.start.col > 0 ? std::string(this->span.start.col - 1, ' ') + "^\n" : "^\n";
@@ -35,7 +37,7 @@ std::string AstNode::where() const {
 }
 
 // TODO: remove this function
-[[noreturn]] void AstNode::parser_error(const std::string &message, Lexer &lexer) {
+[[noreturn]] void AstNode::parser_error(const std::string &message, const Lexer &lexer) {
   std::string pretty_position = lexer.pretty_position();
   std::string labeled_message = "parser-error: " + message;
 
@@ -99,7 +101,7 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-[[noreturn]] void AstNode::operator_error(std::vector<const llvm::Type *> supported,
+[[noreturn]] void AstNode::operator_error(const std::vector<const llvm::Type *> &supported,
                                           const llvm::Type *actual,
                                           const std::string &operator_) const {
   std::string message;
@@ -129,7 +131,7 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-[[noreturn]] void AstNode::operator_error(std::vector<const llvm::Type *> supported,
+[[noreturn]] void AstNode::operator_error(const std::vector<const llvm::Type *> &supported,
                                           const llvm::Type *lhs, const llvm::Type *rhs,
                                           const std::string &operator_) const {
   std::string message;
@@ -161,14 +163,14 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-void AstNode::start_parsing(Lexer &lexer, const std::string &node_name) {
+void AstNode::start_parsing(const Lexer &lexer, const std::string &node_name) {
   // maybe some #ifdef for logging (this would affect testing too)
   Logger::log_with_indent(node_name);
   this->span.start = lexer.position();
   this->path = lexer.get_path();
 }
 
-void AstNode::finish_parsing(Lexer &lexer, const std::string &node_name) {
+void AstNode::finish_parsing(const Lexer &lexer, const std::string &node_name) {
   // maybe some #ifdef for logging (this would affect testing too)
   Logger::log_with_dedent(node_name);
   this->span.end = lexer.position();

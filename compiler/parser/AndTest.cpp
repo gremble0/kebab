@@ -3,7 +3,9 @@
 
 #include "lexer/Lexer.hpp"
 #include "parser/AndTest.hpp"
+#include "parser/Expression.hpp"
 #include "parser/NotTest.hpp"
+#include "parser/Statement.hpp"
 
 namespace Kebab::Parser {
 

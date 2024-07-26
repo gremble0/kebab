@@ -1,6 +1,8 @@
 #include "parser/NotTest.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Comparison.hpp"
+#include "parser/Expression.hpp"
+#include "parser/Statement.hpp"
 
 namespace Kebab::Parser {
 

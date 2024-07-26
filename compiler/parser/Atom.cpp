@@ -2,6 +2,7 @@
 
 #include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
+#include "parser/Statement.hpp"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Instructions.h"
 

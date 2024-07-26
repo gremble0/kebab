@@ -13,15 +13,15 @@ TESTOBJS := main.o LexerTest.o ParserTest.o CompilerTest.o Files.o
 
 LLVM_DIR := ../../lib/llvm-project
 LLVM_CONFIG := $(LLVM_DIR)/build/bin/llvm-config
-LLVM_CXXFLAGS := $(shell $(LLVM_CONFIG) --cxxflags)
+LLVM_CFLAGS := $(shell $(LLVM_CONFIG) --cflags)
 LLVM_LDFLAGS := $(shell $(LLVM_CONFIG) --ldflags --system-libs --libs core)
 
 all: $(TESTOBJS)
 	$(MAKE) -C ..
-	$(CC) $(CFLAGS) $(LLVM_CXXFLAGS) $(INCLUDES) $(TESTOBJS) $(SRCOBJS) -o run_tests $(LIBS) $(LLVM_LDFLAGS)
+	$(CC) $(CFLAGS) $(LLVM_CFLAGS) $(INCLUDES) $(TESTOBJS) $(SRCOBJS) -o run_tests $(LIBS) $(LLVM_LDFLAGS)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) $(LLVM_CXXFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(LLVM_CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	$(MAKE) -C .. clean

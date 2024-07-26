@@ -28,13 +28,14 @@
 
 #include "Scope.hpp"
 
-namespace Kebab {
-// Can't unclude RootNode due to circular imports so have to declare independently
-namespace Parser {
+namespace Kebab::Parser {
 class RootNode;
 class Constructor;
 class FunctionParameter;
-} // namespace Parser
+} // namespace Kebab::Parser
+
+namespace Kebab {
+// Can't unclude RootNode due to circular imports so have to declare independently
 
 class Compiler {
 private:

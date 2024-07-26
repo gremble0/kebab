@@ -1,8 +1,10 @@
 #include <cassert>
 #include <optional>
 
+#include "parser/Expression.hpp"
 #include "parser/Factor.hpp"
 #include "parser/Primary.hpp"
+#include "parser/Statement.hpp"
 
 namespace Kebab::Parser {
 

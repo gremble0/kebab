@@ -4,6 +4,8 @@
 
 #include "lexer/Lexer.hpp"
 #include "parser/Comparison.hpp"
+#include "parser/Expression.hpp"
+#include "parser/Statement.hpp"
 #include "parser/Term.hpp"
 
 namespace Kebab::Parser {

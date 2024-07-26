@@ -7,7 +7,7 @@
 #include <string>
 #include <variant>
 
-#include "Span.hpp"
+#include "lexer/Span.hpp"
 
 namespace Kebab {
 
