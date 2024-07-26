@@ -87,15 +87,14 @@ std::unique_ptr<Primary> Primary::parse(Lexer &lexer) {
 }
 
 llvm::Value *Primary::compile(Compiler &compiler) const {
-  llvm::Value *atom_compiled = this->atom->compile(compiler);
+  llvm::Value *result = this->atom->compile(compiler);
 
-  if (this->suffixes.size() > 0) {
-    // TODO: This does not compile multiple suffixes
-    this->suffixes.front()->subscriptee = atom_compiled;
-    return this->suffixes.front()->compile(compiler);
+  for (size_t i = 0, size = this->suffixes.size(); i < size; ++i) {
+    this->suffixes[i]->subscriptee = result;
+    result = this->suffixes[i]->compile(compiler);
   }
 
-  return atom_compiled;
+  return result;
 }
 
 } // namespace Kebab::Parser
