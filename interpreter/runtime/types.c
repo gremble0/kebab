@@ -4,10 +4,10 @@
 #include "parser/types.h"
 #include "runtime/error.h"
 
-// TODO: This should not be necessary if no duplicate types are produced, then
-// we could just do `==`
-// have global type_registry and function type_register(keb_type_t *type) that
-// checks if type_registry has type and adds if it doesnt -> no duplicate types
+// TODO: This should not be necessary if no duplicate types are produced (types are interned), then
+// we could just do pointer comparison with `==` with some global type_registry and function
+// type_register(keb_type_t *type) that checks if type_registry has type and adds if it doesnt -> no
+// duplicate types
 void type_compare(keb_type_t *expected, keb_type_t *actual, span_t span) {
   if (expected->kind != actual->kind)
     err_type_error(expected, actual, span);
