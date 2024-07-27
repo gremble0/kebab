@@ -32,8 +32,10 @@ static void lexer_load_next_line(lexer_t *lexer) {
   size_t _ = 0;
   char *line_buf = NULL;
   ssize_t line_len = getline(&line_buf, &_, lexer->file.f);
-  if (line_len < 0)
+  if (line_len < 0) {
+    free(line_buf);
     return;
+  }
 
   string_set(lexer->line, line_buf, line_len);
   lexer->prev_line_pos = lexer->line_pos;
