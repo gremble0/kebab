@@ -95,6 +95,7 @@ static void primary_suffix_free(primary_suffix_t *psfx) {
     expression_free(psfx->subscription);
     // free(psfx->subscription) ?
     break;
+
   case PRIMARY_ARGUMENT:
     list_map(psfx->arguments, (list_map_func)expression_free);
     list_free(psfx->arguments);

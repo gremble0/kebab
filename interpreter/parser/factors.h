@@ -10,7 +10,6 @@ typedef enum {
   UNARY_NO_OP, // Indicates missing operator
 } unary_operator_t;
 
-// TODO: nullable types - would be in factor probably?
 typedef struct {
   unary_operator_t prefix; // e.g. -2, +1, ~false
   primary_t *primary;

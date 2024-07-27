@@ -27,8 +27,6 @@ static void print_lexer_pos(lexer_t *lexer) {
   string_free(indent);
 }
 
-// TODO: const char *context? statement, expression, etc.
-// TODO: also ideally none of these functions take the lexer as a param
 _Noreturn void err_illegal_token(lexer_t *lexer) {
   print_lexer_pos(lexer);
   fprintf(stderr, "illegal-token-error: '%s'\n", token_to_string(lexer->cur_token)->s);

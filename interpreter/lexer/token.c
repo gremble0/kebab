@@ -48,80 +48,118 @@ string_t *token_kind_to_string(token_kind_t kind) {
   switch (kind) {
   case TOKEN_DEF:
     return string_dup(&token_string_def);
+
   case TOKEN_SET:
     return string_dup(&token_string_set);
+
   case TOKEN_MUT:
     return string_dup(&token_string_mut);
+
   case TOKEN_NIL:
     return string_dup(&token_string_nil);
+
   case TOKEN_IF:
     return string_dup(&token_string_if);
+
   case TOKEN_ELIF:
     return string_dup(&token_string_elif);
+
   case TOKEN_ELSE:
     return string_dup(&token_string_else);
+
   case TOKEN_CHAR:
     return string_dup(&token_string_char);
+
   case TOKEN_STRING:
     return string_dup(&token_string_string);
+
   case TOKEN_INT:
     return string_dup(&token_string_int);
+
   case TOKEN_BOOL:
     return string_dup(&token_string_bool);
+
   case TOKEN_FN:
     return string_dup(&token_string_fn);
+
   case TOKEN_LIST:
     return string_dup(&token_string_list);
+
   case TOKEN_TRUE:
     return string_dup(&token_string_true);
+
   case TOKEN_FALSE:
     return string_dup(&token_string_false);
+
   case TOKEN_COLON:
     return string_dup(&token_string_colon);
+
   case TOKEN_EQUALS:
     return string_dup(&token_string_equals);
+
   case TOKEN_COMMA:
     return string_dup(&token_string_comma);
+
   case TOKEN_LPAREN:
     return string_dup(&token_string_lparen);
+
   case TOKEN_RPAREN:
     return string_dup(&token_string_rparen);
+
   case TOKEN_LBRACKET:
     return string_dup(&token_string_lbrace);
+
   case TOKEN_RBRACKET:
     return string_dup(&token_string_rbrace);
+
   case TOKEN_FAT_RARROW:
     return string_dup(&token_string_fat_rarrow);
+
   case TOKEN_PLUS:
     return string_dup(&token_string_plus);
+
   case TOKEN_MINUS:
     return string_dup(&token_string_minus);
+
   case TOKEN_MULT:
     return string_dup(&token_string_mult);
+
   case TOKEN_DIV:
     return string_dup(&token_string_div);
+
   case TOKEN_NOT:
     return string_dup(&token_string_not);
+
   case TOKEN_LT:
     return string_dup(&token_string_lt);
+
   case TOKEN_LE:
     return string_dup(&token_string_le);
+
   case TOKEN_EQ:
     return string_dup(&token_string_eq);
+
   case TOKEN_NEQ:
     return string_dup(&token_string_neq);
+
   case TOKEN_GT:
     return string_dup(&token_string_gt);
+
   case TOKEN_GE:
     return string_dup(&token_string_ge);
+
   case TOKEN_EOF:
     return string_dup(&token_string_eof);
+
   case TOKEN_CHAR_LITERAL:
     return string_dup(&token_string_char_lit);
+
   case TOKEN_STRING_LITERAL:
     return string_dup(&token_string_string_lit);
+
   case TOKEN_INT_LITERAL:
     return string_dup(&token_string_int_lit);
+
   case TOKEN_NAME:
     return string_dup(&token_string_name);
   }
@@ -133,10 +171,12 @@ void token_free(token_t *token) {
     string_free(token->name);
     free(token);
     break;
+
   case TOKEN_STRING_LITERAL:
     string_free(token->string_literal);
     free(token);
     break;
+
   default:
     free(token);
   }

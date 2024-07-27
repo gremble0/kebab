@@ -126,16 +126,20 @@ void atom_free(atom_t *atom) {
   case ATOM_STRING:
     string_free(atom->string_value);
     break;
+
   case ATOM_NAME:
     string_free(atom->name_value);
     break;
+
   case ATOM_INNER_EXPR:
     expression_free(atom->inner_expr_value);
     break;
+
   case ATOM_LIST:
     list_map(atom->list_value, (list_map_func)expression_free);
     list_free(atom->list_value);
     break;
+
   case ATOM_CHAR:
   case ATOM_INT:
   case ATOM_BOOL:

@@ -15,7 +15,6 @@ typedef struct {
   };
 } primary_suffix_t;
 
-// TODO: unnecessary? combine with factor
 typedef struct {
   atom_t *atom;
   list_t *suffixes; // list<primary_suffix_t *>

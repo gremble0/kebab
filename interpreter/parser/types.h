@@ -14,9 +14,6 @@ typedef struct {
   keb_type_t *type;
 } keb_type_list_t;
 
-// TODO: create these types sparingly, as they will most of the time be
-// duplicated. Something like a central register of created types and check if a
-// type exists before making one
 typedef enum {
   TYPE_CHAR,
   TYPE_STRING,

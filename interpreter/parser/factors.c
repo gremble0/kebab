@@ -11,14 +11,17 @@ static unary_operator_t unary_operator_parse(lexer_t *lexer) {
     PARSER_LOG_NODE_SELF_CLOSING("factor-prefix='+'");
     lexer_advance(lexer);
     return UNARY_PLUS;
+
   case TOKEN_MINUS:
     PARSER_LOG_NODE_SELF_CLOSING("factor-prefix='-'");
     lexer_advance(lexer);
     return UNARY_MINUS;
+
   case TOKEN_NOT:
     PARSER_LOG_NODE_SELF_CLOSING("unary-operator='~'");
     lexer_advance(lexer);
     return UNARY_NOT;
+
   default:
     return UNARY_NO_OP;
   }

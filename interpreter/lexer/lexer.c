@@ -32,15 +32,14 @@ static void lexer_load_next_line(lexer_t *lexer) {
   size_t _ = 0;
   char *line_buf = NULL;
   ssize_t line_len = getline(&line_buf, &_, lexer->file.f);
-  if (line_len < 0) {
-    free(line_buf);
-    return;
+  if (line_len >= 0) {
+    string_set(lexer->line, line_buf, line_len);
+    lexer->prev_line_pos = lexer->line_pos;
+    lexer->line_pos = 0;
+    ++lexer->line_number;
   }
 
-  string_set(lexer->line, line_buf, line_len);
-  lexer->prev_line_pos = lexer->line_pos;
-  lexer->line_pos = 0;
-  ++lexer->line_number;
+  free(line_buf);
 }
 
 /**
@@ -224,17 +223,19 @@ void lexer_advance(lexer_t *lexer) {
       return;
     }
     return lexer_advance(lexer);
+
   // Whitespace
   case '\t':
   case ' ':
     ++lexer->line_pos;
     return lexer_advance(lexer);
 
-    // Syntax
+  // Syntax
   case ':':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_COLON, lexer_make_span(lexer));
     return;
+
   case '=': {
     switch (lexer_peek_char(lexer, 1)) {
     case '>':
@@ -251,22 +252,27 @@ void lexer_advance(lexer_t *lexer) {
       return;
     }
   }
+
   case ',':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_COMMA, lexer_make_span(lexer));
     return;
+
   case '(':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_LPAREN, lexer_make_span(lexer));
     return;
+
   case ')':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_RPAREN, lexer_make_span(lexer));
     return;
+
   case '[':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_LBRACKET, lexer_make_span(lexer));
     return;
+
   case ']':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_RBRACKET, lexer_make_span(lexer));
@@ -277,14 +283,17 @@ void lexer_advance(lexer_t *lexer) {
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_PLUS, lexer_make_span(lexer));
     return;
+
   case '-':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_MINUS, lexer_make_span(lexer));
     return;
+
   case '*':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_MULT, lexer_make_span(lexer));
     return;
+
   case '~':
     if (lexer_peek_char(lexer, 1) == '=') {
       lexer->line_pos += 2;
@@ -294,6 +303,7 @@ void lexer_advance(lexer_t *lexer) {
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_NOT, lexer_make_span(lexer));
     return;
+
   case '<':
     if (lexer_peek_char(lexer, 1) == '=') {
       lexer->line_pos += 2;
@@ -303,6 +313,7 @@ void lexer_advance(lexer_t *lexer) {
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_LT, lexer_make_span(lexer));
     return;
+
   case '>':
     if (lexer_peek_char(lexer, 1) == '=') {
       lexer->line_pos += 2;
@@ -312,6 +323,7 @@ void lexer_advance(lexer_t *lexer) {
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_GT, lexer_make_span(lexer));
     return;
+
   case '/':
     ++lexer->line_pos;
     lexer->cur_token = token_make_simple(TOKEN_DIV, lexer_make_span(lexer));
@@ -325,7 +337,7 @@ void lexer_advance(lexer_t *lexer) {
   case '\'':
     lexer->cur_token = token_make_char_lit(lexer_read_char(lexer), lexer_make_span(lexer));
     return;
-  // TODO: revisit what to do with numbers starting with 0
+
   case '0':
   case '1':
   case '2':

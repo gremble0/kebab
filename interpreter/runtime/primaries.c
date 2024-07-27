@@ -41,9 +41,6 @@ static rt_value_t *primary_func_call_eval(list_t *arguments, rt_fn_t *fn, scope_
 
 static rt_value_t *primary_subscription_eval(expression_t *subscription, rt_list_t *list,
                                              scope_t *scope, span_t span) {
-  // TODO: subscription could in the future also be for maps or other structures
-  // so these assumptions may no longer be valid
-
   rt_value_t *subscription_v = expression_eval(subscription, scope);
   if (subscription_v->type != type_int)
     // TODO: make some error for this - can only index lists with ints

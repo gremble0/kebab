@@ -94,8 +94,10 @@ rt_value_t *expression_eval(expression_t *expr, scope_t *scope) {
   switch (expr->type) {
   case EXPR_COND:
     return expression_cond_eval(expr->cond, scope, expr->span);
+
   case EXPR_NORMAL:
     return expression_normal_eval(expr->normal, scope, expr->span);
+
   case EXPR_CONSTRUCTOR:
     return expression_constructor_eval(expr->constr, scope);
   }

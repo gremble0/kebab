@@ -100,7 +100,6 @@ keb_type_t *type_parse(lexer_t *lexer) {
     kt->list_type = type_list_parse(lexer);
     break;
 
-  // TODO: TOKEN_NAME for user defined types/structs?
   default:
     err_illegal_token(lexer);
   }

@@ -39,9 +39,11 @@ void statement_eval(statement_t *stmt, scope_t *scope) {
   case STMT_DEFINITION:
     definition_eval(stmt->definition, scope);
     break;
+
   case STMT_ASSIGNMENT:
     assignment_eval(stmt->assignment, scope, stmt->span);
     break;
+
   case STMT_EXPRESSION:
     expression_eval(stmt->expr, scope);
     break;

@@ -18,14 +18,17 @@ static binary_operator_t binary_operator_parse(lexer_t *lexer) {
     PARSER_LOG_NODE_SELF_CLOSING("binary-operator='+'");
     lexer_advance(lexer);
     return BINARY_PLUS;
+
   case TOKEN_MINUS:
     PARSER_LOG_NODE_SELF_CLOSING("binary-operator='-'");
     lexer_advance(lexer);
     return BINARY_MINUS;
+
   case TOKEN_MULT:
     PARSER_LOG_NODE_SELF_CLOSING("binary-operator='*'");
     lexer_advance(lexer);
     return BINARY_MULT;
+
   case TOKEN_DIV:
     PARSER_LOG_NODE_SELF_CLOSING("binary-operator='/'");
     lexer_advance(lexer);
@@ -36,22 +39,27 @@ static binary_operator_t binary_operator_parse(lexer_t *lexer) {
     PARSER_LOG_NODE_SELF_CLOSING("binary-operator='<'");
     lexer_advance(lexer);
     return BINARY_LT;
+
   case TOKEN_LE:
     PARSER_LOG_NODE_SELF_CLOSING("binary-operator='<='");
     lexer_advance(lexer);
     return BINARY_LE;
+
   case TOKEN_EQ:
     PARSER_LOG_NODE_SELF_CLOSING("binary-operator='=='");
     lexer_advance(lexer);
     return BINARY_EQ;
+
   case TOKEN_NEQ:
     PARSER_LOG_NODE_SELF_CLOSING("binary-operator='~='");
     lexer_advance(lexer);
     return BINARY_NEQ;
+
   case TOKEN_GT:
     PARSER_LOG_NODE_SELF_CLOSING("binary-operator='>'");
     lexer_advance(lexer);
     return BINARY_GT;
+
   case TOKEN_GE:
     PARSER_LOG_NODE_SELF_CLOSING("binary-operator='>='");
     lexer_advance(lexer);
@@ -296,9 +304,11 @@ void expression_free(expression_t *expr) {
   case EXPR_COND:
     expression_cond_free(expr->cond);
     break;
+
   case EXPR_NORMAL:
     expression_normal_free(expr->normal);
     break;
+
   case EXPR_CONSTRUCTOR:
     expression_constructor_free(expr->constr);
     break;
