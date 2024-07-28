@@ -23,6 +23,17 @@
 
 namespace Kebab {
 
+void Compiler::compile(std::unique_ptr<Parser::RootNode> root, const std::string &output_path) {
+  this->load_globals();
+  root->compile(*this);
+  this->save_module(output_path);
+}
+
+// ConstantArray?
+llvm::AllocaInst *Compiler::create_list(std::vector<llvm::Value *> list) {
+  return this->create_alloca("", list, list.front()->getType());
+}
+
 void Compiler::save_module(const std::string &path) const {
   std::error_code error_code;
   llvm::raw_fd_stream fd(path, error_code);
@@ -46,12 +57,6 @@ void Compiler::load_globals() { this->load_printf(); }
 
 llvm::Value *Compiler::int_to_float(llvm::Value *i) {
   return this->builder.CreateCast(llvm::Instruction::SIToFP, i, this->get_float_type());
-}
-
-void Compiler::compile(std::unique_ptr<Parser::RootNode> root, const std::string &output_path) {
-  this->load_globals();
-  root->compile(*this);
-  this->save_module(output_path);
 }
 
 llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::string &name) {
@@ -108,6 +113,22 @@ llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constan
 
   llvm::StoreInst *store = this->builder.CreateStore(init, local);
   store->setAlignment(alignment);
+
+  return local;
+}
+
+llvm::AllocaInst *Compiler::create_alloca(const std::string &name, std::vector<llvm::Value *> init,
+                                          llvm::Type *type) {
+  llvm::Align alignment = this->get_alignment(type);
+  llvm::AllocaInst *local = this->builder.CreateAlloca(type, this->create_int(init.size()), name);
+  local->setAlignment(alignment);
+
+  llvm::ConstantInt *index0 = this->create_int(0);
+
+  for (size_t i = 0, size = init.size(); i < size; ++i) {
+    llvm::Value *offset = this->builder.CreateGEP(type, local, {index0, this->create_int(i)});
+    this->builder.CreateStore(init[i], offset);
+  }
 
   return local;
 }

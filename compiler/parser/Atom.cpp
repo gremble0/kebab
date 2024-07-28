@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 
 #include "parser/Atom.hpp"
@@ -126,7 +127,22 @@ std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *ListAtom::compile(Compiler &compiler) const {
-  assert(false && "unimplemented function ListAtom::compile");
+  std::vector<llvm::Value *> elements_compiled;
+  for (const std::unique_ptr<Expression> &element : this->list)
+    elements_compiled.push_back(element->compile(compiler));
+
+  // Type check that the list is homogenous
+  std::ranges::for_each(elements_compiled, [elements_compiled, this](const llvm::Value *v) {
+    const llvm::Type *expected_type = elements_compiled.front()->getType();
+    const llvm::Type *actual_type = v->getType();
+    if (actual_type != expected_type)
+      // TODO: this error is not really right - can be misleading since the actual expected type is
+      // not the first in the list, but whatever the calling constructor has declared. This should
+      // be some other error (nonhomogenous_list_error maybe)
+      this->type_error({expected_type}, actual_type);
+  });
+
+  return compiler.create_list(elements_compiled);
 }
 
 std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {

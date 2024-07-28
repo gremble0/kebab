@@ -7,6 +7,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 // Disable unused parameter warnings for llvm headers
 #pragma clang diagnostic push
@@ -52,6 +53,8 @@ private:
   llvm::Value *int_to_float(llvm::Value *i);
 
   llvm::AllocaInst *create_alloca(const std::string &name, llvm::Constant *init, llvm::Type *type);
+  llvm::AllocaInst *create_alloca(const std::string &name, std::vector<llvm::Value *> init,
+                                  llvm::Type *type);
 
   llvm::Align get_alignment(llvm::Type *type) const;
 
@@ -93,6 +96,8 @@ public:
   llvm::Constant *create_bool(bool b) {
     return llvm::ConstantInt::get(this->builder.getInt1Ty(), b);
   }
+
+  llvm::AllocaInst *create_list(const std::vector<llvm::Value *> list);
 
   /// Constructors for more complicated instructions
   llvm::Function *
