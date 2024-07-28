@@ -1,0 +1,5 @@
+def main = fn(() => int(
+  def local = list((int) => [1, 2, 3, 1, 1, 1])
+
+  0
+))

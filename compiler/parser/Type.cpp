@@ -44,9 +44,8 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   return type;
 }
 
-llvm::ScalableVectorType *ListType::get_llvm_type(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function ListType::get_llvm_type");
+llvm::PointerType *ListType::get_llvm_type(Compiler &compiler) const {
+  return this->content_type->get_llvm_type(compiler)->getPointerTo();
 }
 
 llvm::Value *ListType::compile(Compiler &compiler) const {

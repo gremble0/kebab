@@ -31,7 +31,7 @@ public:
   static std::unique_ptr<ListType> parse(Lexer &lexer);
   llvm::Value *compile(Compiler &compiler) const final;
   // ScalableVectorType may be right here? will look into
-  llvm::ScalableVectorType *get_llvm_type(Compiler &compiler) const final;
+  llvm::PointerType *get_llvm_type(Compiler &compiler) const final;
 };
 
 class FunctionType : public Type {
