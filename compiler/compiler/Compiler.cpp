@@ -19,6 +19,7 @@
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
 #include "llvm/IR/ValueSymbolTable.h"
+#include "llvm/Support/Casting.h"
 #include "llvm/Support/raw_ostream.h"
 
 namespace Kebab {
@@ -166,6 +167,19 @@ std::optional<llvm::Value *> Compiler::create_neg(llvm::Value *v) {
     return this->builder.CreateFNeg(v);
   else
     return std::nullopt;
+}
+
+std::optional<llvm::Value *> Compiler::create_subscription(llvm::Value *array,
+                                                           llvm::Value *offset) {
+  if (llvm::AllocaInst *alloca_inst = llvm::dyn_cast<llvm::AllocaInst>(array)) {
+    if (!alloca_inst->isArrayAllocation())
+      return std::nullopt;
+
+    return this->builder.CreateGEP(alloca_inst->getAllocatedType(), alloca_inst,
+                                   {this->create_int(0), offset});
+  } else {
+    return std::nullopt;
+  }
 }
 
 std::optional<llvm::Value *> Compiler::create_add(llvm::Value *lhs, llvm::Value *rhs) {

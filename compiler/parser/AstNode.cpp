@@ -77,6 +77,19 @@ std::string AstNode::where() const {
   exit(1);
 }
 
+[[noreturn]] void AstNode::unsubscriptable_error(const llvm::Type *const subscriptee) const {
+  std::string where = this->where();
+  std::string subscriptee_type_string;
+  llvm::raw_string_ostream callee_type_stream(subscriptee_type_string);
+  subscriptee->print(callee_type_stream);
+  std::string labeled_message = "unsubscriptable-error: variable with type '" +
+                                subscriptee_type_string + "' cannot be subscripted";
+
+  std::cerr << where << labeled_message << std::endl;
+
+  exit(1);
+}
+
 [[noreturn]] void AstNode::reassignment_error(const std::string &name) const {
   std::string where = this->where();
   std::string labeled_message =

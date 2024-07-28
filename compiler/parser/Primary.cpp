@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <optional>
 #include <vector>
 
 #include "lexer/Token.hpp"
@@ -27,8 +28,17 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
 }
 
 llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function PrimarySubscription::compile");
+  llvm::Value *offset = this->subscription->compile(compiler);
+  if (offset->getType() != compiler.get_int_type())
+    // TODO: could be more descriptive (arrays can only be subscripted with ints)
+    this->type_error({compiler.get_int_type()}, offset->getType());
+
+  std::optional<llvm::Value *> subscription_compiled =
+      compiler.create_subscription(this->subscriptee, offset);
+  if (subscription_compiled.has_value())
+    return subscription_compiled.value();
+  else
+    this->unsubscriptable_error(this->subscriptee);
 }
 
 std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
