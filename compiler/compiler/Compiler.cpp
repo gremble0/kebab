@@ -169,17 +169,11 @@ std::optional<llvm::Value *> Compiler::create_neg(llvm::Value *v) {
     return std::nullopt;
 }
 
-std::optional<llvm::Value *> Compiler::create_subscription(llvm::Value *array,
+// returns nullopt if out of bounds
+std::optional<llvm::Value *> Compiler::create_subscription(llvm::AllocaInst *array,
                                                            llvm::Value *offset) {
-  if (llvm::AllocaInst *alloca_inst = llvm::dyn_cast<llvm::AllocaInst>(array)) {
-    if (!alloca_inst->isArrayAllocation())
-      return std::nullopt;
-
-    return this->builder.CreateGEP(alloca_inst->getAllocatedType(), alloca_inst,
-                                   {this->create_int(0), offset});
-  } else {
-    return std::nullopt;
-  }
+  // TODO: boundscheck `getArraySize()`
+  return this->builder.CreateGEP(array->getAllocatedType(), array, {this->create_int(0), offset});
 }
 
 std::optional<llvm::Value *> Compiler::create_add(llvm::Value *lhs, llvm::Value *rhs) {

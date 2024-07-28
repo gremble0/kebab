@@ -128,7 +128,8 @@ public:
   std::optional<llvm::Value *> create_neg(llvm::Value *v); // -x
 
   /// Binary array operators
-  std::optional<llvm::Value *> create_subscription(llvm::Value *array, llvm::Value *offset); // x[y]
+  std::optional<llvm::Value *> create_subscription(llvm::AllocaInst *array,
+                                                   llvm::Value *offset); // x[y]
 
   /// Binary mathematical operators
   std::optional<llvm::Value *> create_add(llvm::Value *lhs, llvm::Value *rhs); // x + y

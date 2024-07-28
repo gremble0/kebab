@@ -33,12 +33,19 @@ llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
     // TODO: could be more descriptive (arrays can only be subscripted with ints)
     this->type_error({compiler.get_int_type()}, offset->getType());
 
-  std::optional<llvm::Value *> subscription_compiled =
-      compiler.create_subscription(this->subscriptee, offset);
-  if (subscription_compiled.has_value())
-    return subscription_compiled.value();
-  else
-    this->unsubscriptable_error(this->subscriptee);
+  if (llvm::AllocaInst *alloca_inst = llvm::dyn_cast<llvm::AllocaInst>(this->subscriptee)) {
+    if (!alloca_inst->isArrayAllocation())
+      this->unsubscriptable_error(this->subscriptee->getType());
+
+    std::optional<llvm::Value *> subscription_compiled =
+        compiler.create_subscription(alloca_inst, offset);
+    if (subscription_compiled.has_value())
+      return subscription_compiled.value();
+    else
+      this->index_error(alloca_inst->getArraySize(), offset);
+  } else {
+    this->unsubscriptable_error(this->subscriptee->getType());
+  }
 }
 
 std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {

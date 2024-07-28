@@ -26,7 +26,8 @@ protected:
   [[noreturn]] void unreachable_error() const;
   [[noreturn]] void uncallable_error(const llvm::Type *callee) const;
   [[noreturn]] void immutable_assignment_error(const std::string &name) const;
-  [[noreturn]] void unsubscriptable_error(const llvm::Type *const subscriptee) const;
+  [[noreturn]] void unsubscriptable_error(const llvm::Type *subscriptee) const;
+  [[noreturn]] void index_error(const llvm::Value *capacity, const llvm::Value *index) const;
   [[noreturn]] void reassignment_error(const std::string &name) const;
   [[noreturn]] void assign_nonexisting_error(const std::string &name) const;
   [[noreturn]] void unrecognized_type_error(const std::string &type_name) const;
