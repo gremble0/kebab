@@ -137,9 +137,12 @@ std::optional<llvm::AllocaInst *> Compiler::create_mutable(const std::string &na
 }
 
 std::optional<llvm::Value *> Compiler::create_neg(llvm::Value *v) {
-  // unary - is only allowed for ints
-  if (v->getType()->isIntegerTy(64))
+  // unary - is only allowed for numbers
+  llvm::Type *v_type = v->getType();
+  if (v_type->isIntegerTy(64))
     return this->builder.CreateNeg(v);
+  else if (v_type->isDoubleTy())
+    return this->builder.CreateFNeg(v);
   else
     return std::nullopt;
 }
