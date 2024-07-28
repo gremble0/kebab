@@ -105,7 +105,7 @@ std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *InnerExpressionAtom::compile(Compiler &compiler) const {
-  assert(false && "unimplemented function InnerExpressionAtom::compile");
+  return this->expression->compile(compiler);
 }
 
 std::unique_ptr<ListAtom> ListAtom::parse(Lexer &lexer) {
