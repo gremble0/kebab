@@ -1,22 +1,20 @@
 #include <optional>
 
-#include "Scope.hpp"
+#include "compiler/Scope.hpp"
 #include "llvm/IR/Value.h"
 
-std::optional<llvm::Value *> Scope::lookup(const std::string &key) {
+std::optional<Scope::Binding> Scope::lookup(const std::string &key) {
   // Either
   // 1. we have found the value -> return it
   // 2. we have not found the value, but we have a parent -> look in parent
   // 3. we have not found the value and we dont have a parent -> return nullopt
-  const Binding &binding = this->map[key];
-  if (binding.value == nullptr) {
-    if (this->parent.has_value())
-      return this->parent->get()->lookup(key);
-    else
-      return std::nullopt;
-  } else {
-    return binding.value;
-  }
+  auto it = this->map.find(key);
+  if (it != this->map.end())
+    return it->second;
+  else if (this->parent.has_value())
+    return this->parent.value()->lookup(key);
+  else
+    return std::nullopt;
 }
 
 /**

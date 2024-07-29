@@ -155,7 +155,7 @@ public:
 
   /// Scope wrappers and lookups
   std::optional<llvm::Value *> get_value(const std::string &name) const {
-    return this->current_scope->lookup(name);
+    return this->current_scope->lookup(name)->value;
   }
 
   void start_scope() { this->current_scope = std::make_shared<Scope>(this->current_scope); }
