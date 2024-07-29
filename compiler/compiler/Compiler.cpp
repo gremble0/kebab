@@ -33,8 +33,9 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root, const std::string
 llvm::LoadInst *Compiler::create_list(const std::vector<llvm::Value *> &list, llvm::Type *type) {
   llvm::AllocaInst *alloca = this->create_alloca("", list, type);
 
-  llvm::LoadInst *load = this->builder.CreateLoad(type, alloca);
-  load->setAlignment(this->get_alignment(type));
+  llvm::Type *list_type = alloca->getAllocatedType();
+  llvm::LoadInst *load = this->builder.CreateLoad(list_type, alloca);
+  load->setAlignment(this->get_alignment(list_type));
 
   return load;
 }
@@ -127,11 +128,11 @@ llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constan
 llvm::AllocaInst *Compiler::create_alloca(const std::string &name,
                                           const std::vector<llvm::Value *> &init,
                                           llvm::Type *type) {
-  llvm::Align alignment = this->get_alignment(type);
-  llvm::AllocaInst *local = this->builder.CreateAlloca(type, this->create_int(init.size()), name);
-  local->setAlignment(alignment);
-
   llvm::ArrayType *list_type = llvm::ArrayType::get(type, init.size());
+  llvm::AllocaInst *local =
+      this->builder.CreateAlloca(list_type, this->create_int(init.size()), name);
+  llvm::Align alignment = this->get_alignment(list_type);
+  local->setAlignment(alignment);
 
   llvm::ConstantInt *index0 = this->create_int(0);
 
