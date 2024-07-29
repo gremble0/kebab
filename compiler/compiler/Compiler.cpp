@@ -131,10 +131,13 @@ llvm::AllocaInst *Compiler::create_alloca(const std::string &name,
   llvm::AllocaInst *local = this->builder.CreateAlloca(type, this->create_int(init.size()), name);
   local->setAlignment(alignment);
 
+  llvm::ArrayType *list_type = llvm::ArrayType::get(type, init.size());
+
   llvm::ConstantInt *index0 = this->create_int(0);
 
   for (size_t i = 0, size = init.size(); i < size; ++i) {
-    llvm::Value *offset = this->builder.CreateGEP(type, local, {index0, this->create_int(i)});
+    llvm::Value *offset =
+        this->builder.CreateInBoundsGEP(list_type, local, {index0, this->create_int(i)});
     this->builder.CreateStore(init[i], offset);
   }
 
