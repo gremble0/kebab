@@ -180,11 +180,14 @@ std::optional<llvm::Value *> Compiler::create_neg(llvm::Value *v) {
     return std::nullopt;
 }
 
-// returns nullopt if out of bounds
 std::optional<llvm::Value *> Compiler::create_subscription(llvm::AllocaInst *array,
                                                            llvm::Value *offset) {
-  // TODO: boundscheck `getArraySize()`
-  return this->builder.CreateGEP(array->getAllocatedType(), array, {this->create_int(0), offset});
+  // TODO: bounds checking
+  llvm::Type *list_type = array->getAllocatedType();
+  llvm::Value *element_ptr =
+      this->builder.CreateInBoundsGEP(list_type, array, {this->create_int(0), offset});
+
+  return this->builder.CreateLoad(list_type->getArrayElementType(), element_ptr);
 }
 
 std::optional<llvm::Value *> Compiler::create_add(llvm::Value *lhs, llvm::Value *rhs) {

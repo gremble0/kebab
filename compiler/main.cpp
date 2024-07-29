@@ -4,6 +4,7 @@
 
 #include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
+#include "logging/Logger.hpp"
 #include "parser/RootNode.hpp"
 
 using namespace Kebab;
@@ -15,6 +16,8 @@ int main(int argc, char **argv) {
   }
 
   std::string path(argv[1]);
+
+  Logger::silence();
 
   Lexer lexer(path);
   std::unique_ptr<Parser::RootNode> root = Parser::RootNode::parse(lexer);

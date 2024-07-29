@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <optional>
 #include <vector>
 
@@ -13,6 +14,7 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Value.h"
 #include "llvm/Support/Casting.h"
+#include "llvm/Support/raw_ostream.h"
 
 namespace Kebab::Parser {
 
@@ -45,9 +47,8 @@ llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
   if (alloca = llvm::dyn_cast<llvm::AllocaInst>(pointee); alloca == nullptr)
     this->unsubscriptable_error(pointee->getType());
 
-  // Subscriptable values are array allocated
-  if (!alloca->isArrayAllocation())
-    this->unsubscriptable_error(alloca->getType());
+  // TODO: raise unsubscriptable_error here if its not an array allocation. Does not work atm, just
+  // segfaults if attempt to index non array.
 
   std::optional<llvm::Value *> subscription_compiled = compiler.create_subscription(alloca, offset);
   if (subscription_compiled.has_value())
