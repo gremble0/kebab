@@ -23,7 +23,7 @@ std::optional<llvm::Value *> Scope::lookup(const std::string &key) {
  * @return true if successful insertion, false if attempt to override immutable value caused
  * insertion to fail
  */
-bool Scope::put(const std::string &key, llvm::Value *value, bool is_mutable) {
+bool Scope::put(const std::string &key, llvm::Value *value, llvm::Type *type, bool is_mutable) {
   if (this->map.contains(key)) {
     if (!this->map[key].is_mutable)
       return false;
@@ -31,6 +31,6 @@ bool Scope::put(const std::string &key, llvm::Value *value, bool is_mutable) {
       this->map[key].value = value;
   }
 
-  this->map[key] = {is_mutable, value};
+  this->map[key] = {is_mutable, value, type};
   return true;
 }

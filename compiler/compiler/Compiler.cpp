@@ -19,7 +19,6 @@
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
 #include "llvm/IR/ValueSymbolTable.h"
-#include "llvm/Support/Casting.h"
 #include "llvm/Support/raw_ostream.h"
 
 namespace Kebab {
@@ -64,7 +63,7 @@ llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::
   llvm::Function *function =
       llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->mod);
 
-  this->current_scope->put(name, function);
+  this->current_scope->put(name, function, function->getFunctionType());
 
   return function;
 }
@@ -81,7 +80,9 @@ llvm::Function *Compiler::define_function(
   for (size_t i = 0, size = parameters.size(); i < size; ++i) {
     llvm::Argument *argument = function->getArg(i);
     argument->setName(parameters[i]->name);
-    this->current_scope->put(parameters[i]->name, argument);
+    // TODO: mutability for parameters maybe with mut keyword for mutable params. This would have to
+    // be changed in parser as well
+    this->current_scope->put(parameters[i]->name, argument, argument->getType());
   }
 
   // Make entry for new function and save the current insert block so we can return to it after
@@ -96,7 +97,7 @@ llvm::Function *Compiler::define_function(
   this->end_scope();
   // Previous scope now has this function in scope - this allows for first order functions since no
   // parent scopes can't see this binding
-  this->current_scope->put(name, function);
+  this->current_scope->put(name, function, function->getFunctionType());
 
   return function;
 }
@@ -140,7 +141,7 @@ Compiler::create_immutable(const std::string &name, llvm::Constant *init, llvm::
   llvm::LoadInst *load = this->builder.CreateLoad(type, local);
   load->setAlignment(this->get_alignment(type));
 
-  if (this->current_scope->put(name, load))
+  if (this->current_scope->put(name, load, type))
     return local;
   else
     return std::nullopt;
@@ -152,7 +153,7 @@ std::optional<llvm::AllocaInst *> Compiler::create_mutable(const std::string &na
   llvm::LoadInst *load = this->builder.CreateLoad(type, local);
   load->setAlignment(this->get_alignment(type));
 
-  if (this->current_scope->put(name, load, true))
+  if (this->current_scope->put(name, load, type, true))
     return local;
   else
     return std::nullopt;

@@ -9,6 +9,7 @@ private:
   struct Binding {
     bool is_mutable;
     llvm::Value *value;
+    llvm::Type *type;
   };
 
   std::unordered_map<std::string, Binding> map;
@@ -23,5 +24,5 @@ public:
   }
 
   std::optional<llvm::Value *> lookup(const std::string &key);
-  bool put(const std::string &key, llvm::Value *value, bool is_mutable = false);
+  bool put(const std::string &key, llvm::Value *value, llvm::Type *type, bool is_mutable = false);
 };
