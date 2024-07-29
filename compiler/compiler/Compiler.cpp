@@ -30,8 +30,8 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root, const std::string
 }
 
 // ConstantArray?
-llvm::AllocaInst *Compiler::create_list(std::vector<llvm::Value *> list) {
-  return this->create_alloca("", list, list.front()->getType());
+llvm::AllocaInst *Compiler::create_list(const std::vector<llvm::Value *> &list, llvm::Type *type) {
+  return this->create_alloca("", list, type);
 }
 
 void Compiler::save_module(const std::string &path) const {
@@ -119,7 +119,8 @@ llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constan
   return local;
 }
 
-llvm::AllocaInst *Compiler::create_alloca(const std::string &name, std::vector<llvm::Value *> init,
+llvm::AllocaInst *Compiler::create_alloca(const std::string &name,
+                                          const std::vector<llvm::Value *> &init,
                                           llvm::Type *type) {
   llvm::Align alignment = this->get_alignment(type);
   llvm::AllocaInst *local = this->builder.CreateAlloca(type, this->create_int(init.size()), name);

@@ -133,8 +133,8 @@ llvm::Value *ListAtom::compile(Compiler &compiler) const {
     elements_compiled.push_back(element->compile(compiler));
 
   // Type check that the list is homogenous
-  std::ranges::for_each(elements_compiled, [elements_compiled, this](const llvm::Value *v) {
-    const llvm::Type *expected_type = elements_compiled.front()->getType();
+  llvm::Type *expected_type = elements_compiled.front()->getType();
+  std::ranges::for_each(elements_compiled, [this, expected_type](const llvm::Value *v) {
     const llvm::Type *actual_type = v->getType();
     if (actual_type != expected_type)
       // TODO: this error is not really right - can be misleading since the actual expected type is
@@ -143,7 +143,7 @@ llvm::Value *ListAtom::compile(Compiler &compiler) const {
       this->type_error({expected_type}, actual_type);
   });
 
-  return compiler.create_list(elements_compiled);
+  return compiler.create_list(elements_compiled, expected_type);
 }
 
 std::unique_ptr<Atom> Atom::parse(Lexer &lexer) {
