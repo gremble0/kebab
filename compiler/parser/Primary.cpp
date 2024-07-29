@@ -85,7 +85,7 @@ std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
     break;
 
   case Token::Type::LBRACKET:
-    suffix = PrimarySuffix::parse(lexer);
+    suffix = PrimarySubscription::parse(lexer);
     break;
 
   default:
