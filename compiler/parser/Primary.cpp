@@ -10,6 +10,7 @@
 #include "parser/Statement.hpp"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Function.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/IR/Value.h"
 #include "llvm/Support/Casting.h"
 
@@ -33,19 +34,26 @@ llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
     // TODO: could be more descriptive (arrays can only be subscripted with ints)
     this->type_error({compiler.get_int_type()}, offset->getType());
 
-  if (llvm::AllocaInst *alloca_inst = llvm::dyn_cast<llvm::AllocaInst>(this->subscriptee)) {
-    if (!alloca_inst->isArrayAllocation())
-      this->unsubscriptable_error(this->subscriptee->getType());
-
-    std::optional<llvm::Value *> subscription_compiled =
-        compiler.create_subscription(alloca_inst, offset);
-    if (subscription_compiled.has_value())
-      return subscription_compiled.value();
-    else
-      this->index_error(alloca_inst->getArraySize(), offset);
-  } else {
+  // Variable lookups are stored as LoadInstructions
+  llvm::LoadInst *load;
+  if (load = llvm::dyn_cast<llvm::LoadInst>(this->subscriptee); load == nullptr)
     this->unsubscriptable_error(this->subscriptee->getType());
-  }
+
+  llvm::Value *pointee = load->getPointerOperand();
+  llvm::AllocaInst *alloca;
+  // Subscriptable values are all stack allocated with alloca
+  if (alloca = llvm::dyn_cast<llvm::AllocaInst>(pointee); alloca == nullptr)
+    this->unsubscriptable_error(pointee->getType());
+
+  // Subscriptable values are array allocated
+  if (!alloca->isArrayAllocation())
+    this->unsubscriptable_error(alloca->getType());
+
+  std::optional<llvm::Value *> subscription_compiled = compiler.create_subscription(alloca, offset);
+  if (subscription_compiled.has_value())
+    return subscription_compiled.value();
+  else
+    this->index_error(alloca->getArraySize(), offset);
 }
 
 std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {

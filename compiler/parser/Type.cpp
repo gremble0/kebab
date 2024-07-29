@@ -44,8 +44,10 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   return type;
 }
 
-llvm::PointerType *ListType::get_llvm_type(Compiler &compiler) const {
-  return this->content_type->get_llvm_type(compiler)->getPointerTo();
+llvm::Type *ListType::get_llvm_type(Compiler &compiler) const {
+  // List types are currently just stack allocated with alloca meaning their types are the same as
+  // the values they contain, e.g. [1,2,3] has the type `i64`
+  return this->content_type->get_llvm_type(compiler);
 }
 
 llvm::Value *ListType::compile(Compiler &compiler) const {

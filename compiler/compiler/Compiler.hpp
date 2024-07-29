@@ -97,7 +97,7 @@ public:
     return llvm::ConstantInt::get(this->builder.getInt1Ty(), b);
   }
 
-  llvm::AllocaInst *create_list(const std::vector<llvm::Value *> &list, llvm::Type *type);
+  llvm::LoadInst *create_list(const std::vector<llvm::Value *> &list, llvm::Type *type);
 
   /// Constructors for more complicated instructions
   llvm::Function *
