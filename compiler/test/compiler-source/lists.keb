@@ -1,8 +1,13 @@
 def main = fn(() => int(
-  def local = list((int) => [1, 2, 3])
-  def local-int = int(local[1]) ; base 0 so local-int = 2
+  def numbers = list((int) => [1, 2, 3])
+  def number = int(numbers[1]) ; base 0 so local-int = 2
+  printf("%ld\n", number)
 
-  printf("%ld\n", local-int)
+  def functions = list((fn() => int) => [
+    fn(() => int(0)),
+    fn(() => int(1)),
+    fn(() => int(2)),
+  ])
 
   0
 ))
