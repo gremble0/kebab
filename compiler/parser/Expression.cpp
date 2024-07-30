@@ -232,6 +232,7 @@ std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
 }
 
 llvm::Value *FunctionExpression::compile(Compiler &compiler) const {
+  this->function->name = "__anonymous_function";
   return this->function->compile(compiler);
 }
 

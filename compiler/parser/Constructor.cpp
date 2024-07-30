@@ -122,6 +122,9 @@ std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
   auto constructor = std::make_unique<FunctionConstructor>();
   constructor->start_parsing(lexer, "<function-constructor>");
 
+  // This is likely to be changed later, but is required by llvm since if we dont explicitly set the
+  // names of functions it will error (e.g. if function gets automatically named @0 it will error)
+  constructor->name = "__anonymous_function";
   constructor->parse_type(lexer);
   constructor->parse_body(lexer);
 
