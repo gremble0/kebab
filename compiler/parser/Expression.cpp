@@ -232,8 +232,7 @@ std::unique_ptr<FunctionExpression> FunctionExpression::parse(Lexer &lexer) {
 }
 
 llvm::Value *FunctionExpression::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function FunctionExpression::compile");
+  return this->function->compile(compiler);
 }
 
 } // namespace Kebab::Parser
