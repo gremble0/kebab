@@ -137,10 +137,7 @@ llvm::Value *ListAtom::compile(Compiler &compiler) const {
   std::ranges::for_each(elements_compiled, [this, expected_type](const llvm::Value *v) {
     const llvm::Type *actual_type = v->getType();
     if (actual_type != expected_type)
-      // TODO: this error is not really right - can be misleading since the actual expected type is
-      // not the first in the list, but whatever the calling constructor has declared. This should
-      // be some other error (nonhomogenous_list_error maybe)
-      this->type_error({expected_type}, actual_type);
+      this->nonhomogenous_list_error();
   });
 
   return compiler.create_list(elements_compiled, expected_type);

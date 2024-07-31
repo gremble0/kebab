@@ -24,6 +24,7 @@ protected:
 
   [[noreturn]] static void parser_error(const std::string &message, const Lexer &lexer);
   [[noreturn]] void unreachable_error() const;
+  [[noreturn]] void nonhomogenous_list_error() const;
   [[noreturn]] void uncallable_error(const llvm::Type *callee) const;
   [[noreturn]] void immutable_assignment_error(const std::string &name) const;
   [[noreturn]] void unsubscriptable_error(const llvm::Type *subscriptee) const;

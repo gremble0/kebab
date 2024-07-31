@@ -54,6 +54,16 @@ std::string AstNode::where() const {
   exit(1);
 }
 
+[[noreturn]] void AstNode::nonhomogenous_list_error() const {
+  std::string where = this->where();
+  std::string labeled_message =
+      "nonhomogenous-list-error: all elements in a list must be of the same type";
+
+  std::cerr << where << labeled_message << std::endl;
+
+  exit(1);
+}
+
 [[noreturn]] void AstNode::uncallable_error(const llvm::Type *callee) const {
   std::string where = this->where();
   std::string callee_type_string;
