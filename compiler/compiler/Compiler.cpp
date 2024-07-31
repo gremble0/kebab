@@ -79,8 +79,10 @@ llvm::Function *Compiler::define_function(
     const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
   this->start_scope();
 
+  llvm::FunctionType *type_with_closure = this->add_closure_type(type);
+
   llvm::Function *function =
-      llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->mod);
+      llvm::Function::Create(type_with_closure, llvm::Function::ExternalLinkage, name, this->mod);
 
   // Set parameter names
   for (size_t i = 0, size = parameters.size(); i < size; ++i) {
@@ -132,7 +134,7 @@ llvm::FunctionType *Compiler::add_closure_type(llvm::FunctionType *type) {
   return llvm::FunctionType::get(type->getReturnType(), param_types, type->isVarArg());
 }
 
-void Compiler::fill_closure() {}
+llvm::Value *Compiler::generate_closure_value() {}
 
 llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constant *init,
                                           llvm::Type *type) {
@@ -431,6 +433,13 @@ Compiler::create_phi(llvm::Type *type,
     phi->addIncoming(value, branch);
 
   return phi;
+}
+
+llvm::CallInst *Compiler::create_call(llvm::Function *function,
+                                      std::vector<llvm::Value *> &arguments) {
+  arguments.push_back(this->generate_closure_value());
+
+  return this->builder.CreateCall(function, arguments);
 }
 
 } // namespace Kebab

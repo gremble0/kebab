@@ -60,7 +60,7 @@ private:
 
   llvm::StructType *generate_closure_type();
   llvm::FunctionType *add_closure_type(llvm::FunctionType *type);
-  void fill_closure();
+  llvm::Value *generate_closure_value();
 
 public:
   Compiler() : mod("kebab", context), builder(context) {}
@@ -123,10 +123,9 @@ public:
   create_phi(llvm::Type *type,
              const std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> &incoming);
 
-  llvm::CallInst *create_call(llvm::Function *function,
-                              const std::vector<llvm::Value *> &arguments) {
-    return this->builder.CreateCall(function, arguments);
-  }
+  // arguments is not const because the function appends the closure environment to the arguments
+  // before calling the function
+  llvm::CallInst *create_call(llvm::Function *function, std::vector<llvm::Value *> &arguments);
 
   /// Unary mathematical operators
   std::optional<llvm::Value *> create_neg(llvm::Value *v); // -x
