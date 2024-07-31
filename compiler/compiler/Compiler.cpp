@@ -1,3 +1,4 @@
+#include <cassert>
 #include <memory>
 #include <optional>
 #include <string>
@@ -19,6 +20,7 @@
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
 #include "llvm/IR/ValueSymbolTable.h"
+#include "llvm/Support/Casting.h"
 #include "llvm/Support/raw_ostream.h"
 
 namespace Kebab {
@@ -134,7 +136,21 @@ llvm::FunctionType *Compiler::add_closure_type(llvm::FunctionType *type) {
   return llvm::FunctionType::get(type->getReturnType(), param_types, type->isVarArg());
 }
 
-llvm::Value *Compiler::generate_closure_value() {}
+llvm::Value *Compiler::generate_closure_value(llvm::StructType *closure_type) {
+  // TODO: create_alloca overload?
+  llvm::AllocaInst *closure = this->builder.CreateAlloca(closure_type, nullptr, "__closure");
+
+  for (size_t i = 0, num_elements = closure_type->getNumElements(); i < num_elements; ++i) {
+    llvm::Value *field_pointer = this->builder.CreateStructGEP(closure_type, closure, i);
+    llvm::Type *field_type = closure_type->getElementType(i);
+
+    // TODO: actual values
+    llvm::Value *init = llvm::Constant::getNullValue(field_type);
+    this->builder.CreateStore(init, field_pointer);
+  }
+
+  return closure;
+}
 
 llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constant *init,
                                           llvm::Type *type) {
@@ -437,9 +453,17 @@ Compiler::create_phi(llvm::Type *type,
 
 llvm::CallInst *Compiler::create_call(llvm::Function *function,
                                       std::vector<llvm::Value *> &arguments) {
-  arguments.push_back(this->generate_closure_value());
+  // Last argument is the closure struct
+  llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
+  llvm::Type *closure_type = closure_arg->getType();
+  if (auto closure_type_casted = llvm::dyn_cast<llvm::StructType>(closure_type)) {
+    arguments.push_back(this->generate_closure_value(closure_type_casted));
 
-  return this->builder.CreateCall(function, arguments);
+    return this->builder.CreateCall(function, arguments);
+  } else {
+    assert(false &&
+           "reached unreachable branch. Last argument to a function should always be the closure");
+  }
 }
 
 } // namespace Kebab

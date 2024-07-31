@@ -60,7 +60,7 @@ private:
 
   llvm::StructType *generate_closure_type();
   llvm::FunctionType *add_closure_type(llvm::FunctionType *type);
-  llvm::Value *generate_closure_value();
+  llvm::Value *generate_closure_value(llvm::StructType *closure_type);
 
 public:
   Compiler() : mod("kebab", context), builder(context) {}

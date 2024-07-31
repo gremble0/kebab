@@ -1,5 +1,6 @@
 def main = fn(() => int(
   def local-var = int(69)
+  def local-string = string("hello")
   def local-fn = fn(() => int(
     def inner-var = int(42)
     inner-var + 420
