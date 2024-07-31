@@ -32,3 +32,26 @@ bool Scope::put(const std::string &key, llvm::Value *value, llvm::Type *type, bo
   this->map[key] = {is_mutable, value, type};
   return true;
 }
+
+std::vector<std::pair<std::string, Scope::Binding>> Scope::bindings() {
+  std::vector<std::pair<std::string, Binding>> local_bindings;
+
+  for (const auto &[key, binding] : this->map)
+    local_bindings.push_back({key, binding});
+
+  // Only add parent values that are not already present in the more local scope
+  if (this->parent.has_value()) {
+    auto parent_bindings = this->parent.value()->bindings();
+    for (const auto &[key, binding] : parent_bindings) {
+      bool is_shadowed = false;
+      for (const auto &[local_key, local_binding] : local_bindings)
+        if (local_key == key)
+          is_shadowed = true;
+
+      if (!is_shadowed)
+        local_bindings.push_back({key, binding});
+    }
+  }
+
+  return local_bindings;
+}
