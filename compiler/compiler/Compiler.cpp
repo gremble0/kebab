@@ -69,7 +69,7 @@ llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::
   llvm::Function *function =
       llvm::Function::Create(type, llvm::Function::ExternalLinkage, name, this->mod);
 
-  this->current_scope->put(name, function, function->getFunctionType());
+  this->current_scope->put(name, function, type);
 
   return function;
 }
@@ -111,6 +111,16 @@ llvm::Function *Compiler::define_function(
 llvm::Align Compiler::get_alignment(llvm::Type *type) const {
   const llvm::DataLayout &layout = this->mod.getDataLayout();
   return layout.getPrefTypeAlign(type);
+}
+
+llvm::StructType *Compiler::generate_closure_type() {
+  std::vector<llvm::Type *> types;
+  std::vector<std::pair<std::string, Scope::Binding>> bindings = this->current_scope->bindings();
+  for (const auto &[key, binding] : bindings) {
+    types.push_back(binding.type);
+  }
+
+  return llvm::StructType::get(this->context, types);
 }
 
 llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constant *init,

@@ -58,6 +58,8 @@ private:
 
   llvm::Align get_alignment(llvm::Type *type) const;
 
+  llvm::StructType *generate_closure_type();
+
 public:
   Compiler() : mod("kebab", context), builder(context) {}
 
