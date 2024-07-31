@@ -116,12 +116,23 @@ llvm::Align Compiler::get_alignment(llvm::Type *type) const {
 llvm::StructType *Compiler::generate_closure_type() {
   std::vector<llvm::Type *> types;
   std::vector<std::pair<std::string, Scope::Binding>> bindings = this->current_scope->bindings();
-  for (const auto &[key, binding] : bindings) {
+  for (const auto &[key, binding] : bindings)
     types.push_back(binding.type);
-  }
 
-  return llvm::StructType::get(this->context, types);
+  auto closure_type = llvm::StructType::get(this->context, types);
+  closure_type->setName("__closure_env");
+
+  return closure_type;
 }
+
+llvm::FunctionType *Compiler::add_closure_type(llvm::FunctionType *type) {
+  std::vector<llvm::Type *> param_types = type->params();
+  param_types.push_back(generate_closure_type());
+
+  return llvm::FunctionType::get(type->getReturnType(), param_types, type->isVarArg());
+}
+
+void Compiler::fill_closure() {}
 
 llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constant *init,
                                           llvm::Type *type) {

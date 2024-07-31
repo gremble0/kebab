@@ -40,6 +40,7 @@ std::vector<std::pair<std::string, Scope::Binding>> Scope::bindings() {
     local_bindings.push_back({key, binding});
 
   // Only add parent values that are not already present in the more local scope
+  // TODO: this could be optimized with something like a set
   if (this->parent.has_value()) {
     auto parent_bindings = this->parent.value()->bindings();
     for (const auto &[key, binding] : parent_bindings) {
