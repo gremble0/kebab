@@ -30,13 +30,13 @@
 #include "Scope.hpp"
 
 namespace Kebab::Parser {
+// Forward declarations to avoid circular includes
 class RootNode;
 class Constructor;
 class FunctionParameter;
 } // namespace Kebab::Parser
 
 namespace Kebab {
-// Can't unclude RootNode due to circular imports so have to declare independently
 
 class Compiler {
 private:
@@ -60,8 +60,7 @@ private:
 
   llvm::FunctionType *add_parameter(llvm::FunctionType *type, llvm::Type *parameter);
 
-  llvm::StructType *generate_closure_type();
-  llvm::Value *generate_closure_argument(llvm::StructType *closure_type);
+  llvm::Value *create_closure_argument(llvm::StructType *closure_type);
   void load_parameters(llvm::Function *function,
                        const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
 
@@ -115,6 +114,7 @@ public:
   llvm::LoadInst *create_list(const std::vector<llvm::Value *> &list, llvm::Type *type);
 
   /// Constructors for more complicated instructions
+  llvm::StructType *create_closure_type();
   llvm::Function *
   define_function(llvm::FunctionType *type, const std::string &name,
                   const Parser::Constructor &body,
