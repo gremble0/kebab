@@ -90,8 +90,8 @@ llvm::Function *Compiler::define_function(
       llvm::Function::Create(type_with_closure, llvm::Function::ExternalLinkage, name, this->mod);
 
   // TODO: combine with closure gen function maybe cus we also add to scope there
-  // Set parameter names (-1 because closure is special, also ssize_t to avoid underflow)
-  for (ssize_t i = 0, size = parameters.size() - 1; i < size; ++i) {
+  // Set parameter names and bring parameters into scope of function
+  for (size_t i = 0, size = parameters.size(); i < size; ++i) {
     llvm::Argument *argument = function->getArg(i);
     argument->setName(parameters[i]->name);
     // TODO: mutability for parameters maybe with mut keyword for mutable params. This would have to
@@ -110,8 +110,9 @@ llvm::Function *Compiler::define_function(
   llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
-  // unsigned int because type is required by CreateExtractValue()
-  for (unsigned int i = 0, size = bindings.size(); i < size; ++i) {
+  // unsigned int because type is required by CreateExtractValue(), bindings.size - parameters.size
+  // since bindings are expanded by parameters and we dont want to add these in the closure
+  for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
     std::pair<const std::string &, Scope::Binding> binding = bindings[i];
     llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i});
 
@@ -120,6 +121,7 @@ llvm::Function *Compiler::define_function(
       this->current_scope->put(binding.first, field, binding.second.value->getType());
     }
   }
+
   this->builder.CreateRet(body.compile(*this));
   this->set_insert_point(previous_block);
 
@@ -471,7 +473,7 @@ Compiler::create_phi(llvm::Type *type,
 
 llvm::CallInst *Compiler::create_call(llvm::Function *function,
                                       std::vector<llvm::Value *> &arguments) {
-  // TODO: more generic
+  // TODO: more generic - two methods 1. create_extern_call, create_user_call
   if (function->getName() == "printf")
     return this->builder.CreateCall(function, arguments);
 

@@ -5,8 +5,8 @@ source_filename = "kebab"
 
 declare i64 @printf(ptr, ...)
 
-define i64 @main(i64 %argc) {
+define i64 @main(i64 %argc, {} %0) {
 entry:
-  %0 = call i64 (ptr, ...) @printf(ptr @0, i64 %argc)
+  %1 = call i64 (ptr, ...) @printf(ptr @0, i64 %argc)
   ret i64 0
 }
