@@ -98,16 +98,19 @@ llvm::Function *Compiler::define_function(
   }
 
   // Load and add fields of closure into scope
+  llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
   for (size_t i = 0, size = bindings.size(); i < size; ++i) {
     std::pair<const std::string &, Scope::Binding> binding = bindings[i];
-    llvm::Value *field_pointer =
-        this->builder.CreateStructGEP(closure_type, function->getArg(function->arg_size() - 1), i);
-    llvm::LoadInst *load =
-        this->builder.CreateLoad(binding.second.type, field_pointer, binding.first);
+    llvm::Value *field_pointer = this->builder.CreateStructGEP(closure_type, closure_arg, i);
 
-    this->current_scope->put(binding.first, load, binding.second.value->getType());
+    // Only load and put value into scope if it makes sense (e.g. don't try to load functions)
+    if (binding.second.type->isSized()) {
+      llvm::LoadInst *load =
+          this->builder.CreateLoad(binding.second.type, field_pointer, binding.first);
+      this->current_scope->put(binding.first, load, binding.second.value->getType());
+    }
   }
 
   // Make entry for new function and save the current insert block so we can return to it after
