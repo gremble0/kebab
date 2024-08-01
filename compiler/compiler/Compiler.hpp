@@ -58,9 +58,12 @@ private:
 
   llvm::Align get_alignment(llvm::Type *type) const;
 
-  llvm::StructType *generate_closure_type();
   llvm::FunctionType *add_parameter(llvm::FunctionType *type, llvm::Type *parameter);
+
+  llvm::StructType *generate_closure_type();
   llvm::Value *generate_closure_argument(llvm::StructType *closure_type);
+  void load_parameters(llvm::Function *function,
+                       const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
 
 public:
   Compiler() : mod("kebab", context), builder(context) {}

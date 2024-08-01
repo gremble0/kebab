@@ -77,6 +77,35 @@ llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::
   return function;
 }
 
+void Compiler::load_parameters(
+    llvm::Function *function,
+    const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
+  // Set parameter names and bring parameters into scope of function
+  for (size_t i = 0, size = parameters.size(); i < size; ++i) {
+    llvm::Argument *argument = function->getArg(i);
+    argument->setName(parameters[i]->name);
+    // TODO: mutability for parameters maybe with mut keyword for mutable params. This would have to
+    // be changed in parser as well
+    this->current_scope->put(parameters[i]->name, argument, argument->getType());
+  }
+
+  // Load and add fields of closure into scope
+  llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
+  std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
+      this->current_scope->bindings();
+
+  // unsigned int because type is required by CreateExtractValue(), bindings.size - parameters.size
+  // since bindings are expanded by parameters and we dont want to add these in the closure
+  for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
+    std::pair<const std::string &, Scope::Binding> binding = bindings[i];
+    llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i});
+
+    // Only put value into scope if it makes sense (e.g. don't try to load functions)
+    if (binding.second.type->isSized())
+      this->current_scope->put(binding.first, field, binding.second.value->getType());
+  }
+}
+
 // TODO: generate type with closure in FunctionType class
 llvm::Function *Compiler::define_function(
     llvm::FunctionType *type, const std::string &name, const Parser::Constructor &body,
@@ -89,39 +118,13 @@ llvm::Function *Compiler::define_function(
   llvm::Function *function =
       llvm::Function::Create(type_with_closure, llvm::Function::ExternalLinkage, name, this->mod);
 
-  // TODO: combine with closure gen function maybe cus we also add to scope there
-  // Set parameter names and bring parameters into scope of function
-  for (size_t i = 0, size = parameters.size(); i < size; ++i) {
-    llvm::Argument *argument = function->getArg(i);
-    argument->setName(parameters[i]->name);
-    // TODO: mutability for parameters maybe with mut keyword for mutable params. This would have to
-    // be changed in parser as well
-    this->current_scope->put(parameters[i]->name, argument, argument->getType());
-  }
-
   // Make entry for new function and save the current insert block so we can return to it after
   // we're done compiling the current function
   llvm::BasicBlock *entry = this->create_basic_block(function, "entry");
   llvm::BasicBlock *previous_block = this->builder.GetInsertBlock();
 
   this->set_insert_point(entry);
-
-  // Load and add fields of closure into scope
-  llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
-  std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
-      this->current_scope->bindings();
-  // unsigned int because type is required by CreateExtractValue(), bindings.size - parameters.size
-  // since bindings are expanded by parameters and we dont want to add these in the closure
-  for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
-    std::pair<const std::string &, Scope::Binding> binding = bindings[i];
-    llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i});
-
-    // Only load and put value into scope if it makes sense (e.g. don't try to load functions)
-    if (binding.second.type->isSized()) {
-      this->current_scope->put(binding.first, field, binding.second.value->getType());
-    }
-  }
-
+  this->load_parameters(function, parameters);
   this->builder.CreateRet(body.compile(*this));
   this->set_insert_point(previous_block);
 
