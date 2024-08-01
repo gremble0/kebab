@@ -58,16 +58,16 @@ private:
 
   llvm::Align get_alignment(llvm::Type *type) const;
 
-  llvm::FunctionType *add_parameter(llvm::FunctionType *type, llvm::Type *parameter);
+  llvm::FunctionType *add_parameter(const llvm::FunctionType *type, llvm::Type *parameter);
 
   llvm::Value *create_closure_argument(llvm::StructType *closure_type);
-  void load_parameters(llvm::Function *function,
+  void load_parameters(const llvm::Function *function,
                        const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
 
-  bool is_externally_defined(llvm::Function *function) const;
+  bool is_externally_defined(const llvm::Function *function) const;
   // Call an externally defined function that follows the C ABI
   llvm::CallInst *create_extern_call(llvm::Function *function,
-                                     std::vector<llvm::Value *> &arguments);
+                                     const std::vector<llvm::Value *> &arguments);
   // Call a userdefined function that follows kebab function declaration style
   llvm::CallInst *create_userdefined_call(llvm::Function *function,
                                           std::vector<llvm::Value *> &arguments);

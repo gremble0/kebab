@@ -77,7 +77,7 @@ llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::
 }
 
 void Compiler::load_parameters(
-    llvm::Function *function,
+    const llvm::Function *function,
     const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
   // Set parameter names and bring parameters into scope of function
   for (size_t i = 0, size = parameters.size(); i < size; ++i) {
@@ -95,9 +95,9 @@ void Compiler::load_parameters(
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
   for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
-    std::pair<const std::string &, Scope::Binding> binding = bindings[i];
+    const auto &[name, binding] = bindings[i];
     llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i});
-    this->current_scope->put(binding.first, field, binding.second.value->getType());
+    this->current_scope->put(name, field, binding.value->getType());
   }
 }
 
@@ -136,9 +136,8 @@ llvm::Align Compiler::get_alignment(llvm::Type *type) const {
 
 llvm::StructType *Compiler::create_closure_type() {
   std::vector<llvm::Type *> types;
-  std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
-      this->current_scope->bindings();
-  for (const auto &[key, binding] : bindings)
+  for (const auto &bindings = this->current_scope->bindings();
+       const auto &[key, binding] : bindings)
     types.push_back(binding.type);
 
   auto closure_type = llvm::StructType::get(this->context, types);
@@ -147,7 +146,7 @@ llvm::StructType *Compiler::create_closure_type() {
   return closure_type;
 }
 
-llvm::FunctionType *Compiler::add_parameter(llvm::FunctionType *type, llvm::Type *parameter) {
+llvm::FunctionType *Compiler::add_parameter(const llvm::FunctionType *type, llvm::Type *parameter) {
   std::vector<llvm::Type *> param_types = type->params();
   param_types.push_back(parameter);
 
@@ -226,7 +225,7 @@ std::optional<llvm::AllocaInst *> Compiler::create_mutable(const std::string &na
 
 std::optional<llvm::Value *> Compiler::create_neg(llvm::Value *v) {
   // unary - is only allowed for numbers
-  llvm::Type *v_type = v->getType();
+  const llvm::Type *v_type = v->getType();
   if (v_type->isIntegerTy(64))
     return this->builder.CreateNeg(v);
   else if (v_type->isDoubleTy())
@@ -467,7 +466,7 @@ Compiler::create_phi(llvm::Type *type,
   return phi;
 }
 
-bool Compiler::is_externally_defined(llvm::Function *function) const {
+bool Compiler::is_externally_defined(const llvm::Function *function) const {
   // TODO: more sophisticated structure, probably a hashmap from name to functions
   if (function->getName() == "printf")
     return true;
@@ -476,14 +475,14 @@ bool Compiler::is_externally_defined(llvm::Function *function) const {
 }
 
 llvm::CallInst *Compiler::create_extern_call(llvm::Function *function,
-                                             std::vector<llvm::Value *> &arguments) {
+                                             const std::vector<llvm::Value *> &arguments) {
   return this->builder.CreateCall(function, arguments);
 }
 
 llvm::CallInst *Compiler::create_userdefined_call(llvm::Function *function,
                                                   std::vector<llvm::Value *> &arguments) {
   // Last argument is the closure struct
-  llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
+  const llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
   llvm::Type *closure_type = closure_arg->getType();
   if (auto closure_type_casted = llvm::dyn_cast<llvm::StructType>(closure_type)) {
     arguments.push_back(this->create_closure_argument(closure_type_casted));

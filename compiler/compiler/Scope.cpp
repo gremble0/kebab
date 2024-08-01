@@ -1,11 +1,12 @@
 #include <optional>
+#include <set>
 
 #include "compiler/Scope.hpp"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
 
 std::optional<Scope::Binding> Scope::lookup(const std::string &key) {
-  // Either
+  // Either:
   // 1. we have found the value -> return it
   // 2. we have not found the value, but we have a parent -> look in parent
   // 3. we have not found the value and we dont have a parent -> return nullopt
@@ -40,18 +41,20 @@ std::vector<std::pair<const std::string &, Scope::Binding>> Scope::bindings() co
   for (const auto &[key, binding] : this->map)
     local_bindings.push_back({key, binding});
 
-  // Only add parent values that are not already present in the more local scope
-  // TODO: this could be optimized with something like a set
+  // The most local bindings shadow any potential parent bindings with the same name
+  std::set<std::string> seen;
+  for (const auto &[key, _] : local_bindings)
+    seen.insert(key);
+
   if (this->parent.has_value()) {
     auto parent_bindings = this->parent.value()->bindings();
     for (const auto &[key, binding] : parent_bindings) {
-      bool is_shadowed = false;
-      for (const auto &[local_key, local_binding] : local_bindings)
-        if (local_key == key)
-          is_shadowed = true;
+      // Dont add shadowed bindings or values that dont make sense to load (e.g. functions)
+      if (seen.find(key) != seen.end() || !binding.type->isSized())
+        continue;
 
-      if (!is_shadowed && binding.type->isSized())
-        local_bindings.push_back({key, binding});
+      local_bindings.push_back({key, binding});
+      seen.insert(key);
     }
   }
 
