@@ -33,8 +33,8 @@ bool Scope::put(const std::string &key, llvm::Value *value, llvm::Type *type, bo
   return true;
 }
 
-std::vector<std::pair<std::string, Scope::Binding>> Scope::bindings() {
-  std::vector<std::pair<std::string, Binding>> local_bindings;
+std::vector<std::pair<const std::string &, Scope::Binding>> Scope::bindings() const {
+  std::vector<std::pair<const std::string &, Binding>> local_bindings;
 
   for (const auto &[key, binding] : this->map)
     local_bindings.push_back({key, binding});

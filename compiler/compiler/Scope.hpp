@@ -25,7 +25,7 @@ public:
   std::optional<Binding> lookup(const std::string &key);
   bool put(const std::string &key, llvm::Value *value, llvm::Type *type, bool is_mutable = false);
 
-  std::vector<std::pair<std::string, Binding>> bindings();
+  std::vector<std::pair<const std::string &, Binding>> bindings() const;
 
 private:
   std::unordered_map<std::string, Binding> map;
