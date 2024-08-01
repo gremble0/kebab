@@ -3,7 +3,8 @@ def main = fn(() => int(
   def local-string = string("hello")
   def local-fn = fn(() => int(
     def inner-var = int(42)
-    inner-var + 420
+    printf("hello %ld\n", inner-var + local-var)
+    inner-var + local-var
   ))
   def local-fn-called = int(local-fn())
 

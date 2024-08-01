@@ -11,6 +11,7 @@
 #include "llvm/IR/Argument.h"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constant.h"
+#include "llvm/IR/Constants.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Function.h"
@@ -156,15 +157,14 @@ llvm::FunctionType *Compiler::add_parameter(llvm::FunctionType *type, llvm::Type
 }
 
 llvm::Value *Compiler::generate_closure_argument(llvm::StructType *closure_type) {
-  // TODO: create_alloca overload?
-  llvm::AllocaInst *closure = this->builder.CreateAlloca(closure_type, nullptr, "__closure");
+  llvm::Value *closure = llvm::UndefValue::get(closure_type);
 
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
   // unsigned int because type is required by CreateExtractValue()
   for (unsigned int i = 0, num_elements = closure_type->getNumElements(); i < num_elements; ++i) {
-    llvm::Value *init = bindings[i].second.value;
-    this->builder.CreateInsertValue(closure, init, {i});
+    llvm::Value *field_value = bindings[i].second.value;
+    closure = this->builder.CreateInsertValue(closure, field_value, {i});
   }
 
   return closure;
@@ -476,8 +476,8 @@ llvm::CallInst *Compiler::create_call(llvm::Function *function,
     return this->builder.CreateCall(function, arguments);
 
   // Last argument is the closure struct
-  llvm::Function *current_function = this->get_current_function();
-  llvm::Argument *closure_arg = current_function->getArg(current_function->arg_size() - 1);
+  // llvm::Function *current_function = this->get_current_function();
+  llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
   llvm::Type *closure_type = closure_arg->getType();
   if (auto closure_type_casted = llvm::dyn_cast<llvm::StructType>(closure_type)) {
     arguments.push_back(this->generate_closure_argument(closure_type_casted));
