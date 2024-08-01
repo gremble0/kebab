@@ -99,38 +99,34 @@ void Compiler::load_parameters(
   for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
     std::pair<const std::string &, Scope::Binding> binding = bindings[i];
     llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i});
-
-    // Only put value into scope if it makes sense (e.g. don't try to load functions)
-    if (binding.second.type->isSized())
-      this->current_scope->put(binding.first, field, binding.second.value->getType());
+    this->current_scope->put(binding.first, field, binding.second.value->getType());
   }
 }
 
 // TODO: generate type with closure in FunctionType class
 llvm::Function *Compiler::define_function(
-    llvm::FunctionType *type, const std::string &name, const Parser::Constructor &body,
+    llvm::FunctionType *function_type, const std::string &name, const Parser::Constructor &body,
     const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
   this->start_scope();
 
   llvm::StructType *closure_type = this->generate_closure_type();
-  llvm::FunctionType *type_with_closure = this->add_parameter(type, closure_type);
+  llvm::FunctionType *function_type_with_closure = this->add_parameter(function_type, closure_type);
 
-  llvm::Function *function =
-      llvm::Function::Create(type_with_closure, llvm::Function::ExternalLinkage, name, this->mod);
+  llvm::Function *function = llvm::Function::Create(
+      function_type_with_closure, llvm::Function::ExternalLinkage, name, this->mod);
 
   // Make entry for new function and save the current insert block so we can return to it after
   // we're done compiling the current function
   llvm::BasicBlock *entry = this->create_basic_block(function, "entry");
   llvm::BasicBlock *previous_block = this->builder.GetInsertBlock();
 
+  // Codegen for the body of the function
   this->set_insert_point(entry);
   this->load_parameters(function, parameters);
   this->builder.CreateRet(body.compile(*this));
   this->set_insert_point(previous_block);
 
   this->end_scope();
-  // Previous scope now has this function in scope - this allows for first order functions since no
-  // parent scopes can't see this binding
   this->current_scope->put(name, function, function->getFunctionType());
 
   return function;
@@ -474,14 +470,22 @@ Compiler::create_phi(llvm::Type *type,
   return phi;
 }
 
-llvm::CallInst *Compiler::create_call(llvm::Function *function,
-                                      std::vector<llvm::Value *> &arguments) {
-  // TODO: more generic - two methods 1. create_extern_call, create_user_call
+bool Compiler::is_externally_defined(llvm::Function *function) const {
+  // TODO: more sophisticated structure, probably a hashmap from name to functions
   if (function->getName() == "printf")
-    return this->builder.CreateCall(function, arguments);
+    return true;
+  else
+    return false;
+}
 
+llvm::CallInst *Compiler::create_extern_call(llvm::Function *function,
+                                             std::vector<llvm::Value *> &arguments) {
+  return this->builder.CreateCall(function, arguments);
+}
+
+llvm::CallInst *Compiler::create_userdefined_call(llvm::Function *function,
+                                                  std::vector<llvm::Value *> &arguments) {
   // Last argument is the closure struct
-  // llvm::Function *current_function = this->get_current_function();
   llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
   llvm::Type *closure_type = closure_arg->getType();
   if (auto closure_type_casted = llvm::dyn_cast<llvm::StructType>(closure_type)) {
@@ -489,9 +493,17 @@ llvm::CallInst *Compiler::create_call(llvm::Function *function,
 
     return this->builder.CreateCall(function, arguments);
   } else {
-    assert(false &&
-           "reached unreachable branch. Last argument to a function should always be the closure");
+    assert(false && "reached unreachable branch. last argument to a user defined function should "
+                    "always be the closure");
   }
+}
+
+llvm::CallInst *Compiler::create_call(llvm::Function *function,
+                                      std::vector<llvm::Value *> &arguments) {
+  if (this->is_externally_defined(function))
+    return this->create_extern_call(function, arguments);
+  else
+    return this->create_userdefined_call(function, arguments);
 }
 
 } // namespace Kebab

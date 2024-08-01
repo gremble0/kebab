@@ -65,6 +65,14 @@ private:
   void load_parameters(llvm::Function *function,
                        const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
 
+  bool is_externally_defined(llvm::Function *function) const;
+  // Call an externally defined function that follows the C ABI
+  llvm::CallInst *create_extern_call(llvm::Function *function,
+                                     std::vector<llvm::Value *> &arguments);
+  // Call a userdefined function that follows kebab function declaration style
+  llvm::CallInst *create_userdefined_call(llvm::Function *function,
+                                          std::vector<llvm::Value *> &arguments);
+
 public:
   Compiler() : mod("kebab", context), builder(context) {}
 
