@@ -12,7 +12,7 @@
 
 // Memory management: I think we can make functions void and mutate params
 
-rt_value_t *operator_unary_plus_eval(rt_value_t *v) {
+rt_value_t *operator_unary_plus_eval(const rt_value_t *v) {
   switch (v->type->kind) {
   case TYPE_INT: {
     rt_value_t *positive = malloc(sizeof(*positive));
@@ -30,7 +30,7 @@ rt_value_t *operator_unary_plus_eval(rt_value_t *v) {
   }
 }
 
-rt_value_t *operator_unary_minus_eval(rt_value_t *v) {
+rt_value_t *operator_unary_minus_eval(const rt_value_t *v) {
   switch (v->type->kind) {
   case TYPE_INT: {
     rt_value_t *positive = malloc(sizeof(*positive));
@@ -47,7 +47,8 @@ rt_value_t *operator_unary_minus_eval(rt_value_t *v) {
     ASSERT(0);
   }
 }
-rt_value_t *operator_unary_not_eval(rt_value_t *v) {
+
+rt_value_t *operator_unary_not_eval(const rt_value_t *v) {
   switch (v->type->kind) {
   case TYPE_BOOL: {
     rt_value_t *negated = malloc(sizeof(*negated));
@@ -65,7 +66,7 @@ rt_value_t *operator_unary_not_eval(rt_value_t *v) {
   }
 }
 
-rt_value_t *operator_binary_add_eval(rt_value_t *lhs, rt_value_t *rhs, span_t span) {
+rt_value_t *operator_binary_add_eval(const rt_value_t *lhs, const rt_value_t *rhs, span_t span) {
   switch (lhs->type->kind) {
   case TYPE_INT: {
     if (rhs->type != type_int)
@@ -86,7 +87,7 @@ rt_value_t *operator_binary_add_eval(rt_value_t *lhs, rt_value_t *rhs, span_t sp
   }
 }
 
-rt_value_t *operator_binary_minus_eval(rt_value_t *lhs, rt_value_t *rhs, span_t span) {
+rt_value_t *operator_binary_minus_eval(const rt_value_t *lhs, const rt_value_t *rhs, span_t span) {
   switch (lhs->type->kind) {
   case TYPE_INT: {
     if (rhs->type != type_int)
@@ -107,7 +108,7 @@ rt_value_t *operator_binary_minus_eval(rt_value_t *lhs, rt_value_t *rhs, span_t 
   }
 }
 
-rt_value_t *operator_binary_mult_eval(rt_value_t *lhs, rt_value_t *rhs, span_t span) {
+rt_value_t *operator_binary_mult_eval(const rt_value_t *lhs, const rt_value_t *rhs, span_t span) {
   switch (lhs->type->kind) {
   case TYPE_INT: {
     if (rhs->type != type_int)
@@ -128,7 +129,7 @@ rt_value_t *operator_binary_mult_eval(rt_value_t *lhs, rt_value_t *rhs, span_t s
   }
 }
 
-rt_value_t *operator_binary_div_eval(rt_value_t *lhs, rt_value_t *rhs, span_t span) {
+rt_value_t *operator_binary_div_eval(const rt_value_t *lhs, const rt_value_t *rhs, span_t span) {
   switch (lhs->type->kind) {
   case TYPE_INT: {
     if (rhs->type != type_int)
@@ -149,7 +150,7 @@ rt_value_t *operator_binary_div_eval(rt_value_t *lhs, rt_value_t *rhs, span_t sp
   }
 }
 
-rt_value_t *operator_binary_lt_eval(rt_value_t *lhs, rt_value_t *rhs, span_t span) {
+rt_value_t *operator_binary_lt_eval(const rt_value_t *lhs, const rt_value_t *rhs, span_t span) {
   switch (lhs->type->kind) {
   case TYPE_INT: {
     if (rhs->type != type_int)
@@ -170,7 +171,7 @@ rt_value_t *operator_binary_lt_eval(rt_value_t *lhs, rt_value_t *rhs, span_t spa
   }
 }
 
-rt_value_t *operator_binary_le_eval(rt_value_t *lhs, rt_value_t *rhs, span_t span) {
+rt_value_t *operator_binary_le_eval(const rt_value_t *lhs, const rt_value_t *rhs, span_t span) {
   switch (lhs->type->kind) {
   case TYPE_INT: {
     if (rhs->type != type_int)
@@ -191,7 +192,7 @@ rt_value_t *operator_binary_le_eval(rt_value_t *lhs, rt_value_t *rhs, span_t spa
   }
 }
 
-rt_value_t *operator_binary_eq_eval(rt_value_t *lhs, rt_value_t *rhs, span_t span) {
+rt_value_t *operator_binary_eq_eval(const rt_value_t *lhs, const rt_value_t *rhs, span_t span) {
   switch (lhs->type->kind) {
   case TYPE_INT: {
     if (rhs->type != type_int)
@@ -212,7 +213,7 @@ rt_value_t *operator_binary_eq_eval(rt_value_t *lhs, rt_value_t *rhs, span_t spa
   }
 }
 
-rt_value_t *operator_binary_neq_eval(rt_value_t *lhs, rt_value_t *rhs, span_t span) {
+rt_value_t *operator_binary_neq_eval(const rt_value_t *lhs, const rt_value_t *rhs, span_t span) {
   switch (lhs->type->kind) {
   case TYPE_INT: {
     if (rhs->type != type_int)
@@ -233,7 +234,7 @@ rt_value_t *operator_binary_neq_eval(rt_value_t *lhs, rt_value_t *rhs, span_t sp
   }
 }
 
-rt_value_t *operator_binary_gt_eval(rt_value_t *lhs, rt_value_t *rhs, span_t span) {
+rt_value_t *operator_binary_gt_eval(const rt_value_t *lhs, const rt_value_t *rhs, span_t span) {
   switch (lhs->type->kind) {
   case TYPE_INT: {
     if (rhs->type != type_int)
@@ -254,7 +255,7 @@ rt_value_t *operator_binary_gt_eval(rt_value_t *lhs, rt_value_t *rhs, span_t spa
   }
 }
 
-rt_value_t *operator_binary_ge_eval(rt_value_t *lhs, rt_value_t *rhs, span_t span) {
+rt_value_t *operator_binary_ge_eval(const rt_value_t *lhs, const rt_value_t *rhs, span_t span) {
   switch (lhs->type->kind) {
   case TYPE_INT: {
     if (rhs->type != type_int)
