@@ -76,6 +76,7 @@ llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::
   return function;
 }
 
+// TODO: generate type with closure in FunctionType class
 llvm::Function *Compiler::define_function(
     llvm::FunctionType *type, const std::string &name, const Parser::Constructor &body,
     const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {

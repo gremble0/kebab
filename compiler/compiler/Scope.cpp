@@ -1,6 +1,7 @@
 #include <optional>
 
 #include "compiler/Scope.hpp"
+#include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
 
 std::optional<Scope::Binding> Scope::lookup(const std::string &key) {
@@ -49,7 +50,7 @@ std::vector<std::pair<const std::string &, Scope::Binding>> Scope::bindings() co
         if (local_key == key)
           is_shadowed = true;
 
-      if (!is_shadowed)
+      if (!is_shadowed && binding.type->isSized())
         local_bindings.push_back({key, binding});
     }
   }
