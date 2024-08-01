@@ -88,8 +88,8 @@ llvm::Function *Compiler::define_function(
       llvm::Function::Create(type_with_closure, llvm::Function::ExternalLinkage, name, this->mod);
 
   // TODO: combine with closure gen function maybe cus we also add to scope there
-  // Set parameter names (-1 because closure is special)
-  for (size_t i = 0, size = parameters.size() - 1; i < size; ++i) {
+  // Set parameter names (-1 because closure is special, also ssize_t to avoid underflow)
+  for (ssize_t i = 0, size = parameters.size() - 1; i < size; ++i) {
     llvm::Argument *argument = function->getArg(i);
     argument->setName(parameters[i]->name);
     // TODO: mutability for parameters maybe with mut keyword for mutable params. This would have to
