@@ -98,6 +98,13 @@ llvm::Function *Compiler::define_function(
     this->current_scope->put(parameters[i]->name, argument, argument->getType());
   }
 
+  // Make entry for new function and save the current insert block so we can return to it after
+  // we're done compiling the current function
+  llvm::BasicBlock *entry = this->create_basic_block(function, "entry");
+  llvm::BasicBlock *previous_block = this->builder.GetInsertBlock();
+
+  this->set_insert_point(entry);
+
   // Load and add fields of closure into scope
   llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
@@ -113,13 +120,6 @@ llvm::Function *Compiler::define_function(
       this->current_scope->put(binding.first, load, binding.second.value->getType());
     }
   }
-
-  // Make entry for new function and save the current insert block so we can return to it after
-  // we're done compiling the current function
-  llvm::BasicBlock *entry = this->create_basic_block(function, "entry");
-  llvm::BasicBlock *previous_block = this->builder.GetInsertBlock();
-
-  this->set_insert_point(entry);
   this->builder.CreateRet(body.compile(*this));
   this->set_insert_point(previous_block);
 
@@ -160,12 +160,13 @@ llvm::Value *Compiler::generate_closure_argument(llvm::StructType *closure_type)
   // TODO: create_alloca overload?
   llvm::AllocaInst *closure = this->builder.CreateAlloca(closure_type, nullptr, "__closure");
 
+  std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
+      this->current_scope->bindings();
   for (size_t i = 0, num_elements = closure_type->getNumElements(); i < num_elements; ++i) {
     llvm::Value *field_pointer = this->builder.CreateStructGEP(closure_type, closure, i);
-    llvm::Type *field_type = closure_type->getElementType(i);
 
-    // TODO: actual values
-    llvm::Value *init = llvm::Constant::getNullValue(field_type);
+    llvm::Value *init = bindings[i].second.value;
+    assert(bindings[i].second.type == field_pointer->getType());
     this->builder.CreateStore(init, field_pointer);
   }
 
