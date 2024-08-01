@@ -161,12 +161,10 @@ llvm::Value *Compiler::generate_closure_argument(llvm::StructType *closure_type)
 
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
-  for (size_t i = 0, num_elements = closure_type->getNumElements(); i < num_elements; ++i) {
-    llvm::Value *field_pointer = this->builder.CreateStructGEP(closure_type, closure, i);
-
+  // unsigned int because type is required by CreateExtractValue()
+  for (unsigned int i = 0, num_elements = closure_type->getNumElements(); i < num_elements; ++i) {
     llvm::Value *init = bindings[i].second.value;
-    assert(bindings[i].second.type == field_pointer->getType());
-    this->builder.CreateStore(init, field_pointer);
+    this->builder.CreateInsertValue(closure, init, {i});
   }
 
   return closure;
@@ -473,8 +471,13 @@ Compiler::create_phi(llvm::Type *type,
 
 llvm::CallInst *Compiler::create_call(llvm::Function *function,
                                       std::vector<llvm::Value *> &arguments) {
+  // TODO: more generic
+  if (function->getName() == "printf")
+    return this->builder.CreateCall(function, arguments);
+
   // Last argument is the closure struct
-  llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
+  llvm::Function *current_function = this->get_current_function();
+  llvm::Argument *closure_arg = current_function->getArg(current_function->arg_size() - 1);
   llvm::Type *closure_type = closure_arg->getType();
   if (auto closure_type_casted = llvm::dyn_cast<llvm::StructType>(closure_type)) {
     arguments.push_back(this->generate_closure_argument(closure_type_casted));
