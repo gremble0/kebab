@@ -109,15 +109,14 @@ llvm::Function *Compiler::define_function(
   llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
-  for (size_t i = 0, size = bindings.size(); i < size; ++i) {
+  // unsigned int because type is required by CreateExtractValue()
+  for (unsigned int i = 0, size = bindings.size(); i < size; ++i) {
     std::pair<const std::string &, Scope::Binding> binding = bindings[i];
-    llvm::Value *field_pointer = this->builder.CreateStructGEP(closure_type, closure_arg, i);
+    llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i});
 
     // Only load and put value into scope if it makes sense (e.g. don't try to load functions)
     if (binding.second.type->isSized()) {
-      llvm::LoadInst *load =
-          this->builder.CreateLoad(binding.second.type, field_pointer, binding.first);
-      this->current_scope->put(binding.first, load, binding.second.value->getType());
+      this->current_scope->put(binding.first, field, binding.second.value->getType());
     }
   }
   this->builder.CreateRet(body.compile(*this));
