@@ -81,18 +81,33 @@ llvm::Function *Compiler::define_function(
     const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
   this->start_scope();
 
-  llvm::FunctionType *type_with_closure = this->add_closure_type(type);
+  llvm::StructType *closure_type = this->generate_closure_type();
+  llvm::FunctionType *type_with_closure = this->add_parameter(type, closure_type);
 
   llvm::Function *function =
       llvm::Function::Create(type_with_closure, llvm::Function::ExternalLinkage, name, this->mod);
 
-  // Set parameter names
-  for (size_t i = 0, size = parameters.size(); i < size; ++i) {
+  // TODO: combine with closure gen function maybe cus we also add to scope there
+  // Set parameter names (-1 because closure is special)
+  for (size_t i = 0, size = parameters.size() - 1; i < size; ++i) {
     llvm::Argument *argument = function->getArg(i);
     argument->setName(parameters[i]->name);
     // TODO: mutability for parameters maybe with mut keyword for mutable params. This would have to
     // be changed in parser as well
     this->current_scope->put(parameters[i]->name, argument, argument->getType());
+  }
+
+  // Load and add fields of closure into scope
+  std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
+      this->current_scope->bindings();
+  for (size_t i = 0, size = bindings.size(); i < size; ++i) {
+    std::pair<const std::string &, Scope::Binding> binding = bindings[i];
+    llvm::Value *field_pointer =
+        this->builder.CreateStructGEP(closure_type, function->getArg(function->arg_size() - 1), i);
+    llvm::LoadInst *load =
+        this->builder.CreateLoad(binding.second.type, field_pointer, binding.first);
+
+    this->current_scope->put(binding.first, load, binding.second.value->getType());
   }
 
   // Make entry for new function and save the current insert block so we can return to it after
@@ -119,7 +134,8 @@ llvm::Align Compiler::get_alignment(llvm::Type *type) const {
 
 llvm::StructType *Compiler::generate_closure_type() {
   std::vector<llvm::Type *> types;
-  std::vector<std::pair<std::string, Scope::Binding>> bindings = this->current_scope->bindings();
+  std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
+      this->current_scope->bindings();
   for (const auto &[key, binding] : bindings)
     types.push_back(binding.type);
 
@@ -129,14 +145,14 @@ llvm::StructType *Compiler::generate_closure_type() {
   return closure_type;
 }
 
-llvm::FunctionType *Compiler::add_closure_type(llvm::FunctionType *type) {
+llvm::FunctionType *Compiler::add_parameter(llvm::FunctionType *type, llvm::Type *parameter) {
   std::vector<llvm::Type *> param_types = type->params();
-  param_types.push_back(generate_closure_type());
+  param_types.push_back(parameter);
 
   return llvm::FunctionType::get(type->getReturnType(), param_types, type->isVarArg());
 }
 
-llvm::Value *Compiler::generate_closure_value(llvm::StructType *closure_type) {
+llvm::Value *Compiler::generate_closure_argument(llvm::StructType *closure_type) {
   // TODO: create_alloca overload?
   llvm::AllocaInst *closure = this->builder.CreateAlloca(closure_type, nullptr, "__closure");
 
@@ -457,7 +473,7 @@ llvm::CallInst *Compiler::create_call(llvm::Function *function,
   llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
   llvm::Type *closure_type = closure_arg->getType();
   if (auto closure_type_casted = llvm::dyn_cast<llvm::StructType>(closure_type)) {
-    arguments.push_back(this->generate_closure_value(closure_type_casted));
+    arguments.push_back(this->generate_closure_argument(closure_type_casted));
 
     return this->builder.CreateCall(function, arguments);
   } else {

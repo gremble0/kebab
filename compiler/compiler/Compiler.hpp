@@ -59,8 +59,8 @@ private:
   llvm::Align get_alignment(llvm::Type *type) const;
 
   llvm::StructType *generate_closure_type();
-  llvm::FunctionType *add_closure_type(llvm::FunctionType *type);
-  llvm::Value *generate_closure_value(llvm::StructType *closure_type);
+  llvm::FunctionType *add_parameter(llvm::FunctionType *type, llvm::Type *parameter);
+  llvm::Value *generate_closure_argument(llvm::StructType *closure_type);
 
 public:
   Compiler() : mod("kebab", context), builder(context) {}
