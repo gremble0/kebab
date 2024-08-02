@@ -112,6 +112,7 @@ static void replace_compiler_expected() {
   replace_one_compiler_expected("or");
   replace_one_compiler_expected("terms");
   replace_one_compiler_expected("inner-expression");
+  replace_one_compiler_expected("closures");
 
   std::cout << "Replaced expected compiler output" << std::endl;
 }

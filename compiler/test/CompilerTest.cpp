@@ -61,4 +61,6 @@ TEST(CompilerTest, CompilesTermsKeb) { ASSERT_EXPECTED_COMPILATION("terms"); }
 
 TEST(CompilerTest, CompilesInnerExpressionKeb) { ASSERT_EXPECTED_COMPILATION("inner-expression"); }
 
+TEST(CompilerTest, CompilesClosuresKeb) { ASSERT_EXPECTED_COMPILATION("closures"); }
+
 } // namespace Kebab::Test
