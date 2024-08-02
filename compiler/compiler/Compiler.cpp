@@ -498,6 +498,7 @@ llvm::CallInst *Compiler::create_userdefined_call(llvm::Function *function,
 
 llvm::CallInst *Compiler::create_call(llvm::Function *function,
                                       std::vector<llvm::Value *> &arguments) {
+  // TODO: check number of arguments, maybe some other checks too (type checks?)
   if (this->is_externally_defined(function))
     return this->create_extern_call(function, arguments);
   else
