@@ -60,7 +60,7 @@ string_t *type_to_string(keb_type_t *type) {
   case TYPE_FN: {
     // Should look something like "fn(int) => string"
     string_t *s = string_dup(&string_of("fn("));
-    list_t *param_types = type->fn_type.param_types;
+    const list_t *param_types = type->fn_type.param_types;
 
     for (size_t i = 0; i < param_types->size; ++i) {
       string_append(s, type_to_string(list_get(param_types, i)));

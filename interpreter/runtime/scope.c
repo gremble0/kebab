@@ -35,7 +35,9 @@ rt_value_t *scope_get(const scope_t *scope, const string_t *name) {
   return NULL;
 }
 
-void scope_put(scope_t *scope, string_t *name, rt_value_t *v) { ht_put(scope->bindings, name, v); }
+void scope_put(scope_t *scope, const string_t *name, rt_value_t *v) {
+  ht_put(scope->bindings, name, v);
+}
 
 void scope_free(scope_t *scope) {
   ht_free(scope->bindings);
