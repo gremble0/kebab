@@ -92,6 +92,7 @@ void Compiler::load_parameters(
   // unsigned int because type is required by CreateExtractValue(), bindings.size - parameters.size
   // since bindings are expanded by parameters and we dont want to add these in the closure
   llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
+  closure_arg->setName("__closure_env");
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
   for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
@@ -163,6 +164,7 @@ llvm::Value *Compiler::create_closure_argument(llvm::StructType *closure_type) {
     llvm::Value *field_value = bindings[i].second.value;
     closure = this->builder.CreateInsertValue(closure, field_value, {i});
   }
+  closure->setName("__closure_arg");
 
   return closure;
 }
