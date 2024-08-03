@@ -25,7 +25,7 @@ protected:
 
   [[noreturn]] static void parser_error(const std::string &message, const Lexer &lexer);
   [[noreturn]] void unreachable_error() const;
-  [[noreturn]] void nonhomogenous_list_error() const;
+  [[noreturn]] void nonhomogenous_list_error(const NonhomogenousListError &error) const;
   [[noreturn]] void uncallable_error(const UncallableError &error) const;
   [[noreturn]] void argument_count_error(const ArgumentCountError &error) const;
   [[noreturn]] void immutable_assignment_error(const std::string &name) const;

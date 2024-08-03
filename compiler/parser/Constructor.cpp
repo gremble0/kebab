@@ -150,8 +150,8 @@ void PrimitiveConstructor::parse_body(Lexer &lexer) {
     this->body.push_back(Statement::parse(lexer));
 
   if (!this->body.back()->is_expression())
-    AstNode::parser_error("missing return, last statement in each function must be an expression",
-                          lexer);
+    AstNode::parser_error(
+        "missing return, last statement in each constructor must be an expression", lexer);
 
   lexer.skip({Token::Type::RPAREN});
 }

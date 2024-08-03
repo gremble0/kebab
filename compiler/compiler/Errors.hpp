@@ -5,6 +5,7 @@
 #include <optional>
 
 #include "llvm/IR/Function.h"
+#include "llvm/IR/Type.h"
 
 class ArgumentCountError {
 private:
@@ -27,6 +28,21 @@ private:
 
 public:
   static std::optional<UncallableError> check(const llvm::Value *callee);
+
+  std::string to_string() const;
+};
+
+class NonhomogenousListError {
+private:
+  const llvm::Type *expected;
+  const llvm::Type *actual;
+
+  NonhomogenousListError(const llvm::Type *expected, const llvm::Type *actual)
+      : expected(expected), actual(actual){};
+
+public:
+  static std::optional<NonhomogenousListError> check(const llvm::Type *expected,
+                                                     const llvm::Type *actual);
 
   std::string to_string() const;
 };

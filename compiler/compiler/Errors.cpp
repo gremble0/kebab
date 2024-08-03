@@ -1,5 +1,6 @@
 #include <format>
 #include <optional>
+#include <string>
 
 #include "Errors.hpp"
 #include "llvm/Support/Casting.h"
@@ -39,4 +40,26 @@ std::string UncallableError::to_string() const {
   this->callee->getType()->print(callee_type_stream);
 
   return std::format("uncallable-error: value of type '{}' is not callable", callee_type_string);
+}
+
+std::optional<NonhomogenousListError> NonhomogenousListError::check(const llvm::Type *expected,
+                                                                    const llvm::Type *actual) {
+  if (expected == actual)
+    return std::nullopt;
+  else
+    return NonhomogenousListError(expected, actual);
+}
+
+std::string NonhomogenousListError::to_string() const {
+  std::string expected_string;
+  llvm::raw_string_ostream expected_stream(expected_string);
+  this->expected->print(expected_stream);
+
+  std::string actual_string;
+  llvm::raw_string_ostream actual_stream(actual_string);
+  this->actual->print(actual_stream);
+
+  return std::format("nonhomogenous-list-error: all elements in a list must be of the same type. "
+                     "first element in list of type '{}' is different from element of type '{}'",
+                     expected_string, actual_string);
 }

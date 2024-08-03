@@ -71,4 +71,8 @@ TEST(CompilerTest, ErrorsWhenCallingUncallable) {
   ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("uncallable-error"); }, "uncallable-error");
 }
 
+TEST(CompilerTest, ErrorsWhenNonhomogenousList) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("nonhomogenous-list"); }, "nonhomogenous-list");
+}
+
 } // namespace Kebab::Test

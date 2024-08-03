@@ -55,10 +55,9 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-[[noreturn]] void AstNode::nonhomogenous_list_error() const {
+[[noreturn]] void AstNode::nonhomogenous_list_error(const NonhomogenousListError &error) const {
   std::string where = this->where();
-  std::string labeled_message =
-      "nonhomogenous-list-error: all elements in a list must be of the same type";
+  std::string labeled_message = error.to_string();
 
   std::cerr << where << labeled_message << std::endl;
 

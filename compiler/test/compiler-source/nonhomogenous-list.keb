@@ -1,0 +1,4 @@
+def main = fn(() => int(
+  def nonhomogenous = list((int) => [1, 2, "hello"])
+  0
+))
