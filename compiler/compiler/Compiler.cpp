@@ -480,7 +480,7 @@ bool Compiler::is_externally_defined(const llvm::Function *function) const {
 std::variant<llvm::CallInst *, ArgumentCountError>
 Compiler::create_extern_call(llvm::Function *function,
                              const std::vector<llvm::Value *> &arguments) {
-  if (auto maybe_error = ArgumentCountError::check_argument_count(function, arguments.size());
+  if (auto maybe_error = ArgumentCountError::check(function, arguments.size());
       maybe_error.has_value())
     return maybe_error.value();
 
@@ -489,7 +489,7 @@ Compiler::create_extern_call(llvm::Function *function,
 
 std::variant<llvm::CallInst *, ArgumentCountError>
 Compiler::create_userdefined_call(llvm::Function *function, std::vector<llvm::Value *> &arguments) {
-  if (auto maybe_error = ArgumentCountError::check_argument_count(function, arguments.size() + 1);
+  if (auto maybe_error = ArgumentCountError::check(function, arguments.size() + 1);
       maybe_error.has_value())
     return maybe_error.value();
 

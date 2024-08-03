@@ -65,13 +65,9 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-[[noreturn]] void AstNode::uncallable_error(const llvm::Type *callee) const {
+[[noreturn]] void AstNode::uncallable_error(const UncallableError &error) const {
   std::string where = this->where();
-  std::string callee_type_string;
-  llvm::raw_string_ostream callee_type_stream(callee_type_string);
-  callee->print(callee_type_stream);
-  std::string labeled_message =
-      "uncallable-error: value of type '" + callee_type_string + "' is not callable";
+  std::string labeled_message = error.to_string();
 
   std::cerr << where << labeled_message << std::endl;
 

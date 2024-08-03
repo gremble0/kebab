@@ -79,16 +79,17 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
   for (const std::unique_ptr<Expression> &argument : this->arguments)
     arguments_compiled.push_back(argument->compile(compiler));
 
-  if (auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee)) {
-    std::variant<llvm::CallInst *, ArgumentCountError> call =
-        compiler.create_call(function, arguments_compiled);
-    if (std::holds_alternative<ArgumentCountError>(call))
-      this->argument_count_error(std::get<ArgumentCountError>(call));
-    else
-      return std::get<llvm::CallInst *>(call);
-  } else {
-    this->uncallable_error(this->subscriptee->getType());
-  }
+  auto maybe_error = UncallableError::check(this->subscriptee);
+  if (maybe_error.has_value())
+    this->uncallable_error(maybe_error.value());
+
+  auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee);
+  std::variant<llvm::CallInst *, ArgumentCountError> call =
+      compiler.create_call(function, arguments_compiled);
+  if (std::holds_alternative<ArgumentCountError>(call))
+    this->argument_count_error(std::get<ArgumentCountError>(call));
+  else
+    return std::get<llvm::CallInst *>(call);
 }
 
 std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
