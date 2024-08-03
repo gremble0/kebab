@@ -1,8 +1,10 @@
+#include <cassert>
 #include <format>
 #include <optional>
 #include <string>
 
-#include "Errors.hpp"
+#include "compiler/Errors.hpp"
+#include "compiler/Scope.hpp"
 #include "llvm/Support/Casting.h"
 
 std::optional<ArgumentCountError> ArgumentCountError::check(llvm::Function *function,

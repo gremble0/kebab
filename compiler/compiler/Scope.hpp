@@ -1,3 +1,6 @@
+#ifndef KEBAB_SCOPE_HPP
+#define KEBAB_SCOPE_HPP
+
 #include <memory>
 #include <optional>
 #include <unordered_map>
@@ -22,7 +25,7 @@ public:
     return this->parent.value_or(alternative);
   }
 
-  std::optional<Binding> lookup(const std::string &key);
+  std::optional<Binding> lookup(const std::string &key) const;
   bool put(const std::string &key, llvm::Value *value, llvm::Type *type, bool is_mutable = false);
 
   std::vector<std::pair<const std::string &, Binding>> bindings() const;
@@ -31,3 +34,5 @@ private:
   std::unordered_map<std::string, Binding> map;
   std::optional<std::shared_ptr<Scope>> parent;
 };
+
+#endif

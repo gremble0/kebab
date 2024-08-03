@@ -5,7 +5,7 @@
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
 
-std::optional<Scope::Binding> Scope::lookup(const std::string &key) {
+std::optional<Scope::Binding> Scope::lookup(const std::string &key) const {
   // Either:
   // 1. we have found the value -> return it
   // 2. we have not found the value, but we have a parent -> look in parent

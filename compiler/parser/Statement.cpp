@@ -78,7 +78,6 @@ std::unique_ptr<AssignmentStatement> AssignmentStatement::parse(Lexer &lexer) {
 }
 
 llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
-  // TODO: check if is mutable
   this->constructor->name = this->name;
   llvm::Value *variable_value = this->constructor->compile(compiler);
 
