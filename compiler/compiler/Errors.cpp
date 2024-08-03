@@ -48,6 +48,7 @@ std::string UncallableError::to_string() const {
 }
 
 std::optional<UnsubscriptableError> UnsubscriptableError::check(const llvm::Value *subscriptee) {
+  // TODO: this is kinda meh, but it works
   const llvm::LoadInst *load = llvm::dyn_cast<llvm::LoadInst>(subscriptee);
   if (load == nullptr)
     return UnsubscriptableError(subscriptee);
@@ -57,7 +58,8 @@ std::optional<UnsubscriptableError> UnsubscriptableError::check(const llvm::Valu
   if (alloca == nullptr)
     return UnsubscriptableError(subscriptee);
 
-  // TODO: check if is array allocation
+  if (!alloca->isArrayAllocation())
+    return UnsubscriptableError(subscriptee);
 
   return std::nullopt;
 }

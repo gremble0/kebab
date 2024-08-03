@@ -84,4 +84,8 @@ TEST(CompilerTest, ErrorsWhenAssigningToImmutable) {
       { ASSERT_EXPECTED_COMPILATION("immutable-assignment-error"); }, "immutable-assignment-error");
 }
 
+TEST(CompilerTest, ErrorsWhenSubscriptingUnsubscriptable) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("unsubscriptable-error"); }, "unsubscriptable-error");
+}
+
 } // namespace Kebab::Test

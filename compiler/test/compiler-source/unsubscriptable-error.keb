@@ -1,0 +1,5 @@
+def main = fn(() => int(
+  def unsubscriptable = int(0)
+  def a = int(unsubscriptable[0])
+  0
+))
