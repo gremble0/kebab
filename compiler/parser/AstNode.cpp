@@ -98,16 +98,6 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-[[noreturn]] void AstNode::reassignment_error(const std::string &name) const {
-  std::string where = this->where();
-  std::string labeled_message =
-      "immutable-assignment-error: cannot reassign already declared value '" + name + '\'';
-
-  std::cerr << where << labeled_message << std::endl;
-
-  exit(1);
-}
-
 [[noreturn]] void AstNode::assign_nonexisting_error(const std::string &name) const {
   std::string where = this->where();
   std::string labeled_message =

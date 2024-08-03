@@ -19,21 +19,11 @@ std::optional<Scope::Binding> Scope::lookup(const std::string &key) const {
     return std::nullopt;
 }
 
-/**
- * @return true if successful insertion, false if attempt to override immutable value caused
- * insertion to fail
- */
-bool Scope::put(const std::string &key, llvm::Value *value, llvm::Type *type, bool is_mutable) {
-  // TODO: unnecessary return (should be void)
-  if (this->map.contains(key)) {
-    if (!this->map[key].is_mutable)
-      return false;
-    else
-      this->map[key].value = value;
-  }
+void Scope::put(const std::string &key, llvm::Value *value, llvm::Type *type, bool is_mutable) {
+  if (this->map.contains(key))
+    this->map[key].value = value;
 
   this->map[key] = {is_mutable, value, type};
-  return true;
 }
 
 std::vector<std::pair<const std::string &, Scope::Binding>> Scope::bindings() const {
