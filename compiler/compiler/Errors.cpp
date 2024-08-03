@@ -8,9 +8,6 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Type.h"
 #include "llvm/Support/Casting.h"
-#include "llvm/Support/raw_ostream.h"
-
-// TODO: type_to_string(llvm::Type *) helper method in superclass
 
 std::optional<ArgumentCountError> ArgumentCountError::check(llvm::Function *function,
                                                             size_t argument_count) {
@@ -42,11 +39,9 @@ std::optional<UncallableError> UncallableError::check(const llvm::Value *callee)
 }
 
 std::string UncallableError::to_string() const {
-  std::string callee_type_string;
-  llvm::raw_string_ostream callee_type_stream(callee_type_string);
-  this->callee->getType()->print(callee_type_stream);
+  std::string type_string = CompilerError::type_to_string(this->callee->getType());
 
-  return std::format("uncallable-error: value of type '{}' is not callable", callee_type_string);
+  return std::format("uncallable-error: value of type '{}' is not callable", type_string);
 }
 
 std::optional<UnsubscriptableError> UnsubscriptableError::check(const llvm::Value *subscriptee) {
@@ -57,12 +52,10 @@ std::optional<UnsubscriptableError> UnsubscriptableError::check(const llvm::Valu
 }
 
 std::string UnsubscriptableError::to_string() const {
-  std::string subscriptee_type_string;
-  llvm::raw_string_ostream subscriptee_type_stream(subscriptee_type_string);
-  subscriptee->getType()->print(subscriptee_type_stream);
+  std::string type_string = CompilerError::type_to_string(this->subscriptee->getType());
 
   return std::format("unsubscriptable-error: variable with type '{}' cannot be subscripted with []",
-                     subscriptee_type_string);
+                     type_string);
 }
 
 std::optional<NonhomogenousListError> NonhomogenousListError::check(const llvm::Type *expected,
@@ -74,13 +67,8 @@ std::optional<NonhomogenousListError> NonhomogenousListError::check(const llvm::
 }
 
 std::string NonhomogenousListError::to_string() const {
-  std::string expected_string;
-  llvm::raw_string_ostream expected_stream(expected_string);
-  this->expected->print(expected_stream);
-
-  std::string actual_string;
-  llvm::raw_string_ostream actual_stream(actual_string);
-  this->actual->print(actual_stream);
+  std::string expected_string = CompilerError::type_to_string(this->expected);
+  std::string actual_string = CompilerError::type_to_string(this->actual);
 
   return std::format("nonhomogenous-list-error: all elements in a list must be of the same type. "
                      "first element in list of type '{}' is different from element of type '{}'",

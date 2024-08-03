@@ -9,6 +9,14 @@
 #include "llvm/IR/Type.h"
 
 class CompilerError {
+protected:
+  static std::string type_to_string(const llvm::Type *type) {
+    std::string callee_type_string;
+    llvm::raw_string_ostream callee_type_stream(callee_type_string);
+    type->print(callee_type_stream);
+    return callee_type_string;
+  }
+
 public:
   virtual ~CompilerError() = default;
 
