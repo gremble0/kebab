@@ -5,7 +5,10 @@
 
 #include "compiler/Errors.hpp"
 #include "compiler/Scope.hpp"
+#include "llvm/IR/Instructions.h"
 #include "llvm/Support/Casting.h"
+
+// TODO: type_to_string(llvm::Type *) helper method in superclass
 
 std::optional<ArgumentCountError> ArgumentCountError::check(llvm::Function *function,
                                                             size_t argument_count) {
@@ -42,6 +45,30 @@ std::string UncallableError::to_string() const {
   this->callee->getType()->print(callee_type_stream);
 
   return std::format("uncallable-error: value of type '{}' is not callable", callee_type_string);
+}
+
+std::optional<UnsubscriptableError> UnsubscriptableError::check(const llvm::Value *subscriptee) {
+  const llvm::LoadInst *load = llvm::dyn_cast<llvm::LoadInst>(subscriptee);
+  if (load == nullptr)
+    return UnsubscriptableError(subscriptee);
+
+  const llvm::Value *pointee = load->getPointerOperand();
+  const llvm::AllocaInst *alloca = llvm::dyn_cast<llvm::AllocaInst>(pointee);
+  if (alloca == nullptr)
+    return UnsubscriptableError(subscriptee);
+
+  // TODO: check if is array allocation
+
+  return std::nullopt;
+}
+
+std::string UnsubscriptableError::to_string() const {
+  std::string subscriptee_type_string;
+  llvm::raw_string_ostream subscriptee_type_stream(subscriptee_type_string);
+  subscriptee->getType()->print(subscriptee_type_stream);
+
+  return std::format("unsubscriptable-error: variable with type '{}' cannot be subscripted with []",
+                     subscriptee_type_string);
 }
 
 std::optional<NonhomogenousListError> NonhomogenousListError::check(const llvm::Type *expected,

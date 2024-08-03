@@ -36,16 +36,17 @@ llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
     // TODO: could be more descriptive (arrays can only be subscripted with ints)
     this->type_error({compiler.get_int_type()}, offset->getType());
 
+  auto maybe_error = UnsubscriptableError::check(this->subscriptee);
+  if (maybe_error.has_value())
+    this->compiler_error(maybe_error.value());
+
+  // TODO: improve casting
   // Variable lookups are stored as LoadInstructions
-  llvm::LoadInst *load;
-  if (load = llvm::dyn_cast<llvm::LoadInst>(this->subscriptee); load == nullptr)
-    this->unsubscriptable_error(this->subscriptee->getType());
+  llvm::LoadInst *load = llvm::dyn_cast<llvm::LoadInst>(this->subscriptee);
 
   llvm::Value *pointee = load->getPointerOperand();
-  llvm::AllocaInst *alloca;
   // Subscriptable values are all stack allocated with alloca
-  if (alloca = llvm::dyn_cast<llvm::AllocaInst>(pointee); alloca == nullptr)
-    this->unsubscriptable_error(pointee->getType());
+  llvm::AllocaInst *alloca = llvm::dyn_cast<llvm::AllocaInst>(pointee);
 
   // TODO: raise unsubscriptable_error here if its not an array allocation. Does not work atm, just
   // segfaults if attempt to index non array.

@@ -40,6 +40,18 @@ public:
   std::string to_string() const final;
 };
 
+class UnsubscriptableError : public CompilerError {
+private:
+  const llvm::Value *subscriptee;
+
+  UnsubscriptableError(const llvm::Value *subscriptee) : subscriptee(subscriptee) {}
+
+public:
+  static std::optional<UnsubscriptableError> check(const llvm::Value *subscriptee);
+
+  std::string to_string() const final;
+};
+
 class NonhomogenousListError : public CompilerError {
 private:
   const llvm::Type *expected;
