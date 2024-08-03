@@ -30,7 +30,7 @@ def main = fn(() => int(
   def i2 = int(function-consumer())
   def i3 = int(uses-parameter(42))
   def i4 = int(has-local-fn())
-  def s = string(takes-parameter())
+  def s = string(takes-parameter("hello"))
 
   printf("i1: %ld\ni2: %ld\ni3: %ld\ni4: %ld\ns: %s\n", i1, i2, i3, i4, s)
 

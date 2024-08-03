@@ -4,7 +4,8 @@ source_filename = "kebab"
 @0 = private unnamed_addr constant [6 x i8] c"hello\00", align 1
 @1 = private unnamed_addr constant [39 x i8] c"result of calling local function: %ld\0A\00", align 1
 @2 = private unnamed_addr constant [17 x i8] c"two + two = %ld\0A\00", align 1
-@3 = private unnamed_addr constant [39 x i8] c"i1: %ld\0Ai2: %ld\0Ai3: %ld\0Ai4: %ld\0As: %s\0A\00", align 1
+@3 = private unnamed_addr constant [6 x i8] c"hello\00", align 1
+@4 = private unnamed_addr constant [39 x i8] c"i1: %ld\0Ai2: %ld\0Ai3: %ld\0Ai4: %ld\0As: %s\0A\00", align 1
 
 declare i64 @printf(ptr, ...)
 
@@ -79,10 +80,10 @@ entry:
   %i4 = alloca i64, align 8
   store i64 %12, ptr %i4, align 8
   %13 = load i64, ptr %i4, align 8
-  %14 = call ptr @takes-parameter({} undef)
+  %14 = call ptr @takes-parameter(ptr @3, {} undef)
   %s = alloca ptr, align 8
   store ptr %14, ptr %s, align 8
   %15 = load ptr, ptr %s, align 8
-  %16 = call i64 (ptr, ...) @printf(ptr @3, i64 %7, i64 %9, i64 %11, i64 %13, ptr %15)
+  %16 = call i64 (ptr, ...) @printf(ptr @4, i64 %7, i64 %9, i64 %11, i64 %13, ptr %15)
   ret i64 0
 }

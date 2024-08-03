@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "compiler/Compiler.hpp"
+#include "compiler/Errors.hpp"
 #include "parser/Constructor.hpp"
 #include "parser/RootNode.hpp"
 #include "llvm/IR/Argument.h"
@@ -476,13 +477,38 @@ bool Compiler::is_externally_defined(const llvm::Function *function) const {
     return false;
 }
 
-llvm::CallInst *Compiler::create_extern_call(llvm::Function *function,
-                                             const std::vector<llvm::Value *> &arguments) {
+// TODO: static method of error struct?
+static std::optional<ArgumentCountError> check_argument_count(llvm::Function *function,
+                                                              size_t argument_count) {
+  size_t function_arg_size = function->arg_size();
+
+  if (function->isVarArg()) {
+    if (argument_count < function_arg_size)
+      return ArgumentCountError{function_arg_size, argument_count};
+  } else {
+    if (function_arg_size != argument_count)
+      // -1 for closure (user shouldn't see that this is an argument to their function)
+      return ArgumentCountError{function_arg_size - 1, argument_count - 1};
+  }
+
+  return std::nullopt;
+}
+
+std::variant<llvm::CallInst *, ArgumentCountError>
+Compiler::create_extern_call(llvm::Function *function,
+                             const std::vector<llvm::Value *> &arguments) {
+  if (auto maybe_error = check_argument_count(function, arguments.size()); maybe_error.has_value())
+    return maybe_error.value();
+
   return this->builder.CreateCall(function, arguments);
 }
 
-llvm::CallInst *Compiler::create_userdefined_call(llvm::Function *function,
-                                                  std::vector<llvm::Value *> &arguments) {
+std::variant<llvm::CallInst *, ArgumentCountError>
+Compiler::create_userdefined_call(llvm::Function *function, std::vector<llvm::Value *> &arguments) {
+  if (auto maybe_error = check_argument_count(function, arguments.size() + 1);
+      maybe_error.has_value())
+    return maybe_error.value();
+
   // Last argument is the closure struct
   const llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
   llvm::Type *closure_type = closure_arg->getType();
@@ -496,8 +522,8 @@ llvm::CallInst *Compiler::create_userdefined_call(llvm::Function *function,
   }
 }
 
-llvm::CallInst *Compiler::create_call(llvm::Function *function,
-                                      std::vector<llvm::Value *> &arguments) {
+std::variant<llvm::CallInst *, ArgumentCountError>
+Compiler::create_call(llvm::Function *function, std::vector<llvm::Value *> &arguments) {
   // TODO: check number of arguments, maybe some other checks too (type checks?)
   if (this->is_externally_defined(function))
     return this->create_extern_call(function, arguments);

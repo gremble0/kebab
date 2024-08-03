@@ -1,12 +1,14 @@
 #ifndef KEBAB_COMPILER_HPP
 #define KEBAB_COMPILER_HPP
 
+#include "compiler/Errors.hpp"
 #include <cassert>
 #include <cmath>
 #include <cstdint>
 #include <memory>
 #include <optional>
 #include <string>
+#include <variant>
 #include <vector>
 
 // Disable unused parameter warnings for llvm headers
@@ -66,11 +68,11 @@ private:
 
   bool is_externally_defined(const llvm::Function *function) const;
   // Call an externally defined function that follows the C ABI
-  llvm::CallInst *create_extern_call(llvm::Function *function,
-                                     const std::vector<llvm::Value *> &arguments);
+  std::variant<llvm::CallInst *, ArgumentCountError>
+  create_extern_call(llvm::Function *function, const std::vector<llvm::Value *> &arguments);
   // Call a userdefined function that follows kebab function declaration style
-  llvm::CallInst *create_userdefined_call(llvm::Function *function,
-                                          std::vector<llvm::Value *> &arguments);
+  std::variant<llvm::CallInst *, ArgumentCountError>
+  create_userdefined_call(llvm::Function *function, std::vector<llvm::Value *> &arguments);
 
 public:
   Compiler() : mod("kebab", context), builder(context) {}
@@ -134,9 +136,10 @@ public:
   create_phi(llvm::Type *type,
              const std::vector<std::pair<llvm::Value *, llvm::BasicBlock *>> &incoming);
 
-  // arguments is not const because the function appends the closure environment to the arguments
+  // arguments is not const because the function may append the closure environment to the arguments
   // before calling the function
-  llvm::CallInst *create_call(llvm::Function *function, std::vector<llvm::Value *> &arguments);
+  std::variant<llvm::CallInst *, ArgumentCountError>
+  create_call(llvm::Function *function, std::vector<llvm::Value *> &arguments);
 
   /// Unary mathematical operators
   std::optional<llvm::Value *> create_neg(llvm::Value *v); // -x
