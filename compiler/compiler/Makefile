@@ -7,7 +7,7 @@ LLVM_CFLAGS := $(shell $(LLVM_CONFIG) --cflags)
 
 INCLUDES := -I..
 
-OBJS := Compiler.o Scope.o
+OBJS := Compiler.o Scope.o Errors.o
 
 all: $(OBJS)
 

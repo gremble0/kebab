@@ -1,3 +1,5 @@
+#include <format>
+
 #include "Errors.hpp"
 
 std::optional<ArgumentCountError> ArgumentCountError::check_argument_count(llvm::Function *function,
@@ -6,6 +8,7 @@ std::optional<ArgumentCountError> ArgumentCountError::check_argument_count(llvm:
 
   if (function->isVarArg()) {
     if (argument_count < function_arg_size)
+      // currently all variadic functions are extern meaning they dont take a closure so no -1
       return ArgumentCountError{function_arg_size, argument_count};
   } else {
     if (function_arg_size != argument_count)
@@ -14,4 +17,9 @@ std::optional<ArgumentCountError> ArgumentCountError::check_argument_count(llvm:
   }
 
   return std::nullopt;
+}
+
+std::string ArgumentCountError::to_string() const {
+  return std::format("argument-count-error: called function expects {} arguments, but was given {}",
+                     std::to_string(this->expected), std::to_string(this->actual));
 }

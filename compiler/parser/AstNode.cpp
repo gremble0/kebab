@@ -80,9 +80,7 @@ std::string AstNode::where() const {
 
 [[noreturn]] void AstNode::argument_count_error(const ArgumentCountError &error) const {
   std::string where = this->where();
-  std::string labeled_message =
-      std::format("argument-count-error: called function expects {} arguments, but was given {}",
-                  std::to_string(error.expected), std::to_string(error.actual));
+  std::string labeled_message = error.to_string();
 
   std::cerr << where << labeled_message << std::endl;
 
