@@ -1,0 +1,4 @@
+def main = fn(() => int(
+  printf()
+  0
+))

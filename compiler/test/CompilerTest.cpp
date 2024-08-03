@@ -63,4 +63,8 @@ TEST(CompilerTest, CompilesInnerExpressionKeb) { ASSERT_EXPECTED_COMPILATION("in
 
 TEST(CompilerTest, CompilesClosuresKeb) { ASSERT_EXPECTED_COMPILATION("closures"); }
 
+TEST(CompilerTest, ErrorsWhenWrongArgumentCount) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("argument-count-error"); }, "argument-count-error");
+}
+
 } // namespace Kebab::Test
