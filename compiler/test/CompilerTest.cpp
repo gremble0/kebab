@@ -75,4 +75,13 @@ TEST(CompilerTest, ErrorsWhenNonhomogenousList) {
   ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("nonhomogenous-list"); }, "nonhomogenous-list");
 }
 
+TEST(CompilerTest, ErrorsWhenRedefining) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("redefinition-error"); }, "redefinition-error");
+}
+
+TEST(CompilerTest, ErrorsWhenAssigningToImmutable) {
+  ASSERT_DEATH(
+      { ASSERT_EXPECTED_COMPILATION("immutable-assignment-error"); }, "immutable-assignment-error");
+}
+
 } // namespace Kebab::Test

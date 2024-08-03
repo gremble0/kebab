@@ -1,0 +1,6 @@
+def main = fn(() => int(
+  def redefined = int(0)
+  def redefined = int(1)
+
+  0
+))

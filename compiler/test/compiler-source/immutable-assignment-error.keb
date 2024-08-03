@@ -1,0 +1,6 @@
+def main = fn(() => int(
+  def immutable = int(0)
+  set immutable = int(1)
+
+  0
+))
