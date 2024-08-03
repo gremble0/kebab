@@ -6,7 +6,9 @@
 #include "compiler/Errors.hpp"
 #include "compiler/Scope.hpp"
 #include "llvm/IR/Instructions.h"
+#include "llvm/IR/Type.h"
 #include "llvm/Support/Casting.h"
+#include "llvm/Support/raw_ostream.h"
 
 // TODO: type_to_string(llvm::Type *) helper method in superclass
 
@@ -48,20 +50,10 @@ std::string UncallableError::to_string() const {
 }
 
 std::optional<UnsubscriptableError> UnsubscriptableError::check(const llvm::Value *subscriptee) {
-  // TODO: this is kinda meh, but it works
-  const llvm::LoadInst *load = llvm::dyn_cast<llvm::LoadInst>(subscriptee);
-  if (load == nullptr)
+  if (subscriptee->getType()->isArrayTy())
+    return std::nullopt;
+  else
     return UnsubscriptableError(subscriptee);
-
-  const llvm::Value *pointee = load->getPointerOperand();
-  const llvm::AllocaInst *alloca = llvm::dyn_cast<llvm::AllocaInst>(pointee);
-  if (alloca == nullptr)
-    return UnsubscriptableError(subscriptee);
-
-  if (!alloca->isArrayAllocation())
-    return UnsubscriptableError(subscriptee);
-
-  return std::nullopt;
 }
 
 std::string UnsubscriptableError::to_string() const {
