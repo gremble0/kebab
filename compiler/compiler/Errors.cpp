@@ -36,7 +36,7 @@ std::optional<UncallableError> UncallableError::check(const llvm::Value *callee)
 std::string UncallableError::to_string() const {
   std::string callee_type_string;
   llvm::raw_string_ostream callee_type_stream(callee_type_string);
-  this->callee->print(callee_type_stream);
+  this->callee->getType()->print(callee_type_stream);
 
   return std::format("uncallable-error: value of type '{}' is not callable", callee_type_string);
 }

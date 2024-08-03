@@ -67,4 +67,8 @@ TEST(CompilerTest, ErrorsWhenWrongArgumentCount) {
   ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("argument-count-error"); }, "argument-count-error");
 }
 
+TEST(CompilerTest, ErrorsWhenCallingUncallable) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("uncallable-error"); }, "uncallable-error");
+}
+
 } // namespace Kebab::Test
