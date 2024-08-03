@@ -138,7 +138,7 @@ llvm::Value *ListAtom::compile(Compiler &compiler) const {
     const llvm::Type *actual_type = v->getType();
     auto maybe_error = NonhomogenousListError::check(expected_type, actual_type);
     if (maybe_error.has_value())
-      this->nonhomogenous_list_error(maybe_error.value());
+      this->compiler_error(maybe_error.value());
   });
 
   return compiler.create_list(elements_compiled, expected_type);

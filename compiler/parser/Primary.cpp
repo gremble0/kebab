@@ -81,13 +81,13 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
 
   auto maybe_error = UncallableError::check(this->subscriptee);
   if (maybe_error.has_value())
-    this->uncallable_error(maybe_error.value());
+    this->compiler_error(maybe_error.value());
 
   auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee);
   std::variant<llvm::CallInst *, ArgumentCountError> call =
       compiler.create_call(function, arguments_compiled);
   if (std::holds_alternative<ArgumentCountError>(call))
-    this->argument_count_error(std::get<ArgumentCountError>(call));
+    this->compiler_error(std::get<ArgumentCountError>(call));
   else
     return std::get<llvm::CallInst *>(call);
 }

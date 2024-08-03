@@ -7,7 +7,14 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Type.h"
 
-class ArgumentCountError {
+class CompilerError {
+public:
+  virtual ~CompilerError() = default;
+
+  virtual std::string to_string() const = 0;
+};
+
+class ArgumentCountError : public CompilerError {
 private:
   size_t expected;
   size_t actual;
@@ -17,10 +24,10 @@ private:
 public:
   static std::optional<ArgumentCountError> check(llvm::Function *function, size_t argument_count);
 
-  std::string to_string() const;
+  std::string to_string() const final;
 };
 
-class UncallableError {
+class UncallableError : public CompilerError {
 private:
   const llvm::Value *callee;
 
@@ -29,10 +36,10 @@ private:
 public:
   static std::optional<UncallableError> check(const llvm::Value *callee);
 
-  std::string to_string() const;
+  std::string to_string() const final;
 };
 
-class NonhomogenousListError {
+class NonhomogenousListError : public CompilerError {
 private:
   const llvm::Type *expected;
   const llvm::Type *actual;
@@ -44,7 +51,7 @@ public:
   static std::optional<NonhomogenousListError> check(const llvm::Type *expected,
                                                      const llvm::Type *actual);
 
-  std::string to_string() const;
+  std::string to_string() const final;
 };
 
 #endif
