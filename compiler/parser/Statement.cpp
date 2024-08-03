@@ -1,6 +1,7 @@
 #include <cassert>
 #include <optional>
 #include <string>
+#include <variant>
 
 #include "compiler/Compiler.hpp"
 #include "lexer/Token.hpp"
@@ -49,18 +50,13 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
     if (actual_type != declared_type)
       this->type_error({declared_type}, actual_type);
 
-    std::optional<llvm::AllocaInst *> local;
-    if (this->is_mutable)
-      local = compiler.create_mutable(this->name, static_cast<llvm::Constant *>(variable_value),
-                                      declared_type);
-    else
-      local = compiler.create_immutable(this->name, static_cast<llvm::Constant *>(variable_value),
-                                        declared_type);
+    std::variant<llvm::AllocaInst *, RedefinitionError> local = compiler.create_definition(
+        this->name, static_cast<llvm::Constant *>(variable_value), declared_type, this->is_mutable);
 
-    if (local.has_value())
-      return local.value();
+    if (std::holds_alternative<llvm::AllocaInst *>(local))
+      return std::get<llvm::AllocaInst *>(local);
     else
-      this->reassignment_error(this->name);
+      this->compiler_error(std::get<RedefinitionError>(local));
   }
 }
 
@@ -92,12 +88,12 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
     if (!compiler.get_value(this->name).has_value())
       this->assign_nonexisting_error(this->name);
 
-    std::optional<llvm::Value *> result = compiler.create_mutable(
+    std::variant<llvm::AllocaInst *, ImmutableAssignmentError> result = compiler.create_assignment(
         this->name, static_cast<llvm::Constant *>(variable_value), declared_type);
-    if (result.has_value())
-      return result.value();
+    if (std::holds_alternative<llvm::AllocaInst *>(result))
+      return std::get<llvm::AllocaInst *>(result);
     else
-      this->immutable_assignment_error(this->name);
+      this->compiler_error(std::get<ImmutableAssignmentError>(result));
   }
 }
 

@@ -3,6 +3,7 @@
 #include <optional>
 #include <string>
 #include <system_error>
+#include <variant>
 #include <vector>
 
 #include "compiler/Compiler.hpp"
@@ -202,28 +203,36 @@ llvm::AllocaInst *Compiler::create_alloca(const std::string &name,
   return local;
 }
 
-std::optional<llvm::AllocaInst *>
-Compiler::create_immutable(const std::string &name, llvm::Constant *init, llvm::Type *type) {
+std::variant<llvm::AllocaInst *, RedefinitionError>
+Compiler::create_definition(const std::string &name, llvm::Constant *init, llvm::Type *type,
+                            bool is_mutable) {
   llvm::AllocaInst *local = this->create_alloca(name, init, type);
   llvm::LoadInst *load = this->builder.CreateLoad(type, local);
   load->setAlignment(this->get_alignment(type));
 
-  if (this->current_scope->put(name, load, type))
-    return local;
-  else
-    return std::nullopt;
+  auto maybe_error = RedefinitionError::check(*this->current_scope, name);
+  if (maybe_error.has_value())
+    return maybe_error.value();
+
+  this->current_scope->put(name, load, type, is_mutable);
+
+  return local;
 }
 
-std::optional<llvm::AllocaInst *> Compiler::create_mutable(const std::string &name,
-                                                           llvm::Constant *init, llvm::Type *type) {
+std::variant<llvm::AllocaInst *, ImmutableAssignmentError>
+Compiler::create_assignment(const std::string &name, llvm::Constant *init, llvm::Type *type) {
   llvm::AllocaInst *local = this->create_alloca(name, init, type);
   llvm::LoadInst *load = this->builder.CreateLoad(type, local);
   load->setAlignment(this->get_alignment(type));
 
-  if (this->current_scope->put(name, load, type, true))
-    return local;
-  else
-    return std::nullopt;
+  auto maybe_error = ImmutableAssignmentError::check(*this->current_scope, name);
+  if (maybe_error.has_value())
+    return maybe_error.value();
+
+  // All assignments are mutable
+  this->current_scope->put(name, load, type, true);
+
+  return local;
 }
 
 std::optional<llvm::Value *> Compiler::create_neg(llvm::Value *v) {

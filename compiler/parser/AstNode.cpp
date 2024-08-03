@@ -64,16 +64,6 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-[[noreturn]] void AstNode::immutable_assignment_error(const std::string &name) const {
-  std::string where = this->where();
-  std::string labeled_message =
-      "immutable-assignment-error: cannot assign to immutable value '" + name + '\'';
-
-  std::cerr << where << labeled_message << std::endl;
-
-  exit(1);
-}
-
 [[noreturn]] void AstNode::unsubscriptable_error(const llvm::Type *subscriptee_type) const {
   std::string where = this->where();
   std::string subscriptee_type_string;

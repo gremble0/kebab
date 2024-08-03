@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <optional>
 
+#include "compiler/Scope.hpp"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Type.h"
 
@@ -50,6 +51,31 @@ private:
 public:
   static std::optional<NonhomogenousListError> check(const llvm::Type *expected,
                                                      const llvm::Type *actual);
+
+  std::string to_string() const final;
+};
+
+class ImmutableAssignmentError : public CompilerError {
+private:
+  const std::string &assignee;
+
+  ImmutableAssignmentError(const std::string &assignee) : assignee(assignee) {}
+
+public:
+  static std::optional<ImmutableAssignmentError> check(const Scope &scope,
+                                                       const std::string &assignee);
+
+  std::string to_string() const final;
+};
+
+class RedefinitionError : public CompilerError {
+private:
+  const std::string &assignee;
+
+  RedefinitionError(const std::string &assignee) : assignee(assignee) {}
+
+public:
+  static std::optional<RedefinitionError> check(const Scope &scope, const std::string &assignee);
 
   std::string to_string() const final;
 };

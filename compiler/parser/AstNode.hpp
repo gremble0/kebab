@@ -27,7 +27,7 @@ protected:
   [[noreturn]] void compiler_error(const CompilerError &error) const;
 
   [[noreturn]] void unreachable_error() const;
-  [[noreturn]] void immutable_assignment_error(const std::string &name) const;
+  // [[noreturn]] void immutable_assignment_error(const std::string &name) const;
   [[noreturn]] void unsubscriptable_error(const llvm::Type *subscriptee) const;
   [[noreturn]] void index_error(const llvm::Value *capacity, const llvm::Value *index) const;
   [[noreturn]] void reassignment_error(const std::string &name) const;

@@ -122,10 +122,13 @@ public:
                   const Parser::Constructor &body,
                   const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
   llvm::Function *declare_function(llvm::FunctionType *type, const std::string &name);
-  std::optional<llvm::AllocaInst *> create_immutable(const std::string &name, llvm::Constant *init,
-                                                     llvm::Type *type);
-  std::optional<llvm::AllocaInst *> create_mutable(const std::string &name, llvm::Constant *init,
-                                                   llvm::Type *type);
+
+  std::variant<llvm::AllocaInst *, RedefinitionError> create_definition(const std::string &name,
+                                                                        llvm::Constant *init,
+                                                                        llvm::Type *type,
+                                                                        bool is_mutable);
+  std::variant<llvm::AllocaInst *, ImmutableAssignmentError>
+  create_assignment(const std::string &name, llvm::Constant *init, llvm::Type *type);
 
   llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
 

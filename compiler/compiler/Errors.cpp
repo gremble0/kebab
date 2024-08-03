@@ -65,3 +65,34 @@ std::string NonhomogenousListError::to_string() const {
                      "first element in list of type '{}' is different from element of type '{}'",
                      expected_string, actual_string);
 }
+
+std::optional<ImmutableAssignmentError>
+ImmutableAssignmentError::check(const Scope &scope, const std::string &assignee) {
+  std::optional<Scope::Binding> maybe_binding = scope.lookup(assignee);
+  assert(maybe_binding.has_value() &&
+         "assignments should not reach immutability check if name is not in scope");
+
+  if (maybe_binding->is_mutable)
+    return std::nullopt;
+  else
+    return ImmutableAssignmentError(assignee);
+}
+
+std::string ImmutableAssignmentError::to_string() const {
+  return std::format("immutable-assignment-error: cannot assign to immutable value '{}'",
+                     this->assignee);
+}
+
+std::optional<RedefinitionError> RedefinitionError::check(const Scope &scope,
+                                                          const std::string &assignee) {
+  std::optional<Scope::Binding> maybe_binding = scope.lookup(assignee);
+  if (maybe_binding.has_value())
+    return RedefinitionError(assignee);
+  else
+    return std::nullopt;
+}
+
+std::string RedefinitionError::to_string() const {
+  return std::format("reassignment-error: cannot redefine already defined value '{}'",
+                     this->assignee);
+}

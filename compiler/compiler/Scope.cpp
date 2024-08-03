@@ -24,6 +24,7 @@ std::optional<Scope::Binding> Scope::lookup(const std::string &key) const {
  * insertion to fail
  */
 bool Scope::put(const std::string &key, llvm::Value *value, llvm::Type *type, bool is_mutable) {
+  // TODO: unnecessary return (should be void)
   if (this->map.contains(key)) {
     if (!this->map[key].is_mutable)
       return false;
