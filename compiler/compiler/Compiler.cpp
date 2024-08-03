@@ -477,27 +477,11 @@ bool Compiler::is_externally_defined(const llvm::Function *function) const {
     return false;
 }
 
-// TODO: static method of error struct?
-static std::optional<ArgumentCountError> check_argument_count(llvm::Function *function,
-                                                              size_t argument_count) {
-  size_t function_arg_size = function->arg_size();
-
-  if (function->isVarArg()) {
-    if (argument_count < function_arg_size)
-      return ArgumentCountError{function_arg_size, argument_count};
-  } else {
-    if (function_arg_size != argument_count)
-      // -1 for closure (user shouldn't see that this is an argument to their function)
-      return ArgumentCountError{function_arg_size - 1, argument_count - 1};
-  }
-
-  return std::nullopt;
-}
-
 std::variant<llvm::CallInst *, ArgumentCountError>
 Compiler::create_extern_call(llvm::Function *function,
                              const std::vector<llvm::Value *> &arguments) {
-  if (auto maybe_error = check_argument_count(function, arguments.size()); maybe_error.has_value())
+  if (auto maybe_error = ArgumentCountError::check_argument_count(function, arguments.size());
+      maybe_error.has_value())
     return maybe_error.value();
 
   return this->builder.CreateCall(function, arguments);
@@ -505,7 +489,7 @@ Compiler::create_extern_call(llvm::Function *function,
 
 std::variant<llvm::CallInst *, ArgumentCountError>
 Compiler::create_userdefined_call(llvm::Function *function, std::vector<llvm::Value *> &arguments) {
-  if (auto maybe_error = check_argument_count(function, arguments.size() + 1);
+  if (auto maybe_error = ArgumentCountError::check_argument_count(function, arguments.size() + 1);
       maybe_error.has_value())
     return maybe_error.value();
 
