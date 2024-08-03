@@ -1,8 +1,10 @@
 #include <algorithm>
 #include <cassert>
 #include <optional>
+#include <variant>
 #include <vector>
 
+#include "compiler/Errors.hpp"
 #include "lexer/Token.hpp"
 #include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
@@ -13,7 +15,6 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Value.h"
 #include "llvm/Support/Casting.h"
-#include "llvm/Support/raw_ostream.h"
 
 namespace Kebab::Parser {
 
@@ -78,10 +79,16 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
   for (const std::unique_ptr<Expression> &argument : this->arguments)
     arguments_compiled.push_back(argument->compile(compiler));
 
-  if (auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee))
-    return compiler.create_call(function, arguments_compiled);
-  else
+  if (auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee)) {
+    std::variant<llvm::CallInst *, ArgumentCountError> call =
+        compiler.create_call(function, arguments_compiled);
+    if (std::holds_alternative<ArgumentCountError>(call))
+      this->argument_count_error(std::get<ArgumentCountError>(call));
+    else
+      return std::get<llvm::CallInst *>(call);
+  } else {
     this->uncallable_error(this->subscriptee->getType());
+  }
 }
 
 std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {
