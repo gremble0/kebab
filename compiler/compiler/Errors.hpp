@@ -161,14 +161,14 @@ public:
 
 class TypeError : public CompilerError {
 private:
-  std::initializer_list<llvm::Type *> expected;
+  std::initializer_list<const llvm::Type *> expected;
   const llvm::Type *actual;
 
-  TypeError(std::initializer_list<llvm::Type *> expected, llvm::Type *actual)
+  TypeError(std::initializer_list<const llvm::Type *> expected, const llvm::Type *actual)
       : expected(expected), actual(actual) {}
 
 public:
-  static std::optional<TypeError> check(std::initializer_list<llvm::Type *> expected,
+  static std::optional<TypeError> check(std::initializer_list<const llvm::Type *> expected,
                                         llvm::Type *actual);
 
   std::string to_string() const final;

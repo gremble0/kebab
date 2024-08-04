@@ -156,9 +156,9 @@ std::string NameError::to_string() const {
   return std::format("name-error: undeclared identifier '{}'", this->name);
 }
 
-std::optional<TypeError> TypeError::check(std::initializer_list<llvm::Type *> expected,
+std::optional<TypeError> TypeError::check(std::initializer_list<const llvm::Type *> expected,
                                           llvm::Type *actual) {
-  for (llvm::Type *type : expected)
+  for (const llvm::Type *type : expected)
     if (actual == type)
       return std::nullopt;
 
