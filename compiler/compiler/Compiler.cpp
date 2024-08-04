@@ -90,6 +90,8 @@ void Compiler::load_parameters(
     this->current_scope->put(parameters[i]->name, argument, argument->getType());
   }
 
+  // TODO: mutability for variables captured in closure
+
   // Load and add fields of closure into scope
   // unsigned int because type is required by CreateExtractValue(), bindings.size - parameters.size
   // since bindings are expanded by parameters and we dont want to add these in the closure
@@ -100,7 +102,7 @@ void Compiler::load_parameters(
   for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
     const auto &[name, binding] = bindings[i];
     llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i});
-    this->current_scope->put(name, field, binding.value->getType());
+    this->current_scope->put(name, field, binding.value->getType(), binding.is_mutable);
   }
 }
 
@@ -246,9 +248,11 @@ std::optional<llvm::Value *> Compiler::create_neg(llvm::Value *v) {
     return std::nullopt;
 }
 
-std::optional<llvm::Value *> Compiler::create_subscription(llvm::AllocaInst *array,
-                                                           llvm::Value *offset) {
-  // TODO: bounds checking
+std::variant<llvm::Value *, IndexError> Compiler::create_subscription(llvm::AllocaInst *array,
+                                                                      llvm::Value *offset) {
+  if (auto maybe_error = IndexError::check(array, offset); maybe_error.has_value())
+    return maybe_error.value();
+
   llvm::Type *list_type = array->getAllocatedType();
   llvm::Value *element_ptr =
       this->builder.CreateInBoundsGEP(list_type, array, {this->create_int(0), offset});

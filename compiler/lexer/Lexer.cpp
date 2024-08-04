@@ -15,6 +15,7 @@
 namespace Kebab {
 
 Lexer::Lexer(const std::string &path) : path(path), stream(path) {
+  // TODO: exit gracefully if path is a directory (currently segfaults)
   if (!stream.is_open())
     this->error("could not open file " + path);
 

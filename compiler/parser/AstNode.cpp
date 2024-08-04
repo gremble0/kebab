@@ -64,27 +64,6 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-[[noreturn]] void AstNode::index_error(const llvm::Value *capacity,
-                                       const llvm::Value *index) const {
-  std::string where = this->where();
-
-  std::string capacity_string;
-  llvm::raw_string_ostream capacity_stream(capacity_string);
-  capacity->print(capacity_stream);
-
-  std::string index_string;
-  llvm::raw_string_ostream index_stream(index_string);
-  index->print(index_stream);
-
-  std::string labeled_message =
-      std::format("index-error: index '{}' is out of range for list of size '{}'", index_string,
-                  capacity_string);
-
-  std::cerr << where << labeled_message << std::endl;
-
-  exit(1);
-}
-
 [[noreturn]] void AstNode::assign_nonexisting_error(const std::string &name) const {
   std::string where = this->where();
   std::string labeled_message =

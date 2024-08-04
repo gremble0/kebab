@@ -58,6 +58,17 @@ std::string UnsubscriptableError::to_string() const {
                      type_string);
 }
 
+std::optional<IndexError> IndexError::check(const llvm::AllocaInst *subscriptee,
+                                            const llvm::Value *index) {
+  // TODO:
+  return std::nullopt;
+}
+
+std::string IndexError::to_string() const {
+  // TODO:
+  return std::format("index-error: index out of bounds");
+}
+
 std::optional<NonhomogenousListError> NonhomogenousListError::check(const llvm::Type *expected,
                                                                     const llvm::Type *actual) {
   if (expected == actual)

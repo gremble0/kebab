@@ -48,14 +48,12 @@ llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
   // Subscriptable values are all stack allocated with alloca
   llvm::AllocaInst *alloca = llvm::dyn_cast<llvm::AllocaInst>(pointee);
 
-  // TODO: raise unsubscriptable_error here if its not an array allocation. Does not work atm, just
-  // segfaults if attempt to index non array.
-
-  std::optional<llvm::Value *> subscription_compiled = compiler.create_subscription(alloca, offset);
-  if (subscription_compiled.has_value())
-    return subscription_compiled.value();
+  std::variant<llvm::Value *, IndexError> subscription_compiled =
+      compiler.create_subscription(alloca, offset);
+  if (std::holds_alternative<llvm::Value *>(subscription_compiled))
+    return std::get<llvm::Value *>(subscription_compiled);
   else
-    this->index_error(alloca->getArraySize(), offset);
+    this->compiler_error(std::get<IndexError>(subscription_compiled));
 }
 
 std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {

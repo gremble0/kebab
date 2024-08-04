@@ -6,6 +6,7 @@
 
 #include "compiler/Scope.hpp"
 #include "llvm/IR/Function.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/IR/Type.h"
 
 class CompilerError {
@@ -56,6 +57,21 @@ private:
 
 public:
   static std::optional<UnsubscriptableError> check(const llvm::Value *subscriptee);
+
+  std::string to_string() const final;
+};
+
+class IndexError : public CompilerError {
+private:
+  const llvm::AllocaInst *list;
+  const llvm::Value *index;
+
+  IndexError(const llvm::AllocaInst *subscriptee, const llvm::Value *index)
+      : list(subscriptee), index(index) {}
+
+public:
+  static std::optional<IndexError> check(const llvm::AllocaInst *subscriptee,
+                                         const llvm::Value *index);
 
   std::string to_string() const final;
 };
