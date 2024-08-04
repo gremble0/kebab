@@ -94,12 +94,12 @@ void Compiler::load_parameters(
   // unsigned int because type is required by CreateExtractValue(), bindings.size - parameters.size
   // since bindings are expanded by parameters and we dont want to add these in the closure
   llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
-  closure_arg->setName("__closure_env");
+  closure_arg->setName("closure-env");
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
   for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
     const auto &[name, binding] = bindings[i];
-    llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i}, "__closure_" + name);
+    llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i}, "closure-env:" + name);
     this->current_scope->put(name, field, binding.value->getType(), binding.is_mutable);
   }
 }
@@ -144,7 +144,7 @@ llvm::StructType *Compiler::create_closure_type() {
     types.push_back(binding.type);
 
   auto closure_type = llvm::StructType::get(this->context, types);
-  closure_type->setName("__closure_env");
+  closure_type->setName("closure-env");
 
   return closure_type;
 }
@@ -157,18 +157,18 @@ llvm::FunctionType *Compiler::add_parameter(const llvm::FunctionType *type, llvm
 }
 
 llvm::Value *Compiler::create_closure_argument(llvm::StructType *closure_type) {
-  llvm::Value *closure = llvm::UndefValue::get(closure_type);
+  llvm::Value *closure_argument = llvm::UndefValue::get(closure_type);
 
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
   // unsigned int because type is required by CreateExtractValue()
   for (unsigned int i = 0, num_elements = closure_type->getNumElements(); i < num_elements; ++i) {
     llvm::Value *field_value = bindings[i].second.value;
-    closure = this->builder.CreateInsertValue(closure, field_value, {i});
+    closure_argument = this->builder.CreateInsertValue(closure_argument, field_value, {i});
   }
-  closure->setName("__closure_arg");
+  closure_argument->setName("closure-arg");
 
-  return closure;
+  return closure_argument;
 }
 
 llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constant *init,

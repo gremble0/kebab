@@ -5,7 +5,7 @@ source_filename = "kebab"
 
 declare i64 @printf(ptr, ...)
 
-define i64 @main(i64 %argc, {} %__closure_env) {
+define i64 @main(i64 %argc, {} %closure-env) {
 entry:
   %0 = call i64 (ptr, ...) @printf(ptr @0, i64 %argc)
   ret i64 0

@@ -3,7 +3,7 @@ source_filename = "kebab"
 
 declare i64 @printf(ptr, ...)
 
-define i64 @main({} %__closure_env) {
+define i64 @main({} %closure-env) {
 entry:
   %0 = alloca [3 x i64], i64 3, align 8
   %1 = getelementptr inbounds [3 x i64], ptr %0, i64 0, i64 0

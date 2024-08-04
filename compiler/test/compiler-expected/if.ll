@@ -5,7 +5,7 @@ source_filename = "kebab"
 
 declare i64 @printf(ptr, ...)
 
-define i64 @main({} %__closure_env) {
+define i64 @main({} %closure-env) {
 entry:
   br label %if_branch
 

@@ -9,12 +9,12 @@ source_filename = "kebab"
 
 declare i64 @printf(ptr, ...)
 
-define i64 @one-factory({} %__closure_env) {
+define i64 @one-factory({} %closure-env) {
 entry:
   ret i64 1
 }
 
-define i64 @local-addition({} %__closure_env) {
+define i64 @local-addition({} %closure-env) {
 entry:
   %n = alloca i64, align 8
   store i64 68, ptr %n, align 8
@@ -23,7 +23,7 @@ entry:
   ret i64 %1
 }
 
-define i64 @function-consumer({} %__closure_env) {
+define i64 @function-consumer({} %closure-env) {
 entry:
   %0 = call i64 @one-factory({} undef)
   %one = alloca i64, align 8
@@ -32,29 +32,29 @@ entry:
   ret i64 %1
 }
 
-define ptr @takes-parameter(ptr %s, {} %__closure_env) {
+define ptr @takes-parameter(ptr %s, {} %closure-env) {
 entry:
   ret ptr @0
 }
 
-define i64 @uses-parameter(i64 %n, {} %__closure_env) {
+define i64 @uses-parameter(i64 %n, {} %closure-env) {
 entry:
   ret i64 %n
 }
 
-define i64 @has-local-fn({} %__closure_env) {
+define i64 @has-local-fn({} %closure-env) {
 entry:
   %0 = call i64 @local-fn({} undef)
   %1 = call i64 (ptr, ...) @printf(ptr @1, i64 %0)
   ret i64 0
 }
 
-define i64 @local-fn({} %__closure_env) {
+define i64 @local-fn({} %closure-env) {
 entry:
   ret i64 2
 }
 
-define i64 @main({} %__closure_env) {
+define i64 @main({} %closure-env) {
 entry:
   %0 = call i64 @one-factory({} undef)
   %1 = call i64 @one-factory({} undef)

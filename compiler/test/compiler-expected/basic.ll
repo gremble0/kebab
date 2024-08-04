@@ -6,7 +6,7 @@ source_filename = "kebab"
 
 declare i64 @printf(ptr, ...)
 
-define i64 @main({} %__closure_env) {
+define i64 @main({} %closure-env) {
 entry:
   %inner = alloca ptr, align 8
   store ptr @0, ptr %inner, align 8
