@@ -130,3 +130,16 @@ std::string AssignNonExistingError::to_string() const {
   return std::format("assign-nonexisting-error: cannot assign to non existing value '{}'",
                      this->assignee);
 }
+
+std::optional<UnrecognizedTypeError>
+UnrecognizedTypeError::check(const std::unordered_map<std::string, llvm::Type *> &known_types,
+                             const std::string &type_name) {
+  if (known_types.find(type_name) == known_types.end())
+    return UnrecognizedTypeError(type_name);
+  else
+    return std::nullopt;
+}
+
+std::string UnrecognizedTypeError::to_string() const {
+  return std::format("unrecognized-type-error: unrecognized type '{}'", this->type_name);
+}

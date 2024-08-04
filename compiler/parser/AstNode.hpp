@@ -27,7 +27,6 @@ protected:
   [[noreturn]] static void parser_error(const std::string &message, const Lexer &lexer);
   [[noreturn]] void compiler_error(const CompilerError &error) const;
 
-  [[noreturn]] void unrecognized_type_error(const std::string &type_name) const;
   [[noreturn]] void name_error(const std::string &name) const;
   [[noreturn]] void type_error(std::initializer_list<const llvm::Type *> expected,
                                const llvm::Type *actual) const;

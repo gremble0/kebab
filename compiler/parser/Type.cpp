@@ -1,6 +1,8 @@
-#include "parser/Type.hpp"
+#include <variant>
+
 #include "compiler/Compiler.hpp"
 #include "lexer/Lexer.hpp"
+#include "parser/Type.hpp"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Type.h"
 
@@ -114,20 +116,11 @@ std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
 }
 
 llvm::Type *PrimitiveType::get_llvm_type(Compiler &compiler) const {
-  if (this->name.compare("int") == 0)
-    return compiler.get_int_type();
-  else if (this->name.compare("float") == 0)
-    return compiler.get_float_type();
-  else if (this->name.compare("char") == 0)
-    return compiler.get_char_type();
-  else if (this->name.compare("string") == 0)
-    return compiler.get_string_type();
-  else if (this->name.compare("bool") == 0)
-    return compiler.get_bool_type();
-  else if (this->name.compare("void") == 0)
-    return compiler.get_void_type();
-
-  this->unrecognized_type_error(this->name);
+  auto type = compiler.get_primitive_type(this->name);
+  if (std::holds_alternative<llvm::Type *>(type))
+    return std::get<llvm::Type *>(type);
+  else
+    this->compiler_error(std::get<UnrecognizedTypeError>(type));
 }
 
 llvm::Value *PrimitiveType::compile(Compiler &compiler) const {

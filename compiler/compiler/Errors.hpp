@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <optional>
+#include <unordered_map>
 
 #include "compiler/Scope.hpp"
 #include "llvm/IR/Function.h"
@@ -125,6 +126,22 @@ private:
 public:
   static std::optional<AssignNonExistingError> check(const Scope &scope,
                                                      const std::string &assignee);
+
+  std::string to_string() const final;
+};
+
+class UnrecognizedTypeError : public CompilerError {
+private:
+  const std::string &type_name;
+
+  UnrecognizedTypeError(const std::string &type_name) : type_name(type_name) {}
+
+public:
+  // TODO: make typedef/class for this map when we get to userdefined types and there are more than
+  // some preset number of types
+  static std::optional<UnrecognizedTypeError>
+  check(const std::unordered_map<std::string, llvm::Type *> &known_types,
+        const std::string &type_name);
 
   std::string to_string() const final;
 };

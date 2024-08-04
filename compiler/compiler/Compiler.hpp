@@ -8,6 +8,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <unordered_map>
 #include <variant>
 #include <vector>
 
@@ -46,6 +47,7 @@ private:
   llvm::Module mod; // `module` is a reserved word as of c++20 so cannot use that
   llvm::IRBuilder<> builder;
   std::shared_ptr<Scope> current_scope = std::make_shared<Scope>();
+  std::unordered_map<std::string, llvm::Type *> primitive_types;
 
   void save_module(const std::string &path) const;
 
@@ -75,11 +77,29 @@ private:
   create_userdefined_call(llvm::Function *function, std::vector<llvm::Value *> &arguments);
 
 public:
-  Compiler() : mod("kebab", context), builder(context) {}
+  Compiler() : mod("kebab", context), builder(context) {
+    this->primitive_types["int"] = this->builder.getInt64Ty();
+    this->primitive_types["float"] = this->builder.getDoubleTy();
+    this->primitive_types["char"] = this->builder.getInt8Ty();
+    this->primitive_types["string"] = this->builder.getInt8Ty()->getPointerTo();
+    this->primitive_types["bool"] = this->builder.getInt1Ty();
+    this->primitive_types["void"] = this->builder.getVoidTy();
+  }
 
   void compile(std::unique_ptr<Parser::RootNode> root, const std::string &output_path);
 
   /// Type getters
+  std::variant<llvm::Type *, UnrecognizedTypeError>
+  get_primitive_type(const std::string &type_name) const {
+    if (auto maybe_error = UnrecognizedTypeError::check(this->primitive_types, type_name);
+        maybe_error.has_value())
+      return maybe_error.value();
+
+    auto it = this->primitive_types.find(type_name);
+    // Should always be valid since we check if it doesnt exist above
+    return it->second;
+  }
+
   llvm::IntegerType *get_int_type() { return this->builder.getInt64Ty(); }
 
   llvm::Type *get_float_type() { return this->builder.getDoubleTy(); }

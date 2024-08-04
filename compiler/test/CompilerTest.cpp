@@ -95,4 +95,9 @@ TEST(CompilerTest, ErrorsWhenSubscriptingUnsubscriptable) {
   ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("unsubscriptable-error"); }, "unsubscriptable-error");
 }
 
+TEST(CompilerTest, ErrorsWhenUnrecognizedType) {
+  ASSERT_DEATH(
+      { ASSERT_EXPECTED_COMPILATION("unrecognized-type-error"); }, "unrecognized-type-error");
+}
+
 } // namespace Kebab::Test
