@@ -90,8 +90,6 @@ void Compiler::load_parameters(
     this->current_scope->put(parameters[i]->name, argument, argument->getType());
   }
 
-  // TODO: mutability for variables captured in closure
-
   // Load and add fields of closure into scope
   // unsigned int because type is required by CreateExtractValue(), bindings.size - parameters.size
   // since bindings are expanded by parameters and we dont want to add these in the closure
@@ -101,7 +99,7 @@ void Compiler::load_parameters(
       this->current_scope->bindings();
   for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
     const auto &[name, binding] = bindings[i];
-    llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i});
+    llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i}, "__closure_" + name);
     this->current_scope->put(name, field, binding.value->getType(), binding.is_mutable);
   }
 }
@@ -223,10 +221,6 @@ Compiler::create_definition(const std::string &name, llvm::Constant *init, llvm:
 
 std::variant<llvm::AllocaInst *, ImmutableAssignmentError, AssignNonExistingError>
 Compiler::create_assignment(const std::string &name, llvm::Constant *init, llvm::Type *type) {
-  llvm::AllocaInst *local = this->create_alloca(name, init, type);
-  llvm::LoadInst *load = this->builder.CreateLoad(type, local);
-  load->setAlignment(this->get_alignment(type));
-
   if (auto maybe_error = AssignNonExistingError::check(*this->current_scope, name);
       maybe_error.has_value())
     return maybe_error.value();
@@ -234,6 +228,10 @@ Compiler::create_assignment(const std::string &name, llvm::Constant *init, llvm:
   if (auto maybe_error = ImmutableAssignmentError::check(*this->current_scope, name);
       maybe_error.has_value())
     return maybe_error.value();
+
+  llvm::AllocaInst *local = this->create_alloca(name, init, type);
+  llvm::LoadInst *load = this->builder.CreateLoad(type, local);
+  load->setAlignment(this->get_alignment(type));
 
   // All assignments are mutable since they only mutate already mutable values
   this->current_scope->put(name, load, type, true);
@@ -525,7 +523,7 @@ Compiler::create_userdefined_call(llvm::Function *function, std::vector<llvm::Va
 
 std::variant<llvm::CallInst *, ArgumentCountError>
 Compiler::create_call(llvm::Function *function, std::vector<llvm::Value *> &arguments) {
-  // TODO: check number of arguments, maybe some other checks too (type checks?)
+  // TODO: probably should do type checking here
   if (this->is_externally_defined(function))
     return this->create_extern_call(function, arguments);
   else
