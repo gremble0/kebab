@@ -116,4 +116,17 @@ public:
   std::string to_string() const final;
 };
 
+class AssignNonExistingError : public CompilerError {
+private:
+  const std::string &assignee;
+
+  AssignNonExistingError(const std::string &assignee) : assignee(assignee) {}
+
+public:
+  static std::optional<AssignNonExistingError> check(const Scope &scope,
+                                                     const std::string &assignee);
+
+  std::string to_string() const final;
+};
+
 #endif

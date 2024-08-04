@@ -85,15 +85,14 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
     if (actual_type != declared_type)
       this->type_error({declared_type}, actual_type);
 
-    if (!compiler.get_value(this->name).has_value())
-      this->assign_nonexisting_error(this->name);
-
-    std::variant<llvm::AllocaInst *, ImmutableAssignmentError> result = compiler.create_assignment(
+    auto result = compiler.create_assignment(
         this->name, static_cast<llvm::Constant *>(variable_value), declared_type);
     if (std::holds_alternative<llvm::AllocaInst *>(result))
       return std::get<llvm::AllocaInst *>(result);
-    else
+    else if (std::holds_alternative<ImmutableAssignmentError>(result))
       this->compiler_error(std::get<ImmutableAssignmentError>(result));
+    else
+      this->compiler_error(std::get<AssignNonExistingError>(result));
   }
 }
 

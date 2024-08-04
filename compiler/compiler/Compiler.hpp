@@ -127,7 +127,7 @@ public:
                                                                         llvm::Constant *init,
                                                                         llvm::Type *type,
                                                                         bool is_mutable);
-  std::variant<llvm::AllocaInst *, ImmutableAssignmentError>
+  std::variant<llvm::AllocaInst *, ImmutableAssignmentError, AssignNonExistingError>
   create_assignment(const std::string &name, llvm::Constant *init, llvm::Type *type);
 
   llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");

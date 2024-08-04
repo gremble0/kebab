@@ -221,17 +221,21 @@ Compiler::create_definition(const std::string &name, llvm::Constant *init, llvm:
   return local;
 }
 
-std::variant<llvm::AllocaInst *, ImmutableAssignmentError>
+std::variant<llvm::AllocaInst *, ImmutableAssignmentError, AssignNonExistingError>
 Compiler::create_assignment(const std::string &name, llvm::Constant *init, llvm::Type *type) {
   llvm::AllocaInst *local = this->create_alloca(name, init, type);
   llvm::LoadInst *load = this->builder.CreateLoad(type, local);
   load->setAlignment(this->get_alignment(type));
 
-  auto maybe_error = ImmutableAssignmentError::check(*this->current_scope, name);
-  if (maybe_error.has_value())
+  if (auto maybe_error = AssignNonExistingError::check(*this->current_scope, name);
+      maybe_error.has_value())
     return maybe_error.value();
 
-  // All assignments are mutable
+  if (auto maybe_error = ImmutableAssignmentError::check(*this->current_scope, name);
+      maybe_error.has_value())
+    return maybe_error.value();
+
+  // All assignments are mutable since they only mutate already mutable values
   this->current_scope->put(name, load, type, true);
 
   return local;

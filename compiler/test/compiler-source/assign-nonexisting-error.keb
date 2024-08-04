@@ -1,0 +1,4 @@
+def main = fn(() => int(
+  set non-existing = int(2)
+  0
+))

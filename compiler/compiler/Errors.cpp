@@ -116,3 +116,17 @@ std::string RedefinitionError::to_string() const {
   return std::format("reassignment-error: cannot redefine already defined value '{}'",
                      this->assignee);
 }
+
+std::optional<AssignNonExistingError> AssignNonExistingError::check(const Scope &scope,
+                                                                    const std::string &assignee) {
+  std::optional<Scope::Binding> maybe_binding = scope.lookup(assignee);
+  if (maybe_binding.has_value())
+    return std::nullopt;
+  else
+    return AssignNonExistingError(assignee);
+}
+
+std::string AssignNonExistingError::to_string() const {
+  return std::format("assign-nonexisting-error: cannot assign to non existing value '{}'",
+                     this->assignee);
+}

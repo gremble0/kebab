@@ -81,6 +81,11 @@ TEST(CompilerTest, ErrorsWhenRedefining) {
   ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("redefinition-error"); }, "redefinition-error");
 }
 
+TEST(CompilerTest, ErrorsAssigningToNonexisting) {
+  ASSERT_DEATH(
+      { ASSERT_EXPECTED_COMPILATION("assign-nonexisting-error"); }, "assign-nonexisting-error");
+}
+
 TEST(CompilerTest, ErrorsWhenAssigningToImmutable) {
   ASSERT_DEATH(
       { ASSERT_EXPECTED_COMPILATION("immutable-assignment-error"); }, "immutable-assignment-error");
