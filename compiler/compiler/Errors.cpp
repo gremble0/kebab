@@ -8,6 +8,7 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Type.h"
 #include "llvm/Support/Casting.h"
+#include "llvm/Support/raw_ostream.h"
 
 std::optional<ArgumentCountError> ArgumentCountError::check(llvm::Function *function,
                                                             size_t argument_count) {
@@ -153,4 +154,36 @@ std::optional<NameError> NameError::check(const Scope &scope, const std::string 
 
 std::string NameError::to_string() const {
   return std::format("name-error: undeclared identifier '{}'", this->name);
+}
+
+std::optional<TypeError> TypeError::check(std::initializer_list<llvm::Type *> expected,
+                                          llvm::Type *actual) {
+  for (llvm::Type *type : expected)
+    if (actual == type)
+      return std::nullopt;
+
+  return TypeError(expected, actual);
+}
+
+std::string TypeError::to_string() const {
+  std::string as_string =
+      std::format("type-error: unexpected type '{}' expected ", this->type_to_string(this->actual));
+  llvm::raw_string_ostream stream(as_string);
+
+  size_t i = 0;
+  size_t size = expected.size();
+  for (const llvm::Type *type : expected) {
+    stream << '\'';
+    type->print(stream);
+    stream << '\'';
+    ++i;
+    if (i == size)
+      break;
+    else if (i == size - 1)
+      stream << " or ";
+    else
+      stream << ", ";
+  }
+
+  return as_string;
 }

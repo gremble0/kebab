@@ -64,35 +64,6 @@ std::string AstNode::where() const {
   exit(1);
 }
 
-[[noreturn]] void AstNode::type_error(std::initializer_list<const llvm::Type *> expected,
-                                      const llvm::Type *actual) const {
-  std::string message;
-  llvm::raw_string_ostream stream(message);
-  stream << this->where();
-  stream << "type-error: unexpected type '";
-  actual->print(stream);
-  stream << "' expected ";
-
-  int i = 0;
-  int size = expected.size();
-  for (const llvm::Type *type : expected) {
-    stream << '\'';
-    type->print(stream);
-    stream << '\'';
-    ++i;
-    if (i == size)
-      break;
-    else if (i == size - 1)
-      stream << " or ";
-    else
-      stream << ", ";
-  }
-
-  std::cerr << message << std::endl;
-
-  exit(1);
-}
-
 [[noreturn]] void AstNode::operator_error(const std::vector<const llvm::Type *> &supported,
                                           const llvm::Type *actual,
                                           const std::string &operator_) const {

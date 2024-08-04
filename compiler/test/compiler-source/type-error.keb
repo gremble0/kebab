@@ -1,0 +1,5 @@
+def main = fn(() => int(
+  def my-number = int("oh no this is not an integer")
+
+  0
+))

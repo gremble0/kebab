@@ -104,4 +104,8 @@ TEST(CompilerTest, ErrorsWhenUndeclaredIdentifier) {
   ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("name-error"); }, "name-error");
 }
 
+TEST(CompilerTest, ErrorsWhenWrongType) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("type-error"); }, "type-error");
+}
+
 } // namespace Kebab::Test

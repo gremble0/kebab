@@ -2,6 +2,7 @@
 #define KEBAB_ERRORS_HPP
 
 #include <cstddef>
+#include <initializer_list>
 #include <optional>
 #include <unordered_map>
 
@@ -154,6 +155,21 @@ private:
 
 public:
   static std::optional<NameError> check(const Scope &scope, const std::string &name);
+
+  std::string to_string() const final;
+};
+
+class TypeError : public CompilerError {
+private:
+  std::initializer_list<llvm::Type *> expected;
+  const llvm::Type *actual;
+
+  TypeError(std::initializer_list<llvm::Type *> expected, llvm::Type *actual)
+      : expected(expected), actual(actual) {}
+
+public:
+  static std::optional<TypeError> check(std::initializer_list<llvm::Type *> expected,
+                                        llvm::Type *actual);
 
   std::string to_string() const final;
 };

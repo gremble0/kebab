@@ -32,12 +32,13 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
 
 llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
   llvm::Value *offset = this->subscription->compile(compiler);
-  if (offset->getType() != compiler.get_int_type())
-    // TODO: could be more descriptive (arrays can only be subscripted with ints)
-    this->type_error({compiler.get_int_type()}, offset->getType());
+  // TODO: do these error checks elsewhere
+  // TODO: could be more descriptive (arrays can only be subscripted with ints)
+  if (auto maybe_error = TypeError::check({compiler.get_int_type()}, offset->getType());
+      maybe_error.has_value())
+    this->compiler_error(maybe_error.value());
 
-  auto maybe_error = UnsubscriptableError::check(this->subscriptee);
-  if (maybe_error.has_value())
+  if (auto maybe_error = UnsubscriptableError::check(this->subscriptee); maybe_error.has_value())
     this->compiler_error(maybe_error.value());
 
   // TODO: improve casting

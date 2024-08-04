@@ -45,10 +45,10 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
     return function;
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
-    const llvm::Type *actual_type = variable_value->getType();
-    // Types are interned so pointer comparison is sufficient
-    if (actual_type != declared_type)
-      this->type_error({declared_type}, actual_type);
+    llvm::Type *actual_type = variable_value->getType();
+    // TODO: do type checking elsewhere
+    if (auto maybe_error = TypeError::check({declared_type}, actual_type); maybe_error.has_value())
+      this->compiler_error(maybe_error.value());
 
     std::variant<llvm::AllocaInst *, RedefinitionError> local = compiler.create_definition(
         this->name, static_cast<llvm::Constant *>(variable_value), declared_type, this->is_mutable);
@@ -81,9 +81,9 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
     return function;
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
-    const llvm::Type *actual_type = variable_value->getType();
-    if (actual_type != declared_type)
-      this->type_error({declared_type}, actual_type);
+    llvm::Type *actual_type = variable_value->getType();
+    if (auto maybe_error = TypeError::check({declared_type}, actual_type); maybe_error.has_value())
+      this->compiler_error(maybe_error.value());
 
     auto result = compiler.create_assignment(
         this->name, static_cast<llvm::Constant *>(variable_value), declared_type);
