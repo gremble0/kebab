@@ -146,4 +146,16 @@ public:
   std::string to_string() const final;
 };
 
+class NameError : public CompilerError {
+private:
+  const std::string &name;
+
+  NameError(const std::string &name) : name(name) {}
+
+public:
+  static std::optional<NameError> check(const Scope &scope, const std::string &name);
+
+  std::string to_string() const final;
+};
+
 #endif

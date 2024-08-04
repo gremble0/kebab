@@ -1,0 +1,4 @@
+def main = fn(() => int(
+  def my-const = int(non-existent)
+  0
+))

@@ -100,4 +100,8 @@ TEST(CompilerTest, ErrorsWhenUnrecognizedType) {
       { ASSERT_EXPECTED_COMPILATION("unrecognized-type-error"); }, "unrecognized-type-error");
 }
 
+TEST(CompilerTest, ErrorsWhenUndeclaredIdentifier) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("name-error"); }, "name-error");
+}
+
 } // namespace Kebab::Test

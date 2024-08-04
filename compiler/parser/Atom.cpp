@@ -1,11 +1,13 @@
 #include <algorithm>
 #include <cassert>
+#include <variant>
 
 #include "parser/Atom.hpp"
 #include "parser/Expression.hpp"
 #include "parser/Statement.hpp"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Instructions.h"
+#include "llvm/IR/Value.h"
 
 namespace Kebab::Parser {
 
@@ -86,12 +88,11 @@ std::unique_ptr<NameAtom> NameAtom::parse(Lexer &lexer) {
 }
 
 llvm::Value *NameAtom::compile(Compiler &compiler) const {
-  std::optional<llvm::Value *> value = compiler.get_value(this->name);
-
-  if (!value.has_value())
-    this->name_error(name);
+  auto value = compiler.get_value(this->name);
+  if (std::holds_alternative<llvm::Value *>(value))
+    return std::get<llvm::Value *>(value);
   else
-    return value.value();
+    this->compiler_error(std::get<NameError>(value));
 }
 
 std::unique_ptr<InnerExpressionAtom> InnerExpressionAtom::parse(Lexer &lexer) {

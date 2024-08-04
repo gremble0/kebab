@@ -532,4 +532,11 @@ Compiler::create_call(llvm::Function *function, std::vector<llvm::Value *> &argu
     return this->create_userdefined_call(function, arguments);
 }
 
+std::variant<llvm::Value *, NameError> Compiler::get_value(const std::string &name) const {
+  if (auto maybe_error = NameError::check(*this->current_scope, name); maybe_error.has_value())
+    return maybe_error.value();
+  else
+    return this->current_scope->lookup(name)->value;
+}
+
 } // namespace Kebab

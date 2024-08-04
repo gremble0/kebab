@@ -194,9 +194,7 @@ public:
   void set_insert_point(llvm::BasicBlock *block) { this->builder.SetInsertPoint(block); }
 
   /// Scope wrappers and lookups
-  std::optional<llvm::Value *> get_value(const std::string &name) const {
-    return this->current_scope->lookup(name)->value;
-  }
+  std::variant<llvm::Value *, NameError> get_value(const std::string &name) const;
 
   void start_scope() { this->current_scope = std::make_shared<Scope>(this->current_scope); }
 

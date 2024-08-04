@@ -143,3 +143,14 @@ UnrecognizedTypeError::check(const std::unordered_map<std::string, llvm::Type *>
 std::string UnrecognizedTypeError::to_string() const {
   return std::format("unrecognized-type-error: unrecognized type '{}'", this->type_name);
 }
+
+std::optional<NameError> NameError::check(const Scope &scope, const std::string &name) {
+  if (scope.lookup(name).has_value())
+    return std::nullopt;
+  else
+    return NameError(name);
+}
+
+std::string NameError::to_string() const {
+  return std::format("name-error: undeclared identifier '{}'", this->name);
+}
