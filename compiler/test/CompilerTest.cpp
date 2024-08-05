@@ -108,4 +108,12 @@ TEST(CompilerTest, ErrorsWhenWrongType) {
   ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("type-error"); }, "type-error");
 }
 
+TEST(CompilerTest, ErrorsWhenUnsupportedUnaryOperator) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("unary-operator-error"); }, "unary-operator-error");
+}
+
+TEST(CompilerTest, ErrorsWhenUnsupportedBinaryOperator) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("binary-operator-error"); }, "binary-operator-error");
+}
+
 } // namespace Kebab::Test

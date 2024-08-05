@@ -195,6 +195,6 @@ std::string UnaryOperatorError::to_string() const {
 
 std::string BinaryOperatorError::to_string() const {
   return std::format("binary-operator-error: unsupported types '{}' and '{}' for operator '{}'",
-                     this->type_to_string(this->lhs), this->type_to_string(this->lhs),
+                     this->type_to_string(this->lhs), this->type_to_string(this->rhs),
                      this->operator_);
 }
