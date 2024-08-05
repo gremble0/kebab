@@ -90,15 +90,7 @@ public:
 
   /// Type getters
   std::variant<llvm::Type *, UnrecognizedTypeError>
-  get_primitive_type(const std::string &type_name) const {
-    if (auto maybe_error = UnrecognizedTypeError::check(this->primitive_types, type_name);
-        maybe_error.has_value())
-      return maybe_error.value();
-
-    auto it = this->primitive_types.find(type_name);
-    // Should always be valid since we check if it doesnt exist above
-    return it->second;
-  }
+  get_primitive_type(const std::string &type_name) const;
 
   llvm::IntegerType *get_int_type() { return this->builder.getInt64Ty(); }
 
