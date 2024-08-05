@@ -1,5 +1,7 @@
 #include <cassert>
+#include <variant>
 
+#include "compiler/Errors.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Expression.hpp"
 #include "parser/Statement.hpp"
@@ -33,23 +35,22 @@ std::unique_ptr<TermOperator> TermOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *TermOperator::compile(Compiler &compiler) const {
-  std::optional<llvm::Value *> operation;
+  auto create_operation = [this, &compiler]() -> std::variant<llvm::Value *, BinaryOperatorError> {
+    switch (this->type) {
+    case Type::PLUS:
+      return compiler.create_add(this->lhs, this->rhs);
 
-  switch (this->type) {
-  case Type::PLUS:
-    operation = compiler.create_add(this->lhs, this->rhs);
-    break;
+    case Type::MINUS:
+      return compiler.create_sub(this->lhs, this->rhs);
+    }
+  };
 
-  case Type::MINUS:
-    operation = compiler.create_sub(this->lhs, this->rhs);
-    break;
-  }
+  std::variant<llvm::Value *, BinaryOperatorError> operation = create_operation();
 
-  if (operation.has_value())
-    return operation.value();
+  if (std::holds_alternative<llvm::Value *>(operation))
+    return std::get<llvm::Value *>(operation);
   else
-    this->operator_error({compiler.get_int_type(), compiler.get_float_type()}, this->lhs->getType(),
-                         this->rhs->getType(), this->to_string());
+    this->compiler_error(std::get<BinaryOperatorError>(operation));
 }
 
 std::unique_ptr<Term> Term::parse(Lexer &lexer) {

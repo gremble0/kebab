@@ -1,6 +1,8 @@
 #include <cassert>
 #include <optional>
+#include <variant>
 
+#include "compiler/Errors.hpp"
 #include "parser/Expression.hpp"
 #include "parser/Factor.hpp"
 #include "parser/Primary.hpp"
@@ -34,20 +36,22 @@ std::unique_ptr<FactorPrefix> FactorPrefix::parse(Lexer &lexer) {
 }
 
 llvm::Value *FactorPrefix::compile(Compiler &compiler) const {
-  std::optional<llvm::Value *> operation;
+  auto create_operation = [this, &compiler]() -> std::variant<llvm::Value *, UnaryOperatorError> {
+    switch (this->type) {
+    case Type::PLUS:
+      return this->prefixed;
 
-  switch (this->type) {
-  case Type::PLUS:
-    operation = this->prefixed;
+    case Type::MINUS:
+      return compiler.create_neg(this->prefixed);
+    }
+  };
 
-  case Type::MINUS:
-    operation = compiler.create_neg(this->prefixed);
-  }
+  std::variant<llvm::Value *, UnaryOperatorError> operation = create_operation();
 
-  if (operation.has_value())
-    return operation.value();
+  if (std::holds_alternative<llvm::Value *>(operation))
+    return std::get<llvm::Value *>(operation);
   else
-    this->operator_error({compiler.get_int_type()}, this->prefixed->getType(), this->to_string());
+    this->compiler_error(std::get<UnaryOperatorError>(operation));
 }
 
 std::unique_ptr<Factor> Factor::parse(Lexer &lexer) {
@@ -119,22 +123,22 @@ std::unique_ptr<FactorOperator> FactorOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *FactorOperator::compile(Compiler &compiler) const {
-  std::optional<llvm::Value *> operation;
-  switch (this->type) {
-  case Type::MULT:
-    operation = compiler.create_mul(this->lhs, this->rhs);
-    break;
+  auto create_operation = [this, &compiler]() -> std::variant<llvm::Value *, BinaryOperatorError> {
+    switch (this->type) {
+    case Type::MULT:
+      return compiler.create_mul(this->lhs, this->rhs);
 
-  case Type::DIV:
-    operation = compiler.create_div(this->lhs, this->rhs);
-    break;
-  }
+    case Type::DIV:
+      return compiler.create_div(this->lhs, this->rhs);
+    }
+  };
 
-  if (operation.has_value())
-    return operation.value();
+  std::variant<llvm::Value *, BinaryOperatorError> operation = create_operation();
+
+  if (std::holds_alternative<llvm::Value *>(operation))
+    return std::get<llvm::Value *>(operation);
   else
-    this->operator_error({compiler.get_int_type(), compiler.get_float_type()}, this->lhs->getType(),
-                         this->to_string());
+    this->compiler_error(std::get<BinaryOperatorError>(operation));
 }
 
 } // namespace Kebab::Parser

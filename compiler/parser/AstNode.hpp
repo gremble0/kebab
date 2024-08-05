@@ -27,12 +27,6 @@ protected:
   [[noreturn]] static void parser_error(const std::string &message, const Lexer &lexer);
   [[noreturn]] void compiler_error(const CompilerError &error) const;
 
-  [[noreturn]] void operator_error(const std::vector<const llvm::Type *> &supported,
-                                   const llvm::Type *actual, const std::string &operator_) const;
-  [[noreturn]] void operator_error(const std::vector<const llvm::Type *> &supported,
-                                   const llvm::Type *lhs, const llvm::Type *rhs,
-                                   const std::string &operator_) const;
-
   void start_parsing(const Lexer &lexer, const std::string &node_name);
   void finish_parsing(const Lexer &lexer, const std::string &node_name);
 

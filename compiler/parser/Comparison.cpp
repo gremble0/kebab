@@ -1,12 +1,14 @@
 #include <cassert>
-#include <initializer_list>
+#include <variant>
 #include <vector>
 
+#include "compiler/Errors.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Comparison.hpp"
 #include "parser/Expression.hpp"
 #include "parser/Statement.hpp"
 #include "parser/Term.hpp"
+#include "llvm/IR/Value.h"
 
 namespace Kebab::Parser {
 
@@ -54,42 +56,33 @@ std::unique_ptr<ComparisonOperator> ComparisonOperator::parse(Lexer &lexer) {
 }
 
 llvm::Value *ComparisonOperator::compile(Compiler &compiler) const {
-  std::optional<llvm::Value *> operation;
-  std::vector<const llvm::Type *> supported_types = {compiler.get_int_type(),
-                                                     compiler.get_float_type()};
+  auto create_operation = [this, &compiler]() -> std::variant<llvm::Value *, BinaryOperatorError> {
+    switch (this->type) {
+    case Type::LT:
+      return compiler.create_lt(this->lhs, this->rhs);
 
-  switch (this->type) {
-  case Type::LT:
-    operation = compiler.create_lt(this->lhs, this->rhs);
-    break;
+    case Type::LE:
+      return compiler.create_le(this->lhs, this->rhs);
 
-  case Type::LE:
-    operation = compiler.create_le(this->lhs, this->rhs);
-    break;
+    case Type::EQ:
+      return compiler.create_eq(this->lhs, this->rhs);
 
-  case Type::EQ:
-    operation = compiler.create_eq(this->lhs, this->rhs);
-    supported_types.push_back(compiler.get_bool_type());
-    break;
+    case Type::NEQ:
+      return compiler.create_neq(this->lhs, this->rhs);
 
-  case Type::NEQ:
-    operation = compiler.create_neq(this->lhs, this->rhs);
-    break;
+    case Type::GT:
+      return compiler.create_gt(this->lhs, this->rhs);
 
-  case Type::GT:
-    operation = compiler.create_gt(this->lhs, this->rhs);
-    break;
+    case Type::GE:
+      return compiler.create_ge(this->lhs, this->rhs);
+    }
+  };
 
-  case Type::GE:
-    operation = compiler.create_ge(this->lhs, this->rhs);
-    break;
-  }
-
-  if (operation.has_value())
-    return operation.value();
+  std::variant<llvm::Value *, BinaryOperatorError> operation = create_operation();
+  if (std::holds_alternative<llvm::Value *>(operation))
+    return std::get<llvm::Value *>(operation);
   else
-    this->operator_error(supported_types, this->lhs->getType(), this->rhs->getType(),
-                         this->to_string());
+    this->compiler_error(std::get<BinaryOperatorError>(operation));
 }
 
 std::unique_ptr<Comparison> Comparison::parse(Lexer &lexer) {

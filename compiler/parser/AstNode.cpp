@@ -1,5 +1,4 @@
 #include <format>
-#include <initializer_list>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -60,68 +59,6 @@ std::string AstNode::where() const {
   std::cerr << "unreachable-error: reached unreachable branch during compilation (if you're seeing "
                "this there is a bug in the language implementation)"
             << std::endl;
-
-  exit(1);
-}
-
-[[noreturn]] void AstNode::operator_error(const std::vector<const llvm::Type *> &supported,
-                                          const llvm::Type *actual,
-                                          const std::string &operator_) const {
-  std::string message;
-  llvm::raw_string_ostream stream(message);
-  stream << this->where();
-  stream << "operator-error: unsupported type '";
-  actual->print(stream);
-  stream << "' for unary operator '" << operator_ << "' supported types are ";
-
-  int i = 0;
-  int size = supported.size();
-  for (const llvm::Type *type : supported) {
-    stream << '\'';
-    type->print(stream);
-    stream << '\'';
-    ++i;
-    if (i == size)
-      break;
-    else if (i == size - 1)
-      stream << " and ";
-    else
-      stream << ", ";
-  }
-
-  std::cerr << message << std::endl;
-
-  exit(1);
-}
-
-[[noreturn]] void AstNode::operator_error(const std::vector<const llvm::Type *> &supported,
-                                          const llvm::Type *lhs, const llvm::Type *rhs,
-                                          const std::string &operator_) const {
-  std::string message;
-  llvm::raw_string_ostream stream(message);
-  stream << this->where();
-  stream << "operator-error: unsupported types '";
-  lhs->print(stream);
-  stream << "' and '";
-  rhs->print(stream);
-  stream << "' for binary operator '" << operator_ << "' supported types are ";
-
-  int i = 0;
-  int size = supported.size();
-  for (const llvm::Type *type : supported) {
-    stream << '\'';
-    type->print(stream);
-    stream << '\'';
-    ++i;
-    if (i == size)
-      break;
-    else if (i == size - 1)
-      stream << " and ";
-    else
-      stream << ", ";
-  }
-
-  std::cerr << message << std::endl;
 
   exit(1);
 }

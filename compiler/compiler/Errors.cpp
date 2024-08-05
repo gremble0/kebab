@@ -187,3 +187,14 @@ std::string TypeError::to_string() const {
 
   return as_string;
 }
+
+std::string UnaryOperatorError::to_string() const {
+  return std::format("unary-operator-error: unsupported type '{}' for operator '{}'",
+                     this->type_to_string(this->type), this->operator_);
+}
+
+std::string BinaryOperatorError::to_string() const {
+  return std::format("binary-operator-error: unsupported types '{}' and '{}' for operator '{}'",
+                     this->type_to_string(this->lhs), this->type_to_string(this->lhs),
+                     this->operator_);
+}

@@ -1,9 +1,11 @@
 #include <cassert>
 #include <memory>
 #include <optional>
+#include <variant>
 #include <vector>
 
 #include "compiler/Compiler.hpp"
+#include "compiler/Errors.hpp"
 #include "lexer/Token.hpp"
 #include "logging/Logger.hpp"
 #include "parser/AndTest.hpp"
@@ -137,7 +139,7 @@ static llvm::Value *compile_branch_body(Compiler &compiler,
   return body.back()->compile(compiler);
 }
 
-// TODO: this whole function kinda stinks
+// TODO: this whole function is way too big
 llvm::Value *CondExpression::compile(Compiler &compiler) const {
   llvm::Function *current_function = compiler.get_current_function();
 
@@ -157,10 +159,10 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
   for (size_t i = 0; i < num_tests; ++i) {
     llvm::Value *test = this->tests[i]->compile(compiler);
 
-    std::optional<llvm::Value *> test_is_true =
+    std::variant<llvm::Value *, BinaryOperatorError> test_is_true =
         compiler.create_eq(test, compiler.create_bool(true));
-    if (!test_is_true.has_value())
-      this->operator_error({compiler.get_bool_type()}, test->getType(), "bool");
+    if (std::holds_alternative<BinaryOperatorError>(test_is_true))
+      this->compiler_error(std::get<BinaryOperatorError>(test_is_true));
 
     std::string branch_name = (i == num_tests - 1) ? "else_branch" : "elif_branch";
 
@@ -171,7 +173,7 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     llvm::Value *current_return_value = compile_branch_body(compiler, this->bodies[i]);
     compiler.end_scope();
 
-    compiler.create_cond_branch(test_is_true.value(), merge_branch, next_branch);
+    compiler.create_cond_branch(std::get<llvm::Value *>(test_is_true), merge_branch, next_branch);
     incoming_values.push_back({current_return_value, branch});
     branch = next_branch;
   }
@@ -210,11 +212,11 @@ llvm::Value *NormalExpression::compile(Compiler &compiler) const {
 
   for (size_t i = 1; i < and_tests.size(); ++i) {
     llvm::Value *rhs = this->and_tests[i]->compile(compiler);
-    std::optional<llvm::Value *> operation = compiler.create_or(result, rhs);
-    if (operation.has_value())
-      result = operation.value();
+    std::variant<llvm::Value *, BinaryOperatorError> operation = compiler.create_or(result, rhs);
+    if (std::holds_alternative<llvm::Value *>(operation))
+      result = std::get<llvm::Value *>(operation);
     else
-      this->operator_error({compiler.get_bool_type()}, result->getType(), rhs->getType(), "or");
+      this->compiler_error(std::get<BinaryOperatorError>(operation));
   }
 
   return result;

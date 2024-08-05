@@ -1,6 +1,7 @@
 #include <memory>
-#include <optional>
+#include <variant>
 
+#include "compiler/Errors.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/AndTest.hpp"
 #include "parser/Expression.hpp"
@@ -30,11 +31,11 @@ llvm::Value *AndTest::compile(Compiler &compiler) const {
 
   for (size_t i = 1; i < this->not_tests.size(); ++i) {
     llvm::Value *rhs = this->not_tests[i]->compile(compiler);
-    std::optional<llvm::Value *> operation = compiler.create_and(result, rhs);
-    if (operation.has_value())
-      result = operation.value();
+    std::variant<llvm::Value *, BinaryOperatorError> operation = compiler.create_and(result, rhs);
+    if (std::holds_alternative<llvm::Value *>(operation))
+      result = std::get<llvm::Value *>(operation);
     else
-      this->operator_error({compiler.get_bool_type()}, result->getType(), "and");
+      this->compiler_error(std::get<BinaryOperatorError>(operation));
   }
 
   return result;

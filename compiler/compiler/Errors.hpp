@@ -174,4 +174,29 @@ public:
   std::string to_string() const final;
 };
 
+class UnaryOperatorError : public CompilerError {
+private:
+  const llvm::Type *type;
+  const std::string &operator_;
+
+public:
+  UnaryOperatorError(const llvm::Type *type, const std::string &operator_)
+      : type(type), operator_(operator_) {}
+
+  std::string to_string() const final;
+};
+
+class BinaryOperatorError : public CompilerError {
+private:
+  const llvm::Type *lhs;
+  const llvm::Type *rhs;
+  const std::string &operator_;
+
+public:
+  BinaryOperatorError(const llvm::Type *lhs, const llvm::Type *rhs, const std::string &operator_)
+      : lhs(lhs), rhs(rhs), operator_(operator_) {}
+
+  std::string to_string() const final;
+};
+
 #endif

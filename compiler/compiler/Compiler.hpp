@@ -165,30 +165,33 @@ public:
   create_call(llvm::Function *function, std::vector<llvm::Value *> &arguments);
 
   /// Unary mathematical operators
-  std::optional<llvm::Value *> create_neg(llvm::Value *v); // -x
+  std::variant<llvm::Value *, UnaryOperatorError> create_neg(llvm::Value *v);
+
+  /// Unary logical operators
+  std::variant<llvm::Value *, UnaryOperatorError> create_not(llvm::Value *v);
 
   /// Binary array operators
-  std::variant<llvm::Value *, IndexError> create_subscription(llvm::AllocaInst *array,
-                                                              llvm::Value *offset); // x[y]
+  // TODO: could also return operatorerror if offset is wrong type for example
+  std::variant<llvm::Value *, IndexError> create_subscription(llvm::AllocaInst *list,
+                                                              llvm::Value *offset);
 
   /// Binary mathematical operators
-  std::optional<llvm::Value *> create_add(llvm::Value *lhs, llvm::Value *rhs); // x + y
-  std::optional<llvm::Value *> create_sub(llvm::Value *lhs, llvm::Value *rhs); // x - y
-  std::optional<llvm::Value *> create_mul(llvm::Value *lhs, llvm::Value *rhs); // x * y
-  std::optional<llvm::Value *> create_div(llvm::Value *lhs, llvm::Value *rhs); // x / y
+  std::variant<llvm::Value *, BinaryOperatorError> create_add(llvm::Value *lhs, llvm::Value *rhs);
+  std::variant<llvm::Value *, BinaryOperatorError> create_sub(llvm::Value *lhs, llvm::Value *rhs);
+  std::variant<llvm::Value *, BinaryOperatorError> create_mul(llvm::Value *lhs, llvm::Value *rhs);
+  std::variant<llvm::Value *, BinaryOperatorError> create_div(llvm::Value *lhs, llvm::Value *rhs);
 
   /// Binary comparison operators
-  std::optional<llvm::Value *> create_lt(llvm::Value *lhs, llvm::Value *rhs);  // x < y
-  std::optional<llvm::Value *> create_le(llvm::Value *lhs, llvm::Value *rhs);  // x <= y
-  std::optional<llvm::Value *> create_eq(llvm::Value *lhs, llvm::Value *rhs);  // x == y
-  std::optional<llvm::Value *> create_neq(llvm::Value *lhs, llvm::Value *rhs); // x ~= y
-  std::optional<llvm::Value *> create_gt(llvm::Value *lhs, llvm::Value *rhs);  // x > y
-  std::optional<llvm::Value *> create_ge(llvm::Value *lhs, llvm::Value *rhs);  // x >= y
+  std::variant<llvm::Value *, BinaryOperatorError> create_lt(llvm::Value *lhs, llvm::Value *rhs);
+  std::variant<llvm::Value *, BinaryOperatorError> create_le(llvm::Value *lhs, llvm::Value *rhs);
+  std::variant<llvm::Value *, BinaryOperatorError> create_eq(llvm::Value *lhs, llvm::Value *rhs);
+  std::variant<llvm::Value *, BinaryOperatorError> create_neq(llvm::Value *lhs, llvm::Value *rhs);
+  std::variant<llvm::Value *, BinaryOperatorError> create_gt(llvm::Value *lhs, llvm::Value *rhs);
+  std::variant<llvm::Value *, BinaryOperatorError> create_ge(llvm::Value *lhs, llvm::Value *rhs);
 
   /// Binary logical operators
-  std::optional<llvm::Value *> create_and(llvm::Value *lhs, llvm::Value *rhs); // x and y
-  std::optional<llvm::Value *> create_or(llvm::Value *lhs, llvm::Value *rhs);  // x or y
-  std::optional<llvm::Value *> create_not(llvm::Value *v);                     // ~x
+  std::variant<llvm::Value *, BinaryOperatorError> create_and(llvm::Value *lhs, llvm::Value *rhs);
+  std::variant<llvm::Value *, BinaryOperatorError> create_or(llvm::Value *lhs, llvm::Value *rhs);
 
   /// Setter wrappers
   void set_insert_point(llvm::BasicBlock *block) { this->builder.SetInsertPoint(block); }
