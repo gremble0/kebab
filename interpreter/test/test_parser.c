@@ -7,12 +7,16 @@
 #include "utils.h"
 
 static void test_parser_on_file(const char *base_file) {
-  char keb_file_path[strlen(keb_dir_path) + strlen(base_file) + sizeof(".keb") +
-                     1];
-  char expected_path[strlen(parser_expected_dir_path) + strlen(base_file) +
-                     sizeof(".log") + 1];
-  sprintf(keb_file_path, "%s/%s.keb", keb_dir_path, base_file);
-  sprintf(expected_path, "%s/%s.ast", parser_expected_dir_path, base_file);
+  size_t keb_dir_path_len = strlen(keb_dir_path);
+  size_t base_file_len = strlen(base_file);
+  size_t parser_expected_dir_path_len = strlen(parser_expected_dir_path);
+
+  char keb_file_path[keb_dir_path_len + base_file_len + sizeof(".keb") + 1];
+  char expected_path[parser_expected_dir_path_len + base_file_len + sizeof(".log") + 1];
+  sprintf(keb_file_path, "%.*s/%.*s.keb", (int)keb_dir_path_len, keb_dir_path, (int)base_file_len,
+          base_file);
+  sprintf(expected_path, "%.*s/%.*s.ast", (int)parser_expected_dir_path_len,
+          lexer_expected_dir_path, (int)base_file_len, base_file);
 
   lexer_t *lexer = lexer_init(keb_file_path);
   ast_t *ast = parse(lexer);

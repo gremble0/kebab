@@ -18,12 +18,16 @@ static void test_lexer_on_file(const char *base_file) {
   // Derive file locations of expected and source code files from `base_file`
   // NOTE: don't have to account for `/` because double strlen counts nullbyte
   // twice anyways, which means we will have enough size in each buffer
-  char keb_file_path[strlen(keb_dir_path) + strlen(base_file) + sizeof(".keb") +
-                     1];
-  char expected_path[strlen(lexer_expected_dir_path) + strlen(base_file) +
-                     sizeof(".log") + 1];
-  sprintf(keb_file_path, "%s/%s.keb", keb_dir_path, base_file);
-  sprintf(expected_path, "%s/%s.lex", lexer_expected_dir_path, base_file);
+  size_t keb_dir_path_len = strlen(keb_dir_path);
+  size_t base_file_len = strlen(base_file);
+  size_t lexer_expected_dir_path_len = strlen(lexer_expected_dir_path);
+
+  char keb_file_path[keb_dir_path_len + base_file_len + sizeof(".keb") + 1];
+  char expected_path[lexer_expected_dir_path_len + base_file_len + sizeof(".log") + 1];
+  sprintf(keb_file_path, "%.*s/%.*s.keb", (int)keb_dir_path_len, keb_dir_path, (int)base_file_len,
+          base_file);
+  sprintf(expected_path, "%.*s/%.*s.lex", (int)lexer_expected_dir_path_len, lexer_expected_dir_path,
+          (int)base_file_len, base_file);
 
   lexer_t *lexer = lexer_init(keb_file_path);
 
