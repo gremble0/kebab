@@ -188,6 +188,8 @@ std::string TypeError::to_string() const {
   return as_string;
 }
 
+// TODO: operator_ gets printed as `H` for some reason
+
 std::string UnaryOperatorError::to_string() const {
   const std::string &type_string = CompilerError::type_to_string(this->type);
 

@@ -183,7 +183,7 @@ llvm::Value *Compiler::create_closure_argument(llvm::StructType *closure_type) {
   return closure_argument;
 }
 
-llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Constant *init,
+llvm::AllocaInst *Compiler::create_alloca(const std::string &name, llvm::Value *init,
                                           llvm::Type *type) {
   llvm::Align alignment = this->get_alignment(type);
   llvm::AllocaInst *local = this->builder.CreateAlloca(type, nullptr, name);
@@ -216,15 +216,15 @@ llvm::AllocaInst *Compiler::create_alloca(const std::string &name,
 }
 
 std::variant<llvm::AllocaInst *, RedefinitionError>
-Compiler::create_definition(const std::string &name, llvm::Constant *init, llvm::Type *type,
+Compiler::create_definition(const std::string &name, llvm::Value *init, llvm::Type *type,
                             bool is_mutable) {
-  llvm::AllocaInst *local = this->create_alloca(name, init, type);
-  llvm::LoadInst *load = this->builder.CreateLoad(type, local);
-  load->setAlignment(this->get_alignment(type));
-
   if (auto maybe_error = RedefinitionError::check(*this->current_scope, name);
       maybe_error.has_value())
     return maybe_error.value();
+
+  llvm::AllocaInst *local = this->create_alloca(name, init, type);
+  llvm::LoadInst *load = this->builder.CreateLoad(type, local);
+  load->setAlignment(this->get_alignment(type));
 
   this->current_scope->put(name, load, type, is_mutable);
 
@@ -232,7 +232,7 @@ Compiler::create_definition(const std::string &name, llvm::Constant *init, llvm:
 }
 
 std::variant<llvm::AllocaInst *, ImmutableAssignmentError, AssignNonExistingError>
-Compiler::create_assignment(const std::string &name, llvm::Constant *init, llvm::Type *type) {
+Compiler::create_assignment(const std::string &name, llvm::Value *init, llvm::Type *type) {
   if (auto maybe_error = AssignNonExistingError::check(*this->current_scope, name);
       maybe_error.has_value())
     return maybe_error.value();
@@ -568,8 +568,7 @@ Compiler::create_userdefined_call(llvm::Function *function, std::vector<llvm::Va
 
     return this->builder.CreateCall(function, arguments);
   } else {
-    assert(false && "reached unreachable branch. last argument to a user defined function should "
-                    "always be the closure");
+    assert(false && "last argument to a user defined function should always be the closure");
   }
 }
 

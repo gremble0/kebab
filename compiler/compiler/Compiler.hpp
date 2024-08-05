@@ -53,13 +53,13 @@ private:
 
   llvm::Value *int_to_float(llvm::Value *i);
 
-  llvm::AllocaInst *create_alloca(const std::string &name, llvm::Constant *init, llvm::Type *type);
+  llvm::AllocaInst *create_alloca(const std::string &name, llvm::Value *init, llvm::Type *type);
   llvm::AllocaInst *create_alloca(const std::string &name, const std::vector<llvm::Value *> &init,
                                   llvm::Type *type);
 
   llvm::Align get_alignment(llvm::Type *type) const;
 
-  llvm::FunctionType *add_parameter(const llvm::FunctionType *type, llvm::Type *parameter);
+  llvm::FunctionType *add_parameter(const llvm::FunctionType *function_type, llvm::Type *parameter);
 
   llvm::Value *create_closure_argument(llvm::StructType *closure_type);
   void load_parameters(const llvm::Function *function,
@@ -132,12 +132,10 @@ public:
                   const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
   llvm::Function *declare_function(llvm::FunctionType *type, const std::string &name);
 
-  std::variant<llvm::AllocaInst *, RedefinitionError> create_definition(const std::string &name,
-                                                                        llvm::Constant *init,
-                                                                        llvm::Type *type,
-                                                                        bool is_mutable);
+  std::variant<llvm::AllocaInst *, RedefinitionError>
+  create_definition(const std::string &name, llvm::Value *init, llvm::Type *type, bool is_mutable);
   std::variant<llvm::AllocaInst *, ImmutableAssignmentError, AssignNonExistingError>
-  create_assignment(const std::string &name, llvm::Constant *init, llvm::Type *type);
+  create_assignment(const std::string &name, llvm::Value *init, llvm::Type *type);
 
   llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
 
