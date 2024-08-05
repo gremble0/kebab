@@ -2,6 +2,7 @@
 #include <cctype>
 #include <cstdint>
 #include <cstdio>
+#include <filesystem>
 #include <format>
 #include <iostream>
 #include <memory>
@@ -15,8 +16,7 @@
 namespace Kebab {
 
 Lexer::Lexer(const std::string &path) : path(path), stream(path) {
-  // TODO: exit gracefully if path is a directory (currently segfaults)
-  if (!stream.is_open())
+  if (!stream.is_open() || std::filesystem::is_directory(path))
     this->error("could not open file " + path);
 
   this->next_line();

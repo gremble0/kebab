@@ -73,4 +73,8 @@ TEST(LexerTest, ErrorsWhenIllegalToken) {
   ASSERT_DEATH({ ASSERT_EXPECTED_LEXING("illegal"); }, "illegal token");
 }
 
+TEST(LexerTest, ErrorsWhenOpeningDirectory) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_LEXING("."); }, "could not open file");
+}
+
 } // namespace Kebab::Test
