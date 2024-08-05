@@ -10,7 +10,7 @@
 #include "llvm/Support/Casting.h"
 #include "llvm/Support/raw_ostream.h"
 
-std::optional<ArgumentCountError> ArgumentCountError::check(llvm::Function *function,
+std::optional<ArgumentCountError> ArgumentCountError::check(const llvm::Function *function,
                                                             size_t argument_count) {
   size_t function_arg_size = function->arg_size();
 
@@ -135,10 +135,10 @@ std::string AssignNonExistingError::to_string() const {
 std::optional<UnrecognizedTypeError>
 UnrecognizedTypeError::check(const std::unordered_map<std::string, llvm::Type *> &known_types,
                              const std::string &type_name) {
-  if (known_types.find(type_name) == known_types.end())
-    return UnrecognizedTypeError(type_name);
-  else
+  if (known_types.contains(type_name))
     return std::nullopt;
+  else
+    return UnrecognizedTypeError(type_name);
 }
 
 std::string UnrecognizedTypeError::to_string() const {
@@ -157,7 +157,7 @@ std::string NameError::to_string() const {
 }
 
 std::optional<TypeError> TypeError::check(std::initializer_list<const llvm::Type *> expected,
-                                          llvm::Type *actual) {
+                                          const llvm::Type *actual) {
   for (const llvm::Type *type : expected)
     if (actual == type)
       return std::nullopt;
@@ -166,8 +166,8 @@ std::optional<TypeError> TypeError::check(std::initializer_list<const llvm::Type
 }
 
 std::string TypeError::to_string() const {
-  std::string as_string =
-      std::format("type-error: unexpected type '{}' expected ", this->type_to_string(this->actual));
+  std::string as_string = std::format("type-error: unexpected type '{}' expected ",
+                                      CompilerError::type_to_string(this->actual));
   llvm::raw_string_ostream stream(as_string);
 
   size_t i = 0;
@@ -189,12 +189,16 @@ std::string TypeError::to_string() const {
 }
 
 std::string UnaryOperatorError::to_string() const {
-  return std::format("unary-operator-error: unsupported type '{}' for operator '{}'",
-                     this->type_to_string(this->type), this->operator_);
+  const std::string &type_string = CompilerError::type_to_string(this->type);
+
+  return std::format("unary-operator-error: unsupported type '{}' for operator '{}'", type_string,
+                     this->operator_);
 }
 
 std::string BinaryOperatorError::to_string() const {
+  const std::string &lhs_type_string = CompilerError::type_to_string(this->lhs);
+  const std::string &rhs_type_string = CompilerError::type_to_string(this->rhs);
+
   return std::format("binary-operator-error: unsupported types '{}' and '{}' for operator '{}'",
-                     this->type_to_string(this->lhs), this->type_to_string(this->rhs),
-                     this->operator_);
+                     lhs_type_string, rhs_type_string, this->operator_);
 }

@@ -41,7 +41,7 @@ std::vector<std::pair<const std::string &, Scope::Binding>> Scope::bindings() co
     auto parent_bindings = this->parent.value()->bindings();
     for (const auto &[key, binding] : parent_bindings) {
       // Dont add shadowed bindings or values that dont make sense to load (e.g. functions)
-      if (seen.find(key) != seen.end() || !binding.type->isSized())
+      if (seen.contains(key) || !binding.type->isSized())
         continue;
 
       local_bindings.push_back({key, binding});

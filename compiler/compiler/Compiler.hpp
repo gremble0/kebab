@@ -138,7 +138,7 @@ public:
   /// Constructors for more complicated instructions
   llvm::StructType *create_closure_type();
   llvm::Function *
-  define_function(llvm::FunctionType *type, const std::string &name,
+  define_function(const llvm::FunctionType *function_type, const std::string &name,
                   const Parser::Constructor &body,
                   const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
   llvm::Function *declare_function(llvm::FunctionType *type, const std::string &name);

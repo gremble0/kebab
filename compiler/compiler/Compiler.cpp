@@ -105,7 +105,8 @@ void Compiler::load_parameters(
 }
 
 llvm::Function *Compiler::define_function(
-    llvm::FunctionType *function_type, const std::string &name, const Parser::Constructor &body,
+    const llvm::FunctionType *function_type, const std::string &name,
+    const Parser::Constructor &body,
     const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
   this->start_scope();
 
@@ -210,8 +211,8 @@ Compiler::create_definition(const std::string &name, llvm::Constant *init, llvm:
   llvm::LoadInst *load = this->builder.CreateLoad(type, local);
   load->setAlignment(this->get_alignment(type));
 
-  auto maybe_error = RedefinitionError::check(*this->current_scope, name);
-  if (maybe_error.has_value())
+  if (auto maybe_error = RedefinitionError::check(*this->current_scope, name);
+      maybe_error.has_value())
     return maybe_error.value();
 
   this->current_scope->put(name, load, type, is_mutable);

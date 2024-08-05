@@ -34,7 +34,8 @@ private:
   ArgumentCountError(size_t expected, size_t actual) : expected(expected), actual(actual){};
 
 public:
-  static std::optional<ArgumentCountError> check(llvm::Function *function, size_t argument_count);
+  static std::optional<ArgumentCountError> check(const llvm::Function *function,
+                                                 size_t argument_count);
 
   std::string to_string() const final;
 };
@@ -43,7 +44,7 @@ class UncallableError : public CompilerError {
 private:
   const llvm::Value *callee;
 
-  UncallableError(const llvm::Value *callee) : callee(callee) {}
+  explicit UncallableError(const llvm::Value *callee) : callee(callee) {}
 
 public:
   static std::optional<UncallableError> check(const llvm::Value *callee);
@@ -55,7 +56,7 @@ class UnsubscriptableError : public CompilerError {
 private:
   const llvm::Value *subscriptee;
 
-  UnsubscriptableError(const llvm::Value *subscriptee) : subscriptee(subscriptee) {}
+  explicit UnsubscriptableError(const llvm::Value *subscriptee) : subscriptee(subscriptee) {}
 
 public:
   static std::optional<UnsubscriptableError> check(const llvm::Value *subscriptee);
@@ -97,7 +98,7 @@ class ImmutableAssignmentError : public CompilerError {
 private:
   const std::string &assignee;
 
-  ImmutableAssignmentError(const std::string &assignee) : assignee(assignee) {}
+  explicit ImmutableAssignmentError(const std::string &assignee) : assignee(assignee) {}
 
 public:
   static std::optional<ImmutableAssignmentError> check(const Scope &scope,
@@ -110,7 +111,7 @@ class RedefinitionError : public CompilerError {
 private:
   const std::string &assignee;
 
-  RedefinitionError(const std::string &assignee) : assignee(assignee) {}
+  explicit RedefinitionError(const std::string &assignee) : assignee(assignee) {}
 
 public:
   static std::optional<RedefinitionError> check(const Scope &scope, const std::string &assignee);
@@ -122,7 +123,7 @@ class AssignNonExistingError : public CompilerError {
 private:
   const std::string &assignee;
 
-  AssignNonExistingError(const std::string &assignee) : assignee(assignee) {}
+  explicit AssignNonExistingError(const std::string &assignee) : assignee(assignee) {}
 
 public:
   static std::optional<AssignNonExistingError> check(const Scope &scope,
@@ -135,7 +136,7 @@ class UnrecognizedTypeError : public CompilerError {
 private:
   const std::string &type_name;
 
-  UnrecognizedTypeError(const std::string &type_name) : type_name(type_name) {}
+  explicit UnrecognizedTypeError(const std::string &type_name) : type_name(type_name) {}
 
 public:
   // TODO: make typedef/class for this map when we get to userdefined types and there are more than
@@ -151,7 +152,7 @@ class NameError : public CompilerError {
 private:
   const std::string &name;
 
-  NameError(const std::string &name) : name(name) {}
+  explicit NameError(const std::string &name) : name(name) {}
 
 public:
   static std::optional<NameError> check(const Scope &scope, const std::string &name);
@@ -169,7 +170,7 @@ private:
 
 public:
   static std::optional<TypeError> check(std::initializer_list<const llvm::Type *> expected,
-                                        llvm::Type *actual);
+                                        const llvm::Type *actual);
 
   std::string to_string() const final;
 };
