@@ -27,7 +27,7 @@ static constructor_primitive_t *primitive_constructor_parse(lexer_t *lexer) {
 
   // Last statement in constructor should be an expression (the return type of
   // the constructor)
-  statement_t *last_stmt = list_get(pc->body, pc->body->size - 1);
+  const statement_t *last_stmt = list_get(pc->body, pc->body->size - 1);
   if (pc->body->size == 0 || last_stmt->type != STMT_EXPRESSION)
     err_missing_return(lexer);
 
@@ -125,7 +125,7 @@ static constructor_list_t *list_constructor_parse(lexer_t *lexer) {
 
   // Last statement in constructor should be an expression (the return type of
   // the constructor)
-  statement_t *last_stmt = list_get(lc->body, lc->body->size - 1);
+  const statement_t *last_stmt = list_get(lc->body, lc->body->size - 1);
   if (lc->body->size == 0 || last_stmt->type != STMT_EXPRESSION)
     err_missing_return(lexer);
 

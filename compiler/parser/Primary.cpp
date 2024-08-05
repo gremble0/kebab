@@ -79,8 +79,7 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
   for (const std::unique_ptr<Expression> &argument : this->arguments)
     arguments_compiled.push_back(argument->compile(compiler));
 
-  auto maybe_error = UncallableError::check(this->subscriptee);
-  if (maybe_error.has_value())
+  if (auto maybe_error = UncallableError::check(this->subscriptee); maybe_error.has_value())
     this->compiler_error(maybe_error.value());
 
   auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee);

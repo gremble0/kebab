@@ -43,7 +43,6 @@ _Noreturn void err_wrong_token(lexer_t *lexer, string_t *expected, string_t *act
 
 _Noreturn void err_missing_return(lexer_t *lexer) {
   print_lexer_pos(lexer);
-  // TODO: trace the type of the primitive constructor here
   fprintf(stderr, "missing-return-error: constructors must end with an expression\n");
   exit(1);
 }

@@ -20,7 +20,9 @@ public:
   ~Type() override = default;
 
   static std::unique_ptr<Type> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const override = 0;
+  [[noreturn]] llvm::Value *compile([[maybe_unused]] Compiler &compiler) const final {
+    this->unreachable_error();
+  };
   virtual llvm::Type *get_llvm_type(Compiler &compiler) const = 0;
 };
 
@@ -29,8 +31,6 @@ public:
   std::unique_ptr<Type> content_type;
 
   static std::unique_ptr<ListType> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const final;
-  // ScalableVectorType may be right here? will look into
   llvm::ArrayType *get_llvm_type(Compiler &compiler) const final;
 };
 
@@ -46,8 +46,6 @@ public:
   std::shared_ptr<Type> return_type;
 
   static std::unique_ptr<FunctionType> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const final;
-  // FunctionType is surely the right type here?
   llvm::FunctionType *get_llvm_type(Compiler &compiler) const final;
 };
 
@@ -56,7 +54,6 @@ public:
   std::string name;
 
   static std::unique_ptr<PrimitiveType> parse(Lexer &lexer);
-  llvm::Value *compile(Compiler &compiler) const final;
   llvm::Type *get_llvm_type(Compiler &compiler) const final;
 };
 

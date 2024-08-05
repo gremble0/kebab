@@ -152,7 +152,7 @@ static string_t *lexer_read_word(lexer_t *lexer) {
  * @param lexer to get span from
  * @return a span between the lexers previous and current position
  */
-static span_t lexer_make_span(lexer_t *lexer) {
+static span_t lexer_make_span(const lexer_t *lexer) {
   return span_of(lexer->line_number, lexer->prev_line_pos, lexer->line_number, lexer->line_pos,
                  lexer->file);
 }

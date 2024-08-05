@@ -52,11 +52,6 @@ llvm::ArrayType *ListType::get_llvm_type(Compiler &compiler) const {
   return llvm::ArrayType::get(this->content_type->get_llvm_type(compiler), 3);
 }
 
-llvm::Value *ListType::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function ListType::compile");
-}
-
 void FunctionType::parse_parameter_types(Lexer &lexer) {
   while (lexer.peek()->type != Token::Type::RPAREN) {
     this->parameter_types.push_back(Type::parse(lexer));
@@ -100,11 +95,6 @@ llvm::FunctionType *FunctionType::get_llvm_type(Compiler &compiler) const {
   return llvm::FunctionType::get(llvm_return_type, llvm_parameter_types, false);
 }
 
-llvm::Value *FunctionType::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function FunctionType::compile");
-}
-
 std::unique_ptr<PrimitiveType> PrimitiveType::parse(Lexer &lexer) {
   auto type = std::make_unique<PrimitiveType>();
   type->start_parsing(lexer, "<primitive-type>");
@@ -121,11 +111,6 @@ llvm::Type *PrimitiveType::get_llvm_type(Compiler &compiler) const {
     return std::get<llvm::Type *>(type);
   else
     this->compiler_error(std::get<UnrecognizedTypeError>(type));
-}
-
-llvm::Value *PrimitiveType::compile(Compiler &compiler) const {
-  // TODO:
-  assert(false && "unimplemented function PrimitiveType::compile");
 }
 
 } // namespace Kebab::Parser
