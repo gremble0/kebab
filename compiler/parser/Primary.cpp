@@ -32,8 +32,6 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
 
 llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
   llvm::Value *offset = this->subscription->compile(compiler);
-  // TODO: do these error checks elsewhere
-  // TODO: could be more descriptive (arrays can only be subscripted with ints)
   if (auto maybe_error = TypeError::check({compiler.get_int_type()}, offset->getType());
       maybe_error.has_value())
     this->compiler_error(maybe_error.value());
@@ -41,13 +39,15 @@ llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
   if (auto maybe_error = UnsubscriptableError::check(this->subscriptee); maybe_error.has_value())
     this->compiler_error(maybe_error.value());
 
-  // TODO: improve casting
+  // TODO: improve casting - this becomes wrong if we change things elsewhere
   // Variable lookups are stored as LoadInstructions
   llvm::LoadInst *load = llvm::dyn_cast<llvm::LoadInst>(this->subscriptee);
+  assert(load != nullptr && "cannot create subscription for non loaded variables");
 
   llvm::Value *pointee = load->getPointerOperand();
   // Subscriptable values are all stack allocated with alloca
   llvm::AllocaInst *alloca = llvm::dyn_cast<llvm::AllocaInst>(pointee);
+  assert(load != nullptr && "cannot create subscription for non stack allocated variables");
 
   std::variant<llvm::Value *, IndexError> subscription_compiled =
       compiler.create_subscription(alloca, offset);
@@ -83,6 +83,8 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
     this->compiler_error(maybe_error.value());
 
   auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee);
+  assert(function != nullptr && "cannot create call instruction for arguments on a non function");
+
   std::variant<llvm::CallInst *, ArgumentCountError> call =
       compiler.create_call(function, arguments_compiled);
   if (std::holds_alternative<ArgumentCountError>(call))
