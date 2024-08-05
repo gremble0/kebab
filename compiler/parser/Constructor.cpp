@@ -88,7 +88,9 @@ std::unique_ptr<FunctionParameter> FunctionParameter::parse(Lexer &lexer) {
   return parameter;
 }
 
-llvm::Value *FunctionParameter::compile(Compiler &compiler) const { unreachable_error(); }
+llvm::Value *FunctionParameter::compile([[maybe_unused]] Compiler &compiler) const {
+  unreachable_error();
+}
 
 void FunctionConstructor::parse_type(Lexer &lexer) {
   lexer.skip({Token::Type::FN});

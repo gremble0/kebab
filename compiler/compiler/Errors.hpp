@@ -6,10 +6,13 @@
 #include <optional>
 #include <unordered_map>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
 #include "compiler/Scope.hpp"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Type.h"
+#pragma clang diagnostic pop
 
 class CompilerError {
 protected:

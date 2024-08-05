@@ -1,12 +1,10 @@
 #ifndef KEBAB_COMPILER_HPP
 #define KEBAB_COMPILER_HPP
 
-#include "compiler/Errors.hpp"
 #include <cassert>
 #include <cmath>
 #include <cstdint>
 #include <memory>
-#include <optional>
 #include <string>
 #include <unordered_map>
 #include <variant>
@@ -15,7 +13,6 @@
 // Disable unused parameter warnings for llvm headers
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
-
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constant.h"
 #include "llvm/IR/Constants.h"
@@ -27,10 +24,10 @@
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Value.h"
-
 #pragma clang diagnostic pop
 
-#include "Scope.hpp"
+#include "compiler/Errors.hpp"
+#include "compiler/Scope.hpp"
 
 namespace Kebab::Parser {
 // Forward declarations to avoid circular includes

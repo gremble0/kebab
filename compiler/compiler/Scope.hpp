@@ -7,7 +7,10 @@
 #include <utility>
 #include <vector>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
 #include "llvm/IR/Value.h"
+#pragma clang diagnostic pop
 
 class Scope {
 
