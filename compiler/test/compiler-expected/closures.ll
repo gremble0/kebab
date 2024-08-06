@@ -10,28 +10,33 @@ define i64 @main({} %closure-env) {
 entry:
   %local-var = alloca i64, align 8
   store i64 69, ptr %local-var, align 8
-  %0 = load i64, ptr %local-var, align 8
   %local-string = alloca ptr, align 8
   store ptr @0, ptr %local-string, align 8
-  %1 = load ptr, ptr %local-string, align 8
-  %2 = insertvalue { ptr, i64 } undef, ptr %1, 0
-  %closure-arg = insertvalue { ptr, i64 } %2, i64 %0, 1
-  %3 = call i64 @local-fn({ ptr, i64 } %closure-arg)
+  %0 = insertvalue { ptr, ptr } undef, ptr %local-string, 0
+  %closure-arg = insertvalue { ptr, ptr } %0, ptr %local-var, 1
+  %1 = call i64 @local-fn({ ptr, ptr } %closure-arg)
   %local-fn-called = alloca i64, align 8
-  store i64 %3, ptr %local-fn-called, align 8
-  %4 = load i64, ptr %local-fn-called, align 8
+  store i64 %1, ptr %local-fn-called, align 8
   ret i64 0
 }
 
-define i64 @local-fn({ ptr, i64 } %closure-env) {
+define i64 @local-fn({ ptr, ptr } %closure-env) {
 entry:
-  %"closure-env:local-string" = extractvalue { ptr, i64 } %closure-env, 0
-  %"closure-env:local-var" = extractvalue { ptr, i64 } %closure-env, 1
+  %"closure-env:local-string" = extractvalue { ptr, ptr } %closure-env, 0
+  %"closure-env:local-string-ptr" = alloca ptr, align 8
+  store ptr %"closure-env:local-string", ptr %"closure-env:local-string-ptr", align 8
+  %"closure-env:local-var" = extractvalue { ptr, ptr } %closure-env, 1
+  %"closure-env:local-var-ptr" = alloca ptr, align 8
+  store ptr %"closure-env:local-var", ptr %"closure-env:local-var-ptr", align 8
   %inner-var = alloca i64, align 8
   store i64 42, ptr %inner-var, align 8
-  %0 = load i64, ptr %inner-var, align 8
-  %1 = add i64 %0, %"closure-env:local-var"
-  %2 = call i64 (ptr, ...) @printf(ptr @1, ptr %"closure-env:local-string", i64 %1)
-  %3 = add i64 %0, %"closure-env:local-var"
-  ret i64 %3
+  %0 = load ptr, ptr %"closure-env:local-string-ptr", align 8
+  %1 = load i64, ptr %inner-var, align 4
+  %2 = load i64, ptr %"closure-env:local-var-ptr", align 4
+  %3 = add i64 %1, %2
+  %4 = call i64 (ptr, ...) @printf(ptr @1, ptr %0, i64 %3)
+  %5 = load i64, ptr %inner-var, align 4
+  %6 = load i64, ptr %"closure-env:local-var-ptr", align 4
+  %7 = add i64 %5, %6
+  ret i64 %7
 }

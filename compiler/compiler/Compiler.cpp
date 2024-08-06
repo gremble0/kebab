@@ -12,7 +12,6 @@
 #include "parser/RootNode.hpp"
 #include "llvm/IR/Argument.h"
 #include "llvm/IR/BasicBlock.h"
-#include "llvm/IR/Constant.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/IR/DerivedTypes.h"
@@ -27,6 +26,8 @@
 #include "llvm/Support/raw_ostream.h"
 
 namespace Kebab {
+
+// TODO: user defined global variables
 
 void Compiler::compile(std::unique_ptr<Parser::RootNode> root, const std::string &output_path) {
   this->load_globals();
@@ -111,7 +112,10 @@ void Compiler::load_parameters(
   for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
     const auto &[name, binding] = bindings[i];
     llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i}, "closure-env:" + name);
-    this->current_scope->put(name, field, binding.value->getType(), binding.is_mutable);
+    llvm::AllocaInst *field_pointer = this->create_alloca("closure-env:" + name + "-ptr", field,
+                                                          field->getType()->getPointerTo());
+
+    this->current_scope->put(name, field_pointer, binding.type, binding.is_mutable);
   }
 }
 
@@ -153,7 +157,7 @@ llvm::StructType *Compiler::create_closure_type() {
   std::vector<llvm::Type *> types;
   for (const auto &bindings = this->current_scope->bindings();
        const auto &[key, binding] : bindings)
-    types.push_back(binding.type);
+    types.push_back(binding.type->getPointerTo());
 
   auto closure_type = llvm::StructType::get(this->context, types);
   closure_type->setName("closure-env");
@@ -215,6 +219,13 @@ llvm::AllocaInst *Compiler::create_alloca(const std::string &name,
   return local;
 }
 
+llvm::LoadInst *Compiler::create_load(llvm::Type *type, llvm::Value *value) {
+  llvm::LoadInst *load = this->builder.CreateLoad(type, value);
+  load->setAlignment(this->get_alignment(type));
+
+  return load;
+}
+
 std::variant<llvm::AllocaInst *, RedefinitionError>
 Compiler::create_definition(const std::string &name, llvm::Value *init, llvm::Type *type,
                             bool is_mutable) {
@@ -223,10 +234,7 @@ Compiler::create_definition(const std::string &name, llvm::Value *init, llvm::Ty
     return maybe_error.value();
 
   llvm::AllocaInst *local = this->create_alloca(name, init, type);
-  llvm::LoadInst *load = this->builder.CreateLoad(type, local);
-  load->setAlignment(this->get_alignment(type));
-
-  this->current_scope->put(name, load, type, is_mutable);
+  this->current_scope->put(name, local, type, is_mutable);
 
   return local;
 }
@@ -241,12 +249,17 @@ Compiler::create_assignment(const std::string &name, llvm::Value *init, llvm::Ty
       maybe_error.has_value())
     return maybe_error.value();
 
-  llvm::AllocaInst *local = this->create_alloca(name, init, type);
-  llvm::LoadInst *load = this->builder.CreateLoad(type, local);
-  load->setAlignment(this->get_alignment(type));
+  auto existing = this->current_scope->lookup(name);
+  assert(existing.has_value() && "lookup failure should be caught by previous error checking");
+  assert(existing->is_mutable &&
+         "assignment to immutable should be caught by previous error checking");
 
-  // All assignments are mutable since they only mutate already mutable values
-  this->current_scope->put(name, load, type, true);
+  auto local = llvm::dyn_cast<llvm::AllocaInst>(existing->value);
+  assert(local != nullptr && "cannot assign to non stack allocated variable");
+
+  // TODO: change the type of the assigned value in the scope with param `type`
+
+  this->builder.CreateStore(init, local);
 
   return local;
 }
@@ -581,11 +594,17 @@ Compiler::create_call(llvm::Function *function, std::vector<llvm::Value *> &argu
     return this->create_userdefined_call(function, arguments);
 }
 
-std::variant<llvm::Value *, NameError> Compiler::get_value(const std::string &name) const {
+std::variant<llvm::Value *, NameError> Compiler::get_value(const std::string &name) {
   if (auto maybe_error = NameError::check(*this->current_scope, name); maybe_error.has_value())
     return maybe_error.value();
-  else
-    return this->current_scope->lookup(name)->value;
+  else {
+    auto existing = this->current_scope->lookup(name);
+    assert(existing.has_value() && "lookup failure should be caught by previous error checking");
+    if (llvm::isa<llvm::AllocaInst>(existing->value))
+      return this->builder.CreateLoad(existing->type, existing->value);
+    else
+      return existing->value;
+  }
 }
 
 } // namespace Kebab

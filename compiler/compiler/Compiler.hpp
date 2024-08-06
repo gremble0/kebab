@@ -53,9 +53,11 @@ private:
 
   llvm::Value *int_to_float(llvm::Value *i);
 
+  /// IRBuilder wrappers that fix alignment
   llvm::AllocaInst *create_alloca(const std::string &name, llvm::Value *init, llvm::Type *type);
   llvm::AllocaInst *create_alloca(const std::string &name, const std::vector<llvm::Value *> &init,
                                   llvm::Type *type);
+  llvm::LoadInst *create_load(llvm::Type *type, llvm::Value *value);
 
   llvm::Align get_alignment(llvm::Type *type) const;
 
@@ -184,7 +186,7 @@ public:
   void set_insert_point(llvm::BasicBlock *block) { this->builder.SetInsertPoint(block); }
 
   /// Scope wrappers and lookups
-  std::variant<llvm::Value *, NameError> get_value(const std::string &name) const;
+  std::variant<llvm::Value *, NameError> get_value(const std::string &name);
 
   void start_scope() { this->current_scope = std::make_shared<Scope>(this->current_scope); }
 
