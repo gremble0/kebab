@@ -65,6 +65,10 @@ TEST(CompilerTest, CompilesClosuresSimpleKeb) { ASSERT_EXPECTED_COMPILATION("clo
 
 TEST(CompilerTest, CompilesSubscriptionKeb) { ASSERT_EXPECTED_COMPILATION("subscription"); }
 
+TEST(CompilerTest, CompilesClosuresInnerMutationKeb) {
+  ASSERT_EXPECTED_COMPILATION("closures-inner-mutation");
+}
+
 TEST(CompilerTest, CompilesDoubleNestedFunctionKeb) {
   ASSERT_EXPECTED_COMPILATION("double-nested-function");
 }

@@ -1,3 +1,4 @@
+; TODO: implement and test
 def returns-one-factory = fn(() => fn(() => int(1)))
 
 def main = fn(() => int(

@@ -2,7 +2,7 @@ def main = fn(() => int(
   def mut counter = int(0)
 
   def increment-counter = fn(() => int(
-    set counter = string("")
+    set counter = int(counter + 1)
     0
   ))
 
