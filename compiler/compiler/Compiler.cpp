@@ -114,8 +114,9 @@ void Compiler::load_parameters(
     llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i}, "closure-env:" + name);
     llvm::AllocaInst *field_pointer = this->create_alloca("closure-env:" + name + "-ptr", field,
                                                           field->getType()->getPointerTo());
+    llvm::LoadInst *field_loaded = this->create_load(field_pointer->getType(), field_pointer);
 
-    this->current_scope->put(name, field_pointer, binding.type, binding.is_mutable);
+    this->current_scope->put(name, field_loaded, binding.type, binding.is_mutable);
   }
 }
 
@@ -259,7 +260,8 @@ Compiler::create_assignment(const std::string &name, llvm::Value *init) {
   assert(existing.has_value() && "lookup failure should be caught by previous error checking");
   assert(existing->is_mutable &&
          "assignment to immutable should be caught by previous error checking");
-  assert(existing->value->getType()->isPointerTy() && "cannot assign to non pointer value");
+  assert(existing->value->getType()->isPointerTy() &&
+         "should be unreachable for non pointer values");
 
   // TODO: change the type of the assigned value in the scope
 
@@ -604,7 +606,8 @@ std::variant<llvm::Value *, NameError> Compiler::get_value(const std::string &na
   else {
     auto existing = this->current_scope->lookup(name);
     assert(existing.has_value() && "lookup failure should be caught by previous error checking");
-    if (llvm::isa<llvm::AllocaInst>(existing->value))
+    // Could add needs_loading to binding struct instead of `isa`
+    if (llvm::isa<llvm::AllocaInst>(existing->value) || llvm::isa<llvm::LoadInst>(existing->value))
       return this->create_load(existing->type, existing->value);
     else
       return existing->value;
