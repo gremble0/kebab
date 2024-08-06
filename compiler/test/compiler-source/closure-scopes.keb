@@ -1,0 +1,10 @@
+def main = fn(() => int(
+  def inner-function = fn(() => int(
+    def should-be-local-to-inner-function = fn(() => int(0))
+    0
+  ))
+
+  def should-result-in-name-error = int(should-be-local-to-inner-function())
+
+  0
+))

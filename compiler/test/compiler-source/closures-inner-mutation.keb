@@ -1,0 +1,16 @@
+def main = fn(() => int(
+  def mut counter = int(0)
+
+  def increment-counter = fn(() => int(
+    set counter = string("")
+    0
+  ))
+
+  printf("%ld\n", counter)
+  def i1 = int(increment-counter())
+  printf("%ld\n", counter)
+  def i3 = int(increment-counter())
+  printf("%ld\n", counter)
+
+  0
+))

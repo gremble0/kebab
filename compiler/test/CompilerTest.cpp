@@ -61,9 +61,13 @@ TEST(CompilerTest, CompilesTermsKeb) { ASSERT_EXPECTED_COMPILATION("terms"); }
 
 TEST(CompilerTest, CompilesInnerExpressionKeb) { ASSERT_EXPECTED_COMPILATION("inner-expression"); }
 
-TEST(CompilerTest, CompilesClosuresKeb) { ASSERT_EXPECTED_COMPILATION("closures"); }
+TEST(CompilerTest, CompilesClosuresSimpleKeb) { ASSERT_EXPECTED_COMPILATION("closures-simple"); }
 
 TEST(CompilerTest, CompilesSubscriptionKeb) { ASSERT_EXPECTED_COMPILATION("subscription"); }
+
+TEST(CompilerTest, CompilesDoubleNestedFunctionKeb) {
+  ASSERT_EXPECTED_COMPILATION("double-nested-function");
+}
 
 TEST(CompilerTest, ErrorsWhenWrongArgumentCount) {
   ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("argument-count-error"); }, "argument-count-error");
@@ -114,6 +118,10 @@ TEST(CompilerTest, ErrorsWhenUnsupportedUnaryOperator) {
 
 TEST(CompilerTest, ErrorsWhenUnsupportedBinaryOperator) {
   ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("binary-operator-error"); }, "binary-operator-error");
+}
+
+TEST(CompilerTest, ErrorsWhenGettingClosureLocalBinding) {
+  ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("closure-scopes"); }, "name-error");
 }
 
 } // namespace Kebab::Test

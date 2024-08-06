@@ -1,0 +1,12 @@
+def main = fn(() => int(
+  def local = fn(() => int(
+    def my-int = int(9)
+    def local-to-local = fn(() => int(
+      my-int
+    ))
+    def return = int(local-to-local())
+    return
+  ))
+
+  0
+))
