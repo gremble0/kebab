@@ -20,6 +20,5 @@ entry:
   %7 = load i64, ptr %6, align 4
   %number = alloca i64, align 8
   store i64 %7, ptr %number, align 8
-  %8 = load i64, ptr %number, align 8
   ret i64 0
 }

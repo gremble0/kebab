@@ -31,12 +31,12 @@ entry:
   %inner-var = alloca i64, align 8
   store i64 42, ptr %inner-var, align 8
   %0 = load ptr, ptr %"closure-env:local-string-ptr", align 8
-  %1 = load i64, ptr %inner-var, align 4
-  %2 = load i64, ptr %"closure-env:local-var-ptr", align 4
+  %1 = load i64, ptr %inner-var, align 8
+  %2 = load i64, ptr %"closure-env:local-var-ptr", align 8
   %3 = add i64 %1, %2
   %4 = call i64 (ptr, ...) @printf(ptr @1, ptr %0, i64 %3)
-  %5 = load i64, ptr %inner-var, align 4
-  %6 = load i64, ptr %"closure-env:local-var-ptr", align 4
+  %5 = load i64, ptr %inner-var, align 8
+  %6 = load i64, ptr %"closure-env:local-var-ptr", align 8
   %7 = add i64 %5, %6
   ret i64 %7
 }

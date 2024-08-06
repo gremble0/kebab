@@ -33,8 +33,8 @@ entry:
   store i64 2, ptr %i1, align 8
   %i2 = alloca i64, align 8
   store i64 5, ptr %i2, align 8
-  %0 = load i64, ptr %i1, align 4
-  %1 = load i64, ptr %i2, align 4
+  %0 = load i64, ptr %i1, align 8
+  %1 = load i64, ptr %i2, align 8
   %2 = icmp ult i64 %0, %1
   %b13 = alloca i1, align 1
   store i1 %2, ptr %b13, align 1

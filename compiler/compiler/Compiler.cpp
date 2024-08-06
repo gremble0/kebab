@@ -259,7 +259,8 @@ Compiler::create_assignment(const std::string &name, llvm::Value *init, llvm::Ty
 
   // TODO: change the type of the assigned value in the scope with param `type`
 
-  this->builder.CreateStore(init, local);
+  llvm::StoreInst *store = this->builder.CreateStore(init, local);
+  store->setAlignment(this->get_alignment(type));
 
   return local;
 }
@@ -601,7 +602,7 @@ std::variant<llvm::Value *, NameError> Compiler::get_value(const std::string &na
     auto existing = this->current_scope->lookup(name);
     assert(existing.has_value() && "lookup failure should be caught by previous error checking");
     if (llvm::isa<llvm::AllocaInst>(existing->value))
-      return this->builder.CreateLoad(existing->type, existing->value);
+      return this->create_load(existing->type, existing->value);
     else
       return existing->value;
   }
