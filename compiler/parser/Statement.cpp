@@ -8,7 +8,6 @@
 #include "parser/Constructor.hpp"
 #include "parser/Statement.hpp"
 #include "llvm/IR/Function.h"
-#include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/Support/Casting.h"
 
@@ -50,7 +49,7 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
       this->compiler_error(maybe_error.value());
 
     std::variant<llvm::AllocaInst *, RedefinitionError> local =
-        compiler.create_definition(this->name, variable_value, declared_type, this->is_mutable);
+        compiler.create_definition(this->name, variable_value, this->is_mutable);
 
     if (std::holds_alternative<llvm::AllocaInst *>(local))
       return std::get<llvm::AllocaInst *>(local);
@@ -84,7 +83,7 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
     if (auto maybe_error = TypeError::check({declared_type}, actual_type); maybe_error.has_value())
       this->compiler_error(maybe_error.value());
 
-    auto result = compiler.create_assignment(this->name, variable_value, declared_type);
+    auto result = compiler.create_assignment(this->name, variable_value);
     if (std::holds_alternative<llvm::AllocaInst *>(result))
       return std::get<llvm::AllocaInst *>(result);
     else if (std::holds_alternative<ImmutableAssignmentError>(result))

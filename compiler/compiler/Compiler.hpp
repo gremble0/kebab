@@ -58,6 +58,7 @@ private:
   llvm::AllocaInst *create_alloca(const std::string &name, const std::vector<llvm::Value *> &init,
                                   llvm::Type *type);
   llvm::LoadInst *create_load(llvm::Type *type, llvm::Value *value);
+  llvm::StoreInst *create_store(llvm::Value *init, llvm::Value *dest);
 
   llvm::Align get_alignment(llvm::Type *type) const;
 
@@ -135,9 +136,9 @@ public:
   llvm::Function *declare_function(llvm::FunctionType *type, const std::string &name);
 
   std::variant<llvm::AllocaInst *, RedefinitionError>
-  create_definition(const std::string &name, llvm::Value *init, llvm::Type *type, bool is_mutable);
+  create_definition(const std::string &name, llvm::Value *init, bool is_mutable);
   std::variant<llvm::AllocaInst *, ImmutableAssignmentError, AssignNonExistingError>
-  create_assignment(const std::string &name, llvm::Value *init, llvm::Type *type);
+  create_assignment(const std::string &name, llvm::Value *init);
 
   llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");
 

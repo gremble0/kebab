@@ -226,21 +226,27 @@ llvm::LoadInst *Compiler::create_load(llvm::Type *type, llvm::Value *value) {
   return load;
 }
 
+llvm::StoreInst *Compiler::create_store(llvm::Value *init, llvm::Value *dest) {
+  llvm::StoreInst *store = this->builder.CreateStore(init, dest);
+  store->setAlignment(this->get_alignment(init->getType()));
+
+  return store;
+}
+
 std::variant<llvm::AllocaInst *, RedefinitionError>
-Compiler::create_definition(const std::string &name, llvm::Value *init, llvm::Type *type,
-                            bool is_mutable) {
+Compiler::create_definition(const std::string &name, llvm::Value *init, bool is_mutable) {
   if (auto maybe_error = RedefinitionError::check(*this->current_scope, name);
       maybe_error.has_value())
     return maybe_error.value();
 
-  llvm::AllocaInst *local = this->create_alloca(name, init, type);
-  this->current_scope->put(name, local, type, is_mutable);
+  llvm::AllocaInst *local = this->create_alloca(name, init, init->getType());
+  this->current_scope->put(name, local, init->getType(), is_mutable);
 
   return local;
 }
 
 std::variant<llvm::AllocaInst *, ImmutableAssignmentError, AssignNonExistingError>
-Compiler::create_assignment(const std::string &name, llvm::Value *init, llvm::Type *type) {
+Compiler::create_assignment(const std::string &name, llvm::Value *init) {
   if (auto maybe_error = AssignNonExistingError::check(*this->current_scope, name);
       maybe_error.has_value())
     return maybe_error.value();
@@ -259,8 +265,7 @@ Compiler::create_assignment(const std::string &name, llvm::Value *init, llvm::Ty
 
   // TODO: change the type of the assigned value in the scope with param `type`
 
-  llvm::StoreInst *store = this->builder.CreateStore(init, local);
-  store->setAlignment(this->get_alignment(type));
+  this->create_store(init, local);
 
   return local;
 }
