@@ -112,8 +112,10 @@ static void replace_compiler_expected() {
   replace_one_compiler_expected("or");
   replace_one_compiler_expected("terms");
   replace_one_compiler_expected("inner-expression");
-  replace_one_compiler_expected("closures");
+  replace_one_compiler_expected("closures-simple");
+  replace_one_compiler_expected("closures-inner-mutation");
   replace_one_compiler_expected("subscription");
+  replace_one_compiler_expected("recursion");
 
   std::cout << "Replaced expected compiler output" << std::endl;
 }

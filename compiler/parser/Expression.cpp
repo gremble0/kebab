@@ -157,6 +157,7 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
   // branch for last elif) if false)
   size_t num_tests = this->tests.size();
   for (size_t i = 0; i < num_tests; ++i) {
+    compiler.set_insert_point(branch);
     llvm::Value *test = this->tests[i]->compile(compiler);
 
     std::variant<llvm::Value *, BinaryOperatorError> test_is_true =
@@ -167,7 +168,6 @@ llvm::Value *CondExpression::compile(Compiler &compiler) const {
     std::string branch_name = (i == num_tests - 1) ? "else_branch" : "elif_branch";
 
     llvm::BasicBlock *next_branch = compiler.create_basic_block(current_function, branch_name);
-    compiler.set_insert_point(branch);
 
     compiler.start_scope();
     llvm::Value *current_return_value = compile_branch_body(compiler, this->bodies[i]);

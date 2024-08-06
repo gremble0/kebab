@@ -1,19 +1,22 @@
-; some naive implementations of typically recursive problems
-
-; fibonacci
 def fib = fn((n : int) => int(
   if n < 2 => n
   else => fib(n - 1) + fib(n - 2)
 ))
 
-; faculty function - `n!`
 def fac = fn((n : int) => int(
   if n <= 1 => n
   else => n * fac(n - 1)
 ))
 
-; exponent function - `x^n`
 def exp = fn((base : int, exponent : int) => int(
   if exponent == 1 => base
   else => base * exp(base, exponent - 1)
+))
+
+def main = fn(() => int(
+  def i1 = int(printf("%ld\n", fib(10)))
+  def i2 = int(printf("%ld\n", fac(10)))
+  def i3 = int(printf("%ld\n", exp(2, 10)))
+
+  0
 ))

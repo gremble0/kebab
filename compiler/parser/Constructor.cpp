@@ -136,8 +136,10 @@ std::unique_ptr<FunctionConstructor> FunctionConstructor::parse(Lexer &lexer) {
 
 llvm::Value *FunctionConstructor::compile(Compiler &compiler) const {
   // NOTE: parameters of function are inferred by the prototype, however we still have to set their
-  // names which is done by FunctionParameter::compile
-  llvm::FunctionType *prototype = this->type->get_llvm_type(compiler);
+  // names which is done by calling FunctionParameter::compile inside the define_function method.
+  // There is also another hidden parameter to every function for the environment from which it was
+  // called (its closure). This also gets handled by the define_function method
+  const llvm::FunctionType *prototype = this->type->get_llvm_type(compiler);
   llvm::Function *function =
       compiler.define_function(prototype, this->name, *this->body, this->parameters);
 

@@ -63,11 +63,13 @@ TEST(CompilerTest, CompilesInnerExpressionKeb) { ASSERT_EXPECTED_COMPILATION("in
 
 TEST(CompilerTest, CompilesClosuresSimpleKeb) { ASSERT_EXPECTED_COMPILATION("closures-simple"); }
 
-TEST(CompilerTest, CompilesSubscriptionKeb) { ASSERT_EXPECTED_COMPILATION("subscription"); }
-
 TEST(CompilerTest, CompilesClosuresInnerMutationKeb) {
   ASSERT_EXPECTED_COMPILATION("closures-inner-mutation");
 }
+
+TEST(CompilerTest, CompilesSubscriptionKeb) { ASSERT_EXPECTED_COMPILATION("subscription"); }
+
+TEST(CompilerTest, CompilesRecursionKeb) { ASSERT_EXPECTED_COMPILATION("recursion"); }
 
 TEST(CompilerTest, CompilesDoubleNestedFunctionKeb) {
   ASSERT_EXPECTED_COMPILATION("double-nested-function");

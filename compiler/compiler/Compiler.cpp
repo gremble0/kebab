@@ -141,6 +141,8 @@ llvm::Function *Compiler::define_function(
   // Codegen for the body of the function
   this->set_insert_point(entry);
   this->load_parameters(function, parameters);
+  // For recursion the function needs to be defined within its own scope
+  this->current_scope->put(name, function, function->getFunctionType());
   this->builder.CreateRet(body.compile(*this));
   this->set_insert_point(previous_block);
 
