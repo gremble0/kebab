@@ -245,7 +245,7 @@ Compiler::create_definition(const std::string &name, llvm::Value *init, bool is_
   return local;
 }
 
-std::variant<llvm::AllocaInst *, ImmutableAssignmentError, AssignNonExistingError>
+std::variant<llvm::Value *, ImmutableAssignmentError, AssignNonExistingError>
 Compiler::create_assignment(const std::string &name, llvm::Value *init) {
   if (auto maybe_error = AssignNonExistingError::check(*this->current_scope, name);
       maybe_error.has_value())
@@ -259,15 +259,13 @@ Compiler::create_assignment(const std::string &name, llvm::Value *init) {
   assert(existing.has_value() && "lookup failure should be caught by previous error checking");
   assert(existing->is_mutable &&
          "assignment to immutable should be caught by previous error checking");
+  assert(existing->value->getType()->isPointerTy() && "cannot assign to non pointer value");
 
-  auto local = llvm::dyn_cast<llvm::AllocaInst>(existing->value);
-  assert(local != nullptr && "cannot assign to non stack allocated variable");
+  // TODO: change the type of the assigned value in the scope
 
-  // TODO: change the type of the assigned value in the scope with param `type`
+  this->create_store(init, existing->value);
 
-  this->create_store(init, local);
-
-  return local;
+  return existing->value;
 }
 
 std::variant<llvm::Value *, UnaryOperatorError> Compiler::create_neg(llvm::Value *v) {

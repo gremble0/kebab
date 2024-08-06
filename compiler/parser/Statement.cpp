@@ -84,8 +84,8 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
       this->compiler_error(maybe_error.value());
 
     auto result = compiler.create_assignment(this->name, variable_value);
-    if (std::holds_alternative<llvm::AllocaInst *>(result))
-      return std::get<llvm::AllocaInst *>(result);
+    if (std::holds_alternative<llvm::Value *>(result))
+      return std::get<llvm::Value *>(result);
     else if (std::holds_alternative<ImmutableAssignmentError>(result))
       this->compiler_error(std::get<ImmutableAssignmentError>(result));
     else
