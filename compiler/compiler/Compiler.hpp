@@ -137,7 +137,7 @@ public:
 
   std::variant<llvm::AllocaInst *, RedefinitionError>
   create_definition(const std::string &name, llvm::Value *init, bool is_mutable);
-  std::variant<llvm::Value *, ImmutableAssignmentError, AssignNonExistingError>
+  std::variant<llvm::Value *, ImmutableAssignmentError, AssignNonExistingError, TypeError>
   create_assignment(const std::string &name, llvm::Value *init);
 
   llvm::BasicBlock *create_basic_block(llvm::Function *parent, const std::string &name = "");

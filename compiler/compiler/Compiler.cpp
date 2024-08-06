@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstdlib>
 #include <memory>
 #include <optional>
 #include <string>
@@ -246,7 +247,7 @@ Compiler::create_definition(const std::string &name, llvm::Value *init, bool is_
   return local;
 }
 
-std::variant<llvm::Value *, ImmutableAssignmentError, AssignNonExistingError>
+std::variant<llvm::Value *, ImmutableAssignmentError, AssignNonExistingError, TypeError>
 Compiler::create_assignment(const std::string &name, llvm::Value *init) {
   if (auto maybe_error = AssignNonExistingError::check(*this->current_scope, name);
       maybe_error.has_value())
@@ -263,7 +264,8 @@ Compiler::create_assignment(const std::string &name, llvm::Value *init) {
   assert(existing->value->getType()->isPointerTy() &&
          "should be unreachable for non pointer values");
 
-  // TODO: change the type of the assigned value in the scope
+  if (auto maybe_error = TypeError::check(existing->type, init->getType()); maybe_error.has_value())
+    return maybe_error.value();
 
   this->create_store(init, existing->value);
 

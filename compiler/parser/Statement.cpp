@@ -45,7 +45,7 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
     llvm::Type *actual_type = variable_value->getType();
-    if (auto maybe_error = TypeError::check({declared_type}, actual_type); maybe_error.has_value())
+    if (auto maybe_error = TypeError::check(declared_type, actual_type); maybe_error.has_value())
       this->compiler_error(maybe_error.value());
 
     std::variant<llvm::AllocaInst *, RedefinitionError> local =
@@ -80,7 +80,7 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
     llvm::Type *actual_type = variable_value->getType();
-    if (auto maybe_error = TypeError::check({declared_type}, actual_type); maybe_error.has_value())
+    if (auto maybe_error = TypeError::check(declared_type, actual_type); maybe_error.has_value())
       this->compiler_error(maybe_error.value());
 
     auto result = compiler.create_assignment(this->name, variable_value);
@@ -88,6 +88,8 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
       return std::get<llvm::Value *>(result);
     else if (std::holds_alternative<ImmutableAssignmentError>(result))
       this->compiler_error(std::get<ImmutableAssignmentError>(result));
+    else if (std::holds_alternative<TypeError>(result))
+      this->compiler_error(std::get<TypeError>(result));
     else
       this->compiler_error(std::get<AssignNonExistingError>(result));
   }
