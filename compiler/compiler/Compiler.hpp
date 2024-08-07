@@ -43,6 +43,7 @@ private:
   llvm::LLVMContext context;
   llvm::Module mod; // `module` is a reserved word as of c++20 so cannot use that
   llvm::IRBuilder<> builder;
+
   std::shared_ptr<Scope> current_scope = std::make_shared<Scope>();
   std::unordered_map<std::string, llvm::Type *> primitive_types;
 
@@ -65,8 +66,8 @@ private:
   llvm::FunctionType *add_parameter(const llvm::FunctionType *function_type, llvm::Type *parameter);
 
   llvm::Value *create_closure_argument(llvm::StructType *closure_type);
-  void load_parameters(const llvm::Function *function,
-                       const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
+  void load_arguments(const llvm::Function *function,
+                      const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters);
 
   bool is_externally_defined(const llvm::Function *function) const;
   // Call an externally defined function that follows the C ABI

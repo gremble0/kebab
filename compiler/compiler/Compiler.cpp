@@ -91,7 +91,7 @@ llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::
   return function;
 }
 
-void Compiler::load_parameters(
+void Compiler::load_arguments(
     const llvm::Function *function,
     const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
   // Load and add fields of closure into scope
@@ -118,12 +118,12 @@ void Compiler::load_parameters(
     llvm::Argument *argument = function->getArg(i);
     argument->setName(parameters[i]->name);
 
-    // llvm::AllocaInst *argument_alloca =
-    //     this->create_alloca(parameters[i]->name, argument, argument->getType());
+    llvm::AllocaInst *argument_alloca =
+        this->create_alloca("arg:" + parameters[i]->name, argument, argument->getType());
 
     // TODO: mutability for parameters maybe with mut keyword for mutable params. This would have to
     // be changed in parser as well. For now just make all parameters const
-    this->current_scope->put(parameters[i]->name, argument, argument->getType());
+    this->current_scope->put(parameters[i]->name, argument_alloca, argument->getType());
   }
 }
 
@@ -146,7 +146,7 @@ llvm::Function *Compiler::define_function(
 
   // Codegen for the body of the function
   this->set_insert_point(entry);
-  this->load_parameters(function, parameters);
+  this->load_arguments(function, parameters);
   // For recursion the function needs to be defined within its own scope
   this->current_scope->put(name, function, function->getFunctionType());
   this->builder.CreateRet(body.compile(*this));
