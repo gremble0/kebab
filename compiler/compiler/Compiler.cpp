@@ -94,23 +94,16 @@ llvm::Function *Compiler::declare_function(llvm::FunctionType *type, const std::
 void Compiler::load_parameters(
     const llvm::Function *function,
     const std::vector<std::unique_ptr<Parser::FunctionParameter>> &parameters) {
-  // Set parameter names and bring parameters into scope of function
-  for (size_t i = 0, size = parameters.size(); i < size; ++i) {
-    llvm::Argument *argument = function->getArg(i);
-    argument->setName(parameters[i]->name);
-    // TODO: mutability for parameters maybe with mut keyword for mutable params. This would have to
-    // be changed in parser as well
-    this->current_scope->put(parameters[i]->name, argument, argument->getType());
-  }
-
   // Load and add fields of closure into scope
   // unsigned int because type is required by CreateExtractValue(), bindings.size - parameters.size
   // since bindings are expanded by parameters and we dont want to add these in the closure
   llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
   closure_arg->setName("closure-env");
+
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
-  for (unsigned int i = 0, size = bindings.size() - parameters.size(); i < size; ++i) {
+
+  for (unsigned int i = 0, size = bindings.size(); i < size; ++i) {
     const auto &[name, binding] = bindings[i];
     llvm::Value *field = this->builder.CreateExtractValue(closure_arg, {i}, "closure-env:" + name);
     llvm::AllocaInst *field_pointer = this->create_alloca("closure-env:" + name + "-ptr", field,
@@ -118,6 +111,19 @@ void Compiler::load_parameters(
     llvm::LoadInst *field_loaded = this->create_load(field_pointer->getType(), field_pointer);
 
     this->current_scope->put(name, field_loaded, binding.type, binding.is_mutable);
+  }
+
+  // Set parameter names and bring parameters into scope of function
+  for (size_t i = 0, size = parameters.size(); i < size; ++i) {
+    llvm::Argument *argument = function->getArg(i);
+    argument->setName(parameters[i]->name);
+
+    // llvm::AllocaInst *argument_alloca =
+    //     this->create_alloca(parameters[i]->name, argument, argument->getType());
+
+    // TODO: mutability for parameters maybe with mut keyword for mutable params. This would have to
+    // be changed in parser as well. For now just make all parameters const
+    this->current_scope->put(parameters[i]->name, argument, argument->getType());
   }
 }
 
@@ -181,7 +187,6 @@ llvm::Value *Compiler::create_closure_argument(llvm::StructType *closure_type) {
 
   std::vector<std::pair<const std::string &, Scope::Binding>> bindings =
       this->current_scope->bindings();
-  // unsigned int because type is required by CreateExtractValue()
   for (unsigned int i = 0, num_elements = closure_type->getNumElements(); i < num_elements; ++i) {
     llvm::Value *field_value = bindings[i].second.value;
     closure_argument = this->builder.CreateInsertValue(closure_argument, field_value, {i});

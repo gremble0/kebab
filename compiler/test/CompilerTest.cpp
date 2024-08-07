@@ -71,6 +71,8 @@ TEST(CompilerTest, CompilesSubscriptionKeb) { ASSERT_EXPECTED_COMPILATION("subsc
 
 TEST(CompilerTest, CompilesRecursionKeb) { ASSERT_EXPECTED_COMPILATION("recursion"); }
 
+TEST(CompilerTest, CompilesRecursionTailKeb) { ASSERT_EXPECTED_COMPILATION("recursion-tail"); }
+
 TEST(CompilerTest, CompilesDoubleNestedFunctionKeb) {
   ASSERT_EXPECTED_COMPILATION("double-nested-function");
 }

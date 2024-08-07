@@ -1,0 +1,18 @@
+def main = fn(() => int(
+  def local = int(0)
+
+  def exp-tail = fn((base : int, exponent : int) => int(
+    def exp-tail-impl = fn((exponent : int, acc : int) => int(
+      if exponent == 1 =>
+        acc
+      else =>
+        exp-tail-impl(exponent - 1, acc * base)
+    ))
+    
+    exp-tail-impl(exponent, 1)
+  ))
+
+  def i1 = int(printf("%ld\n", exp-tail(2, 3)))
+
+  0
+))
