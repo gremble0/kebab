@@ -69,9 +69,9 @@ void Compiler::load_globals() { this->load_printf(); }
 
 std::variant<llvm::Type *, UnrecognizedTypeError>
 Compiler::get_primitive_type(const std::string &type_name) const {
-  if (auto maybe_error = UnrecognizedTypeError::check(this->primitive_types, type_name);
-      maybe_error.has_value())
-    return maybe_error.value();
+  if (auto error = UnrecognizedTypeError::check(this->primitive_types, type_name);
+      error.has_value())
+    return error.value();
 
   auto it = this->primitive_types.find(type_name);
   // Should always be valid since we check if it doesnt exist above
@@ -244,9 +244,8 @@ llvm::StoreInst *Compiler::create_store(llvm::Value *init, llvm::Value *dest) {
 
 std::variant<llvm::AllocaInst *, RedefinitionError>
 Compiler::create_definition(const std::string &name, llvm::Value *init, bool is_mutable) {
-  if (auto maybe_error = RedefinitionError::check(*this->current_scope, name);
-      maybe_error.has_value())
-    return maybe_error.value();
+  if (auto error = RedefinitionError::check(*this->current_scope, name); error.has_value())
+    return error.value();
 
   llvm::AllocaInst *local = this->create_alloca(name, init, init->getType());
   this->current_scope->put(name, local, init->getType(), is_mutable);
@@ -256,13 +255,11 @@ Compiler::create_definition(const std::string &name, llvm::Value *init, bool is_
 
 std::variant<llvm::Value *, ImmutableAssignmentError, AssignNonExistingError, TypeError>
 Compiler::create_assignment(const std::string &name, llvm::Value *init) {
-  if (auto maybe_error = AssignNonExistingError::check(*this->current_scope, name);
-      maybe_error.has_value())
-    return maybe_error.value();
+  if (auto error = AssignNonExistingError::check(*this->current_scope, name); error.has_value())
+    return error.value();
 
-  if (auto maybe_error = ImmutableAssignmentError::check(*this->current_scope, name);
-      maybe_error.has_value())
-    return maybe_error.value();
+  if (auto error = ImmutableAssignmentError::check(*this->current_scope, name); error.has_value())
+    return error.value();
 
   auto existing = this->current_scope->lookup(name);
   assert(existing.has_value() && "lookup failure should be caught by previous error checking");
@@ -271,8 +268,8 @@ Compiler::create_assignment(const std::string &name, llvm::Value *init) {
   assert(existing->value->getType()->isPointerTy() &&
          "should be unreachable for non pointer values");
 
-  if (auto maybe_error = TypeError::check(existing->type, init->getType()); maybe_error.has_value())
-    return maybe_error.value();
+  if (auto error = TypeError::check(existing->type, init->getType()); error.has_value())
+    return error.value();
 
   this->create_store(init, existing->value);
 
@@ -304,8 +301,8 @@ std::variant<llvm::Value *, UnaryOperatorError> Compiler::create_not(llvm::Value
 
 std::variant<llvm::Value *, IndexError> Compiler::create_subscription(llvm::AllocaInst *list,
                                                                       llvm::Value *offset) {
-  if (auto maybe_error = IndexError::check(list, offset); maybe_error.has_value())
-    return maybe_error.value();
+  if (auto error = IndexError::check(list, offset); error.has_value())
+    return error.value();
 
   llvm::Type *list_type = list->getAllocatedType();
   llvm::Value *element_ptr =
@@ -575,18 +572,16 @@ bool Compiler::is_externally_defined(const llvm::Function *function) const {
 std::variant<llvm::CallInst *, ArgumentCountError>
 Compiler::create_extern_call(llvm::Function *function,
                              const std::vector<llvm::Value *> &arguments) {
-  if (auto maybe_error = ArgumentCountError::check(function, arguments.size());
-      maybe_error.has_value())
-    return maybe_error.value();
+  if (auto error = ArgumentCountError::check(function, arguments.size()); error.has_value())
+    return error.value();
 
   return this->builder.CreateCall(function, arguments);
 }
 
 std::variant<llvm::CallInst *, ArgumentCountError>
 Compiler::create_userdefined_call(llvm::Function *function, std::vector<llvm::Value *> &arguments) {
-  if (auto maybe_error = ArgumentCountError::check(function, arguments.size() + 1);
-      maybe_error.has_value())
-    return maybe_error.value();
+  if (auto error = ArgumentCountError::check(function, arguments.size() + 1); error.has_value())
+    return error.value();
 
   // Last argument is the closure struct
   const llvm::Argument *closure_arg = function->getArg(function->arg_size() - 1);
@@ -610,17 +605,18 @@ Compiler::create_call(llvm::Function *function, std::vector<llvm::Value *> &argu
 }
 
 std::variant<llvm::Value *, NameError> Compiler::get_value(const std::string &name) {
-  if (auto maybe_error = NameError::check(*this->current_scope, name); maybe_error.has_value())
-    return maybe_error.value();
-  else {
-    auto existing = this->current_scope->lookup(name);
-    assert(existing.has_value() && "lookup failure should be caught by previous error checking");
-    // Could add needs_loading to binding struct instead of `isa`
-    if (llvm::isa<llvm::AllocaInst>(existing->value) || llvm::isa<llvm::LoadInst>(existing->value))
-      return this->create_load(existing->type, existing->value);
-    else
-      return existing->value;
-  }
+  if (auto error = NameError::check(*this->current_scope, name); error.has_value())
+    return error.value();
+
+  auto existing = this->current_scope->lookup(name);
+  assert(existing.has_value() && "lookup failure should be caught by previous error checking");
+  // Could add needs_loading to binding struct instead of `isa` reason to load LoadInst is because
+  // these are loaded pointers from closure argument, this is not really clear by the current
+  // implementation since a LoadInst really could be anything
+  if (llvm::isa<llvm::AllocaInst>(existing->value) || llvm::isa<llvm::LoadInst>(existing->value))
+    return this->create_load(existing->type, existing->value);
+  else
+    return existing->value;
 }
 
 } // namespace Kebab

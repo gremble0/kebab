@@ -35,6 +35,7 @@ public:
 
 private:
   // Needs to be ordered to see insertion order
+  // Could split into several parts for functions, arguments, etc.
   std::map<std::string, Binding> map;
   std::optional<std::shared_ptr<Scope>> parent;
 };

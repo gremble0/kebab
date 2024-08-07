@@ -23,19 +23,19 @@ void Scope::put(const std::string &key, llvm::Value *value, llvm::Type *type, bo
   if (this->map.contains(key))
     this->map[key].value = value;
 
-  this->map[key] = {is_mutable, value, type};
+  this->map[key] = Binding{is_mutable, value, type};
 }
 
 std::vector<std::pair<const std::string &, Scope::Binding>> Scope::bindings() const {
   std::vector<std::pair<const std::string &, Binding>> local_bindings;
-
-  for (const auto &[key, binding] : this->map)
-    local_bindings.push_back({key, binding});
+  std::set<std::string> seen;
 
   // The most local bindings shadow any potential parent bindings with the same name
-  std::set<std::string> seen;
-  for (const auto &[key, _] : local_bindings)
-    seen.insert(key);
+  for (const auto &[key, binding] : this->map)
+    if (binding.type->isSized()) {
+      local_bindings.push_back({key, binding});
+      seen.insert(key);
+    }
 
   if (this->parent.has_value()) {
     auto parent_bindings = this->parent.value()->bindings();

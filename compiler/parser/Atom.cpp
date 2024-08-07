@@ -137,9 +137,9 @@ llvm::Value *ListAtom::compile(Compiler &compiler) const {
   llvm::Type *expected_type = elements_compiled.front()->getType();
   std::ranges::for_each(elements_compiled, [this, expected_type](const llvm::Value *v) {
     const llvm::Type *actual_type = v->getType();
-    auto maybe_error = NonhomogenousListError::check(expected_type, actual_type);
-    if (maybe_error.has_value())
-      this->compiler_error(maybe_error.value());
+    auto error = NonhomogenousListError::check(expected_type, actual_type);
+    if (error.has_value())
+      this->compiler_error(error.value());
   });
 
   return compiler.create_list(elements_compiled, expected_type);

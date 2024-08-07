@@ -32,12 +32,11 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
 
 llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
   llvm::Value *offset = this->subscription->compile(compiler);
-  if (auto maybe_error = TypeError::check(compiler.get_int_type(), offset->getType());
-      maybe_error.has_value())
-    this->compiler_error(maybe_error.value());
+  if (auto error = TypeError::check(compiler.get_int_type(), offset->getType()); error.has_value())
+    this->compiler_error(error.value());
 
-  if (auto maybe_error = UnsubscriptableError::check(this->subscriptee); maybe_error.has_value())
-    this->compiler_error(maybe_error.value());
+  if (auto error = UnsubscriptableError::check(this->subscriptee); error.has_value())
+    this->compiler_error(error.value());
 
   // TODO: improve casting - this becomes wrong if we change things elsewhere
   // Variable lookups are stored as LoadInstructions
@@ -79,8 +78,8 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
   for (const std::unique_ptr<Expression> &argument : this->arguments)
     arguments_compiled.push_back(argument->compile(compiler));
 
-  if (auto maybe_error = UncallableError::check(this->subscriptee); maybe_error.has_value())
-    this->compiler_error(maybe_error.value());
+  if (auto error = UncallableError::check(this->subscriptee); error.has_value())
+    this->compiler_error(error.value());
 
   auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee);
   assert(function != nullptr && "cannot create call instruction for arguments on a non function");

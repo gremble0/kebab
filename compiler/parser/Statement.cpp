@@ -45,8 +45,8 @@ llvm::Value *DefinitionStatement::compile(Compiler &compiler) const {
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
     llvm::Type *actual_type = variable_value->getType();
-    if (auto maybe_error = TypeError::check(declared_type, actual_type); maybe_error.has_value())
-      this->compiler_error(maybe_error.value());
+    if (auto error = TypeError::check(declared_type, actual_type); error.has_value())
+      this->compiler_error(error.value());
 
     std::variant<llvm::AllocaInst *, RedefinitionError> local =
         compiler.create_definition(this->name, variable_value, this->is_mutable);
@@ -80,8 +80,8 @@ llvm::Value *AssignmentStatement::compile(Compiler &compiler) const {
   } else {
     llvm::Type *declared_type = this->constructor->get_type()->get_llvm_type(compiler);
     llvm::Type *actual_type = variable_value->getType();
-    if (auto maybe_error = TypeError::check(declared_type, actual_type); maybe_error.has_value())
-      this->compiler_error(maybe_error.value());
+    if (auto error = TypeError::check(declared_type, actual_type); error.has_value())
+      this->compiler_error(error.value());
 
     auto result = compiler.create_assignment(this->name, variable_value);
     if (std::holds_alternative<llvm::Value *>(result))
