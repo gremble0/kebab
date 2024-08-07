@@ -32,7 +32,7 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
 
 llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
   llvm::Value *offset = this->subscription->compile(compiler);
-  if (auto maybe_error = TypeError::check({compiler.get_int_type()}, offset->getType());
+  if (auto maybe_error = TypeError::check(compiler.get_int_type(), offset->getType());
       maybe_error.has_value())
     this->compiler_error(maybe_error.value());
 
