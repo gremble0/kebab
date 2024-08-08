@@ -1,7 +1,6 @@
 #ifndef KEBAB_SCOPE_HPP
 #define KEBAB_SCOPE_HPP
 
-#include <map>
 #include <memory>
 #include <optional>
 #include <utility>
@@ -34,9 +33,8 @@ public:
   std::vector<std::pair<const std::string &, Binding>> bindings() const;
 
 private:
-  // Needs to be ordered to see insertion order
   // Could split into several parts for functions, arguments, etc.
-  std::map<std::string, Binding> map;
+  std::vector<std::pair<std::string, Binding>> map;
   std::optional<std::shared_ptr<Scope>> parent;
 };
 

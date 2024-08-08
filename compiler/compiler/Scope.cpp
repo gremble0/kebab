@@ -10,20 +10,24 @@ std::optional<Scope::Binding> Scope::lookup(const std::string &key) const {
   // 1. we have found the value -> return it
   // 2. we have not found the value, but we have a parent -> look in parent
   // 3. we have not found the value and we dont have a parent -> return nullopt
-  auto it = this->map.find(key);
-  if (it != this->map.end())
-    return it->second;
-  else if (this->parent.has_value())
+  for (const auto &[k, b] : this->map)
+    if (k == key)
+      return b;
+
+  if (this->parent.has_value())
     return this->parent.value()->lookup(key);
-  else
-    return std::nullopt;
+
+  return std::nullopt;
 }
 
 void Scope::put(const std::string &key, llvm::Value *value, llvm::Type *type, bool is_mutable) {
-  if (this->map.contains(key))
-    this->map[key].value = value;
+  for (auto &[k, b] : this->map)
+    if (k == key) {
+      b.value = value;
+      return;
+    }
 
-  this->map[key] = Binding{is_mutable, value, type};
+  this->map.push_back({key, Binding{is_mutable, value, type}});
 }
 
 std::vector<std::pair<const std::string &, Scope::Binding>> Scope::bindings() const {
