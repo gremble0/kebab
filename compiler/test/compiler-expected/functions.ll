@@ -34,12 +34,17 @@ entry:
 
 define ptr @takes-parameter(ptr %s, {} %closure-env) {
 entry:
+  %"arg:s" = alloca ptr, align 8
+  store ptr %s, ptr %"arg:s", align 8
   ret ptr @0
 }
 
 define i64 @uses-parameter(i64 %n, {} %closure-env) {
 entry:
-  ret i64 %n
+  %"arg:n" = alloca i64, align 8
+  store i64 %n, ptr %"arg:n", align 8
+  %0 = load i64, ptr %"arg:n", align 8
+  ret i64 %0
 }
 
 define i64 @has-local-fn({} %closure-env) {

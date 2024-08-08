@@ -9,63 +9,84 @@ declare i64 @printf(ptr, ...)
 
 define i64 @fib(i64 %n, {} %closure-env) {
 entry:
+  %"arg:n" = alloca i64, align 8
+  store i64 %n, ptr %"arg:n", align 8
   br label %if_branch
 
 if_branch:                                        ; preds = %entry
-  %0 = icmp ult i64 %n, 2
-  %1 = icmp eq i1 %0, true
-  br i1 %1, label %merge_branch, label %else_branch
+  %0 = load i64, ptr %"arg:n", align 8
+  %1 = icmp ult i64 %0, 2
+  %2 = icmp eq i1 %1, true
+  %3 = load i64, ptr %"arg:n", align 8
+  br i1 %2, label %merge_branch, label %else_branch
 
 merge_branch:                                     ; preds = %else_branch, %if_branch
-  %2 = phi i64 [ %n, %if_branch ], [ %7, %else_branch ]
-  ret i64 %2
+  %4 = phi i64 [ %3, %if_branch ], [ %11, %else_branch ]
+  ret i64 %4
 
 else_branch:                                      ; preds = %if_branch
-  %3 = sub i64 %n, 1
-  %4 = call i64 @fib(i64 %3, {} undef)
-  %5 = sub i64 %n, 2
-  %6 = call i64 @fib(i64 %5, {} undef)
-  %7 = add i64 %4, %6
+  %5 = load i64, ptr %"arg:n", align 8
+  %6 = sub i64 %5, 1
+  %7 = call i64 @fib(i64 %6, {} undef)
+  %8 = load i64, ptr %"arg:n", align 8
+  %9 = sub i64 %8, 2
+  %10 = call i64 @fib(i64 %9, {} undef)
+  %11 = add i64 %7, %10
   br label %merge_branch
 }
 
 define i64 @fac(i64 %n, {} %closure-env) {
 entry:
+  %"arg:n" = alloca i64, align 8
+  store i64 %n, ptr %"arg:n", align 8
   br label %if_branch
 
 if_branch:                                        ; preds = %entry
-  %0 = icmp ule i64 %n, 1
-  %1 = icmp eq i1 %0, true
-  br i1 %1, label %merge_branch, label %else_branch
+  %0 = load i64, ptr %"arg:n", align 8
+  %1 = icmp ule i64 %0, 1
+  %2 = icmp eq i1 %1, true
+  %3 = load i64, ptr %"arg:n", align 8
+  br i1 %2, label %merge_branch, label %else_branch
 
 merge_branch:                                     ; preds = %else_branch, %if_branch
-  %2 = phi i64 [ %n, %if_branch ], [ %5, %else_branch ]
-  ret i64 %2
+  %4 = phi i64 [ %3, %if_branch ], [ %9, %else_branch ]
+  ret i64 %4
 
 else_branch:                                      ; preds = %if_branch
-  %3 = sub i64 %n, 1
-  %4 = call i64 @fac(i64 %3, {} undef)
-  %5 = mul i64 %n, %4
+  %5 = load i64, ptr %"arg:n", align 8
+  %6 = load i64, ptr %"arg:n", align 8
+  %7 = sub i64 %6, 1
+  %8 = call i64 @fac(i64 %7, {} undef)
+  %9 = mul i64 %5, %8
   br label %merge_branch
 }
 
 define i64 @exp(i64 %base, i64 %exponent, {} %closure-env) {
 entry:
+  %"arg:base" = alloca i64, align 8
+  store i64 %base, ptr %"arg:base", align 8
+  %"arg:exponent" = alloca i64, align 8
+  store i64 %exponent, ptr %"arg:exponent", align 8
   br label %if_branch
 
 if_branch:                                        ; preds = %entry
-  %0 = icmp eq i64 %exponent, 1
-  %1 = icmp eq i1 %0, true
-  br i1 %1, label %merge_branch, label %else_branch
+  %0 = load i64, ptr %"arg:exponent", align 8
+  %1 = icmp eq i64 %0, 1
+  %2 = icmp eq i1 %1, true
+  %3 = load i64, ptr %"arg:base", align 8
+  br i1 %2, label %merge_branch, label %else_branch
 
 merge_branch:                                     ; preds = %else_branch, %if_branch
-  %2 = phi i64 [ %base, %if_branch ], [ %5, %else_branch ]
-  ret i64 %2
+  %4 = phi i64 [ %3, %if_branch ], [ %10, %else_branch ]
+  ret i64 %4
 
 else_branch:                                      ; preds = %if_branch
-  %3 = sub i64 %exponent, 1
-  %4 = call i64 @exp(i64 %base, i64 %3, {} undef)
-  %5 = mul i64 %base, %4
+  %5 = load i64, ptr %"arg:base", align 8
+  %6 = load i64, ptr %"arg:base", align 8
+  %7 = load i64, ptr %"arg:exponent", align 8
+  %8 = sub i64 %7, 1
+  %9 = call i64 @exp(i64 %6, i64 %8, {} undef)
+  %10 = mul i64 %5, %9
   br label %merge_branch
 }
 

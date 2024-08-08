@@ -7,6 +7,9 @@ declare i64 @printf(ptr, ...)
 
 define i64 @main(i64 %argc, {} %closure-env) {
 entry:
-  %0 = call i64 (ptr, ...) @printf(ptr @0, i64 %argc)
+  %"arg:argc" = alloca i64, align 8
+  store i64 %argc, ptr %"arg:argc", align 8
+  %0 = load i64, ptr %"arg:argc", align 8
+  %1 = call i64 (ptr, ...) @printf(ptr @0, i64 %0)
   ret i64 0
 }

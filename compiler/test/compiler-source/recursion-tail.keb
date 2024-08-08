@@ -1,9 +1,10 @@
 def main = fn(() => int(
   def local = int(0)
+  def local2 = int(2)
 
   def exp-tail = fn((base : int, exponent : int) => int(
     def exp-tail-impl = fn((exponent : int, acc : int) => int(
-      if exponent == 1 =>
+      if exponent == 0 =>
         acc
       else =>
         exp-tail-impl(exponent - 1, acc * base)

@@ -189,6 +189,8 @@ llvm::Value *Compiler::create_closure_argument(llvm::StructType *closure_type) {
       this->current_scope->bindings();
   for (unsigned int i = 0, num_elements = closure_type->getNumElements(); i < num_elements; ++i) {
     llvm::Value *field_value = bindings[i].second.value;
+    // LAST PIECE OF PUZZLE - THIS INSERTION IS WRONG (bindings are in wrong order, likely from
+    // load_arguments)
     closure_argument = this->builder.CreateInsertValue(closure_argument, field_value, {i});
   }
   closure_argument->setName("closure-arg");
