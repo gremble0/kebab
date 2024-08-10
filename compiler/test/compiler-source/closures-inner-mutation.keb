@@ -7,9 +7,9 @@ def main = fn(() => int(
   ))
 
   printf("%ld\n", counter)
-  def i1 = int(increment-counter())
+  increment-counter()
   printf("%ld\n", counter)
-  def i3 = int(increment-counter())
+  increment-counter()
   printf("%ld\n", counter)
 
   0
