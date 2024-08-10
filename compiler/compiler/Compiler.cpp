@@ -610,9 +610,9 @@ std::variant<llvm::Value *, NameError> Compiler::get_value(const std::string &na
 
   auto existing = this->current_scope->lookup(name);
   assert(existing.has_value() && "lookup failure should be caught by previous error checking");
-  // Could add needs_loading to binding struct instead of `isa` reason to load LoadInst is because
-  // these are loaded pointers from closure argument, this is not really clear by the current
-  // implementation since a LoadInst really could be anything
+  // Could add needs_loading to binding struct instead of `isa`. Reason to load LoadInst values is
+  // because these are loaded pointers from closure argument, this is not really clear by the
+  // current implementation since a LoadInst really could be anything
   if (llvm::isa<llvm::AllocaInst>(existing->value) || llvm::isa<llvm::LoadInst>(existing->value))
     return this->create_load(existing->type, existing->value);
   else
