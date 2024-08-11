@@ -45,8 +45,6 @@ llvm::Value *Compiler::create_list(const std::vector<llvm::Value *> &list, llvm:
   std::vector<llvm::Value *> malloc_args = {list_size};
   llvm::CallInst *alloc =
       std::get<llvm::CallInst *>(this->create_call(this->mod.getFunction("malloc"), malloc_args));
-
-  // Bitcast the allocated memory to the correct pointer type
   llvm::Value *typed_alloc = this->builder.CreateBitCast(alloc, type->getPointerTo());
 
   // Fill list allocation with initializers
@@ -57,8 +55,8 @@ llvm::Value *Compiler::create_list(const std::vector<llvm::Value *> &list, llvm:
 
   // Store information about list for later use (this information is not stored in the value itself
   // so it will get lost if we dont store it somewhere)
-  this->list_infos[alloc] = {type, list_size};
-  return alloc;
+  this->list_infos[typed_alloc] = {type, list_size};
+  return typed_alloc;
 }
 
 void Compiler::save_module(const std::string &path) const {
@@ -277,6 +275,10 @@ Compiler::create_definition(const std::string &name, llvm::Value *init, bool is_
 
   llvm::AllocaInst *local = this->create_alloca(name, init, init->getType());
   this->current_scope->put(name, local, init->getType(), is_mutable);
+
+  // If we're creating a pointer to a list, copy the list info as well
+  if (this->list_infos.contains(init))
+    this->list_infos[local] = this->list_infos[init];
 
   return local;
 }
@@ -635,12 +637,18 @@ std::variant<llvm::Value *, NameError> Compiler::get_value(const std::string &na
 
   auto existing = this->current_scope->lookup(name);
   assert(existing.has_value() && "lookup failure should be caught by previous error checking");
+
   // Could add needs_loading to binding struct instead of `isa`. Reason to load LoadInst values is
   // because these are loaded pointers from closure argument, this is not really clear by the
   // current implementation since a LoadInst really could be anything
-  if (llvm::isa<llvm::AllocaInst>(existing->value) || llvm::isa<llvm::LoadInst>(existing->value))
-    return this->create_load(existing->type, existing->value);
-  else
+  // TODO: This is a little messy
+  if (llvm::isa<llvm::AllocaInst>(existing->value) || llvm::isa<llvm::LoadInst>(existing->value)) {
+    // This is for lists (stack allocated pointers should not be loaded)
+    if (llvm::isa<llvm::AllocaInst>(existing->value) && existing->value->getType()->isPointerTy())
+      return existing->value;
+    else
+      return this->create_load(existing->type, existing->value);
+  } else
     return existing->value;
 }
 

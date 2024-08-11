@@ -1,6 +1,10 @@
 def main = fn(() => int(
   def numbers = list((int) => [1, 2, 3])
-  def number = int(numbers[1]) ; base 0 so local-int = 2
+  def words = list((string) => ["hello", "world"])
+
+  def number = int(numbers[1])
+  def word = string(words[0])
+  
 
   0
 ))

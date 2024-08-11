@@ -51,6 +51,8 @@ private:
     llvm::Type *type;
     llvm::Value *size;
   };
+  // Lists are heap allocated with opaque pointers so we need to store information about these
+  // pointers before we lose it
   std::unordered_map<llvm::Value *, ListInfo> list_infos;
 
   void save_module(const std::string &path) const;
