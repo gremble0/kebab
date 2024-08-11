@@ -332,10 +332,9 @@ std::variant<llvm::Value *, IndexError> Compiler::create_subscription(llvm::Valu
     return error.value();
 
   llvm::Type *list_type = this->list_infos[list].type;
-  llvm::Value *element_ptr =
-      this->builder.CreateInBoundsGEP(list_type, list, {this->create_int(0), offset});
+  llvm::Value *element_ptr = this->builder.CreateGEP(list_type, list, offset);
 
-  return this->builder.CreateLoad(list_type->getArrayElementType(), element_ptr);
+  return this->create_load(list_type, element_ptr);
 }
 
 std::variant<llvm::Value *, BinaryOperatorError> Compiler::create_add(llvm::Value *lhs,

@@ -78,8 +78,8 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
   for (const std::unique_ptr<Expression> &argument : this->arguments)
     arguments_compiled.push_back(argument->compile(compiler));
 
-  // if (auto error = UncallableError::check(this->subscriptee); error.has_value())
-  //   this->compiler_error(error.value());
+  if (auto error = UncallableError::check(this->subscriptee); error.has_value())
+    this->compiler_error(error.value());
 
   if (auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee); function != nullptr) {
     std::variant<llvm::CallInst *, ArgumentCountError> call =
