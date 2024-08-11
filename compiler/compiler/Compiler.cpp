@@ -81,10 +81,11 @@ void Compiler::load_printf() {
 }
 
 void Compiler::load_malloc() {
-  // The signature of this function is `void *malloc(u32)`
+  // The signature of this function is `void *malloc(u32)` - but again, we just say that its
+  // parameter is i64 for ease of use
   llvm::PointerType *return_type = this->get_void_type()->getPointerTo();
   llvm::IntegerType *size_type = this->get_int_type();
-  llvm::FunctionType *prototype = llvm::FunctionType::get(return_type, size_type, true);
+  llvm::FunctionType *prototype = llvm::FunctionType::get(return_type, size_type, false);
 
   this->declare_function(prototype, "malloc");
 }
