@@ -116,6 +116,8 @@ static void replace_compiler_expected() {
   replace_one_compiler_expected("closures-inner-mutation");
   replace_one_compiler_expected("subscription");
   replace_one_compiler_expected("recursion");
+  replace_one_compiler_expected("recursion-tail");
+  replace_one_compiler_expected("double-nested-function");
 
   std::cout << "Replaced expected compiler output" << std::endl;
 }
