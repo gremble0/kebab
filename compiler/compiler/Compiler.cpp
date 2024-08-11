@@ -330,8 +330,7 @@ std::variant<llvm::Value *, UnaryOperatorError> Compiler::create_not(llvm::Value
 }
 
 llvm::Value *Compiler::create_subscription(llvm::Value *list, llvm::Value *offset) {
-  std::cout << "subsc: " << list << std::endl;
-  llvm::Type *list_type = this->get_int_type(); // this->list_infos[list].type;
+  llvm::Type *list_type = this->list_infos[list].type;
   llvm::Value *element_ptr = this->builder.CreateGEP(list_type, list, offset);
 
   return this->create_load(list_type, element_ptr);
