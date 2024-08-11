@@ -31,7 +31,7 @@ namespace Kebab {
 // TODO: user defined global variables
 
 void Compiler::compile(std::unique_ptr<Parser::RootNode> root, const std::string &output_path) {
-  this->load_globals();
+  this->declare_extern_functions();
   root->compile(*this);
   this->save_module(output_path);
 }
@@ -65,7 +65,7 @@ void Compiler::save_module(const std::string &path) const {
   this->mod.print(fd, nullptr);
 }
 
-void Compiler::load_printf() {
+void Compiler::declare_printf() {
   // `printfs` real return type is int32 however we just say that it is int64 to make it easier to
   // deal with since the rest of the language uses 64 bit integers. This may cause some issues
   // however I have not encountered any yet so I will keep it as is until I need to change it
@@ -78,7 +78,7 @@ void Compiler::load_printf() {
   this->declare_function(prototype, "printf");
 }
 
-void Compiler::load_malloc() {
+void Compiler::declare_malloc() {
   // The signature of this function is `void *malloc(u32)` - but again, we just say that its
   // parameter is i64 for ease of use
   llvm::PointerType *return_type = this->get_void_type()->getPointerTo();
@@ -88,9 +88,9 @@ void Compiler::load_malloc() {
   this->declare_function(prototype, "malloc");
 }
 
-void Compiler::load_globals() {
-  this->load_printf();
-  this->load_malloc();
+void Compiler::declare_extern_functions() {
+  this->declare_printf();
+  this->declare_malloc();
 }
 
 std::variant<llvm::Type *, UnrecognizedTypeError>

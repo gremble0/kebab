@@ -57,9 +57,9 @@ private:
 
   void save_module(const std::string &path) const;
 
-  void load_malloc();
-  void load_printf();
-  void load_globals();
+  void declare_malloc();
+  void declare_printf();
+  void declare_extern_functions();
 
   llvm::Value *int_to_float(llvm::Value *i);
 
