@@ -68,15 +68,14 @@ public:
 
 class IndexError : public CompilerError {
 private:
-  const llvm::AllocaInst *list;
+  const llvm::Value *list;
   const llvm::Value *index;
 
-  IndexError(const llvm::AllocaInst *subscriptee, const llvm::Value *index)
+  IndexError(const llvm::Value *subscriptee, const llvm::Value *index)
       : list(subscriptee), index(index) {}
 
 public:
-  static std::optional<IndexError> check(const llvm::AllocaInst *subscriptee,
-                                         const llvm::Value *index);
+  static std::optional<IndexError> check(const llvm::Value *subscriptee, const llvm::Value *index);
 
   std::string to_string() const final;
 };

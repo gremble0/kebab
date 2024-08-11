@@ -78,18 +78,22 @@ llvm::Value *PrimaryArguments::compile(Compiler &compiler) const {
   for (const std::unique_ptr<Expression> &argument : this->arguments)
     arguments_compiled.push_back(argument->compile(compiler));
 
-  if (auto error = UncallableError::check(this->subscriptee); error.has_value())
-    this->compiler_error(error.value());
+  // if (auto error = UncallableError::check(this->subscriptee); error.has_value())
+  //   this->compiler_error(error.value());
 
-  auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee);
-  assert(function != nullptr && "cannot create call instruction for arguments on a non function");
-
-  std::variant<llvm::CallInst *, ArgumentCountError> call =
-      compiler.create_call(function, arguments_compiled);
-  if (std::holds_alternative<ArgumentCountError>(call))
-    this->compiler_error(std::get<ArgumentCountError>(call));
-  else
-    return std::get<llvm::CallInst *>(call);
+  if (auto *function = llvm::dyn_cast<llvm::Function>(this->subscriptee); function != nullptr) {
+    std::variant<llvm::CallInst *, ArgumentCountError> call =
+        compiler.create_call(function, arguments_compiled);
+    if (std::holds_alternative<ArgumentCountError>(call))
+      this->compiler_error(std::get<ArgumentCountError>(call));
+    else
+      return std::get<llvm::CallInst *>(call);
+  } else {
+    // This means the variable is a function pointer - need to get the type of the pointed to
+    // function
+    assert(false && "calling from function pointers is so hard to do with opaque pointers, haven't "
+                    "figured out yet");
+  }
 }
 
 std::unique_ptr<PrimarySuffix> PrimarySuffix::parse(Lexer &lexer) {

@@ -45,7 +45,9 @@ std::string UncallableError::to_string() const {
 }
 
 std::optional<UnsubscriptableError> UnsubscriptableError::check(const llvm::Value *subscriptee) {
-  if (subscriptee->getType()->isArrayTy())
+  // TODO: could be more sophisticated - this allows all pointers to be subscripted, e.g. function
+  // pointers, strings, etc.
+  if (subscriptee->getType()->isPointerTy())
     return std::nullopt;
   else
     return UnsubscriptableError(subscriptee);
@@ -58,7 +60,7 @@ std::string UnsubscriptableError::to_string() const {
                      type_string);
 }
 
-std::optional<IndexError> IndexError::check(const llvm::AllocaInst *subscriptee,
+std::optional<IndexError> IndexError::check(const llvm::Value *subscriptee,
                                             const llvm::Value *index) {
   // TODO:
   return std::nullopt;

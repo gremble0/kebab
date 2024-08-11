@@ -46,10 +46,10 @@ std::unique_ptr<ListType> ListType::parse(Lexer &lexer) {
   return type;
 }
 
-llvm::ArrayType *ListType::get_llvm_type(Compiler &compiler) const {
+llvm::PointerType *ListType::get_llvm_type(Compiler &compiler) const {
   // We don't know the size of the list here so just hardcode 3 to test - we will replace arrays
   // with heap lists anyways so cba
-  return llvm::ArrayType::get(this->content_type->get_llvm_type(compiler), 3);
+  return compiler.get_void_type()->getPointerTo();
 }
 
 void FunctionType::parse_parameter_types(Lexer &lexer) {

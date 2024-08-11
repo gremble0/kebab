@@ -31,7 +31,7 @@ public:
   std::unique_ptr<Type> content_type;
 
   static std::unique_ptr<ListType> parse(Lexer &lexer);
-  llvm::ArrayType *get_llvm_type(Compiler &compiler) const final;
+  llvm::PointerType *get_llvm_type(Compiler &compiler) const final;
 };
 
 class FunctionType : public Type {
