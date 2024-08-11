@@ -9,6 +9,8 @@ source_filename = "kebab"
 
 declare i64 @printf(ptr, ...)
 
+declare ptr @malloc(i64)
+
 define i64 @one-factory({} %closure-env) {
 entry:
   ret i64 1

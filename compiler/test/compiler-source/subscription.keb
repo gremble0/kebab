@@ -4,6 +4,8 @@ def main = fn(() => int(
 
   def number = int(numbers[1])
   def word = string(words[0])
+
+  printf("num: %ld, word: %s\n", number, word)
   
 
   0

@@ -3,6 +3,8 @@ source_filename = "kebab"
 
 declare i64 @printf(ptr, ...)
 
+declare ptr @malloc(i64)
+
 define i64 @main({} %closure-env) {
 entry:
   %i1 = alloca i64, align 8
