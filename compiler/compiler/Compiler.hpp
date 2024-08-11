@@ -170,8 +170,7 @@ public:
 
   /// Binary array operators
   // TODO: could also return operatorerror if offset is wrong type for example
-  std::variant<llvm::Value *, IndexError> create_subscription(llvm::Value *list,
-                                                              llvm::Value *offset);
+  llvm::Value *create_subscription(llvm::Value *list, llvm::Value *offset);
 
   /// Binary mathematical operators
   std::variant<llvm::Value *, BinaryOperatorError> create_add(llvm::Value *lhs, llvm::Value *rhs);

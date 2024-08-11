@@ -31,29 +31,21 @@ std::unique_ptr<PrimarySubscription> PrimarySubscription::parse(Lexer &lexer) {
 }
 
 llvm::Value *PrimarySubscription::compile(Compiler &compiler) const {
-  llvm::Value *offset = this->subscription->compile(compiler);
-  if (auto error = TypeError::check(compiler.get_int_type(), offset->getType()); error.has_value())
+  llvm::Value *index = this->subscription->compile(compiler);
+  // Subscriptions can only be done with ints
+  if (auto error = TypeError::check(compiler.get_int_type(), index->getType()); error.has_value())
     this->compiler_error(error.value());
 
+  // Only certain types can be subscripted
   if (auto error = UnsubscriptableError::check(this->subscriptee); error.has_value())
     this->compiler_error(error.value());
 
-  // TODO: improve casting - this becomes wrong if we change things elsewhere
-  // Variable lookups are stored as LoadInstructions
-  llvm::LoadInst *load = llvm::dyn_cast<llvm::LoadInst>(this->subscriptee);
-  assert(load != nullptr && "cannot create subscription for non loaded variables");
+  // Dont index if out of range (currently unimplemented, and should maybe be removed since we
+  // cannot check this at compiletime with heap allocated lists)
+  if (auto error = IndexError::check(this->subscriptee, index); error.has_value())
+    this->compiler_error(error.value());
 
-  llvm::Value *pointee = load->getPointerOperand();
-  // Subscriptable values are all stack allocated with alloca
-  llvm::AllocaInst *alloca = llvm::dyn_cast<llvm::AllocaInst>(pointee);
-  assert(load != nullptr && "cannot create subscription for non stack allocated variables");
-
-  std::variant<llvm::Value *, IndexError> subscription_compiled =
-      compiler.create_subscription(alloca, offset);
-  if (std::holds_alternative<llvm::Value *>(subscription_compiled))
-    return std::get<llvm::Value *>(subscription_compiled);
-  else
-    this->compiler_error(std::get<IndexError>(subscription_compiled));
+  return compiler.create_subscription(this->subscriptee, index);
 }
 
 std::unique_ptr<PrimaryArguments> PrimaryArguments::parse(Lexer &lexer) {
