@@ -36,14 +36,29 @@ void Compiler::compile(std::unique_ptr<Parser::RootNode> root, const std::string
   this->save_module(output_path);
 }
 
-llvm::LoadInst *Compiler::create_list(const std::vector<llvm::Value *> &list, llvm::Type *type) {
-  llvm::AllocaInst *alloca = this->create_alloca("", list, type);
+llvm::Value *Compiler::create_list(const std::vector<llvm::Value *> &list, llvm::Type *type) {
+  // Calculate total size in bytes
+  llvm::ConstantInt *list_size =
+      this->create_int(list.size() * (type->getPrimitiveSizeInBits() / 8));
 
-  llvm::Type *list_type = alloca->getAllocatedType();
-  llvm::LoadInst *load = this->builder.CreateLoad(list_type, alloca);
-  load->setAlignment(this->get_alignment(list_type));
+  // Allocate memory
+  std::vector<llvm::Value *> malloc_args = {list_size};
+  llvm::CallInst *alloc =
+      std::get<llvm::CallInst *>(this->create_call(this->mod.getFunction("malloc"), malloc_args));
 
-  return load;
+  // Bitcast the allocated memory to the correct pointer type
+  llvm::Value *typed_alloc = this->builder.CreateBitCast(alloc, type->getPointerTo());
+
+  // Fill list allocation with initializers
+  for (size_t i = 0; i < list.size(); ++i) {
+    llvm::Value *elementPtr = this->builder.CreateGEP(type, typed_alloc, this->create_int(i));
+    this->create_store(list[i], elementPtr);
+  }
+
+  // Store information about list for later use (this information is not stored in the value itself
+  // so it will get lost if we dont store it somewhere)
+  this->list_infos[alloc] = {type, list_size};
+  return alloc;
 }
 
 void Compiler::save_module(const std::string &path) const {
@@ -65,7 +80,19 @@ void Compiler::load_printf() {
   this->declare_function(prototype, "printf");
 }
 
-void Compiler::load_globals() { this->load_printf(); }
+void Compiler::load_malloc() {
+  // The signature of this function is `void *malloc(u32)`
+  llvm::PointerType *return_type = this->get_void_type()->getPointerTo();
+  llvm::IntegerType *size_type = this->get_int_type();
+  llvm::FunctionType *prototype = llvm::FunctionType::get(return_type, size_type, true);
+
+  this->declare_function(prototype, "malloc");
+}
+
+void Compiler::load_globals() {
+  this->load_printf();
+  this->load_malloc();
+}
 
 std::variant<llvm::Type *, UnrecognizedTypeError>
 Compiler::get_primitive_type(const std::string &type_name) const {
@@ -299,12 +326,12 @@ std::variant<llvm::Value *, UnaryOperatorError> Compiler::create_not(llvm::Value
     return UnaryOperatorError(v_type, "~");
 }
 
-std::variant<llvm::Value *, IndexError> Compiler::create_subscription(llvm::AllocaInst *list,
+std::variant<llvm::Value *, IndexError> Compiler::create_subscription(llvm::Value *list,
                                                                       llvm::Value *offset) {
   if (auto error = IndexError::check(list, offset); error.has_value())
     return error.value();
 
-  llvm::Type *list_type = list->getAllocatedType();
+  llvm::Type *list_type = this->list_infos[list].type;
   llvm::Value *element_ptr =
       this->builder.CreateInBoundsGEP(list_type, list, {this->create_int(0), offset});
 
@@ -563,7 +590,8 @@ Compiler::create_phi(llvm::Type *type,
 
 bool Compiler::is_externally_defined(const llvm::Function *function) const {
   // TODO: more sophisticated structure, probably a hashmap from name to functions
-  if (function->getName() == "printf")
+  const std::string function_name = function->getName().str();
+  if (function_name == "printf" || function_name == "malloc")
     return true;
   else
     return false;

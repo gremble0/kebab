@@ -47,8 +47,15 @@ private:
   std::shared_ptr<Scope> current_scope = std::make_shared<Scope>();
   std::unordered_map<std::string, llvm::Type *> primitive_types;
 
+  struct ListInfo {
+    llvm::Type *type;
+    llvm::Value *size;
+  };
+  std::unordered_map<llvm::Value *, ListInfo> list_infos;
+
   void save_module(const std::string &path) const;
 
+  void load_malloc();
   void load_printf();
   void load_globals();
 
@@ -126,7 +133,7 @@ public:
     return llvm::ConstantInt::get(this->builder.getInt1Ty(), b);
   }
 
-  llvm::LoadInst *create_list(const std::vector<llvm::Value *> &list, llvm::Type *type);
+  llvm::Value *create_list(const std::vector<llvm::Value *> &list, llvm::Type *type);
 
   /// Constructors for more complicated instructions
   llvm::StructType *create_closure_type();
@@ -163,7 +170,7 @@ public:
 
   /// Binary array operators
   // TODO: could also return operatorerror if offset is wrong type for example
-  std::variant<llvm::Value *, IndexError> create_subscription(llvm::AllocaInst *list,
+  std::variant<llvm::Value *, IndexError> create_subscription(llvm::Value *list,
                                                               llvm::Value *offset);
 
   /// Binary mathematical operators
