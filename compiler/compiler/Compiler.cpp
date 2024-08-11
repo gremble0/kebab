@@ -642,11 +642,15 @@ std::variant<llvm::Value *, NameError> Compiler::get_value(const std::string &na
   // current implementation since a LoadInst really could be anything
   // TODO: This is a little messy
   if (llvm::isa<llvm::AllocaInst>(existing->value) || llvm::isa<llvm::LoadInst>(existing->value)) {
-    // This is for lists (stack allocated pointers should not be loaded)
-    if (llvm::isa<llvm::AllocaInst>(existing->value) && existing->value->getType()->isPointerTy())
-      return existing->value;
-    else
+    // This is for lists - need to copy over list info for loaded pointer
+    if (llvm::isa<llvm::AllocaInst>(existing->value) && existing->value->getType()->isPointerTy()) {
+      llvm::LoadInst *load = this->create_load(existing->type, existing->value);
+      this->list_infos[load] = this->list_infos[existing->value];
+      // HERE - NEED TO LOAD POINTER AND THEN PUT IN LIST INFO BEFORE RETURNING IT
+      return load;
+    } else {
       return this->create_load(existing->type, existing->value);
+    }
   } else
     return existing->value;
 }
