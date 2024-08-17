@@ -1,0 +1,19 @@
+def main = fn(() => int(
+  def fn-list = list((fn() => int) => [
+    fn(() => int(420)),
+    fn(() => int(69)),
+  ])
+
+  def list-list = list((list(int)) => [
+    [1, 2, 3],
+    [4, 5],
+    [6, 7, 8, 9],
+  ])
+
+  def first-fn = fn(() => int(fn-list[0]()))
+  def first-list = list((int) => list-list[0])
+
+  printf("%ld\n", first-list[0])
+
+  0
+))

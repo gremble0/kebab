@@ -57,6 +57,7 @@ private:
 
   void save_module(const std::string &path) const;
 
+  /// Externally defined libc functions
   void declare_malloc();
   void declare_printf();
   void declare_extern_functions();

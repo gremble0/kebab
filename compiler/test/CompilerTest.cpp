@@ -47,8 +47,6 @@ TEST(CompilerTest, CompilesFactorsKeb) { ASSERT_EXPECTED_COMPILATION("factors");
 
 TEST(CompilerTest, CompilesFunctionsKeb) { ASSERT_EXPECTED_COMPILATION("functions"); }
 
-// TEST(CompilerTest, CompilesFunctionReturnKeb) { ASSERT_EXPECTED_COMPILATION("function-return"); }
-
 TEST(CompilerTest, CompilesIfKeb) { ASSERT_EXPECTED_COMPILATION("if"); }
 
 TEST(CompilerTest, CompilesMainKeb) { ASSERT_EXPECTED_COMPILATION("main"); }
@@ -133,5 +131,9 @@ TEST(CompilerTest, ErrorsWhenUnsupportedBinaryOperator) {
 TEST(CompilerTest, ErrorsWhenGettingClosureLocalBinding) {
   ASSERT_DEATH({ ASSERT_EXPECTED_COMPILATION("closure-scopes"); }, "name-error");
 }
+
+// Disabled tests
+// TEST(CompilerTest, CompilesFunctionReturnKeb) { ASSERT_EXPECTED_COMPILATION("function-return"); }
+// TEST(CompilerTest, CompilesAdvancedLists) { ASSERT_EXPECTED_COMPILATION("advanced-lists"); }
 
 } // namespace Kebab::Test
