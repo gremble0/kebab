@@ -20,6 +20,9 @@ static constructor_primitive_t *primitive_constructor_parse(lexer_t *lexer) {
   if (pc == NULL)
     err_malloc_fail();
 
+  pc->span.file = lexer->file;
+  pc->span.start = (position_t){lexer->line_number, lexer->line_pos};
+
   pc->body = list_init(LIST_START_SIZE); // list<statement_t *>
 
   while (lexer->cur_token->kind != TOKEN_RPAREN)
@@ -30,6 +33,8 @@ static constructor_primitive_t *primitive_constructor_parse(lexer_t *lexer) {
   const statement_t *last_stmt = list_get(pc->body, pc->body->size - 1);
   if (pc->body->size == 0 || last_stmt->type != STMT_EXPRESSION)
     err_missing_return(lexer);
+
+  pc->span.end = (position_t){lexer->line_number, lexer->line_pos};
 
   SKIP_TOKEN(lexer, TOKEN_RPAREN);
   PARSER_LOG_NODE_FINISH("primitive-constructor");

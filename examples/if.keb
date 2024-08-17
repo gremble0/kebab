@@ -5,7 +5,7 @@ def a = int(
   else => 1
 )
 
-; l is not an int list of `[3, 1]`
+; l is now an int list of `[3, 1]`
 def l = list((int) =>
   def q = int(1 + 2)
   if 1 == 2 =>
