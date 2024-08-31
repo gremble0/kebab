@@ -1,7 +1,7 @@
-; this is a constant, meaning we cannot mutate it with `set` making the code below an error
+; this is a immutable constant, meaning we cannot mutate it with `set` making the code below an error
 def my-constant = int(2)
 set my-constant = int(3) ; error
 
-; this is a variable, meaning we can mutate it with `set`
+; this is a mutable variable, meaning we can mutate it with `set`
 def mut my-variable = int(4)
 set my-variable = int(5) ; this is fine

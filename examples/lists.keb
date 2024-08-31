@@ -3,7 +3,7 @@ def int-list = list((int) => [1, 2, 3])
 def string-list = list((string) => ["abc", "a"])
 
 ; You can index lists with the subscription operator `[n]`, indexing is 0-based
-def first-in-int-list = int(int-list[2])
+def first-in-int-list = int(int-list[0])
 ; first-in-int-list = 1
 
 ; This is a type error - list should consist of strings, but actually contains ints
@@ -11,8 +11,8 @@ def wrong = list((string) => [1, 2])
 
 ; A list of nested int lists - nested lists can be of variable size
 def list-of-lists = list((list(int)) => [
-  list((int) => [1, 2]),
-  list((int) => [3, 4, 5]),
+  [1, 2],
+  [3, 4, 5],
 ])
 ; You can access the nested lists like this
 def first-nested-list = list((int) => list-of-lists[0])
@@ -23,7 +23,7 @@ def last-in-second-nested = int(list-of-lists[1][2])
 ; list of ints, while the inner lists actually consist of strings.
 def illegal-list-of-lists = list((list(int)) => [
   list((string) => ["hello", "world"]),
-  list((string) => ["", "a"]),
+  list((string) => ["a", "b"]),
 ])
 
 ; list of two anonymous functions

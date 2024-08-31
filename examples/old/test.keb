@@ -1,5 +1,0 @@
-def a = int((1 + 2) * 3)
-def b = int(a + 2)
-def my-fun = fn(() => int(b))
-def c = int(my-fun())
-def i = int(if false => 1 elif false => 2 else => 3)
